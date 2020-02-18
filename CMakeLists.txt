@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.3)
-project(projectname)
+project(videogames)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 
@@ -17,6 +17,6 @@ file(GLOB SOURCE_FILES
         *.h
         )
 
-add_executable(main.cpp ${SOURCE_FILES})
+add_executable(videogames ${SOURCE_FILES})
 
-target_link_libraries (main.cpp ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} GL m dl Xinerama Xrandr Xi Xcursor X11 Xxf86vm pthread)
+target_link_libraries (videogames ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} GL m dl Xinerama Xrandr Xi Xcursor X11 Xxf86vm pthread)
