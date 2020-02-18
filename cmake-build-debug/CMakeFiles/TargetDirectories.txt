@@ -1,3 +1,0 @@
-C:/Users/Devid/Documents/MisRepositorios/Videojuegos/Videogames/cmake-build-debug/CMakeFiles/Videogames.dir
-C:/Users/Devid/Documents/MisRepositorios/Videojuegos/Videogames/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/Devid/Documents/MisRepositorios/Videojuegos/Videogames/cmake-build-debug/CMakeFiles/rebuild_cache.dir
