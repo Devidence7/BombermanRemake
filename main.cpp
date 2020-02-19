@@ -1,7 +1,8 @@
 #include <stdlib.h>
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include <unistd.h>
+#include <chrono>
+#include <thread>
 
 int tamImageX = 1200, tamImgaeY = 600;
 float DireccionX = 0.4, DireccionY = 1;
@@ -20,9 +21,9 @@ int actualizarShape(float &x, float &y)
 
     if (y < 0 || y + tamSpriteY*2 > tamImgaeY)
     {
-        std::cout << y << std::endl;
         DireccionY = -DireccionY;
     }
+    return 1;
 }
 
 int main()
@@ -65,7 +66,7 @@ int main()
         //window.draw(shape);
         window.draw(sprite);
         window.display();
-        sleep(0.3);
+        std::this_thread::sleep_for(std::chrono::milliseconds(3));
         actualizarShape(posX, posY);
         sprite.setPosition(sf::Vector2f(posX, posY));
     }
