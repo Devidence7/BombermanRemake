@@ -12,8 +12,8 @@ int tamImageX = 1200, tamImgaeY = 600;
 float DireccionX = 0.4, DireccionY = 1;
 
 int tamSpriteX = 0, tamSpriteY = 0;
-int MAXC = 10;
-int countador = 0;
+int MAXC = 15;
+int counter = 0;
 
 std::default_random_engine generator;
 vector<tuple<float, float, sf::Sprite>> spriList;
@@ -21,10 +21,10 @@ sf::Texture texture;
 
 void generateNewSprites()
 {
-    std::uniform_real_distribution<double> distribution(-1.0, 1);
+    std::uniform_real_distribution<double> distribution(-1.0, 1.0);
     std::uniform_real_distribution<double> distributionRotation(0.0, 360.0);
-    countador = countador % MAXC;
-    if (!countador)
+    counter = counter % MAXC;
+    if (!counter)
     {
         float x, y, norm;
         do
@@ -43,7 +43,7 @@ void generateNewSprites()
         sprite.setRotation(distributionRotation(generator));
         spriList.push_back(tuple<float, float, sf::Sprite>(x, y, sprite));
     }
-    countador++;
+    counter++;
 }
 
 int actualizarShape(tuple<float, float, sf::Sprite> &t)
@@ -69,7 +69,7 @@ int actualizarShape(tuple<float, float, sf::Sprite> &t)
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(tamImageX, tamImgaeY), "Estrellas!");
+    sf::RenderWindow window(sf::VideoMode(tamImageX, tamImgaeY), "Estrellas!"); // , sf::Style::Fullscreen
     sf::CircleShape shape(100.f);
     //sf::RectangleShape shape(100.f)
     shape.setFillColor(sf::Color::Green);
