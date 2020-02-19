@@ -1,7 +1,8 @@
 #include <stdlib.h>
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include <unistd.h>
+#include <chrono>
+#include <thread>
 #include <vector>
 #include <tuple>
 #include <random>
@@ -21,6 +22,7 @@ sf::Texture texture;
 void generateNewSprites()
 {
     std::uniform_real_distribution<double> distribution(-1.0, 1);
+    std::uniform_real_distribution<double> distributionRotation(0.0, 360.0);
     countador = countador % MAXC;
     if (!countador)
     {
@@ -38,6 +40,7 @@ void generateNewSprites()
         sprite.setTexture(texture);
         sprite.setPosition(sf::Vector2f(posX, posY));
         sprite.setScale(sf::Vector2f(0.01,0.01));
+        sprite.setRotation(distributionRotation(generator));
         spriList.push_back(tuple<float, float, sf::Sprite>(x, y, sprite));
     }
     countador++;
@@ -66,7 +69,7 @@ int actualizarShape(tuple<float, float, sf::Sprite> &t)
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(tamImageX, tamImgaeY), "Rebotes!");
+    sf::RenderWindow window(sf::VideoMode(tamImageX, tamImgaeY), "Estrellas!");
     sf::CircleShape shape(100.f);
     //sf::RectangleShape shape(100.f)
     shape.setFillColor(sf::Color::Green);
@@ -80,10 +83,11 @@ int main()
 
     float posX = tamImageX / 2, posY = tamImgaeY / 2;
 
+    /*
     sf::Sprite sprite;
     sprite.setTexture(texture);
     sprite.setPosition(sf::Vector2f(posX, posY));
-    spriList.push_back(tuple<float, float, sf::Sprite>(0.3, -1, sprite));
+    spriList.push_back(tuple<float, float, sf::Sprite>(0.3, -1, sprite));*/
 
     //window.draw(shape);
     while (window.isOpen())
@@ -113,7 +117,7 @@ int main()
             }
         }
         window.display();
-        sleep(0.6);
+        std::this_thread::sleep_for(std::chrono::milliseconds(6));
     }
 
     return 0;
