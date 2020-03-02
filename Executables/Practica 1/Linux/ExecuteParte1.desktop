@@ -1,8 +1,0 @@
-[Desktop Entry]
-Name=ExecuteParte1
-Comment=Test hello world script
-Exec=bash -c "export PATH=$PATH:`dirname %k`; ./Parte1"
-Icon=/home/rankern/Practicas/Videogames/Executables/Practica 1/Linux/image.jpeg
-Terminal=false
-Type=Application
-Name[es_ES]=ExecuteParte1
