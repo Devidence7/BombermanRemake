@@ -79,26 +79,41 @@ public:
 		velocity.y = 0;
 
 		if (playerDown) {
-			velocity.x = speedBoost;
+			velocity.y = speedBoost;
 			lastMovement = 0;
 		}
 		if (playerUp) {
-			velocity.x = -speedBoost;
+			velocity.y = -speedBoost;
 			lastMovement = 1;
 		}
 		if (playerLeft) {
-			velocity.y = -speedBoost;
+			velocity.x = -speedBoost;
 			lastMovement = 2;
 		}
 		if (playerRight) {
-			velocity.y = speedBoost;
+			velocity.x = speedBoost;
 			lastMovement = 3;
+		}
+
+		// Collision test
+		std::cout << getGlobalBounds().top << " * " << velocity.y << std::endl;
+		if (getGlobalBounds().top <= 0 && velocity.y < 0) {
+			velocity.y = 0;
+		}
+		if (getGlobalBounds().top + frameSize.y >= 600 && velocity.y > 0) {
+			velocity.y = 0;
+		}
+		if (getGlobalBounds().left <= 0 && velocity.x < 0) {
+			velocity.x = 0;
+		}
+		if (getGlobalBounds().left + frameSize.x >= 800 && velocity.x > 0) {
+			velocity.x = 0;
 		}
 
 		// Call animate to change current sprite if needed.
 		animate(velocity);
 
 		// Move Entity position
-		move(velocity.y, velocity.x);
+		move(velocity.x, velocity.y);
 	}
 };
