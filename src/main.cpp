@@ -10,21 +10,12 @@ int windowsWidth = 800;
 
 int main(int argc, char* argv[]) {
 	// Create the main window
-	sf::RenderWindow window(sf::VideoMode(windowsWidth, windowsHeight), "Bomberman");
+	sf::RenderWindow window(sf::VideoMode(windowsWidth, windowsHeight), "BomberMenaman");
 
 	// Make maximun FPSs to 60. Somewhat control the player speed.
 	window.setFramerateLimit(60);
 
-	// Texture
-	sf::Texture bombermanTexture;
-	if (!bombermanTexture.loadFromFile("../textures/Entities/WhiteBombermanSprites.png")) {
-		std::cerr << "Unable to load texture:" << std::endl;
-		std::cerr << "Texture location: ../textures/Entities/WhiteBombermanSprites.png" << std::endl;
-		std::cerr << "Exec path: " << argv[0] << std::endl;
-	}
-
-	bool playerUp, playerDown, playerLeft, playerRight = false;
-	auto player = PlayerEntity(bombermanTexture);
+	auto player = PlayerEntity();
 
 	// Start game loop
 	while (window.isOpen()) {
@@ -37,18 +28,8 @@ int main(int argc, char* argv[]) {
 			}
 		}
 
-		// Player movement
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) { playerRight = true; }
-		else { playerRight = false; }
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::A)) { playerLeft = true; }
-		else { playerLeft = false; }
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::W)) { playerUp = true; }
-		else { playerUp = false; }
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) { playerDown = true; }
-		else { playerDown = false; }
-
 		// TODO PLAYER MOVEMENT MUST NOT DEPENT ON PROCESSOR SPEED THIS IS SHIIIIIIIIT
-		player.update(playerDown, playerUp, playerLeft, playerRight);
+		player.update();
 
 		// Clear screen from previous drawings
 		window.clear();

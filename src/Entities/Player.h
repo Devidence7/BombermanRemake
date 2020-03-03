@@ -7,7 +7,7 @@ public:
 	/* 
 	Constructor of Entity
 	*/
-	PlayerEntity(sf::Texture& t) : Entity() {
+	PlayerEntity() : Entity() {
 		// Speed
 		speedBoost = 5;
 		velocity.x = 0;
@@ -27,6 +27,12 @@ public:
 		frameSize.y = 75;
 
 		// Get texture sprites:
+		if (!texture.loadFromFile("../textures/Entities/WhiteBombermanSprites.png")) {
+			std::cerr << "Unable to load texture:" << std::endl;
+			std::cerr << "Texture location: ../textures/Entities/WhiteBombermanSprites.png" << std::endl;
+		}
+
+		// Save sprites positions in a array
 		for (int y = 0; y < 4; y++) {
 			for (int x = 0; x < 3; x++) {
 				sf::IntRect frame(15 + frameSize.x * x, 24 + frameSize.y * y, frameSize.x, frameSize.y);
@@ -37,7 +43,7 @@ public:
 		// Set starting sprite
 		setTextureRect(frames[0]);
 		// Set sprite Sheet texture
-		setTexture(t);
+		setTexture(texture);
 	}
 
 	/*
@@ -62,7 +68,13 @@ public:
 	/*
 	 * Update player position.
 	 */
-	void update(bool playerDown, bool playerUp, bool playerLeft, bool playerRight) {
+	void update() {
+		// Player movement
+		bool playerRight = (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D));
+		bool playerLeft = (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::A));
+		bool playerUp = (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::W));
+		bool playerDown = (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S));
+
 		velocity.x = 0;
 		velocity.y = 0;
 

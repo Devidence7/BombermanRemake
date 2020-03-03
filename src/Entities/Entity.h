@@ -10,6 +10,8 @@ public:
 
 	std::vector<sf::IntRect> frames; // Frames of the Entity animation
 
+	sf::Texture texture; // Entity Texture
+
 	int	animationCounter,
 		walkFrames,  // Number of walking sprites
 		walkCounter,  // Number of walking sprites
