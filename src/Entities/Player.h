@@ -58,8 +58,8 @@ public:
 			// If there is speed set walking sprites
 			animationCounter %= walkSpeed;
 			if (animationCounter == 0) {
-				walkCounter = (walkCounter + 1) % walkFrames;
-				setTextureRect(frames[(1 + walkCounter) + 3 * lastMovement]);
+				walkCounter = (walkCounter + 1) % (walkFrames + 1);
+				setTextureRect(frames[(walkCounter) + 3 * lastMovement]);
 			}
 		}
 		animationCounter++;
