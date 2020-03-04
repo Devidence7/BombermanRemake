@@ -1,10 +1,15 @@
 #pragma once
 #include <iostream>
 #include <SFML/Graphics.hpp>
+
+#include "../Textures/PlayerTexture.hpp"
 #include "Entity.h"
 
 class PlayerEntity : public Entity {
 public:
+	PlayerTexture entityTexture;
+	PlayerTexture::LookingAt lastMovement; // Save last looked direction
+	
 	/* 
 	Constructor of Entity
 	*/
@@ -14,37 +19,14 @@ public:
 		velocity.x = 0;
 		velocity.y = 0;
 
-		// Initialize sprite counters
-		walkCounter = 0;
-		walkFrames = 4;
-		idleCounter = 0;
-		idleFrames = 1;
-		walkSpeed = 8;
-		idleSpeed = 10;
+		lastMovement = PlayerTexture::down;
 
-		lastMovement = 0;
-
-		frameSize.x = 57;
-		frameSize.y = 75;
-
-		// Get texture sprites:
-		if (!texture.loadFromFile("../textures/Entities/BombermanSpriteSheet.png")) {
-			std::cerr << "Unable to load texture:" << std::endl;
-			std::cerr << "Texture location: ../textures/Entities/BombermanSpriteSheet.png" << std::endl;
-		}
-
-		// Save sprites positions in a array
-		for (int y = 0; y < 4; y++) {
-			for (int x = 0; x < 4; x++) {
-				sf::IntRect frame(frameSize.x * x, frameSize.y * y, frameSize.x, frameSize.y);
-				frames.push_back(frame);
-			}
-		}
-		
+		// Texture Controller:
+		entityTexture = PlayerTexture();
 		// Set starting sprite
-		setTextureRect(frames[0]);
+		setTextureRect(entityTexture.getIdleSprite(lastMovement));
 		// Set sprite Sheet texture
-		setTexture(texture);
+		setTexture(entityTexture.getTexture());
 	}
 
 	/*
@@ -53,17 +35,15 @@ public:
 	void animate(sf::Vector2f velocity) {
 		if (velocity.x == 0 && velocity.y == 0) {
 			// If there is not speed set idle sprite
-			setTextureRect(frames[lastMovement * 4]);
+			setTextureRect(entityTexture.getIdleSprite(lastMovement));
 		}
 		else {
-			// If there is speed set walking sprites
-			animationCounter %= walkSpeed;
-			if (animationCounter == 0) {
-				walkCounter = (walkCounter + 1) % walkFrames;
-				setTextureRect(frames[walkCounter + 4 * lastMovement]);
+			// If there is speed we must update animation sprite every X time
+			if(entityTexture.mustChangeSprite())
+			{
+				setTextureRect(entityTexture.getWalkingSprite(lastMovement));
 			}
 		}
-		animationCounter++;
 	}
 
 	/*
@@ -81,34 +61,19 @@ public:
 
 		if (playerDown) {
 			velocity.y = speedBoost;
-			lastMovement = 0;
+			lastMovement = PlayerTexture::down;
 		}
 		if (playerUp) {
 			velocity.y = -speedBoost;
-			lastMovement = 1;
+			lastMovement = PlayerTexture::up;
 		}
 		if (playerLeft) {
 			velocity.x = -speedBoost;
-			lastMovement = 2;
+			lastMovement = PlayerTexture::left;
 		}
 		if (playerRight) {
 			velocity.x = speedBoost;
-			lastMovement = 3;
-		}
-
-		// Collision test
-		std::cout << getGlobalBounds().top << " * " << velocity.y << std::endl;
-		if (getGlobalBounds().top <= 0 && velocity.y < 0) {
-			velocity.y = 0;
-		}
-		if (getGlobalBounds().top + frameSize.y >= 600 && velocity.y > 0) {
-			velocity.y = 0;
-		}
-		if (getGlobalBounds().left <= 0 && velocity.x < 0) {
-			velocity.x = 0;
-		}
-		if (getGlobalBounds().left + frameSize.x >= 800 && velocity.x > 0) {
-			velocity.x = 0;
+			lastMovement = PlayerTexture::right;
 		}
 
 		// Call animate function to change current sprite if needed.

@@ -4,11 +4,14 @@
 
 #include <SFML/Graphics.hpp>
 class TextureVector {
-	protected:
+
+protected:
 	std::vector<sf::IntRect> frames; // Frames of the Entity animation
 	sf::Texture texture; // Entity Texture
 
-	public:
-	TextureVector(){}
-
+public:
+	
+	sf::Texture& getTexture() {
+		return this->texture;
+	}
 };
