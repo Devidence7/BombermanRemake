@@ -1,11 +1,19 @@
 #include <SFML/Graphics.hpp>
 
 #include "Entities/Player.h"
+#include "GameEngine.hpp"
+//#include "Map/Map.hpp"
 
 int windowsHeight = 600;
 int windowsWidth = 800;
 
 int main(int argc, char* argv[]) {
+
+	//Inicializar Texturas
+	
+	
+	//Inicializar ventana
+	
 	// Create the main window
 	//unsigned int desktopWidth = sf::VideoMode::getDesktopMode().width;
 	//unsigned int desktopHeight = sf::VideoMode::getDesktopMode().height;
@@ -13,9 +21,8 @@ int main(int argc, char* argv[]) {
 
 	// Make maximum FPSs to 60. Somewhat control the player speed.
 	window.setFramerateLimit(60);
-
-	auto player = PlayerEntity();
-
+	
+	Game game;
 	// Start game loop
 	while (window.isOpen()) {
 		// Process events
@@ -28,13 +35,13 @@ int main(int argc, char* argv[]) {
 		}
 
 		// TODO PLAYER MOVEMENT MUST NOT DEPEND ON PROCESSOR SPEED THIS IS SHIIIIIIIIT
-		player.update();
+		game.update();
 
 		// Clear screen from previous drawings
 		window.clear();
-
+		game.draw(window);
 		// Draw the player in the scene
-		window.draw(player);
+		//window.draw(player);
 
 		// Update window
 		window.display();
