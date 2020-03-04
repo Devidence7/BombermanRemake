@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include <SFML/Graphics.hpp>
 #include "Entity.h"
 
@@ -13,7 +14,7 @@ public:
 		velocity.x = 0;
 		velocity.y = 0;
 
-		// Inicialize sprite counters
+		// Initialize sprite counters
 		walkCounter = 0;
 		walkFrames = 2;
 		idleCounter = 0;
@@ -119,7 +120,7 @@ public:
 			velocity.x = 0;
 		}
 
-		// Call animate to change current sprite if needed.
+		// Call animate function to change current sprite if needed.
 		animate(velocity);
 
 		// Move Entity position

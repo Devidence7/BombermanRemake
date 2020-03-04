@@ -1,18 +1,17 @@
 #include <SFML/Graphics.hpp>
-#include <iostream>
-#include <vector>
 
 #include "Entities/Player.h"
 
 int windowsHeight = 600;
 int windowsWidth = 800;
 
-
 int main(int argc, char* argv[]) {
 	// Create the main window
-	sf::RenderWindow window(sf::VideoMode(windowsWidth, windowsHeight), "BomberMenaman");
+	//unsigned int desktopWidth = sf::VideoMode::getDesktopMode().width;
+	//unsigned int desktopHeight = sf::VideoMode::getDesktopMode().height;
+	sf::RenderWindow window(sf::VideoMode(800, 600), "BomberMenaman"); // sf::Style::Fullscreen
 
-	// Make maximun FPSs to 60. Somewhat control the player speed.
+	// Make maximum FPSs to 60. Somewhat control the player speed.
 	window.setFramerateLimit(60);
 
 	auto player = PlayerEntity();
@@ -28,7 +27,7 @@ int main(int argc, char* argv[]) {
 			}
 		}
 
-		// TODO PLAYER MOVEMENT MUST NOT DEPENT ON PROCESSOR SPEED THIS IS SHIIIIIIIIT
+		// TODO PLAYER MOVEMENT MUST NOT DEPEND ON PROCESSOR SPEED THIS IS SHIIIIIIIIT
 		player.update();
 
 		// Clear screen from previous drawings
