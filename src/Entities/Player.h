@@ -16,7 +16,7 @@ public:
 
 		// Initialize sprite counters
 		walkCounter = 0;
-		walkFrames = 2;
+		walkFrames = 4;
 		idleCounter = 0;
 		idleFrames = 1;
 		walkSpeed = 8;
@@ -24,19 +24,19 @@ public:
 
 		lastMovement = 0;
 
-		frameSize.x = 51;
+		frameSize.x = 57;
 		frameSize.y = 75;
 
 		// Get texture sprites:
-		if (!texture.loadFromFile("../textures/Entities/WhiteBombermanSprites.png")) {
+		if (!texture.loadFromFile("../textures/Entities/BombermanSpriteSheet.png")) {
 			std::cerr << "Unable to load texture:" << std::endl;
-			std::cerr << "Texture location: ../textures/Entities/WhiteBombermanSprites.png" << std::endl;
+			std::cerr << "Texture location: ../textures/Entities/BombermanSpriteSheet.png" << std::endl;
 		}
 
 		// Save sprites positions in a array
 		for (int y = 0; y < 4; y++) {
-			for (int x = 0; x < 3; x++) {
-				sf::IntRect frame(15 + frameSize.x * x, 24 + frameSize.y * y, frameSize.x, frameSize.y);
+			for (int x = 0; x < 4; x++) {
+				sf::IntRect frame(frameSize.x * x, frameSize.y * y, frameSize.x, frameSize.y);
 				frames.push_back(frame);
 			}
 		}
@@ -53,23 +53,14 @@ public:
 	void animate(sf::Vector2f velocity) {
 		if (velocity.x == 0 && velocity.y == 0) {
 			// If there is not speed set idle sprite
-			setTextureRect(frames[lastMovement * 3]);
+			setTextureRect(frames[lastMovement * 4]);
 		}
 		else {
 			// If there is speed set walking sprites
 			animationCounter %= walkSpeed;
 			if (animationCounter == 0) {
-				walkCounter = (walkCounter + 1) % (walkFrames + 2);
-				int walkFrame = 0;
-				switch (walkCounter) {
-				case 1:
-					walkFrame = 1;
-					break;
-				case 3:
-					walkFrame = 2;
-					break;
-				}
-				setTextureRect(frames[walkFrame + 3 * lastMovement]);
+				walkCounter = (walkCounter + 1) % walkFrames;
+				setTextureRect(frames[walkCounter + 4 * lastMovement]);
 			}
 		}
 		animationCounter++;
