@@ -1,28 +1,74 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <list>
+
+#include "Exceptions/ExceptionsGame.hpp"
+
 using namespace sf;
 
-class Game{
-private:
-    // A regular RenderWindow
-    RenderWindow m_Window;  
+
+/**
+ * 
+ * Esta clase se encarga de gestionar la lógica del juego
+ * 
+ */
  
-    // Declare a sprite and a Texture for the background
-    Sprite m_BackgroundSprite;
-    Texture m_BackgroundTexture;
- 
-    // An instance of Bob
-    //Bob m_Bob;
- 
-    // Private functions for internal use only
-    //void input();
-    void update(float dtAsSeconds);
-    void draw();
- 
+class Level
+{
+    int level = 1;
+    Sprite BackgroundSprite;
+    Texture BackgroundTexture;
+    std::list<Sprite> enemies;
+    std::list<Sprite> walls;
+
 public:
-    // The Game constructor
-    Game();
-    // start will call all the private functions
-    void start();
+    Level() {}
+    Level(int _level) : level(_level)
+    {
+        if (!this->BackgroundTexture.loadFromFile("../Assets/map_sprites.png"))
+        {
+            throw ExceptionLoadImage("Error al cargar imagen de fondo");
+        }
+        this->BackgroundSprite = Sprite(this->BackgroundTexture);
+        //sf::IntRect frame(0, 0, 496, 225);
+        //BackgroundSprite.setTextureRect(frame);
+        //BackgroundSprite.setTexture(BackgroundTexture);
+        
+        //Instanciar pilares
+        //Instanciar jugador
+        //Instanciar enemigos (Guardar margen con jugador de X casillas)
+        //Instanciar muros
+        
+
+        // Associate the sprite with the texture
+    }
+
+    Sprite & getBackground(){
+        return this->BackgroundSprite;
+    }
+
+    void draw(RenderWindow *w);
 };
 
+
+/**
+ * 
+ * Clase encargada de inicialización de niveles.
+ * Mostrará al comienzo el menú
+ * Mostrará al morir el Game Over
+ */ 
+
+class Game
+{
+private:
+    RenderWindow m_Window;
+    Level level;
+    Sprite BackgroundSprite;
+    Texture BackgroundTexture;
+    void update(float dtAsSeconds);
+    void draw();
+
+public:
+    Game();
+    void start();
+};
