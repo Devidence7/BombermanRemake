@@ -4,6 +4,11 @@
 
 #include "Exceptions/ExceptionsGame.hpp"
 
+#include "Map/Map.hpp"
+#include "Entities/Player.h"
+#include "Textures/ball_wall_Texture.h"
+
+
 using namespace sf;
 
 
@@ -16,38 +21,15 @@ using namespace sf;
 class Level
 {
     int level = 1;
-    Sprite BackgroundSprite;
-    Texture BackgroundTexture;
-    std::list<Sprite> enemies;
-    std::list<Sprite> walls;
-
+    Map map;
 public:
-    Level() {}
-    Level(int _level) : level(_level)
+    Level(int _level, Ball_Wall &bw) : level(_level), map(bw)
     {
-        if (!this->BackgroundTexture.loadFromFile("../Assets/map_sprites.png"))
-        {
-            throw ExceptionLoadImage("Error al cargar imagen de fondo");
-        }
-        this->BackgroundSprite = Sprite(this->BackgroundTexture);
-        //sf::IntRect frame(0, 0, 496, 225);
-        //BackgroundSprite.setTextureRect(frame);
-        //BackgroundSprite.setTexture(BackgroundTexture);
-        
-        //Instanciar pilares
-        //Instanciar jugador
-        //Instanciar enemigos (Guardar margen con jugador de X casillas)
-        //Instanciar muros
-        
-
-        // Associate the sprite with the texture
     }
 
-    Sprite & getBackground(){
-        return this->BackgroundSprite;
+    void draw(RenderWindow &w){
+        map.Draw(w);
     }
-
-    void draw(RenderWindow *w);
 };
 
 
@@ -61,14 +43,20 @@ public:
 class Game
 {
 private:
-    RenderWindow m_Window;
+    Ball_Wall ball_walls;
     Level level;
     Sprite BackgroundSprite;
-    Texture BackgroundTexture;
-    void update(float dtAsSeconds);
-    void draw();
-
+    PlayerEntity player;
 public:
-    Game();
+    Game(): level(1, ball_walls){
+        
+    }
     void start();
+    void update(){
+        player.update();
+    }
+    void draw(RenderWindow &w){
+        level.draw(w);
+        w.draw(player);
+    }
 };
