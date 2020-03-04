@@ -5,7 +5,7 @@
 
 class Entity : public sf::Sprite {
 public:
-	float speedBoost; // Base Entity Speed (TODO Make baseSpeed parameter too)
+	float baseSpeed;// Base Entity Speed 
 	sf::Vector2f velocity; // Speed of the Entity right now.
 	sf::Vector2f size; // Size of the Entity
 

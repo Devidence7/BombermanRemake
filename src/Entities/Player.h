@@ -7,6 +7,9 @@
 
 class PlayerEntity : public Entity {
 public:
+	unsigned int lifes;
+	float speedBoost;
+	
 	PlayerTexture entityTexture;
 	PlayerTexture::LookingAt lastMovement; // Save last looked direction
 	
@@ -15,6 +18,8 @@ public:
 	*/
 	PlayerEntity() : Entity() {
 		// Speed
+		lifes = 3;
+		baseSpeed = 1;
 		speedBoost = 5;
 		velocity.x = 0;
 		velocity.y = 0;
@@ -56,23 +61,25 @@ public:
 		bool playerUp = (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::W));
 		bool playerDown = (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S));
 
+		bool playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
+
 		velocity.x = 0;
 		velocity.y = 0;
 
 		if (playerDown) {
-			velocity.y = speedBoost;
+			velocity.y = baseSpeed * speedBoost;
 			lastMovement = PlayerTexture::down;
 		}
 		if (playerUp) {
-			velocity.y = -speedBoost;
+			velocity.y = -baseSpeed * speedBoost;
 			lastMovement = PlayerTexture::up;
 		}
 		if (playerLeft) {
-			velocity.x = -speedBoost;
+			velocity.x = -baseSpeed * speedBoost;
 			lastMovement = PlayerTexture::left;
 		}
 		if (playerRight) {
-			velocity.x = speedBoost;
+			velocity.x = baseSpeed * speedBoost;
 			lastMovement = PlayerTexture::right;
 		}
 
