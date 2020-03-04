@@ -40,13 +40,14 @@ public:
  * Mostrará al morir el Game Over
  */ 
 
+
 class Game
 {
 private:
     Ball_Wall ball_walls;
     Level level;
-    Sprite BackgroundSprite;
     PlayerEntity player;
+    
 public:
     Game(): level(1, ball_walls){
         

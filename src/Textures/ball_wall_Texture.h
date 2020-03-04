@@ -22,11 +22,10 @@ class Ball_Wall : public TextureVector {
 	}
 
 	sf::IntRect &getRectWall(){
-		this->frames[1];
+		return this->frames[1];
 	}
 
 	sf::IntRect &getRectPillar(){
-		this->frames[0];
+		return this->frames[0];
 	}
-
 };
