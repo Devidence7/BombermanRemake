@@ -1,46 +1,47 @@
 #pragma once
 #include <iostream>
 #include "../Textures/BombTexture.h"
+#include "../Textures/FireTexture.h"
 #include "Entity.h"
 
 class Bomb : public Entity {
 public:
-	BombTexture *entityTexture;
+	BombTexture* bombTexture;
+	FireTexture* fireTexture;
 	int spriteCounter;
 	int spriteSpeed;
 	int actualFrame;
 	int spriteFrames;
 
 	int explosionCounter;
-	
-	Bomb(BombTexture &bt)
-	{
+
+	Bomb(BombTexture& bt, FireTexture& ft) {
 		spriteCounter = 0;
 		spriteSpeed = 15;
 		actualFrame = 0;
 		spriteFrames = 3;
 		explosionCounter = 0;
-		
+
 		// Texture Controller:
-		entityTexture = &bt;
+		bombTexture = &bt;
+		fireTexture = &ft;
 		// Set starting sprite
-		setTextureRect(entityTexture->getFrame(0));
+		setTextureRect(bombTexture->getFrame(0));
 		// Set sprite Sheet texture
-		setTexture(entityTexture->getTexture());
+		setTexture(bombTexture->getTexture());
 	}
 
-	void Entity::update() override
-	{
+	void Entity::update() override {
 		explosionCounter++;
-		if(explosionCounter >= 300){
+		if (explosionCounter >= 300) {
 			expiredEntity = true;
 		}
-		
+
 		spriteCounter++;
 		spriteCounter %= spriteSpeed;
 		if (spriteCounter == 0) {
 			actualFrame = (actualFrame + 1) % spriteFrames;
-			setTextureRect(entityTexture->getFrame(actualFrame));
+			setTextureRect(bombTexture->getFrame(actualFrame));
 		}
 	}
 };

@@ -72,6 +72,7 @@ private:
 	Level level;
 	Sprite BackgroundSprite;
 	PlayerEntity player;
+	
 public:
 	Game() : level(1, ball_walls) {
 		textureStorage = TextureStorage();
@@ -82,7 +83,7 @@ public:
 		level.update();
 		if (player.updatePlayer())
 		{
-			Bomb *b = new Bomb(textureStorage.getBombTexture());
+			Bomb *b = new Bomb(textureStorage.getBombTexture(), textureStorage.getFireTexture());
 			b->setPosition(player.getPosition());
 			level.addEntity(b);
 		}
