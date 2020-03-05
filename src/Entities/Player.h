@@ -48,7 +48,7 @@ public:
 		}
 	}
 
-	void Entity::Eat() override {
+	void Entity::update() override {
 		return;
 	}
 

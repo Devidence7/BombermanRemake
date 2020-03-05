@@ -9,5 +9,5 @@ public:
 
 	bool expiredEntity = false; // Mark the entity as expired to be deleted
 
-	virtual void Eat(void) = 0;
+	virtual void update(void) = 0;
 };

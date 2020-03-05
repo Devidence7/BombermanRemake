@@ -29,7 +29,7 @@ public:
 		// This is made this way because we need to erase element from a vector while we are iterating
 		while (it != entities.end()) {
 			// Update the entities.
-			(*it)->Eat();
+			(*it)->update();
 			if ((*it)->expiredEntity) {
 				// Remove the entity from the list of entities if it expired.
 				it = entities.erase(it);

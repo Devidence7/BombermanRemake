@@ -10,6 +10,8 @@ public:
 	int spriteSpeed;
 	int actualFrame;
 	int spriteFrames;
+
+	int explosionCounter;
 	
 	Bomb(BombTexture &bt)
 	{
@@ -17,6 +19,7 @@ public:
 		spriteSpeed = 15;
 		actualFrame = 0;
 		spriteFrames = 3;
+		explosionCounter = 0;
 		
 		// Texture Controller:
 		entityTexture = &bt;
@@ -26,9 +29,13 @@ public:
 		setTexture(entityTexture->getTexture());
 	}
 
-	void Entity::Eat() override
+	void Entity::update() override
 	{
-		std::cout << "Hey" << std::endl;
+		explosionCounter++;
+		if(explosionCounter >= 300){
+			expiredEntity = true;
+		}
+		
 		spriteCounter++;
 		spriteCounter %= spriteSpeed;
 		if (spriteCounter == 0) {
