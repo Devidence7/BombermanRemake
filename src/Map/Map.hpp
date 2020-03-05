@@ -1,19 +1,17 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
-
-
-#include "../Entities/Entity.h"
+#include "../Textures/WallTexture.h"
 #include "wall.hpp"
-#include "../Textures/ball_wall_Texture.h"
+
 
 class Map {
-	Ball_Wall& Pillars_Balls;
+	WallTexture& Pillars_Balls;
 	std::vector<WallBlock> active_walls;
 	std::vector<sf::Sprite> pillars;
 	sf::RectangleShape floor;
 
 public:
-	Map(Ball_Wall& bw) : Pillars_Balls(bw) {
+	Map(WallTexture& bw) : Pillars_Balls(bw) {
 		//Suelo
 		floor.setSize(sf::Vector2f(1600, 1200));
 		floor.setFillColor(sf::Color(0, 100, 0));

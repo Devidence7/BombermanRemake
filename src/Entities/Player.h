@@ -1,8 +1,6 @@
 #pragma once
-#include <iostream>
 #include <SFML/Graphics.hpp>
 #include "../Textures/PlayerTexture.hpp"
-#include "Bomb.h"
 #include "Entity.h"
 
 class PlayerEntity : public Entity {
@@ -13,14 +11,10 @@ public:
 	PlayerTexture entityTexture;
 	PlayerTexture::LookingAt lastMovement; // Save last looked direction
 
-	//Map* map;
-
 	/*
 	Constructor of Entity
 	*/
-	PlayerEntity() : Entity() {
-		//map = &m;
-
+	PlayerEntity() {
 		// Speed
 		lifes = 3;
 		baseSpeed = 1;
@@ -54,10 +48,15 @@ public:
 		}
 	}
 
+	void Entity::Eat() override {
+		return;
+	}
+
+
 	/*
 	 * Update player position.
 	 */
-	void update() {
+	bool updatePlayer() {
 		// Player movement
 		bool playerRight = (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D));
 		bool playerLeft = (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::A));
@@ -89,12 +88,12 @@ public:
 		// Call animate function to change current sprite if needed.
 		animate(velocity);
 
-		if (playerBOMB) {
-			Bomb b = Bomb();
-			//map->addEntity(b);
-		}
-
 		// Move Entity position
 		move(velocity.x, velocity.y);
+
+		if (playerBOMB) {
+			return true;
+		}
+		return false;
 	}
 };

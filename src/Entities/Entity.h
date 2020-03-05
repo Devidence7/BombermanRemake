@@ -1,8 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-#include "../Textures/texture.h"
-
 class Entity : public sf::Sprite {
 public:
 	float baseSpeed;// Base Entity Speed 
@@ -11,16 +9,5 @@ public:
 
 	bool expiredEntity = false; // Mark the entity as expired to be deleted
 
-	/* 
-	*  Constructor of Entity
-	*/
-	Entity() : Sprite() {
-
-	}
-
-	virtual void update()
-	{
-		
-	}
-
+	virtual void Eat(void) = 0;
 };

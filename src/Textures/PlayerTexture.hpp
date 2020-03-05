@@ -1,8 +1,7 @@
 #pragma once
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include "../Exceptions/ExceptionsGame.hpp"
-#include "texture.h"
+#include "TextureVector.h"
 
 class PlayerTexture : public TextureVector {
 

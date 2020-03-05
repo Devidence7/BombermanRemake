@@ -1,12 +1,9 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <list>
-
-#include "Exceptions/ExceptionsGame.hpp"
-
+#include "Entities/Bomb.h"
 #include "Map/Map.hpp"
 #include "Entities/Player.h"
-#include "Textures/ball_wall_Texture.h"
+#include "Textures/TextureStorage.h"
 
 
 using namespace sf;
@@ -21,27 +18,26 @@ using namespace sf;
 class Level {
 	int level = 1;
 	Map map;
-	std::vector<Entity> entities;
+	std::vector<Entity*> entities;
 
 public:
-	Level(int _level, Ball_Wall& bw) : level(_level), map(bw) {
+	Level(int _level, WallTexture& bw) : level(_level), map(bw) {
 	}
 
 	void update() {
 		auto it = entities.begin();
-
+		// This is made this way because we need to erase element from a vector while we are iterating
 		while (it != entities.end()) {
-			it->update();
-			if (it->expiredEntity) {
+			// Update the entities.
+			(*it)->Eat();
+			if ((*it)->expiredEntity) {
+				// Remove the entity from the list of entities if it expired.
 				it = entities.erase(it);
 			}
 			else {
 				++it;
 			}
 		}
-
-
-
 	}
 
 	void draw(RenderWindow& w) {
@@ -49,13 +45,12 @@ public:
 		map.Draw(w);
 
 		// Draw the entities
-		for (Entity& e : entities) {
-			w.draw(e);
+		for (auto e : entities) {
+			w.draw(*e);
 		}
 	}
 
-
-	void addEntity(Entity& e) {
+	void addEntity(Entity* e) {
 		entities.push_back(e);
 	}
 
@@ -71,19 +66,25 @@ public:
 
 class Game {
 private:
-	Ball_Wall ball_walls;
+	WallTexture ball_walls;
+	TextureStorage textureStorage;
 	Level level;
 	Sprite BackgroundSprite;
 	PlayerEntity player;
 public:
 	Game() : level(1, ball_walls) {
-
+		textureStorage = TextureStorage();
 	}
 	void start();
 
 	void update() {
 		level.update();
-		player.update();
+		if (player.updatePlayer())
+		{
+			Bomb *b = new Bomb(textureStorage.getBombTexture());
+			b->setPosition(player.getPosition());
+			level.addEntity(b);
+		}
 	}
 
 	void draw(RenderWindow& w) {
