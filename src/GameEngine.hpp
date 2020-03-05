@@ -32,6 +32,7 @@ public:
 			(*it)->update();
 			if ((*it)->expiredEntity) {
 				// Remove the entity from the list of entities if it expired.
+				delete(*it);
 				it = entities.erase(it);
 			}
 			else {
