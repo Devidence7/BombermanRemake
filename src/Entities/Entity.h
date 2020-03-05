@@ -9,11 +9,18 @@ public:
 	sf::Vector2f velocity; // Speed of the Entity right now.
 	sf::Vector2f size; // Size of the Entity
 
+	bool expiredEntity = false; // Mark the entity as expired to be deleted
+
 	/* 
 	*  Constructor of Entity
 	*/
 	Entity() : Sprite() {
 
+	}
+
+	virtual void update()
+	{
+		
 	}
 
 };

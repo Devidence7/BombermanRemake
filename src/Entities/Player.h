@@ -1,22 +1,26 @@
 #pragma once
 #include <iostream>
 #include <SFML/Graphics.hpp>
-
 #include "../Textures/PlayerTexture.hpp"
+#include "Bomb.h"
 #include "Entity.h"
 
 class PlayerEntity : public Entity {
 public:
 	unsigned int lifes;
 	float speedBoost;
-	
+
 	PlayerTexture entityTexture;
 	PlayerTexture::LookingAt lastMovement; // Save last looked direction
-	
-	/* 
+
+	//Map* map;
+
+	/*
 	Constructor of Entity
 	*/
 	PlayerEntity() : Entity() {
+		//map = &m;
+
 		// Speed
 		lifes = 3;
 		baseSpeed = 1;
@@ -44,8 +48,7 @@ public:
 		}
 		else {
 			// If there is speed we must update animation sprite every X time
-			if(entityTexture.mustChangeSprite())
-			{
+			if (entityTexture.mustChangeSprite()) {
 				setTextureRect(entityTexture.getWalkingSprite(lastMovement));
 			}
 		}
@@ -85,6 +88,11 @@ public:
 
 		// Call animate function to change current sprite if needed.
 		animate(velocity);
+
+		if (playerBOMB) {
+			Bomb b = Bomb();
+			//map->addEntity(b);
+		}
 
 		// Move Entity position
 		move(velocity.x, velocity.y);
