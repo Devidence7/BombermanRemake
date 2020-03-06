@@ -6,6 +6,7 @@
 class PlayerEntity : public Entity {
 public:
 	unsigned int lifes;
+	unsigned int bombsTimeLimit;
 	float speedBoost;
 
 	PlayerTexture entityTexture;
@@ -65,6 +66,17 @@ public:
 
 		bool playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
 
+		// TODO: Remove this
+		if (playerBOMB) {
+			if (bombsTimeLimit < 30) {
+				playerBOMB = false;
+			}
+			else {
+				bombsTimeLimit = 0;
+			}
+		}
+		bombsTimeLimit++;
+		
 		velocity.x = 0;
 		velocity.y = 0;
 

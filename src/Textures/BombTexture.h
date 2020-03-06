@@ -13,7 +13,7 @@ public:
 		}
 
 		for (int i = 0; i < 3; i++) {
-			this->frames.push_back(sf::IntRect(0 + 49 * i, 0, 48, 48));
+			this->frames.push_back(sf::IntRect(0 + 51 * i, 0, 48, 48));
 		}
 	}
 

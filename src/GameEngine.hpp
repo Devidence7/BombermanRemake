@@ -31,6 +31,15 @@ public:
 			// Update the entities.
 			(*it)->update();
 			if ((*it)->expiredEntity) {
+
+				// If it is a bomb
+				Bomb *b;
+				if ((b = dynamic_cast<Bomb*>(*it)) != nullptr) {
+					Fire* f = new Fire(b->getFireTexture());
+					f->setPosition(b->getPosition());
+					//addEntity(f);
+				}
+				
 				// Remove the entity from the list of entities if it expired.
 				delete(*it);
 				it = entities.erase(it);
