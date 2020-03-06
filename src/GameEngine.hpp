@@ -22,6 +22,7 @@ class Level {
 
 public:
 	Level(int _level, WallTexture& bw) : level(_level), map(bw) {
+		entities.reserve(10000);
 	}
 
 	void update() {
@@ -33,16 +34,17 @@ public:
 			if ((*it)->expiredEntity) {
 
 				// If it is a bomb
-				Bomb *b;
+				Bomb* b;
 				if ((b = dynamic_cast<Bomb*>(*it)) != nullptr) {
 					int pos = entities.begin() - it;
-					Fire* f = new Fire(b->getFireTexture());
-					f->setPosition(b->getPosition());
-					addEntity(f);
 
+					// Create fires
+					createFires(b);
+
+					// When adding entities vector iterator can be invalidated:
 					it = entities.begin() + pos;
 				}
-				
+
 				// Remove the entity from the list of entities if it expired.
 				delete(*it);
 				it = entities.erase(it);
@@ -67,6 +69,29 @@ public:
 		entities.push_back(e);
 	}
 
+	void createFires(Bomb* b) {
+		// Central:
+		Fire* f = new Fire(b->getFireTexture());
+		f->setPosition(b->getPosition());
+		addEntity(f);
+		// Down:
+		f = new Fire(b->getFireTexture(),2);
+		f->setPosition(b->getPosition().x, b->getPosition().y + 48);
+		addEntity(f);
+		// Up:
+		f = new Fire(b->getFireTexture(), 3);
+		f->setPosition(b->getPosition().x, b->getPosition().y - 48);
+		addEntity(f);
+		// Left:
+		f = new Fire(b->getFireTexture(), 6);
+		f->setPosition(b->getPosition().x - 48, b->getPosition().y);
+		addEntity(f);
+		// Right:
+		f = new Fire(b->getFireTexture(), 5);
+		f->setPosition(b->getPosition().x + 48, b->getPosition().y);
+		addEntity(f);
+	}
+
 };
 
 
@@ -84,7 +109,7 @@ private:
 	Level level;
 	Sprite BackgroundSprite;
 	PlayerEntity player;
-	
+
 public:
 	Game() : level(1, ball_walls) {
 		textureStorage = TextureStorage();
@@ -93,9 +118,8 @@ public:
 
 	void update() {
 		level.update();
-		if (player.updatePlayer())
-		{
-			Bomb *b = new Bomb(textureStorage.getBombTexture(), textureStorage.getFireTexture());
+		if (player.updatePlayer()) {
+			Bomb* b = new Bomb(textureStorage.getBombTexture(), textureStorage.getFireTexture());
 			b->setPosition(player.getPosition());
 			level.addEntity(b);
 		}

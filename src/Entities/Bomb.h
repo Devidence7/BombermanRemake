@@ -62,18 +62,20 @@ public:
 	int spriteFrames;
 
 	int explosionCounter;
+	int explosionType;
 
-	Fire(FireTexture* ft) {
+	Fire(FireTexture* ft, int type = 0) {
 		spriteCounter = 0;
 		spriteSpeed = 30;
 		actualFrame = 0;
 		spriteFrames = 5;
 		explosionCounter = 0;
+		explosionType = type;
 
 		// Texture Controller:
 		fireTexture = ft;
 		// Set starting sprite
-		setTextureRect(fireTexture->getFrame(0, 0));
+		setTextureRect(fireTexture->getFrame(0, explosionType));
 		// Set sprite Sheet texture
 		setTexture(fireTexture->getTexture());
 	}
@@ -88,7 +90,7 @@ public:
 		spriteCounter %= spriteSpeed;
 		if (spriteCounter == 0) {
 			actualFrame = (actualFrame + 1) % spriteFrames;
-			setTextureRect(fireTexture->getFrame(actualFrame, 0));
+			setTextureRect(fireTexture->getFrame(actualFrame, explosionType));
 		}
 	}
 };
