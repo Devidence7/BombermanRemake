@@ -35,9 +35,12 @@ public:
 				// If it is a bomb
 				Bomb *b;
 				if ((b = dynamic_cast<Bomb*>(*it)) != nullptr) {
+					int pos = entities.begin() - it;
 					Fire* f = new Fire(b->getFireTexture());
 					f->setPosition(b->getPosition());
-					//addEntity(f);
+					addEntity(f);
+
+					it = entities.begin() + pos;
 				}
 				
 				// Remove the entity from the list of entities if it expired.
