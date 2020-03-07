@@ -1,6 +1,4 @@
 #include <SFML/Graphics.hpp>
-
-#include "Entities/Player.h"
 #include "GameEngine.hpp"
 //#include "Map/Map.hpp"
 
@@ -39,10 +37,10 @@ int main(int argc, char* argv[]) {
 
 		// Clear screen from previous drawings
 		window.clear();
-		game.draw(window);
-		// Draw the player in the scene
-		//window.draw(player);
 
+		// Draw the player and the scene
+		game.draw(window);
+		
 		// Update window
 		window.display();
 	}

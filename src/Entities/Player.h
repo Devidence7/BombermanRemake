@@ -1,50 +1,36 @@
 #pragma once
-#include <iostream>
 #include <SFML/Graphics.hpp>
+#include "../Textures/PlayerTexture.hpp"
 #include "Entity.h"
 
 class PlayerEntity : public Entity {
 public:
-	/* 
+	unsigned int lifes;
+	unsigned int bombsTimeLimit;
+	float speedBoost;
+
+	PlayerTexture entityTexture;
+	PlayerTexture::LookingAt lastMovement; // Save last looked direction
+
+	/*
 	Constructor of Entity
 	*/
-	PlayerEntity() : Entity() {
+	PlayerEntity() {
 		// Speed
+		lifes = 3;
+		baseSpeed = 1;
 		speedBoost = 5;
 		velocity.x = 0;
 		velocity.y = 0;
 
-		// Initialize sprite counters
-		walkCounter = 0;
-		walkFrames = 2;
-		idleCounter = 0;
-		idleFrames = 1;
-		walkSpeed = 8;
-		idleSpeed = 10;
+		lastMovement = PlayerTexture::down;
 
-		lastMovement = 0;
-
-		frameSize.x = 51;
-		frameSize.y = 75;
-
-		// Get texture sprites:
-		if (!texture.loadFromFile("../textures/Entities/WhiteBombermanSprites.png")) {
-			std::cerr << "Unable to load texture:" << std::endl;
-			std::cerr << "Texture location: ../textures/Entities/WhiteBombermanSprites.png" << std::endl;
-		}
-
-		// Save sprites positions in a array
-		for (int y = 0; y < 4; y++) {
-			for (int x = 0; x < 3; x++) {
-				sf::IntRect frame(15 + frameSize.x * x, 24 + frameSize.y * y, frameSize.x, frameSize.y);
-				frames.push_back(frame);
-			}
-		}
-		
+		// Texture Controller:
+		entityTexture = PlayerTexture();
 		// Set starting sprite
-		setTextureRect(frames[0]);
+		setTextureRect(entityTexture.getIdleSprite(lastMovement));
 		// Set sprite Sheet texture
-		setTexture(texture);
+		setTexture(entityTexture.getTexture());
 	}
 
 	/*
@@ -53,71 +39,62 @@ public:
 	void animate(sf::Vector2f velocity) {
 		if (velocity.x == 0 && velocity.y == 0) {
 			// If there is not speed set idle sprite
-			setTextureRect(frames[lastMovement * 3]);
+			setTextureRect(entityTexture.getIdleSprite(lastMovement));
 		}
 		else {
-			// If there is speed set walking sprites
-			animationCounter %= walkSpeed;
-			if (animationCounter == 0) {
-				walkCounter = (walkCounter + 1) % (walkFrames + 2);
-				int walkFrame = 0;
-				switch (walkCounter) {
-				case 1:
-					walkFrame = 1;
-					break;
-				case 3:
-					walkFrame = 2;
-					break;
-				}
-				setTextureRect(frames[walkFrame + 3 * lastMovement]);
+			// If there is speed we must update animation sprite every X time
+			if (entityTexture.mustChangeSprite()) {
+				setTextureRect(entityTexture.getWalkingSprite(lastMovement));
 			}
 		}
-		animationCounter++;
 	}
+
+	void Entity::update() override {
+		return;
+	}
+
 
 	/*
 	 * Update player position.
 	 */
-	void update() {
+	bool updatePlayer() {
 		// Player movement
 		bool playerRight = (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D));
 		bool playerLeft = (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::A));
 		bool playerUp = (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::W));
 		bool playerDown = (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S));
 
+		bool playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
+
+		// TODO: Remove this
+		if (playerBOMB) {
+			if (bombsTimeLimit < 30) {
+				playerBOMB = false;
+			}
+			else {
+				bombsTimeLimit = 0;
+			}
+		}
+		bombsTimeLimit++;
+		
 		velocity.x = 0;
 		velocity.y = 0;
 
 		if (playerDown) {
-			velocity.y = speedBoost;
-			lastMovement = 0;
+			velocity.y = baseSpeed * speedBoost;
+			lastMovement = PlayerTexture::down;
 		}
 		if (playerUp) {
-			velocity.y = -speedBoost;
-			lastMovement = 1;
+			velocity.y = -baseSpeed * speedBoost;
+			lastMovement = PlayerTexture::up;
 		}
 		if (playerLeft) {
-			velocity.x = -speedBoost;
-			lastMovement = 2;
+			velocity.x = -baseSpeed * speedBoost;
+			lastMovement = PlayerTexture::left;
 		}
 		if (playerRight) {
-			velocity.x = speedBoost;
-			lastMovement = 3;
-		}
-
-		// Collision test
-		std::cout << getGlobalBounds().top << " * " << velocity.y << std::endl;
-		if (getGlobalBounds().top <= 0 && velocity.y < 0) {
-			velocity.y = 0;
-		}
-		if (getGlobalBounds().top + frameSize.y >= 600 && velocity.y > 0) {
-			velocity.y = 0;
-		}
-		if (getGlobalBounds().left <= 0 && velocity.x < 0) {
-			velocity.x = 0;
-		}
-		if (getGlobalBounds().left + frameSize.x >= 800 && velocity.x > 0) {
-			velocity.x = 0;
+			velocity.x = baseSpeed * speedBoost;
+			lastMovement = PlayerTexture::right;
 		}
 
 		// Call animate function to change current sprite if needed.
@@ -125,5 +102,10 @@ public:
 
 		// Move Entity position
 		move(velocity.x, velocity.y);
+
+		if (playerBOMB) {
+			return true;
+		}
+		return false;
 	}
 };

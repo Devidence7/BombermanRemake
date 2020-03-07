@@ -3,12 +3,8 @@
 #include <SFML/Graphics.hpp>
 #include "../Exceptions/ExceptionsGame.hpp"
 
-class WallBlock : public sf::Sprite {
+class WallBlock{
 public:
-	WallBlock() : Sprite(){
+	WallBlock() {
 	}
-
-	
-
-
 };

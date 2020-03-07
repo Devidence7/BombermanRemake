@@ -1,63 +1,132 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <list>
-
-#include "Exceptions/ExceptionsGame.hpp"
-
+#include "Entities/Bomb.h"
 #include "Map/Map.hpp"
 #include "Entities/Player.h"
-#include "Textures/ball_wall_Texture.h"
+#include "Textures/TextureStorage.h"
 
 
 using namespace sf;
 
 
 /**
- * 
+ *
  * Esta clase se encarga de gestionar la lógica del juego
- * 
+ *
  */
- 
-class Level
-{
-    int level = 1;
-    Map map;
-public:
-    Level(int _level, Ball_Wall &bw) : level(_level), map(bw)
-    {
-    }
 
-    void draw(RenderWindow &w){
-        map.Draw(w);
-    }
+class Level {
+	int level = 1;
+	Map map;
+	std::vector<Entity*> entities;
+
+public:
+	Level(int _level, WallTexture& bw) : level(_level), map(bw) {
+		entities.reserve(10000);
+	}
+
+	void update() {
+		auto it = entities.begin();
+		// This is made this way because we need to erase element from a vector while we are iterating
+		while (it != entities.end()) {
+			// Update the entities.
+			(*it)->update();
+			if ((*it)->expiredEntity) {
+
+				// If it is a bomb
+				Bomb* b;
+				if ((b = dynamic_cast<Bomb*>(*it)) != nullptr) {
+					int pos = entities.begin() - it;
+
+					// Create fires
+					createFires(b);
+
+					// When adding entities vector iterator can be invalidated:
+					it = entities.begin() + pos;
+				}
+
+				// Remove the entity from the list of entities if it expired.
+				delete(*it);
+				it = entities.erase(it);
+			}
+			else {
+				++it;
+			}
+		}
+	}
+
+	void draw(RenderWindow& w) {
+		// Draw the level map
+		map.Draw(w);
+
+		// Draw the entities
+		for (auto e : entities) {
+			w.draw(*e);
+		}
+	}
+
+	void addEntity(Entity* e) {
+		entities.push_back(e);
+	}
+
+	void createFires(Bomb* b) {
+		// Central:
+		Fire* f = new Fire(b->getFireTexture());
+		f->setPosition(b->getPosition());
+		addEntity(f);
+		// Down:
+		f = new Fire(b->getFireTexture(),2);
+		f->setPosition(b->getPosition().x, b->getPosition().y + 48);
+		addEntity(f);
+		// Up:
+		f = new Fire(b->getFireTexture(), 3);
+		f->setPosition(b->getPosition().x, b->getPosition().y - 48);
+		addEntity(f);
+		// Left:
+		f = new Fire(b->getFireTexture(), 6);
+		f->setPosition(b->getPosition().x - 48, b->getPosition().y);
+		addEntity(f);
+		// Right:
+		f = new Fire(b->getFireTexture(), 5);
+		f->setPosition(b->getPosition().x + 48, b->getPosition().y);
+		addEntity(f);
+	}
+
 };
 
 
 /**
- * 
+ *
  * Clase encargada de inicialización de niveles.
  * Mostrará al comienzo el menú
  * Mostrará al morir el Game Over
- */ 
+ */
 
-
-class Game
-{
+class Game {
 private:
-    Ball_Wall ball_walls;
-    Level level;
-    PlayerEntity player;
-    
+	WallTexture ball_walls;
+	TextureStorage textureStorage;
+	Level level;
+	Sprite BackgroundSprite;
+	PlayerEntity player;
+
 public:
-    Game(): level(1, ball_walls){
-        
-    }
-    void start();
-    void update(){
-        player.update();
-    }
-    void draw(RenderWindow &w){
-        level.draw(w);
-        w.draw(player);
-    }
+	Game() : level(1, ball_walls) {
+		textureStorage = TextureStorage();
+	}
+	void start();
+
+	void update() {
+		level.update();
+		if (player.updatePlayer()) {
+			Bomb* b = new Bomb(textureStorage.getBombTexture(), textureStorage.getFireTexture());
+			b->setPosition(player.getPosition());
+			level.addEntity(b);
+		}
+	}
+
+	void draw(RenderWindow& w) {
+		level.draw(w);
+		w.draw(player);
+	}
 };

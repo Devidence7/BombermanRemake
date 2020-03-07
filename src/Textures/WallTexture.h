@@ -1,15 +1,13 @@
 #pragma once
 #include <vector>
-#include <string>
-
 #include <SFML/Graphics.hpp>
-
-#include "texture.h"
 #include "../Exceptions/ExceptionsGame.hpp"
-class Ball_Wall : public TextureVector {
+#include "TextureVector.h"
+
+class WallTexture : public TextureVector {
 
 	public:
-	Ball_Wall(){
+	WallTexture(){
 		if(!this->texture.loadFromFile("../textures/blocks.png")){
 			throw ExceptionLoadImage("Imagen no cargada: ../textures/blocks.png");
 		}
@@ -28,4 +26,5 @@ class Ball_Wall : public TextureVector {
 	sf::IntRect &getRectPillar(){
 		return this->frames[0];
 	}
+
 };

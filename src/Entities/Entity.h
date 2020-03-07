@@ -3,30 +3,11 @@
 
 class Entity : public sf::Sprite {
 public:
-	float speedBoost; // Base Entity Speed (TODO Make baseSpeed parameter too)
+	float baseSpeed;// Base Entity Speed 
 	sf::Vector2f velocity; // Speed of the Entity right now.
 	sf::Vector2f size; // Size of the Entity
-	sf::Vector2f frameSize; // Size of the Entity Sprite
 
-	std::vector<sf::IntRect> frames; // Frames of the Entity animation
+	bool expiredEntity = false; // Mark the entity as expired to be deleted
 
-	sf::Texture texture; // Entity Texture
-
-	int	animationCounter,
-		walkFrames,  // Number of walking sprites
-		walkCounter,  // Number of walking sprites
-		idleFrames, // Number of idleling sprites
-		idleCounter, // Number of idleling sprites
-		walkSpeed,	// Number of ticks between walking sprites
-		idleSpeed; // Number of ticks between idleling sprites
-
-	int lastMovement; // Save last looked direction
-
-	/* 
-	*  Constructor of Entity
-	*/
-	Entity() : Sprite() {
-
-	}
-
+	virtual void update(void) = 0;
 };
