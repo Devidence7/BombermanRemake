@@ -14,8 +14,7 @@ public:
 	int spriteFrames;
 
 	int explosionCounter;
-
-	Bomb(BombTexture& bt, FireTexture& ft) {
+	Bomb(BombTexture& bt, FireTexture& ft, Collider2d &col) : Entity(col) {
 		spriteCounter = 0;
 		spriteSpeed = 15;
 		actualFrame = 0;
@@ -31,7 +30,7 @@ public:
 		setTexture(bombTexture->getTexture());
 	}
 
-	void Entity::update() override {
+	void update() {
 		explosionCounter++;
 		if (explosionCounter >= 200) {
 			expiredEntity = true;
@@ -64,7 +63,7 @@ public:
 	int explosionCounter;
 	int explosionType;
 
-	Fire(FireTexture* ft, int type = 0) {
+	Fire(FireTexture* ft,  Collider2d &col, int type = 0) : Entity(col) {
 		spriteCounter = 0;
 		spriteSpeed = 30;
 		actualFrame = 0;
@@ -80,7 +79,7 @@ public:
 		setTexture(fireTexture->getTexture());
 	}
 
-	void Entity::update() override {
+	void update() {
 		explosionCounter++;
 		if (explosionCounter >= 150) {
 			expiredEntity = true;

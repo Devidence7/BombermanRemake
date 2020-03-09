@@ -4,6 +4,9 @@
 #include "../Exceptions/ExceptionsGame.hpp"
 #include "TextureVector.h"
 
+#define sizeWall 48
+#define sizePillar 48
+
 class WallTexture : public TextureVector {
 
 	public:
@@ -11,7 +14,7 @@ class WallTexture : public TextureVector {
 		if(!this->texture.loadFromFile("../textures/blocks.png")){
 			throw ExceptionLoadImage("Imagen no cargada: ../textures/blocks.png");
 		}
-		this->frames.push_back(sf::IntRect(0,0,48,48));
+		this->frames.push_back(sf::IntRect(0,0,sizePillar, sizePillar));
 		this->frames.push_back(sf::IntRect(51,0,99,48));
 	}
 

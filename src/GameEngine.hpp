@@ -1,10 +1,12 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+
+#include "Include/global.hpp"
 #include "Entities/Bomb.h"
 #include "Map/Map.hpp"
 #include "Entities/Player.h"
 #include "Textures/TextureStorage.h"
-
+#include "Phisics/collider2d.hpp"
 
 using namespace sf;
 
@@ -23,6 +25,9 @@ class Level {
 public:
 	Level(int _level, WallTexture& bw) : level(_level), map(bw) {
 		entities.reserve(10000);
+	}
+	void checkAndFixCollisions(Entity &e){
+		map.checkAndFixCollisions(e);
 	}
 
 	void update() {
@@ -71,23 +76,24 @@ public:
 
 	void createFires(Bomb* b) {
 		// Central:
-		Fire* f = new Fire(b->getFireTexture());
+		Collider2d colFire(sf::Vector2f(0,0), sf::FloatRect(0,0,48,48), true);
+		Fire* f = new Fire(b->getFireTexture(),colFire);
 		f->setPosition(b->getPosition());
 		addEntity(f);
 		// Down:
-		f = new Fire(b->getFireTexture(),2);
+		f = new Fire(b->getFireTexture(),colFire, 2);
 		f->setPosition(b->getPosition().x, b->getPosition().y + 48);
 		addEntity(f);
 		// Up:
-		f = new Fire(b->getFireTexture(), 3);
+		f = new Fire(b->getFireTexture(),colFire, 3);
 		f->setPosition(b->getPosition().x, b->getPosition().y - 48);
 		addEntity(f);
 		// Left:
-		f = new Fire(b->getFireTexture(), 6);
+		f = new Fire(b->getFireTexture(), colFire, 6);
 		f->setPosition(b->getPosition().x - 48, b->getPosition().y);
 		addEntity(f);
 		// Right:
-		f = new Fire(b->getFireTexture(), 5);
+		f = new Fire(b->getFireTexture(),colFire, 5);
 		f->setPosition(b->getPosition().x + 48, b->getPosition().y);
 		addEntity(f);
 	}
@@ -108,6 +114,7 @@ private:
 	TextureStorage textureStorage;
 	Level level;
 	Sprite BackgroundSprite;
+	int uno = 1;
 	PlayerEntity player;
 
 public:
@@ -118,11 +125,15 @@ public:
 
 	void update() {
 		level.update();
+		
 		if (player.updatePlayer()) {
-			Bomb* b = new Bomb(textureStorage.getBombTexture(), textureStorage.getFireTexture());
+			Collider2d colFire(sf::Vector2f(0,0), sf::FloatRect(0,0,1,1), true);
+			Bomb* b = new Bomb(textureStorage.getBombTexture(), textureStorage.getFireTexture(), colFire);
 			b->setPosition(player.getPosition());
 			level.addEntity(b);
 		}
+		level.checkAndFixCollisions(this->player);
+		
 	}
 
 	void draw(RenderWindow& w) {

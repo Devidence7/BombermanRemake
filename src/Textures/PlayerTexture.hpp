@@ -1,14 +1,13 @@
 #pragma once
 #include <iostream>
 #include <SFML/Graphics.hpp>
+
 #include "TextureVector.h"
 
 class PlayerTexture : public TextureVector {
 
 public:
-	enum LookingAt {
-		down = 0, up = 1, left = 2, right = 3
-	};
+	
 
 	sf::Vector2f frameSize; // Size of the Entity Sprite
 	int	animationCounter{},
