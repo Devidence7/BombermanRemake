@@ -2,7 +2,7 @@ src=../src
 bin=../bin
 build=.
 CC=g++
-std=-std=c++11
+std=-std=c++17
 O=-O3
 libsSFML=-lsfml-graphics -lsfml-window -lsfml-system
 
