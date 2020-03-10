@@ -3,33 +3,32 @@
 #include <math.h>
 #include <random>
 #include <SFML/Graphics.hpp>
+#include <memory>
 
 #include "../Entities/BrickWall.h"
 #include "../Textures/WallTexture.h"
 #include "wall.hpp"
 #include "../Entities/mapSprites.hpp"
-
+typedef std::shared_ptr<Entity> Entity_ptr;
 class Map {
 	int dimY = 15;
 	int dimX = 25;
 
 	WallTexture& Pillars_Balls;
-	std::vector<std::vector<Entity*>> map;
+	std::vector<std::vector<std::shared_ptr<Entity>>> map;
 
 	sf::RectangleShape floor;
 
 
-	Pillar* createPilar(int x, int y) {
-		Pillar* p = new Pillar((sizeColliderPillar)*y, x * (sizeColliderPillar));
-		p->setTexture(Pillars_Balls.getTexture());
-		p->setTextureRect(Pillars_Balls.getRectPillar());
-		p->setPosition(sf::Vector2f((sizeColliderPillar)*y, x * (sizeColliderPillar)));
+	Pillar createPilar(int x, int y) {
+		Pillar p((sizeColliderPillar)*y, x * (sizeColliderPillar));
+		p.setTexture(Pillars_Balls.getTexture());
+		p.setTextureRect(Pillars_Balls.getRectPillar());
+		p.setPosition(sf::Vector2f((sizeColliderPillar)*y, x * (sizeColliderPillar)));
 		return p;
 	}
 
 public:
-	std::vector<Entity*> wallEntities;
-
 
 	Map(WallTexture& bw) : Pillars_Balls(bw) {
 		std::random_device rd;
@@ -37,7 +36,7 @@ public:
 		std::uniform_int_distribution<int> dist(0, 3);
 
 		// Create map matrix:
-		map = std::vector<std::vector<Entity*>>(dimY + 2, std::vector<Entity*>(dimX + 2));
+		map = std::vector<std::vector<std::shared_ptr<Entity>>>(dimY + 2, std::vector<std::shared_ptr<Entity>>(dimX + 2, nullptr));
 
 		// Background:
 		floor.setSize(sf::Vector2f((dimX + 2) * sizeTextureX, (dimY + 2) * sizeTextureY));
@@ -45,13 +44,13 @@ public:
 
 		// Create all pillars:
 		for (int x = 0; x < dimY + 2; x++) {
-			map[x][0] = createPilar(x, 0);
-			map[x][dimX + 1] = createPilar(x, dimX + 1);
+			map[x][0] = std::make_shared<Entity>(createPilar(x, 0));
+			map[x][dimX + 1] =  std::make_shared<Entity>(createPilar(x, dimX + 1));
 		}
 
 		for (int y = 0; y < dimX + 2; y++) {
-			map[0][y] = (createPilar(0, y));
-			map[dimY + 1][y] = (createPilar(dimY + 1, y));
+			map[0][y] = std::make_shared<Entity>(createPilar(0, y));
+			map[dimY + 1][y] = std::make_shared<Entity>(createPilar(dimY + 1, y));
 		}
 
 		for (int x = 1; x < dimX + 1; x++) {
@@ -60,34 +59,16 @@ public:
 					// Create random Bricks:
 					if (!dist(mt)) {
 						Collider2d col(sf::Vector2f(0, 0), sf::FloatRect(0, 0, 48, 48), false, true, false);
-						map[y][x] = new BrickWall(Pillars_Balls, x * sizeColliderPillar, y * sizeColliderPillar, col);
-						wallEntities.push_back(map[y][x]);
+						map[y][x] = std::make_shared<Entity>(BrickWall(Pillars_Balls, x * sizeColliderPillar, y * sizeColliderPillar, col));
 					}
 				}
 				else {
-					map[y][x] = createPilar(y, x);
+					map[y][x] = std::make_shared<Entity>(createPilar(y, x));
 				}
 			}
 		}
 	}
 
-	void update() {
-		auto it = wallEntities.begin();
-		// This is made this way because we need to erase element from a vector while we are iterating
-		while (it != wallEntities.end()) {
-			// Update the entities.
-			(*it)->update();
-			if ((*it)->expiredEntity) {
-
-				// Remove the entity from the list of entities if it expired.
-				delete(*it);
-				it = wallEntities.erase(it);
-			}
-			else {
-				++it;
-			}
-		}
-	}
 
 	bool circIntersect(Entity& e1, Entity& e2) {
 		sf::FloatRect shape1 = e1.getGlobalBounds();
@@ -130,10 +111,10 @@ public:
 		return (cornerDistance_sq <= pow(circle.width, 2));
 	}
 
-	void checkAndFixCollisions(Entity& e, std::vector<Entity*>& liveEntities) {
+	void checkAndFixCollisions(Entity& e, std::vector<Entity_ptr>& liveEntities) {
 
-		for (std::vector<Entity*>& v : map) {
-			for (Entity*& _e : v) {
+		for (std::vector<std::shared_ptr<Entity>>& v : map) {
+			for (std::shared_ptr<Entity>& _e : v) {
 				if (_e != nullptr && _e->expiredEntity) {
 					_e = nullptr;
 					continue;
@@ -189,7 +170,7 @@ public:
 			}
 		}
 
-		for (Entity*& _e : liveEntities) {
+		for (Entity_ptr& _e : liveEntities) {
 			if (_e != nullptr && _e->expiredEntity) {
 				_e = nullptr;
 				continue;
@@ -199,13 +180,13 @@ public:
 				double x;
 				double y;
 				
-				Bomb* b;
-				Fire* f;
-				if ((b = dynamic_cast<Bomb*>(_e)) != nullptr) {
+				std::shared_ptr<Bomb> b;
+				std::shared_ptr<Fire> f;
+				if ((b = std::dynamic_pointer_cast<Bomb>(_e)) != nullptr) {
 					while (intersectsCircleRect(e, *_e, x, y)) {
 						e.setPosition(e.getPosition().x + x, e.getPosition().y + y);
 					}
-				} else if((f = dynamic_cast<Fire*>(_e)) != nullptr)
+				} else if((f = std::dynamic_pointer_cast<Fire>(_e)) != nullptr)
 				{
 					e.expiredEntity = true;
 				}
@@ -228,14 +209,14 @@ public:
 		return sf::Vector2f((int)pos.x / sizeColliderPillar * sizeColliderPillar, (int)pos.y / sizeColliderPillar * sizeColliderPillar);
 	}
 
-	Entity* getCellObject(sf::Vector2i pos) {
+	std::shared_ptr<Entity> getCellObject(sf::Vector2i pos) {
 		return map[pos.y][pos.x];
 	}
 
 	void Draw(sf::RenderWindow& w) {
 		w.draw(floor);
-		for (std::vector<Entity*>& v : this->map) {
-			for (Entity*& e : v) {
+		for (std::vector<std::shared_ptr<Entity>>& v : this->map) {
+			for (std::shared_ptr<Entity>& e : v) {
 				if (e != nullptr) {
 					w.draw(*e);
 				}

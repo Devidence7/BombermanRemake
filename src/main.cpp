@@ -1,14 +1,15 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <memory>
 #include "GameEngine.hpp"
 //#include "Map/Map.hpp"
 
 int windowsHeight = 600;
 int windowsWidth = 800;
 
+
 int main(int argc, char *argv[])
 {
-
 	//Inicializar Texturas
 
 	//Inicializar ventana
@@ -17,7 +18,7 @@ int main(int argc, char *argv[])
 	//unsigned int desktopWidth = sf::VideoMode::getDesktopMode().width;
 	//unsigned int desktopHeight = sf::VideoMode::getDesktopMode().height;
 	sf::RenderWindow window(sf::VideoMode(27 * 48, 17 * 48), "BomberMenaman"); // sf::Style::Fullscreen
-
+	
 	// Make maximum FPSs to 60. Somewhat control the player speed.
 	window.setFramerateLimit(60);
 

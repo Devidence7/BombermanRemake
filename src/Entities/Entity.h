@@ -37,5 +37,7 @@ public:
 	Entity(Collider2d &col) : body(&col){}
 	Entity(Collider2d *col) : body(col){}
 
-	virtual void update(void) = 0;
+	virtual void update(void) {
+		throw NoImplementedException("Intentando ejecutar UPDATE Entity");
+	}
 };

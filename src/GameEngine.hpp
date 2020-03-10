@@ -11,6 +11,7 @@
 using namespace sf;
 
 
+
 /**
  *
  * Esta clase se encarga de gestionar la lógica del juego
@@ -20,7 +21,7 @@ using namespace sf;
 class Level {
 	int level = 1;
 
-	std::vector<Entity*> entities;
+	std::vector<Entity_ptr> entities;
 
 public:
 	Map map;
@@ -42,26 +43,25 @@ public:
 			if ((*it)->expiredEntity) {
 
 				// If it is a bomb
-				Bomb* b;
-				if ((b = dynamic_cast<Bomb*>(*it)) != nullptr) {
+				std::shared_ptr<Bomb> b;
+				if ((b = std::dynamic_pointer_cast<Bomb>(*it)) != nullptr) {
 					int pos = entities.begin() - it;
 
 					// Create fires
-					createFires(b);
+					createFires(b.get());
 
 					// When adding entities vector iterator can be invalidated:
 					it = entities.begin() + pos;
 				}
 
 				// Remove the entity from the list of entities if it expired.
-				delete(*it);
+				it->reset();
 				it = entities.erase(it);
 			}
 			else {
 				++it;
 			}
 		}
-		map.update();
 	}
 
 	void draw(RenderWindow& w) {
@@ -74,24 +74,24 @@ public:
 		}
 	}
 
-	void addEntity(Entity* e) {
+	void addEntity(Entity_ptr e) {
 		entities.push_back(e);
 	}
 
 	void createFire(Bomb* b, int type, int posX, int posY) {
 		// If it is a bomb
-		Entity* e = map.getCellObject(map.getMapCoordinates(posX, posY));
-		BrickWall* bw;
-		Pillar* p;
-		if (e != nullptr && ((bw = dynamic_cast<BrickWall*>(e)) != nullptr)) {
+		Entity_ptr e = map.getCellObject(map.getMapCoordinates(posX, posY));
+		std::shared_ptr<BrickWall> bw;
+		std::shared_ptr<Pillar> p;
+		if (e != nullptr && ((bw = std::dynamic_pointer_cast<BrickWall>(e)) != nullptr)) {
 			bw->isDestroyed = true;
 		}
-		else if (e != nullptr && ((p = dynamic_cast<Pillar*>(e)) != nullptr)) {
+		else if (e != nullptr && ((p = std::dynamic_pointer_cast<Pillar>(e)) != nullptr)) {
 			// Do nothing
 		}
 		else {
 			Collider2d colFire(sf::Vector2f(0, 0), sf::FloatRect(0, 0, 48, 48), true);
-			Fire* f = new Fire(b->getFireTexture(), colFire, type);
+			std::shared_ptr<Fire> f = std::make_shared<Fire>(Fire(b->getFireTexture(), colFire, type));
 			f->setPosition(posX, posY);
 			addEntity(f);
 		}
@@ -142,7 +142,7 @@ public:
 			// If there is nothing in that cell:
 			//if(level.map.getCellObject(level.map.getMapCoordinates(player.getCenterPosition())) == nullptr) {
 			Collider2d colFire(sf::Vector2f(0, 0), sf::FloatRect(0, 0, 1, 1), true);
-			Bomb* b = new Bomb(textureStorage.getBombTexture(), textureStorage.getFireTexture(), colFire);
+			std::shared_ptr<Bomb> b = std::make_shared<Bomb>(Bomb(textureStorage.getBombTexture(), textureStorage.getFireTexture(), colFire));
 			b->setPosition(level.map.getMapCellCorner(player.getCenterPosition()));
 			level.addEntity(b);
 			//}
