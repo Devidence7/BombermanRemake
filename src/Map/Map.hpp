@@ -114,8 +114,12 @@ public:
 		if (circleDistance.x > (rect.width / 2 + circle.width)) { return false; }
 		if (circleDistance.y > (rect.height / 2 + circle.width)) { return false; }
 
-		x /= 1000;
-		y /= 1000;
+		float moduloCentro = sqrtf(x * x + y * y);
+		x /= moduloCentro;
+		y /= moduloCentro;
+
+		x /= 1000.0;
+		y /= 1000.0;
 		
 		if (circleDistance.x <= (rect.width / 2)) { return true; }
 		if (circleDistance.y <= (rect.height / 2)) { return true; }
