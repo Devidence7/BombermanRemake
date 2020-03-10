@@ -9,6 +9,9 @@ class PlayerEntity : public Entity
 public:
 	unsigned int lifes;
 	unsigned int bombsTimeLimit;
+	int actualframe = 0;
+	int frameSpeed = 10;
+	int frameCounter = 0;
 	float speedBoost;
 
 	PlayerTexture entityTexture;
@@ -60,6 +63,18 @@ public:
 	*/
 	void animate(sf::Vector2f velocity)
 	{
+
+		if(expiredEntity)
+		{
+			if (frameCounter == 0) {
+				setTextureRect(entityTexture.getDeathSprite(actualframe));
+				actualframe = (actualframe + 1) % 7;
+			}
+			frameCounter = (frameCounter + 1) % frameSpeed;
+			return;
+		}
+		
+		
 		if (velocity.x == 0 && velocity.y == 0)
 		{
 			// If there is not speed set idle sprite
@@ -152,7 +167,11 @@ public:
 		animate(velocity);
 
 		// Move Entity position
-		move(velocity.x, velocity.y);
+		if(!expiredEntity)
+		{
+			move(velocity.x, velocity.y);
+		}
+		
 
 		if (playerBOMB)
 		{

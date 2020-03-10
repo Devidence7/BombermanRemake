@@ -12,7 +12,7 @@
 class Map {
 	int dimY = 15;
 	int dimX = 25;
-	
+
 	WallTexture& Pillars_Balls;
 	std::vector<std::vector<Entity*>> map;
 
@@ -20,36 +20,36 @@ class Map {
 
 
 	Pillar* createPilar(int x, int y) {
-		Pillar* p = new Pillar((sizeColliderPillar) * y, x * (sizeColliderPillar));
+		Pillar* p = new Pillar((sizeColliderPillar)*y, x * (sizeColliderPillar));
 		p->setTexture(Pillars_Balls.getTexture());
 		p->setTextureRect(Pillars_Balls.getRectPillar());
-		p->setPosition(sf::Vector2f((sizeColliderPillar) * y, x * (sizeColliderPillar)));
+		p->setPosition(sf::Vector2f((sizeColliderPillar)*y, x * (sizeColliderPillar)));
 		return p;
 	}
 
 public:
 	std::vector<Entity*> wallEntities;
 
-	
+
 	Map(WallTexture& bw) : Pillars_Balls(bw) {
 		std::random_device rd;
 		std::mt19937 mt(rd());
 		std::uniform_int_distribution<int> dist(0, 3);
-		
+
 		// Create map matrix:
 		map = std::vector<std::vector<Entity*>>(dimY + 2, std::vector<Entity*>(dimX + 2));
 
 		// Background:
 		floor.setSize(sf::Vector2f((dimX + 2) * sizeTextureX, (dimY + 2) * sizeTextureY));
 		floor.setFillColor(sf::Color(0, 100, 0));
-		
+
 		// Create all pillars:
 		for (int x = 0; x < dimY + 2; x++) {
 			map[x][0] = createPilar(x, 0);
 			map[x][dimX + 1] = createPilar(x, dimX + 1);
 		}
 
-		for (int y= 0; y < dimX + 2; y++) {
+		for (int y = 0; y < dimX + 2; y++) {
 			map[0][y] = (createPilar(0, y));
 			map[dimY + 1][y] = (createPilar(dimY + 1, y));
 		}
@@ -58,7 +58,7 @@ public:
 			for (int y = 1; y < dimY + 1; y++) {
 				if (x % 2 == 1 || y % 2 == 1) {
 					// Create random Bricks:
-					if(!dist(mt)){
+					if (!dist(mt)) {
 						Collider2d col(sf::Vector2f(0, 0), sf::FloatRect(0, 0, 48, 48), false, true, false);
 						map[y][x] = new BrickWall(Pillars_Balls, x * sizeColliderPillar, y * sizeColliderPillar, col);
 						wallEntities.push_back(map[y][x]);
@@ -89,8 +89,7 @@ public:
 		}
 	}
 
-	bool circIntersect(Entity& e1, Entity& e2)
-	{
+	bool circIntersect(Entity& e1, Entity& e2) {
 		sf::FloatRect shape1 = e1.getGlobalBounds();
 		sf::FloatRect shape2 = e2.getGlobalBounds();
 
@@ -101,7 +100,7 @@ public:
 		return (distance <= (shape1.width / 2) + (shape2.width / 2));
 	}
 
-	bool intersectsCircleRect(Entity& e1circle, Entity& e2rect, double &x, double &y) {
+	bool intersectsCircleRect(Entity& e1circle, Entity& e2rect, double& x, double& y) {
 		sf::FloatRect circle = e1circle.getGlobalBounds();
 		sf::FloatRect rect = e2rect.getGlobalBounds();
 
@@ -120,7 +119,7 @@ public:
 
 		x /= 1000.0;
 		y /= 1000.0;
-		
+
 		if (circleDistance.x <= (rect.width / 2)) { return true; }
 		if (circleDistance.y <= (rect.height / 2)) { return true; }
 
@@ -131,23 +130,22 @@ public:
 		return (cornerDistance_sq <= pow(circle.width, 2));
 	}
 
-	void checkAndFixCollisions(Entity& e) {
+	void checkAndFixCollisions(Entity& e, std::vector<Entity*>& liveEntities) {
 
 		for (std::vector<Entity*>& v : map) {
 			for (Entity*& _e : v) {
-				if(_e != nullptr && _e->expiredEntity)
-				{
+				if (_e != nullptr && _e->expiredEntity) {
 					_e = nullptr;
 					continue;
 				}
 
 				if (_e != nullptr && e.collision(*_e)) {
 
-					
+
 					//calcular centro
 
 					//sf::Vector2f position = e.getPosition();
-					
+
 
 					//if (_e->getGlobalBounds().contains(position))
 					//{
@@ -190,23 +188,47 @@ public:
 				}
 			}
 		}
+
+		for (Entity*& _e : liveEntities) {
+			if (_e != nullptr && _e->expiredEntity) {
+				_e = nullptr;
+				continue;
+			}
+
+			if (_e != nullptr && e.collision(*_e)) {
+				double x;
+				double y;
+				
+				Bomb* b;
+				Fire* f;
+				if ((b = dynamic_cast<Bomb*>(_e)) != nullptr) {
+					while (intersectsCircleRect(e, *_e, x, y)) {
+						e.setPosition(e.getPosition().x + x, e.getPosition().y + y);
+					}
+				} else if((f = dynamic_cast<Fire*>(_e)) != nullptr)
+				{
+					e.expiredEntity = true;
+				}
+			}
+		}
+		
 		//std::cout << "--------------" << std::endl;
 	}
 
 	sf::Vector2i getMapCoordinates(int x, int y) {
 		return sf::Vector2i((int)x / sizeColliderPillar, (int)y / sizeColliderPillar);
 	}
-	
-	sf::Vector2i getMapCoordinates(sf::Vector2f pos){
+
+	sf::Vector2i getMapCoordinates(sf::Vector2f pos) {
 		return getMapCoordinates(pos.x, pos.y);
 	}
-	
+
 
 	sf::Vector2f getMapCellCorner(sf::Vector2f pos) {
 		return sf::Vector2f((int)pos.x / sizeColliderPillar * sizeColliderPillar, (int)pos.y / sizeColliderPillar * sizeColliderPillar);
 	}
 
-	Entity *getCellObject(sf::Vector2i pos){
+	Entity* getCellObject(sf::Vector2i pos) {
 		return map[pos.y][pos.x];
 	}
 

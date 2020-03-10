@@ -43,10 +43,24 @@ public:
 				frames.push_back(frame);
 			}
 		}
+		for (int y = 4; y < 9; y++) {
+			for (int x = 0; x < 7; x++) {
+				sf::IntRect frame(frameSize.x * x, frameSize.y * y, frameSize.x, frameSize.y);
+				frames.push_back(frame);
+			}
+		}
 	}
 
 	sf::IntRect& getIdleSprite(LookingAt lookat) {
 		return frames[lookat * 4];
+	}
+
+	sf::IntRect& getMoveSprite(int i, int j) {
+		return frames[i * 4 + j];
+	}
+
+	sf::IntRect& getDeathSprite(int i) {
+		return frames[44 + i];
 	}
 
 	bool mustChangeSprite() {

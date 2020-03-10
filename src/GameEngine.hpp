@@ -29,7 +29,7 @@ public:
 		entities.reserve(10000);
 	}
 	void checkAndFixCollisions(Entity& e) {
-		map.checkAndFixCollisions(e);
+		map.checkAndFixCollisions(e, entities);
 	}
 
 	void update() {
