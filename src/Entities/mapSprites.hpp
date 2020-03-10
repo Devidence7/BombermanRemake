@@ -4,7 +4,7 @@
 class Pillar : public Entity{
 
     public:
-    Pillar(int x, int y) : Entity(new Collider2d(sf::Vector2f(x,y), sf::FloatRect(0,0,sizeColliderPillar,sizeColliderPillar))){}
+    Pillar(int x, int y) : Entity(){}
     void update(){}
 
 };

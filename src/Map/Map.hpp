@@ -59,8 +59,7 @@ public:
 				if (x % 2 == 1 || y % 2 == 1) {
 					// Create random Bricks:
 					if (!dist(mt)) {
-						Collider2d col(sf::Vector2f(0, 0), sf::FloatRect(0, 0, 48, 48), false, true, false);
-						map[y][x] = new BrickWall(Pillars_Balls, x * sizeColliderPillar, y * sizeColliderPillar, col);
+						map[y][x] = new BrickWall(Pillars_Balls, x * sizeColliderPillar, y * sizeColliderPillar);
 						wallEntities.push_back(map[y][x]);
 					}
 				}

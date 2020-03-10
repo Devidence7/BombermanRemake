@@ -11,15 +11,18 @@ class TextureStorage {
 	FireTexture fireTexture;
 
 public:
+
 	TextureStorage()
 	{
-		playerTexture = PlayerTexture();
-		bombTexture = BombTexture();
+		std::cout << "Texture" << std::endl;
 	}
 
-	PlayerTexture &getPlayerTexture()
-	{
+	PlayerTexture& getPlayerTexture() {
 		return playerTexture;
+	}
+
+	WallTexture& getlevel1WallTexture() {
+		return level1WallTexture;
 	}
 
 	BombTexture& getBombTexture() {
@@ -28,7 +31,5 @@ public:
 
 	FireTexture& getFireTexture() {
 		return fireTexture;
-		;
 	}
-	
 };
