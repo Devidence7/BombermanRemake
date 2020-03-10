@@ -19,14 +19,16 @@ using namespace sf;
 
 class Level {
 	int level = 1;
-	Map map;
+
 	std::vector<Entity*> entities;
 
 public:
+	Map map;
+
 	Level(int _level, WallTexture& bw) : level(_level), map(bw) {
 		entities.reserve(10000);
 	}
-	void checkAndFixCollisions(Entity &e){
+	void checkAndFixCollisions(Entity& e) {
 		map.checkAndFixCollisions(e);
 	}
 
@@ -34,6 +36,7 @@ public:
 		auto it = entities.begin();
 		// This is made this way because we need to erase element from a vector while we are iterating
 		while (it != entities.end()) {
+			
 			// Update the entities.
 			(*it)->update();
 			if ((*it)->expiredEntity) {
@@ -58,6 +61,7 @@ public:
 				++it;
 			}
 		}
+		map.update();
 	}
 
 	void draw(RenderWindow& w) {
@@ -74,28 +78,36 @@ public:
 		entities.push_back(e);
 	}
 
+	void createFire(Bomb* b, int type, int posX, int posY) {
+		// If it is a bomb
+		Entity* e = map.getCellObject(map.getMapCoordinates(posX, posY));
+		BrickWall* bw;
+		Pillar* p;
+		if (e != nullptr && ((bw = dynamic_cast<BrickWall*>(e)) != nullptr)) {
+			bw->isDestroyed = true;
+		}
+		else if (e != nullptr && ((p = dynamic_cast<Pillar*>(e)) != nullptr)) {
+			// Do nothing
+		}
+		else {
+			Collider2d colFire(sf::Vector2f(0, 0), sf::FloatRect(0, 0, 48, 48), true);
+			Fire* f = new Fire(b->getFireTexture(), colFire, type);
+			f->setPosition(posX, posY);
+			addEntity(f);
+		}
+	}
+
 	void createFires(Bomb* b) {
 		// Central:
-		Collider2d colFire(sf::Vector2f(0,0), sf::FloatRect(0,0,48,48), true);
-		Fire* f = new Fire(b->getFireTexture(),colFire);
-		f->setPosition(b->getPosition());
-		addEntity(f);
+		createFire(b, 0, b->getPosition().x, b->getPosition().y);
 		// Down:
-		f = new Fire(b->getFireTexture(),colFire, 2);
-		f->setPosition(b->getPosition().x, b->getPosition().y + 48);
-		addEntity(f);
+		createFire(b, 2, b->getPosition().x, b->getPosition().y + 48);
 		// Up:
-		f = new Fire(b->getFireTexture(),colFire, 3);
-		f->setPosition(b->getPosition().x, b->getPosition().y - 48);
-		addEntity(f);
+		createFire(b, 3, b->getPosition().x, b->getPosition().y - 48);
 		// Left:
-		f = new Fire(b->getFireTexture(), colFire, 6);
-		f->setPosition(b->getPosition().x - 48, b->getPosition().y);
-		addEntity(f);
+		createFire(b, 6, b->getPosition().x - 48, b->getPosition().y);
 		// Right:
-		f = new Fire(b->getFireTexture(),colFire, 5);
-		f->setPosition(b->getPosition().x + 48, b->getPosition().y);
-		addEntity(f);
+		createFire(b, 5, b->getPosition().x + 48, b->getPosition().y);
 	}
 
 };
@@ -125,15 +137,19 @@ public:
 
 	void update() {
 		level.update();
-		
+
 		if (player.updatePlayer()) {
-			Collider2d colFire(sf::Vector2f(0,0), sf::FloatRect(0,0,1,1), true);
+			// If there is nothing in that cell:
+			//if(level.map.getCellObject(level.map.getMapCoordinates(player.getCenterPosition())) == nullptr) {
+			Collider2d colFire(sf::Vector2f(0, 0), sf::FloatRect(0, 0, 1, 1), true);
 			Bomb* b = new Bomb(textureStorage.getBombTexture(), textureStorage.getFireTexture(), colFire);
-			b->setPosition(player.getPosition());
+			b->setPosition(level.map.getMapCellCorner(player.getCenterPosition()));
 			level.addEntity(b);
+			//}
+
 		}
 		level.checkAndFixCollisions(this->player);
-		
+
 	}
 
 	void draw(RenderWindow& w) {

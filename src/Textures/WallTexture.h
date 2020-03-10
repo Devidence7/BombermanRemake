@@ -14,16 +14,15 @@ class WallTexture : public TextureVector {
 		if(!this->texture.loadFromFile("../textures/blocks.png")){
 			throw ExceptionLoadImage("Imagen no cargada: ../textures/blocks.png");
 		}
-		this->frames.push_back(sf::IntRect(0,0,sizePillar, sizePillar));
-		this->frames.push_back(sf::IntRect(51,0,99,48));
+
+		for(int i = 0; i < 8; i++)
+		{
+			this->frames.push_back(sf::IntRect(51 * i, 0, sizePillar, sizePillar));
+		}
 	}
 
-	sf::Texture &getTexture(){
-		return this->texture;
-	}
-
-	sf::IntRect &getRectWall(){
-		return this->frames[1];
+	sf::IntRect &getRectWall(int i){
+		return this->frames[i];
 	}
 
 	sf::IntRect &getRectPillar(){

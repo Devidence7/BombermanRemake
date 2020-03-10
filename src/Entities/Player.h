@@ -26,11 +26,16 @@ public:
 		velocity.y = 0;
 
 		lastMovement = LookingAt::down;
+
+		// TODO: Remove this
+		move(100, 100);
+		
 		// Set starting sprite
 		setTextureRect(entityTexture.getIdleSprite(lastMovement));
 		// Set sprite Sheet texture
 		setTexture(entityTexture.getTexture());
 	}
+	
 	PlayerEntity(Collider2d &col) : Entity(col)
 	{
 		// Speed
@@ -41,6 +46,8 @@ public:
 		velocity.y = 0;
 
 		lastMovement = LookingAt::down;
+
+		move(100,100);
 
 		// Set starting sprite
 		setTextureRect(entityTexture.getIdleSprite(lastMovement));
@@ -70,13 +77,14 @@ public:
 
 	sf::FloatRect getGlobalBounds() const override
 	{
-		//if(this->body != nullptr){
-		//	return body->getRect();
-		//}
-		sf::Vector2f p = getPosition();
-		float h = sf::Sprite::getGlobalBounds().height;
-		return sf::FloatRect(p.x, p.y+(h/2), sf::Sprite::getGlobalBounds().width, (h/2) );
-		
+		sf::FloatRect dim = sf::Sprite::getGlobalBounds();
+		return sf::FloatRect(dim.left + (dim.width / 2), dim.top + dim.height - dim.width / 4, dim.width / 4, dim.height / 4);
+	}
+
+	sf::Vector2f getCenterPosition()
+	{
+		sf::FloatRect p = getGlobalBounds();
+		return sf::Vector2f(p.left + p.width/2, p.top + p.height / 2);
 	}
 
 	void update()
