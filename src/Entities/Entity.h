@@ -17,6 +17,10 @@ public:
 		return body != nullptr;
 	}
 
+	virtual sf::Vector2f getPosition() const{
+		return this->sf::Sprite::getPosition();
+	}
+
 	virtual sf::FloatRect getGlobalBounds() const
 	{
 		//if(this->body != nullptr){
