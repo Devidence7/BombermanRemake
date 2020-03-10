@@ -9,12 +9,14 @@ class TextureStorage {
 	WallTexture level1WallTexture;
 	BombTexture bombTexture;
 	FireTexture fireTexture;
+	EnemyTexture enemyTexture; 
 
 public:
 	TextureStorage()
 	{
 		playerTexture = PlayerTexture();
 		bombTexture = BombTexture();
+		enemyTexture= EnemyTexture();
 	}
 
 	PlayerTexture &getPlayerTexture()
@@ -28,7 +30,11 @@ public:
 
 	FireTexture& getFireTexture() {
 		return fireTexture;
-		;
+		
+	}
+
+	EnemyTexture& getEnemyTexture() {
+		return enemyTexture;
 	}
 	
 };

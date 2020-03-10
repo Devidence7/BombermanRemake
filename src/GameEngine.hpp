@@ -5,6 +5,7 @@
 #include "Entities/Bomb.h"
 #include "Map/Map.hpp"
 #include "Entities/Player.h"
+#include "Entities/Enemy.h"
 #include "Textures/TextureStorage.h"
 #include "Phisics/collider2d.hpp"
 
@@ -128,10 +129,12 @@ private:
 	Sprite BackgroundSprite;
 	int uno = 1;
 	PlayerEntity player;
+	EnemyEntity enemy;
 
 public:
 	Game() : level(1, ball_walls) {
-		textureStorage = TextureStorage();
+		 
+		level.addEntity(new EnemyEntity());
 	}
 	void start();
 
@@ -148,6 +151,8 @@ public:
 			//}
 
 		}
+
+		
 		level.checkAndFixCollisions(this->player);
 
 	}
@@ -155,5 +160,6 @@ public:
 	void draw(RenderWindow& w) {
 		level.draw(w);
 		w.draw(player);
+		
 	}
 };
