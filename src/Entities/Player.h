@@ -8,70 +8,81 @@ class PlayerEntity : public Entity
 {
 public:
 	unsigned int lifes;
-	unsigned int bombsTimeLimit;
-	float speedBoost;
+	unsigned int bombsTimeLimit = 30;
+	int actualframe = 0;
+	int frameSpeed = 10;
+	int frameCounter = 0;
+	float speedBoost = 1;
 
-	PlayerTexture entityTexture;
+	PlayerTexture *playerTexture;
 	LookingAt lastMovement; // Save last looked direction
+	
+	int	animationCounter{},
+		walkFrames,  // Number of walking sprites
+		walkCounter,  // Number of walking sprites
+		idleFrames, // Number of idleling sprites
+		idleCounter, // Number of idleling sprites
+		walkSpeed,	// Number of ticks between walking sprites
+		idleSpeed; // Number of ticks between idleling sprites
 
 	/*
 	Constructor of Entity
 	*/
-	PlayerEntity() : Entity(new Collider2d(sf::Vector2f(0,0), sf::FloatRect(0,0,48,48), false, true))
+	PlayerEntity(PlayerTexture &pt) : Entity(), playerTexture(&pt)
 	{
 		lifes = 3;
 		baseSpeed = 1;
 		speedBoost = 5;
 		velocity.x = 0;
 		velocity.y = 0;
+
+		// Initialize sprite counters
+		walkCounter = 0;
+		walkFrames = 4;
+		idleCounter = 0;
+		idleFrames = 1;
+		walkSpeed = 8;
+		idleSpeed = 10;
 
 		lastMovement = LookingAt::down;
 
 		// TODO: Remove this
 		move(100, 100);
-		
 		// Set starting sprite
-		setTextureRect(entityTexture.getIdleSprite(lastMovement));
+		setTextureRect(playerTexture->getIdleSprite(lastMovement));
 		// Set sprite Sheet texture
-		setTexture(entityTexture.getTexture());
+		setTexture(playerTexture->getTexture());
 	}
-	
-	PlayerEntity(Collider2d &col) : Entity(col)
-	{
-		// Speed
-		lifes = 3;
-		baseSpeed = 1;
-		speedBoost = 5;
-		velocity.x = 0;
-		velocity.y = 0;
 
-		lastMovement = LookingAt::down;
-
-		move(100,100);
-
-		// Set starting sprite
-		setTextureRect(entityTexture.getIdleSprite(lastMovement));
-		// Set sprite Sheet texture
-		setTexture(entityTexture.getTexture());
-	}
 
 	/*
 	Animate Entity by changing the actual sprite.
 	*/
 	void animate(sf::Vector2f velocity)
 	{
-		if (velocity.x == 0 && velocity.y == 0)
+		// If the player has died:
+		if(!expiredEntity)
 		{
-			// If there is not speed set idle sprite
-			setTextureRect(entityTexture.getIdleSprite(lastMovement));
+			if (velocity.x == 0 && velocity.y == 0) {
+				// If there is not speed set idle sprite
+				setTextureRect(playerTexture->getIdleSprite(lastMovement));
+			}
+			else {
+				// If there is speed we must update animation sprite every X time
+				if (frameCounter == 0) {
+					setTextureRect(playerTexture->getMoveSprite(lastMovement,actualframe));
+					actualframe = (actualframe + 1) % 4;
+				}
+				frameCounter = (frameCounter + 1) % frameSpeed;
+			}
 		}
 		else
 		{
-			// If there is speed we must update animation sprite every X time
-			if (entityTexture.mustChangeSprite())
-			{
-				setTextureRect(entityTexture.getWalkingSprite(lastMovement));
+			if (frameCounter == 0) {
+				setTextureRect(playerTexture->getDeathSprite(actualframe));
+				actualframe = (actualframe + 1) % 7;
 			}
+			frameCounter = (frameCounter + 1) % frameSpeed;
 		}
 	}
 
@@ -152,7 +163,11 @@ public:
 		animate(velocity);
 
 		// Move Entity position
-		move(velocity.x, velocity.y);
+		/*if(!expiredEntity)
+		{*/
+			move(velocity.x, velocity.y);
+		//}
+		
 
 		if (playerBOMB)
 		{

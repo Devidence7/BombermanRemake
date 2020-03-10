@@ -12,16 +12,18 @@ class TextureStorage {
 	EnemyTexture enemyTexture; 
 
 public:
+
 	TextureStorage()
 	{
-		playerTexture = PlayerTexture();
-		bombTexture = BombTexture();
-		enemyTexture= EnemyTexture();
+		
 	}
 
-	PlayerTexture &getPlayerTexture()
-	{
+	PlayerTexture& getPlayerTexture() {
 		return playerTexture;
+	}
+
+	WallTexture& getlevel1WallTexture() {
+		return level1WallTexture;
 	}
 
 	BombTexture& getBombTexture() {
@@ -36,5 +38,4 @@ public:
 	EnemyTexture& getEnemyTexture() {
 		return enemyTexture;
 	}
-	
 };

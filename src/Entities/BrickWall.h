@@ -11,7 +11,7 @@ public:
 	int explosionCounter;
 	bool isDestroyed = false;
 	
-	BrickWall(WallTexture& wt, int xloc, int yloc, Collider2d& col) : Entity(col) {
+	BrickWall(WallTexture& wt, int xloc, int yloc) : Entity() {
 		spriteCounter = 0;
 		spriteSpeed = 3;
 		actualFrame = 0;

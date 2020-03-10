@@ -20,7 +20,6 @@ using namespace sf;
 
 class Level {
 	int level = 1;
-
 	std::vector<Entity*> entities;
 
 public:
@@ -30,7 +29,7 @@ public:
 		entities.reserve(10000);
 	}
 	void checkAndFixCollisions(Entity& e) {
-		map.checkAndFixCollisions(e);
+		map.checkAndFixCollisions(e, entities);
 	}
 
 	void update() {
@@ -91,8 +90,7 @@ public:
 			// Do nothing
 		}
 		else {
-			Collider2d colFire(sf::Vector2f(0, 0), sf::FloatRect(0, 0, 48, 48), true);
-			Fire* f = new Fire(b->getFireTexture(), colFire, type);
+			Fire* f = new Fire(b->getFireTexture(), type);
 			f->setPosition(posX, posY);
 			addEntity(f);
 		}
@@ -110,7 +108,6 @@ public:
 		// Right:
 		createFire(b, 5, b->getPosition().x + 48, b->getPosition().y);
 	}
-
 };
 
 
@@ -127,39 +124,31 @@ private:
 	TextureStorage textureStorage;
 	Level level;
 	Sprite BackgroundSprite;
-	int uno = 1;
-	PlayerEntity player;
-	EnemyEntity enemy;
+	PlayerEntity *player;
 
 public:
-	Game() : level(1, ball_walls) {
-		 
-		level.addEntity(new EnemyEntity());
+	Game() : level(1, ball_walls){
+		player = new PlayerEntity(textureStorage.getPlayerTexture());
 	}
 	void start();
 
 	void update() {
 		level.update();
 
-		if (player.updatePlayer()) {
+		if (player->updatePlayer()) {
 			// If there is nothing in that cell:
 			//if(level.map.getCellObject(level.map.getMapCoordinates(player.getCenterPosition())) == nullptr) {
-			Collider2d colFire(sf::Vector2f(0, 0), sf::FloatRect(0, 0, 1, 1), true);
-			Bomb* b = new Bomb(textureStorage.getBombTexture(), textureStorage.getFireTexture(), colFire);
-			b->setPosition(level.map.getMapCellCorner(player.getCenterPosition()));
+			Bomb* b = new Bomb(textureStorage.getBombTexture(), textureStorage.getFireTexture());
+			b->setPosition(level.map.getMapCellCorner(player->getCenterPosition()));
 			level.addEntity(b);
 			//}
-
 		}
-
-		
-		level.checkAndFixCollisions(this->player);
+		level.checkAndFixCollisions(*player);
 
 	}
 
 	void draw(RenderWindow& w) {
 		level.draw(w);
-		w.draw(player);
-		
+		w.draw(*player);
 	}
 };
