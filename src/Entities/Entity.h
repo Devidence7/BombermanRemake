@@ -26,7 +26,7 @@ public:
 	}
 
 	bool collision(const Entity & e) const{
-		this->Entity::getGlobalBounds().intersects(e.getGlobalBounds());
+		return this->Entity::getGlobalBounds().intersects(e.getGlobalBounds());
 	}
 
 	Entity(){}

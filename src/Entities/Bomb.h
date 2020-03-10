@@ -32,7 +32,7 @@ public:
 
 	void update() {
 		explosionCounter++;
-		if (explosionCounter >= 200) {
+		if (explosionCounter >= 135) {
 			expiredEntity = true;
 		}
 
@@ -65,7 +65,7 @@ public:
 
 	Fire(FireTexture* ft,  Collider2d &col, int type = 0) : Entity(col) {
 		spriteCounter = 0;
-		spriteSpeed = 30;
+		spriteSpeed = 10;
 		actualFrame = 0;
 		spriteFrames = 5;
 		explosionCounter = 0;
@@ -81,7 +81,7 @@ public:
 
 	void update() {
 		explosionCounter++;
-		if (explosionCounter >= 150) {
+		if (explosionCounter >= 50) {
 			expiredEntity = true;
 		}
 
