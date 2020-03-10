@@ -82,8 +82,12 @@ public:
 		// If it is a bomb
 		Entity* e = map.getCellObject(map.getMapCoordinates(posX, posY));
 		BrickWall* bw;
+		Pillar* p;
 		if (e != nullptr && ((bw = dynamic_cast<BrickWall*>(e)) != nullptr)) {
 			bw->isDestroyed = true;
+		}
+		else if (e != nullptr && ((p = dynamic_cast<Pillar*>(e)) != nullptr)) {
+			// Do nothing
 		}
 		else {
 			Collider2d colFire(sf::Vector2f(0, 0), sf::FloatRect(0, 0, 48, 48), true);
