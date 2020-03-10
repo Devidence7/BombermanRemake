@@ -16,7 +16,7 @@ public:
 	int spriteFrames;
 	int deathCounter;
 	bool firstMov;
-	EnemyEntity():Entity(new Collider2d(sf::Vector2f(0,0), sf::FloatRect(0,0,48,48), false, true)){
+	EnemyEntity():Entity(){
 		velocity.x = 1;
 		velocity.y = 0;
 		lastMovement=0;
