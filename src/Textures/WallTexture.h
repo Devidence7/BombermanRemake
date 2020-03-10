@@ -8,7 +8,6 @@
 #define sizePillar 48
 
 class WallTexture : public TextureVector {
-
 	public:
 	WallTexture(){
 		if(!this->texture.loadFromFile("../textures/blocks.png")){

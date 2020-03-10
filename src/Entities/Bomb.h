@@ -14,7 +14,7 @@ public:
 	int spriteFrames;
 
 	int explosionCounter;
-	Bomb(BombTexture& bt, FireTexture& ft, Collider2d &col) : Entity(col) {
+	Bomb(BombTexture& bt, FireTexture& ft) : Entity() {
 		spriteCounter = 0;
 		spriteSpeed = 15;
 		actualFrame = 0;
@@ -47,7 +47,6 @@ public:
 	FireTexture* getFireTexture() {
 		return fireTexture;
 	}
-
 };
 
 
@@ -63,7 +62,7 @@ public:
 	int explosionCounter;
 	int explosionType;
 
-	Fire(FireTexture* ft,  Collider2d &col, int type = 0) : Entity(col) {
+	Fire(FireTexture* ft, int type = 0) : Entity() {
 		spriteCounter = 0;
 		spriteSpeed = 5;
 		actualFrame = 0;

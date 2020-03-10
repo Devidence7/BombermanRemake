@@ -10,22 +10,10 @@ public:
 	sf::Vector2f velocity; // Speed of the Entity right now.
 	sf::Vector2f size; // Size of the Entity
 	
-	Collider2d *body =nullptr;
 	bool expiredEntity = false; // Mark the entity as expired to be deleted
-
-	bool hasCollider()const{
-		return body != nullptr;
-	}
-
-	virtual sf::Vector2f getPosition() const{
-		return this->sf::Sprite::getPosition();
-	}
 
 	virtual sf::FloatRect getGlobalBounds() const
 	{
-		//if(this->body != nullptr){
-		//	return body->getRect();
-		//}
 		return this->sf::Sprite::getGlobalBounds();
 	}
 
@@ -33,9 +21,7 @@ public:
 		return this->Entity::getGlobalBounds().intersects(e.getGlobalBounds());
 	}
 
-	Entity(){}
-	Entity(Collider2d &col) : body(&col){}
-	Entity(Collider2d *col) : body(col){}
+	Entity() : Sprite(){}
 
 	virtual void update(void) {
 		throw NoImplementedException("Intentando ejecutar UPDATE Entity");

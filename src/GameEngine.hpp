@@ -5,6 +5,7 @@
 #include "Entities/Bomb.h"
 #include "Map/Map.hpp"
 #include "Entities/Player.h"
+#include "Entities/Enemy.h"
 #include "Textures/TextureStorage.h"
 #include "Phisics/collider2d.hpp"
 
@@ -90,8 +91,8 @@ public:
 			// Do nothing
 		}
 		else {
-			Collider2d colFire(sf::Vector2f(0, 0), sf::FloatRect(0, 0, 48, 48), true);
-			std::shared_ptr<Fire> f = std::make_shared<Fire>(Fire(b->getFireTexture(), colFire, type));
+			//Collider2d colFire(sf::Vector2f(0, 0), sf::FloatRect(0, 0, 48, 48), true);
+			std::shared_ptr<Fire> f = std::make_shared<Fire>(Fire(b->getFireTexture(), type));
 			f->setPosition(posX, posY);
 			addEntity(f);
 		}
@@ -109,7 +110,6 @@ public:
 		// Right:
 		createFire(b, 5, b->getPosition().x + 48, b->getPosition().y);
 	}
-
 };
 
 
@@ -126,34 +126,32 @@ private:
 	TextureStorage textureStorage;
 	Level level;
 	Sprite BackgroundSprite;
-	int uno = 1;
-	PlayerEntity player;
+	PlayerEntity *player;
 
 public:
-	Game() : level(1, ball_walls) {
-		textureStorage = TextureStorage();
+	Game() : level(1, ball_walls){
+		player = new PlayerEntity(textureStorage.getPlayerTexture());
 	}
 	void start();
 
 	void update() {
 		level.update();
 
-		if (player.updatePlayer()) {
+		if (player->updatePlayer()) {
 			// If there is nothing in that cell:
 			//if(level.map.getCellObject(level.map.getMapCoordinates(player.getCenterPosition())) == nullptr) {
-			Collider2d colFire(sf::Vector2f(0, 0), sf::FloatRect(0, 0, 1, 1), true);
-			std::shared_ptr<Bomb> b = std::make_shared<Bomb>(Bomb(textureStorage.getBombTexture(), textureStorage.getFireTexture(), colFire));
-			b->setPosition(level.map.getMapCellCorner(player.getCenterPosition()));
+			//Collider2d colFire(sf::Vector2f(0, 0), sf::FloatRect(0, 0, 1, 1), true);
+			std::shared_ptr<Bomb> b = std::make_shared<Bomb>(Bomb(textureStorage.getBombTexture(), textureStorage.getFireTexture()));
+			b->setPosition(level.map.getMapCellCorner(player->getCenterPosition()));
 			level.addEntity(b);
 			//}
-
 		}
-		level.checkAndFixCollisions(this->player);
+		level.checkAndFixCollisions(*player);
 
 	}
 
 	void draw(RenderWindow& w) {
 		level.draw(w);
-		w.draw(player);
+		w.draw(*player);
 	}
 };
