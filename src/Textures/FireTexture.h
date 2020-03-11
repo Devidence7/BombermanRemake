@@ -21,10 +21,6 @@ public:
 		}
 	}
 
-	sf::Texture& getTexture() {
-		return this->texture;
-	}
-
 	sf::IntRect& getFrame(int stage, int i) {
 		return this->frames[7 * stage + i];
 	}

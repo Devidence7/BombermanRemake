@@ -14,7 +14,7 @@ public:
 	int spriteFrames;
 
 	int explosionCounter;
-	Bomb(BombTexture& bt, FireTexture& ft) : Entity() {
+	Bomb(BombTexture& bt, FireTexture& ft) : Entity(bt) {
 		spriteCounter = 0;
 		spriteSpeed = 15;
 		actualFrame = 0;
@@ -62,20 +62,13 @@ public:
 	int explosionCounter;
 	int explosionType;
 
-	Fire(FireTexture* ft, int type = 0) : Entity() {
+	Fire(FireTexture* ft, int type = 0) : Entity(*ft), fireTexture(ft) {
 		spriteCounter = 0;
 		spriteSpeed = 5;
 		actualFrame = 0;
 		spriteFrames = 5;
 		explosionCounter = 0;
 		explosionType = type;
-
-		// Texture Controller:
-		fireTexture = ft;
-		// Set starting sprite
-		setTextureRect(fireTexture->getFrame(0, explosionType));
-		// Set sprite Sheet texture
-		setTexture(fireTexture->getTexture());
 	}
 
 	void update() {

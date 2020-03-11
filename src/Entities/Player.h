@@ -28,7 +28,7 @@ public:
 	/*
 	Constructor of Entity
 	*/
-	PlayerEntity(PlayerTexture &pt) : Entity(), playerTexture(&pt)
+	PlayerEntity(PlayerTexture &pt) : Entity(pt), playerTexture(&pt)
 	{
 		lifes = 3;
 		baseSpeed = 1;
@@ -48,10 +48,6 @@ public:
 
 		// TODO: Remove this
 		move(100, 100);
-		// Set starting sprite
-		setTextureRect(playerTexture->getIdleSprite(lastMovement));
-		// Set sprite Sheet texture
-		setTexture(playerTexture->getTexture());
 	}
 
 
@@ -163,10 +159,10 @@ public:
 		animate(velocity);
 
 		// Move Entity position
-		/*if(!expiredEntity)
-		{*/
+		if(!expiredEntity)
+		{
 			move(velocity.x, velocity.y);
-		//}
+		}
 		
 
 		if (playerBOMB)

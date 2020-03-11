@@ -1,6 +1,5 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-
 #include "Include/global.hpp"
 #include "Entities/Bomb.h"
 #include "Map/Map.hpp"
@@ -131,6 +130,10 @@ private:
 public:
 	Game() : level(1, ball_walls){
 		player = new PlayerEntity(textureStorage.getPlayerTexture());
+		std::shared_ptr<EnemyEntity> e1 = std::make_shared<EnemyEntity>(Balloon(textureStorage.getEnemyTexture()));
+		std::shared_ptr<EnemyEntity> e2 = std::make_shared<EnemyEntity>(Ice(textureStorage.getEnemyTexture()));
+		level.addEntity(e1);
+		level.addEntity(e2);
 	}
 	void start();
 

@@ -11,7 +11,7 @@ public:
 	int explosionCounter;
 	bool isDestroyed = false;
 	
-	BrickWall(WallTexture& wt, int xloc, int yloc) : Entity() {
+	BrickWall(WallTexture& wt, int xloc, int yloc) : Entity(wt), wallTexture(&wt) {
 		spriteCounter = 0;
 		spriteSpeed = 3;
 		actualFrame = 0;
@@ -19,12 +19,6 @@ public:
 
 		// Set coordinates:
 		setPosition(xloc, yloc);
-		// Texture Controller:
-		wallTexture = &wt;
-		// Set starting sprite
-		setTextureRect(wallTexture->getRectWall(1));
-		// Set sprite Sheet texture
-		setTexture(wallTexture->getTexture());
 	}
 
 	void update() override {

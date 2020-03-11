@@ -9,6 +9,10 @@ protected:
 
 public:
 	sf::Texture& getTexture() {
-		return this->texture;
+		return texture;
+	}
+
+	virtual sf::IntRect& getDefaultIntRect() {
+		return frames[0];
 	}
 };

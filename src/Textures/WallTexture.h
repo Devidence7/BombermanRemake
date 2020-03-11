@@ -20,6 +20,10 @@ class WallTexture : public TextureVector {
 		}
 	}
 
+	sf::IntRect& getDefaultIntRect() override {
+		return frames[1];
+	}
+
 	sf::IntRect &getRectWall(int i){
 		return this->frames[i];
 	}
@@ -27,5 +31,4 @@ class WallTexture : public TextureVector {
 	sf::IntRect &getRectPillar(){
 		return this->frames[0];
 	}
-
 };

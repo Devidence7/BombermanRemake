@@ -17,11 +17,7 @@ public:
 		}
 	}
 
-	sf::Texture& getTexture() {
-		return this->texture;
-	}
-
 	sf::IntRect& getFrame(int i) {
-		return this->frames[i];
+		return frames[i];
 	}
 };

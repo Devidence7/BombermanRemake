@@ -35,8 +35,8 @@ public:
 		return frames[lookat * 4];
 	}
 
-	sf::IntRect& getMoveSprite(int i, int j) {
-		return frames[i * 4 + j];
+	sf::IntRect& getMoveSprite(LookingAt lookat, int i) {
+		return frames[lookat * 4 + i];
 	}
 
 	sf::IntRect& getDeathSprite(int i) {
