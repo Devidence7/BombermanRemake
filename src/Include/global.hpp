@@ -19,7 +19,14 @@ enum PlayerEvent{
 
 enum EnemyType {
 	balloon = 0,
-	ice = 1
+	ice = 1,
+	barrel = 2,
+	coin = 3,
+	blob = 4,
+	ghost = 5,
+	hypo = 6
+	
+	
 };
 
 const int TOTAL_ENEMY_FRAMES = 13;

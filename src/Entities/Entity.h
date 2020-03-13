@@ -3,7 +3,6 @@
 
 
 #include "../Exceptions/ExceptionsGame.hpp"
-#include "../Phisics/collider2d.hpp"
 
 
 class Entity : public sf::Sprite {

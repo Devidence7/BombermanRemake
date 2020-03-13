@@ -6,7 +6,6 @@
 #include "Entities/Player.h"
 #include "Entities/Enemy.h"
 #include "Textures/TextureStorage.h"
-#include "Phisics/collider2d.hpp"
 
 using namespace sf;
 
