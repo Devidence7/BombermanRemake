@@ -132,8 +132,18 @@ public:
 		player = new PlayerEntity(textureStorage.getPlayerTexture());
 		std::shared_ptr<EnemyEntity> e1 = std::make_shared<EnemyEntity>(Balloon(textureStorage.getEnemyTexture()));
 		std::shared_ptr<EnemyEntity> e2 = std::make_shared<EnemyEntity>(Ice(textureStorage.getEnemyTexture()));
+		std::shared_ptr<EnemyEntity> e3 = std::make_shared<EnemyEntity>(Barrel(textureStorage.getEnemyTexture()));
+		std::shared_ptr<EnemyEntity> e4 = std::make_shared<EnemyEntity>(Coin(textureStorage.getEnemyTexture()));
+		std::shared_ptr<EnemyEntity> e5 = std::make_shared<EnemyEntity>(Blob(textureStorage.getEnemyTexture()));
+		std::shared_ptr<EnemyEntity> e6 = std::make_shared<EnemyEntity>(Ghost(textureStorage.getEnemyTexture()));
+		std::shared_ptr<EnemyEntity> e7 = std::make_shared<EnemyEntity>(Hypo(textureStorage.getEnemyTexture()));
 		level.addEntity(e1);
 		level.addEntity(e2);
+		level.addEntity(e3);
+		level.addEntity(e4);
+		level.addEntity(e5);
+		level.addEntity(e6);
+		level.addEntity(e7);
 	}
 	void start();
 
