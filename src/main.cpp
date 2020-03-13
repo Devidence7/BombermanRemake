@@ -2,6 +2,7 @@
 #include <iostream>
 #include <memory>
 #include "GameEngine.hpp"
+#include "Logic/Time.h"
 //#include "Map/Map.hpp"
 
 int windowsHeight = 600;
@@ -22,10 +23,13 @@ int main(int argc, char *argv[])
 	// Make maximum FPSs to 60. Somewhat control the player speed.
 	window.setFramerateLimit(60);
 
+	// Start counting the time:
+	GameTime::GameTime();
+
 	Game game;
 	// Start game loop
 	while (window.isOpen())
-	{
+	{		
 		// Process events
 		sf::Event event;
 		while (window.pollEvent(event))
