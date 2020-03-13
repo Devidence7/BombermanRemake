@@ -10,8 +10,8 @@
 class WallTexture : public TextureVector {
 	public:
 	WallTexture(){
-		if(!this->texture.loadFromFile("../textures/blocks.png")){
-			throw ExceptionLoadImage("Imagen no cargada: ../textures/blocks.png");
+		if(!this->texture.loadFromFile("../textures/Entities/blocks.png")){
+			throw ExceptionLoadImage("Imagen no cargada: ../textures/Entities/blocks.png");
 		}
 
 		for(int i = 0; i < 8; i++)

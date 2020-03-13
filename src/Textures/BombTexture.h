@@ -8,8 +8,8 @@ class BombTexture : public TextureVector {
 
 public:
 	BombTexture() {
-		if (!this->texture.loadFromFile("../textures/bombs.png")) {
-			throw ExceptionLoadImage("Imagen no cargada: ../textures/bombs.png");
+		if (!this->texture.loadFromFile("../textures/Entities/bombs.png")) {
+			throw ExceptionLoadImage("Imagen no cargada: ../textures/Entities/bombs.png");
 		}
 
 		for (int i = 0; i < 3; i++) {

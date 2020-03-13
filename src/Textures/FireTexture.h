@@ -9,8 +9,8 @@ class FireTexture : public TextureVector {
 
 public:
 	FireTexture() {
-		if (!this->texture.loadFromFile("../textures/fires.png")) {
-			throw ExceptionLoadImage("Imagen no cargada: ../textures/fires.png");
+		if (!this->texture.loadFromFile("../textures/Entities/fires.png")) {
+			throw ExceptionLoadImage("Imagen no cargada: ../textures/Entities/fires.png");
 		}
 
 		frames.reserve(5 * 7);
