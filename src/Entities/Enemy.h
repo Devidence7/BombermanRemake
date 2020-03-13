@@ -83,3 +83,48 @@ public:
 		move(200, 200);
 	}
 };
+
+class Barrel : public EnemyEntity {
+public:
+
+	Barrel(EnemyTexture& et) :EnemyEntity(et) {
+		enemyType = barrel;
+		move(120, 500);
+	}
+};
+
+class Coin : public EnemyEntity {
+public:
+
+	Coin(EnemyTexture& et) :EnemyEntity(et) {
+		enemyType = coin;
+		move(500, 450);
+	}
+};
+
+class Blob : public EnemyEntity {
+public:
+
+	Blob(EnemyTexture& et) :EnemyEntity(et) {
+		enemyType = blob;
+		move(400, 300);
+	}
+};
+
+class Ghost : public EnemyEntity {
+public:
+
+	Ghost(EnemyTexture& et) :EnemyEntity(et) {
+		enemyType = ghost;
+		move(200, 400);
+	}
+};
+
+class Hypo : public EnemyEntity {
+public:
+
+	Hypo(EnemyTexture& et) :EnemyEntity(et) {
+		enemyType = hypo;
+		move(400,600);
+	}
+};
