@@ -10,7 +10,7 @@ enum LookingAt {
 	};
 
 enum LookingAtBi {
-	bRight = 0, bLeft = 1
+	bRight = 1, bLeft = 0
 };
 
 enum PlayerEvent{
