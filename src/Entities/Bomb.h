@@ -2,19 +2,19 @@
 #include <iostream>
 #include "../Textures/BombTexture.h"
 #include "../Textures/FireTexture.h"
+#include "../Textures/TextureStorage.h"
 #include "Entity.h"
 
 class Bomb : public Entity {
 public:
 	BombTexture* bombTexture;
-	FireTexture* fireTexture;
 	int spriteCounter;
 	int spriteSpeed;
 	int actualFrame;
 	int spriteFrames;
 
 	int explosionCounter;
-	Bomb(BombTexture& bt, FireTexture& ft) : Entity(bt) {
+	Bomb() : Entity() {
 		spriteCounter = 0;
 		spriteSpeed = 15;
 		actualFrame = 0;
@@ -22,8 +22,7 @@ public:
 		explosionCounter = 0;
 
 		// Texture Controller:
-		bombTexture = &bt;
-		fireTexture = &ft;
+		bombTexture = &TextureStorage::getBombTexture();
 		// Set starting sprite
 		setTextureRect(bombTexture->getFrame(0));
 		// Set sprite Sheet texture
@@ -43,10 +42,6 @@ public:
 			setTextureRect(bombTexture->getFrame(actualFrame));
 		}
 	}
-
-	FireTexture* getFireTexture() {
-		return fireTexture;
-	}
 };
 
 
@@ -62,16 +57,23 @@ public:
 	int explosionCounter;
 	int explosionType;
 
-	Fire(FireTexture* ft, int type = 0) : Entity(*ft), fireTexture(ft) {
+	Fire(int type = 0) : Entity() {
 		spriteCounter = 0;
 		spriteSpeed = 5;
 		actualFrame = 0;
 		spriteFrames = 5;
 		explosionCounter = 0;
 		explosionType = type;
+
+		// Texture Controller:
+		fireTexture = &TextureStorage::getFireTexture();
+		// Set starting sprite
+		setTextureRect(fireTexture->getFrame(0, type));
+		// Set sprite Sheet texture
+		setTexture(fireTexture->getTexture());
 	}
 
-	void update() {
+	void update() override{
 		explosionCounter++;
 		if (explosionCounter >= 25) {
 			expiredEntity = true;

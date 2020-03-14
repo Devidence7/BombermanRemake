@@ -10,19 +10,9 @@ public:
 	float baseSpeed = 1;// Base Entity Speed 
 	sf::Vector2f velocity; // Speed of the Entity right now.
 	sf::Vector2f size; // Size of the Entity
-	
 	bool expiredEntity = false; // Mark the entity as expired to be deleted
 
-
 	Entity() : Sprite() {}
-
-	Entity(TextureVector& tv) : Sprite() {
-		// Set starting sprite
-		setTextureRect(tv.getDefaultIntRect());
-		// Set sprite Sheet texture
-		setTexture(tv.getTexture());
-	}
-	
 
 	virtual sf::FloatRect getGlobalBounds() const
 	{
@@ -33,7 +23,8 @@ public:
 		return this->Entity::getGlobalBounds().intersects(e.getGlobalBounds());
 	}
 
-	virtual void update(void) {
+	virtual void update() {
 		throw NoImplementedException("Intentando ejecutar UPDATE Entity");
 	}
+	
 };

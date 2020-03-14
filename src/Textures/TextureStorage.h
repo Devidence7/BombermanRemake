@@ -1,15 +1,16 @@
 #pragma once
 #include "BombTexture.h"
+#include "EnemyTexture.h"
 #include "PlayerTexture.hpp"
 #include "WallTexture.h"
 #include "FireTexture.h"
 
 class TextureStorage {
-	PlayerTexture playerTexture;
-	WallTexture level1WallTexture;
-	BombTexture bombTexture;
-	FireTexture fireTexture;
-	EnemyTexture enemyTexture; 
+	static PlayerTexture playerTexture;
+	static WallTexture level1WallTexture;
+	static BombTexture bombTexture;
+	static FireTexture fireTexture;
+	static EnemyTexture enemyTexture; 
 
 public:
 
@@ -18,24 +19,32 @@ public:
 		
 	}
 
-	PlayerTexture& getPlayerTexture() {
+	static PlayerTexture& getPlayerTexture() {
 		return playerTexture;
 	}
 
-	WallTexture& getlevel1WallTexture() {
+	static WallTexture& getlevel1WallTexture() {
 		return level1WallTexture;
 	}
 
-	BombTexture& getBombTexture() {
+	static BombTexture& getBombTexture() {
 		return bombTexture;
 	}
 
-	FireTexture& getFireTexture() {
+	static FireTexture& getFireTexture() {
 		return fireTexture;
-		
 	}
 
-	EnemyTexture& getEnemyTexture() {
+	static EnemyTexture& getEnemyTexture() {
 		return enemyTexture;
 	}
 };
+
+
+PlayerTexture TextureStorage::playerTexture;
+WallTexture TextureStorage::level1WallTexture;
+BombTexture TextureStorage::bombTexture;
+FireTexture TextureStorage::fireTexture;
+EnemyTexture TextureStorage::enemyTexture;
+
+

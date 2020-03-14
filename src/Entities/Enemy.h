@@ -17,10 +17,17 @@ protected:
 	EnemyType enemyType;
 	
 public:
-	EnemyEntity(EnemyTexture& et) : Entity(et), enemyTexture(&et)
+	EnemyEntity() : Entity()
 	{
 		velocity.x = baseSpeed;
 		velocity.y = baseSpeed;
+
+		// Texture Controller
+		enemyTexture = &TextureStorage::getEnemyTexture();
+		// Set starting sprite
+		setTextureRect(enemyTexture->getDefaultIntRect());
+		// Set sprite Sheet texture
+		setTexture(enemyTexture->getTexture());
 	}
 
 	void updateVelocity() {
@@ -69,7 +76,7 @@ public:
 class Balloon : public EnemyEntity {
 public:
 
-	Balloon(EnemyTexture& et) :EnemyEntity(et) {
+	Balloon() :EnemyEntity() {
 		enemyType = balloon;
 		move(500, 100);
 	}
@@ -78,7 +85,7 @@ public:
 class Ice : public EnemyEntity {
 public:
 
-	Ice(EnemyTexture& et) :EnemyEntity(et) {
+	Ice() :EnemyEntity() {
 		enemyType = ice;
 		move(200, 200);
 	}
@@ -87,7 +94,7 @@ public:
 class Barrel : public EnemyEntity {
 public:
 
-	Barrel(EnemyTexture& et) :EnemyEntity(et) {
+	Barrel() :EnemyEntity() {
 		enemyType = barrel;
 		move(120, 500);
 	}
@@ -96,7 +103,7 @@ public:
 class Coin : public EnemyEntity {
 public:
 
-	Coin(EnemyTexture& et) :EnemyEntity(et) {
+	Coin() :EnemyEntity() {
 		enemyType = coin;
 		move(500, 450);
 	}
@@ -105,7 +112,7 @@ public:
 class Blob : public EnemyEntity {
 public:
 
-	Blob(EnemyTexture& et) :EnemyEntity(et) {
+	Blob() :EnemyEntity() {
 		enemyType = blob;
 		move(400, 300);
 	}
@@ -114,7 +121,7 @@ public:
 class Ghost : public EnemyEntity {
 public:
 
-	Ghost(EnemyTexture& et) :EnemyEntity(et) {
+	Ghost() :EnemyEntity() {
 		enemyType = ghost;
 		move(200, 400);
 	}
@@ -123,7 +130,7 @@ public:
 class Hypo : public EnemyEntity {
 public:
 
-	Hypo(EnemyTexture& et) :EnemyEntity(et) {
+	Hypo() :EnemyEntity() {
 		enemyType = hypo;
 		move(400,600);
 	}

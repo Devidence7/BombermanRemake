@@ -4,6 +4,8 @@
 #define sizeTextureX 48
 #define sizeTextureY 48
 
+#define SIZE_PILLAR 48
+
 
 enum LookingAt {
 		down = 0, up = 1, left = 2, right = 3
@@ -20,11 +22,11 @@ enum PlayerEvent{
 enum EnemyType {
 	balloon = 0,
 	ice = 1,
-	barrel = 2,
-	coin = 3,
-	blob = 4,
-	ghost = 5,
-	hypo = 6
+	barrel = 4,
+	coin = 2,
+	blob = 6,
+	ghost = 7,
+	hypo = 8
 	
 	
 };

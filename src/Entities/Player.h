@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "../Textures/PlayerTexture.hpp"
+#include "../Textures/TextureStorage.h"
 #include "Entity.h"
 
 class PlayerEntity : public Entity
@@ -28,7 +29,7 @@ public:
 	/*
 	Constructor of Entity
 	*/
-	PlayerEntity(PlayerTexture &pt) : Entity(pt), playerTexture(&pt)
+	PlayerEntity() : Entity()
 	{
 		lifes = 3;
 		baseSpeed = 1;
@@ -45,6 +46,13 @@ public:
 		idleSpeed = 10;
 
 		lastMovement = LookingAt::down;
+
+		// Texture Controller
+		playerTexture = &TextureStorage::getPlayerTexture();
+		// Set starting sprite
+		setTextureRect(playerTexture->getDefaultIntRect());
+		// Set sprite Sheet texture
+		setTexture(playerTexture->getTexture());
 
 		// TODO: Remove this
 		move(100, 100);
@@ -94,7 +102,7 @@ public:
 		return sf::Vector2f(p.left + p.width/2, p.top + p.height / 2);
 	}
 
-	void update()
+	void update() override
 	{
 		return;
 	}
