@@ -10,41 +10,23 @@ class PlayerEntity : public Entity
 public:
 	unsigned int lifes;
 	unsigned int bombsTimeLimit = 30;
-	int actualframe = 0;
-	int frameSpeed = 10;
-	int frameCounter = 0;
-	float speedBoost = 1;
+	unsigned int speedBoost = 1;
+
+	int	animationCounter = 0;			// Actual tick
+	int	currentFrame = 0;				// Frame we are now
+	const int walkFrames = 4;			// Number of walking sprites
+	const int deathFrames = 7;
+	const int	frameSpeed = 8;		// Number of tics
 
 	PlayerTexture *playerTexture;
 	LookingAt lastMovement; // Save last looked direction
 	
-	int	animationCounter{},
-		walkFrames,  // Number of walking sprites
-		walkCounter,  // Number of walking sprites
-		idleFrames, // Number of idleling sprites
-		idleCounter, // Number of idleling sprites
-		walkSpeed,	// Number of ticks between walking sprites
-		idleSpeed; // Number of ticks between idleling sprites
-
 	/*
 	Constructor of Entity
 	*/
 	PlayerEntity() : Entity()
 	{
-		lifes = 3;
-		baseSpeed = 1;
-		speedBoost = 5;
-		velocity.x = 0;
-		velocity.y = 0;
-
-		// Initialize sprite counters
-		walkCounter = 0;
-		walkFrames = 4;
-		idleCounter = 0;
-		idleFrames = 1;
-		walkSpeed = 8;
-		idleSpeed = 10;
-
+		baseSpeed = 2.5;
 		lastMovement = LookingAt::down;
 
 		// Texture Controller
@@ -56,6 +38,14 @@ public:
 
 		// TODO: Remove this
 		move(100, 100);
+	}
+
+	void setExpiredEntity() override {
+		if (!expiredEntity) {
+			expiredEntity = true;
+			currentFrame = 0;
+			animationCounter = 0;
+		}
 	}
 
 
@@ -73,25 +63,25 @@ public:
 			}
 			else {
 				// If there is speed we must update animation sprite every X time
-				if (frameCounter == 0) {
-					setTextureRect(playerTexture->getMoveSprite(lastMovement,actualframe));
-					actualframe = (actualframe + 1) % 4;
+				if (animationCounter == 0) {
+					setTextureRect(playerTexture->getMoveSprite(lastMovement, currentFrame));
+					currentFrame = (currentFrame + 1) % walkFrames;
 				}
-				frameCounter = (frameCounter + 1) % frameSpeed;
+				animationCounter = (animationCounter + 1) % frameSpeed;
 			}
 		}
 		else
 		{
-			if(actualframe == 6 && frameCounter == 0){
+			if(currentFrame == 6 && animationCounter == 0){
 				expiredEntity = false;
 				setPosition(100, 100);
 			}
 			
-			if (frameCounter == 0) {
-				setTextureRect(playerTexture->getDeathSprite(actualframe));
-				actualframe = (actualframe + 1) % 7;
+			if (animationCounter == 0) {
+				setTextureRect(playerTexture->getDeathSprite(currentFrame));
+				currentFrame = (currentFrame + 1) % deathFrames;
 			}
-			frameCounter = (frameCounter + 1) % frameSpeed;
+			animationCounter = (animationCounter + 1) % frameSpeed;
 		}
 	}
 

@@ -7,8 +7,8 @@ class EnemyEntity : public Entity {
 private:
 	EnemyTexture* enemyTexture;
 	LookingAtBi lookingDir = bRight;
-	int	animationCounter = 0;	// Actual tick
-	int	currentFrame = 0;		// Frame we are now
+	int	animationCounter = 0;			// Actual tick
+	int	currentFrame = 0;				// Frame we are now
 	const int walkFrames = 4;			// Number of walking sprites
 	const int deathFrames = 5;
 	const int	framesSpeed = 8;		// Number of ticks between walking sprites

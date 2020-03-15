@@ -91,7 +91,7 @@ public:
 
 			// Update the entities.
 			(*it)->update();
-			if ((*it)->expiredEntity) {
+			if ((*it)->getExpiredEntity()) {
 
 				// If it is a bomb
 				std::shared_ptr<Bomb> b;
@@ -205,7 +205,7 @@ public:
 
 	void checkAndFixCollisions(Entity& eCollisioning) {
 		for(Entity_ptr _e : entities){
-			if (_e->expiredEntity) {
+			if (_e->getExpiredEntity()) {
 				_e = nullptr;
 				continue;
 			}
@@ -252,10 +252,10 @@ public:
 				}*/
 
 				if (std::dynamic_pointer_cast<Fire>(_e) != nullptr){
-					eCollisioning.expiredEntity = true;
+					eCollisioning.setExpiredEntity();
 				}
 				else if (dynamic_cast<PlayerEntity*>(&eCollisioning) != nullptr && std::dynamic_pointer_cast<EnemyEntity>(_e) != nullptr) {
-					eCollisioning.expiredEntity = true;
+					eCollisioning.setExpiredEntity();
 				}
 				else {
 					double x;
@@ -282,7 +282,7 @@ public:
 	}
 
 	Entity_ptr& getCellObject(sf::Vector2i pos) {
-		if (map[pos.y][pos.x].get() != nullptr && map[pos.y][pos.x].get()->expiredEntity) {
+		if (map[pos.y][pos.x].get() != nullptr && map[pos.y][pos.x].get()->getExpiredEntity()) {
 			map[pos.y][pos.x].reset();
 		}
 		return map[pos.y][pos.x];
