@@ -82,6 +82,11 @@ public:
 		}
 		else
 		{
+			if(actualframe == 6 && frameCounter == 0){
+				expiredEntity = false;
+				setPosition(100, 100);
+			}
+			
 			if (frameCounter == 0) {
 				setTextureRect(playerTexture->getDeathSprite(actualframe));
 				actualframe = (actualframe + 1) % 7;
