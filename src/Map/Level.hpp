@@ -133,6 +133,7 @@ public:
 		Entity_ptr e = getCellObject(getMapCoordinates(posX, posY));
 		std::shared_ptr<BrickWall> bw;
 		std::shared_ptr<Pillar> p;
+		
 		if ((bw = std::dynamic_pointer_cast<BrickWall>(e)) != nullptr) {
 			;
 			bw->isDestroyed = true;
@@ -281,6 +282,9 @@ public:
 	}
 
 	Entity_ptr& getCellObject(sf::Vector2i pos) {
+		if (map[pos.y][pos.x].get() != nullptr && map[pos.y][pos.x].get()->expiredEntity) {
+			map[pos.y][pos.x].reset();
+		}
 		return map[pos.y][pos.x];
 	}
 };
