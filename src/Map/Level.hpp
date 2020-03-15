@@ -202,14 +202,14 @@ public:
 		return (cornerDistance_sq <= pow(circle.width, 2));
 	}
 
-	void checkAndFixCollisions(Entity& e) {
+	void checkAndFixCollisions(Entity& eCollisioning) {
 		for(Entity_ptr _e : entities){
 			if (_e->expiredEntity) {
 				_e = nullptr;
 				continue;
 			}
 
-			if (e.collision(*_e)) {
+			if (eCollisioning.collision(*_e)) {
 
 
 				//calcular centro
@@ -250,10 +250,18 @@ public:
 					e.setPosition(e.getPosition().x + t.x / 100, e.getPosition().y + t.y / 100);
 				}*/
 
-				double x;
-				double y;
-				while (intersectsCircleRect(e, *_e, x, y)) {
-					e.setPosition(e.getPosition().x + x, e.getPosition().y + y);
+				if (std::dynamic_pointer_cast<Fire>(_e) != nullptr){
+					eCollisioning.expiredEntity = true;
+				}
+				else if (dynamic_cast<PlayerEntity*>(&eCollisioning) != nullptr && std::dynamic_pointer_cast<EnemyEntity>(_e) != nullptr) {
+					eCollisioning.expiredEntity = true;
+				}
+				else {
+					double x;
+					double y;
+					while (intersectsCircleRect(eCollisioning, *_e, x, y)) {
+						eCollisioning.setPosition(eCollisioning.getPosition().x + x, eCollisioning.getPosition().y + y);
+					}
 				}
 			}	
 		}

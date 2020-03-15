@@ -25,6 +25,7 @@ int main(int argc, char *argv[])
 
 	// Start counting the time:
 	GameTime::GameTime();
+	
 
 	Game game;
 	// Start game loop
