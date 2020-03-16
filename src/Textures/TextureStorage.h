@@ -4,6 +4,7 @@
 #include "PlayerTexture.hpp"
 #include "WallTexture.h"
 #include "FireTexture.h"
+#include "PowerUpTexture.h"
 
 class TextureStorage {
 	static PlayerTexture playerTexture;
@@ -11,6 +12,7 @@ class TextureStorage {
 	static BombTexture bombTexture;
 	static FireTexture fireTexture;
 	static EnemyTexture enemyTexture; 
+	static PowerUpTexture powerUpTexture;
 
 public:
 
@@ -37,6 +39,10 @@ public:
 
 	static EnemyTexture& getEnemyTexture() {
 		return enemyTexture;
+	}
+
+	static PowerUpTexture& getPowerUpTexture() {
+		return powerUpTexture;
 	}
 };
 

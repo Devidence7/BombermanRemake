@@ -27,8 +27,11 @@ enum EnemyType {
 	blob = 6,
 	ghost = 7,
 	hypo = 8
-	
-	
+};
+
+enum PowerUpType {
+	moreFire = 0,
+	lessFire = 1
 };
 
 const int TOTAL_ENEMY_FRAMES = 13;

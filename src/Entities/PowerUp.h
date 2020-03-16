@@ -1,16 +1,19 @@
 #pragma once
 #include "Entity.h"
+#include "../Textures/PowerUpTexture.h"
+#include "../Textures/TextureStorage.h"
 
-class Bomb : public Entity {
+class PowerUp : public Entity {
 public:
-	BombTexture* bombTexture;
+	PowerUpTexture* powerUpTexture;
+	PowerUpType powerUpType;
 	int spriteCounter;
 	int spriteSpeed;
 	int actualFrame;
 	int spriteFrames;
 
 	int explosionCounter;
-	Bomb() : Entity() {
+	PowerUp() : Entity() {
 		spriteCounter = 0;
 		spriteSpeed = 15;
 		actualFrame = 0;
@@ -18,14 +21,19 @@ public:
 		explosionCounter = 0;
 
 		// Texture Controller:
-		bombTexture = &TextureStorage::getBombTexture();
+		powerUpTexture = &TextureStorage::getPowerUpTexture();
 		// Set starting sprite
-		setTextureRect(bombTexture->getFrame(0));
+		setTextureRect(powerUpTexture->getDefaultIntRect());
 		// Set sprite Sheet texture
-		setTexture(bombTexture->getTexture());
+		setTexture(powerUpTexture->getTexture());
 	}
+
 
 	void update() {
 
 	}
+};
+
+class MoreFirePowerUp : public PowerUp {
+	powerUpType = moreFire;
 };
