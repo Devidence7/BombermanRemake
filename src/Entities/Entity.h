@@ -20,6 +20,11 @@ public:
 		return this->sf::Sprite::getGlobalBounds();
 	}
 
+	virtual sf::Vector2f getCenterPosition() {
+		sf::FloatRect p = getGlobalBounds();
+		return sf::Vector2f(p.left + p.width / 2, p.top + p.height / 2);
+	}
+
 	bool collision(const Entity & e) const{
 		return this->Entity::getGlobalBounds().intersects(e.getGlobalBounds());
 	}

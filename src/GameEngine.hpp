@@ -63,5 +63,8 @@ public:
 	void draw(RenderWindow& w) {
 		level->draw(w);
 		w.draw(*player);
+		if (level->HITBOX_DEBUG_MODE) {
+			level->drawEntityHitbox(w, *player);
+		}
 	}
 };

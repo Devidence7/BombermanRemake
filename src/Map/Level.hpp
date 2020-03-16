@@ -28,8 +28,8 @@ class Level {
 	int dimX = 25;
 	std::vector<std::vector<Entity_ptr>> map;
 	sf::RectangleShape floor;
-
 public:
+	bool HITBOX_DEBUG_MODE = true;
 
 	Level() {
 		// Reserve space for faster insert, delete of the entities
@@ -114,6 +114,40 @@ public:
 		}
 	}
 
+	/*
+	 * This is a DEBUG method, draws in the RenderWindow the hitbox of the Entity
+	*/
+	void drawEntityHitbox(sf::RenderWindow &w, Entity& e) {
+		sf::FloatRect dim = e.getGlobalBounds();
+		sf::VertexArray lines(sf::Lines, 2);
+
+		// Left
+		lines[0].position = sf::Vector2f(dim.left, dim.top);
+		lines[0].color = sf::Color::Red;
+		lines[1].position = sf::Vector2f(dim.left, dim.top + dim.height);
+		lines[1].color = sf::Color::Red;
+		w.draw(lines);
+
+		// top
+		lines[0].position = sf::Vector2f(dim.left, dim.top);
+		lines[0].color = sf::Color::Red;
+		lines[1].position = sf::Vector2f(dim.left + dim.width, dim.top);
+		lines[1].color = sf::Color::Red;
+		w.draw(lines);
+
+		lines[0].position = sf::Vector2f(dim.left, dim.top + dim.height);
+		lines[0].color = sf::Color::Red;
+		lines[1].position = sf::Vector2f(dim.left + dim.width, dim.top + dim.height);
+		lines[1].color = sf::Color::Red;
+		w.draw(lines);
+
+		lines[0].position = sf::Vector2f(dim.left + dim.width, dim.top);
+		lines[0].color = sf::Color::Red;
+		lines[1].position = sf::Vector2f(dim.left + dim.width, dim.top + dim.height);
+		lines[1].color = sf::Color::Red;
+		w.draw(lines);
+	}
+
 	void draw(sf::RenderWindow& w) {
 		// Draw the floor:
 		w.draw(floor);
@@ -121,6 +155,9 @@ public:
 		// Draw the entities
 		for (auto e : entities) {
 			w.draw(*e);
+			if (HITBOX_DEBUG_MODE) {
+				drawEntityHitbox(w, *e);
+			}
 		}
 	}
 
@@ -175,23 +212,32 @@ public:
 
 	bool intersectsCircleRect(Entity& e1circle, Entity& e2rect, double& x, double& y) {
 		sf::FloatRect circle = e1circle.getGlobalBounds();
+		sf::Vector2f circleC = e1circle.getCenterPosition();
 		sf::FloatRect rect = e2rect.getGlobalBounds();
+		sf::Vector2f recteC = e2rect.getCenterPosition();
 
 		sf::Vector2f circleDistance;
-		x = (circle.left + circle.width / 2) - (rect.left + rect.width / 2);
-		y = (circle.top + circle.width / 2) - (rect.top + rect.height / 2);
+
+		//std::cout << "1" << std::endl;
+
+		x = (circleC.x - recteC.x);
+		y = (circleC.y - recteC.y);
 		circleDistance.x = abs(x);
 		circleDistance.y = abs(y);
 
-		if (circleDistance.x > (rect.width / 2 + circle.width)) { return false; }
-		if (circleDistance.y > (rect.height / 2 + circle.width)) { return false; }
+		//std::cout << "2" << std::endl;
 
+		// circle.width and circle.height should be the same (it is the radius).
+		if (circleDistance.x > (rect.width / 2 + circle.width / 2)) { return false; }
+		if (circleDistance.y > (rect.height / 2 + circle.height / 2)) { return false; }
+
+		// Move one pixel modulus
 		float moduloCentro = sqrtf(x * x + y * y);
 		x /= moduloCentro;
 		y /= moduloCentro;
 
-		x /= 1000.0;
-		y /= 1000.0;
+		// x /= 1000.0;
+		// y /= 1000.0;
 
 		if (circleDistance.x <= (rect.width / 2)) { return true; }
 		if (circleDistance.y <= (rect.height / 2)) { return true; }
@@ -200,7 +246,7 @@ public:
 		cornerDistance_sq = pow((circleDistance.x - rect.width / 2), 2) +
 			pow((circleDistance.y - rect.height / 2), 2);
 
-		return (cornerDistance_sq <= pow(circle.width, 2));
+		return (cornerDistance_sq <= pow(circle.width / 2, 2));
 	}
 
 	void checkAndFixCollisions(Entity& eCollisioning) {
@@ -210,7 +256,8 @@ public:
 				continue;
 			}
 
-			if (eCollisioning.collision(*_e)) {
+			double dumb1, dumb2;
+			if (intersectsCircleRect(eCollisioning,*_e,dumb1, dumb2)) {
 
 
 				//calcular centro

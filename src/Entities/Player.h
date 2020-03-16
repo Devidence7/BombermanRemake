@@ -88,13 +88,7 @@ public:
 	sf::FloatRect getGlobalBounds() const override
 	{
 		sf::FloatRect dim = sf::Sprite::getGlobalBounds();
-		return sf::FloatRect(dim.left + (3 * dim.width / 8), dim.top + dim.height - dim.width / 4, dim.width / 4, dim.height / 4);
-	}
-
-	sf::Vector2f getCenterPosition()
-	{
-		sf::FloatRect p = getGlobalBounds();
-		return sf::Vector2f(p.left + p.width/2, p.top + p.height / 2);
+		return sf::FloatRect(dim.left + 15, dim.top + 45, 27, 27);
 	}
 
 	void update() override
