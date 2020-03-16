@@ -308,7 +308,48 @@ public:
 					double x;
 					double y;
 					while (intersectsCircleRect(eCollisioning, *_e, x, y)) {
-						eCollisioning.setPosition(eCollisioning.getPosition().x + x, eCollisioning.getPosition().y + y);
+						sf::Vector2f blockCpos = _e->getCenterPosition();
+						sf::Vector2i mapPos = getMapCoordinates(blockCpos);
+
+						// This is for not guide Bomberman to a hole if he can't go there
+						if (abs(x) > abs(y)) {
+							if (y < 0) {
+								if (getCellObject(mapPos.x, mapPos.y - 1)) {
+									eCollisioning.move(x, 0);
+								}
+								else {
+									eCollisioning.move(x, y);
+								}
+							}
+							else {
+								if (getCellObject(mapPos.x, mapPos.y + 1)) {
+									eCollisioning.move(x, 0);
+								}
+								else {
+									eCollisioning.move(x, y);
+								}
+							}
+							
+						}
+						else {
+							if (x < 0) {
+								if (getCellObject(mapPos.x - 1, mapPos.y)) {
+									eCollisioning.move(0, y);
+								}
+								else {
+									eCollisioning.move(x, y);
+								}
+							}
+							else {
+								if (getCellObject(mapPos.x + 1, mapPos.y)) {
+									eCollisioning.move(0, y);
+								}
+								else {
+									eCollisioning.move(x, y);
+								}
+							}
+						}
+						
 					}
 				}
 			}	
@@ -328,10 +369,14 @@ public:
 		return sf::Vector2f((int)pos.x / SIZE_PILLAR * SIZE_PILLAR, (int)pos.y / SIZE_PILLAR * SIZE_PILLAR);
 	}
 
-	Entity_ptr& getCellObject(sf::Vector2i pos) {
-		if (map[pos.y][pos.x].get() != nullptr && map[pos.y][pos.x].get()->getExpiredEntity()) {
-			map[pos.y][pos.x].reset();
+	Entity_ptr& getCellObject(int x, int y) {
+		if (map[y][x].get() != nullptr && map[y][x].get()->getExpiredEntity()) {
+			map[y][x].reset();
 		}
-		return map[pos.y][pos.x];
+		return map[y][x];
+	}
+
+	Entity_ptr& getCellObject(sf::Vector2i pos) {
+		return getCellObject(pos.x, pos.y);
 	}
 };
