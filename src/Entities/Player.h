@@ -3,20 +3,24 @@
 #include <iostream>
 #include "../Textures/PlayerTexture.hpp"
 #include "../Textures/TextureStorage.h"
+#include "../Logic/Time.h"
 #include "Entity.h"
 
 class PlayerEntity : public Entity
 {
 public:
+	// Gameplay variables:
 	unsigned int lifes;
-	unsigned int bombsTimeLimit = 30;
 	unsigned int speedBoost = 1;
 
-	int	animationCounter = 0;			// Actual tick
+	unsigned int bombsTimeLimit = 30;
+
+	// Texture varibles:
+	double	animLastTic = 0;			// Last time frame changed
 	int	currentFrame = 0;				// Frame we are now
 	const int walkFrames = 4;			// Number of walking sprites
-	const int deathFrames = 7;
-	const int	frameSpeed = 8;		// Number of tics
+	const int deathFrames = 7;			// Number of death sprites
+	const double frameSpeed = 0.15;		// Time between frames
 
 	PlayerTexture *playerTexture;
 	LookingAt lastMovement; // Save last looked direction
@@ -26,6 +30,7 @@ public:
 	*/
 	PlayerEntity() : Entity()
 	{
+		animLastTic = GameTime::getTimeNow();
 		baseSpeed = 2.5;
 		lastMovement = LookingAt::down;
 
@@ -44,7 +49,7 @@ public:
 		if (!expiredEntity) {
 			expiredEntity = true;
 			currentFrame = 0;
-			animationCounter = 0;
+			animLastTic = GameTime::getTimeNow();
 		}
 	}
 
@@ -63,25 +68,25 @@ public:
 			}
 			else {
 				// If there is speed we must update animation sprite every X time
-				if (animationCounter == 0) {
+				if (GameTime::getTimeNow() - animLastTic > frameSpeed) {
 					setTextureRect(playerTexture->getMoveSprite(lastMovement, currentFrame));
 					currentFrame = (currentFrame + 1) % walkFrames;
+					animLastTic = GameTime::getTimeNow();
 				}
-				animationCounter = (animationCounter + 1) % frameSpeed;
 			}
 		}
 		else
 		{
-			if(currentFrame == 6 && animationCounter == 0){
+			if(currentFrame == 6 && GameTime::getTimeNow() - animLastTic > frameSpeed){
 				expiredEntity = false;
 				setPosition(100, 100);
 			}
 			
-			if (animationCounter == 0) {
+			if (GameTime::getTimeNow() - animLastTic > frameSpeed) {
 				setTextureRect(playerTexture->getDeathSprite(currentFrame));
 				currentFrame = (currentFrame + 1) % deathFrames;
+				animLastTic = GameTime::getTimeNow();
 			}
-			animationCounter = (animationCounter + 1) % frameSpeed;
 		}
 	}
 

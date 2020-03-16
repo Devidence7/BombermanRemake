@@ -29,8 +29,6 @@ class Level {
 	std::vector<std::vector<Entity_ptr>> map;
 	sf::RectangleShape floor;
 public:
-	bool HITBOX_DEBUG_MODE = true;
-
 	Level() {
 		// Reserve space for faster insert, delete of the entities
 		entities.reserve(10000);

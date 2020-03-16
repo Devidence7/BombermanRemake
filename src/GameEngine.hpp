@@ -34,13 +34,13 @@ public:
 		std::shared_ptr<EnemyEntity> e5 = std::make_shared<EnemyEntity>(Blob());
 		std::shared_ptr<EnemyEntity> e6 = std::make_shared<EnemyEntity>(Ghost());
 		std::shared_ptr<EnemyEntity> e7 = std::make_shared<EnemyEntity>(Hypo());
-		level->addEntity(e1);
-		level->addEntity(e2);
-		level->addEntity(e3);
-		level->addEntity(e4);
-		level->addEntity(e5);
-		level->addEntity(e6);
-		level->addEntity(e7);
+		//level->addEntity(e1);
+		//level->addEntity(e2);
+		//level->addEntity(e3);
+		//level->addEntity(e4);
+		//level->addEntity(e5);
+		//level->addEntity(e6);
+		//level->addEntity(e7);
 	}
 	void start();
 
@@ -63,7 +63,7 @@ public:
 	void draw(RenderWindow& w) {
 		level->draw(w);
 		w.draw(*player);
-		if (level->HITBOX_DEBUG_MODE) {
+		if (HITBOX_DEBUG_MODE) {
 			level->drawEntityHitbox(w, *player);
 		}
 	}

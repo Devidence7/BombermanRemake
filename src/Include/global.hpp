@@ -32,3 +32,7 @@ enum EnemyType {
 };
 
 const int TOTAL_ENEMY_FRAMES = 13;
+
+
+// Debug features:
+bool HITBOX_DEBUG_MODE = true;
