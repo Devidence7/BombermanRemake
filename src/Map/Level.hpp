@@ -236,8 +236,8 @@ public:
 		x /= moduloCentro;
 		y /= moduloCentro;
 
-		// x /= 1000.0;
-		// y /= 1000.0;
+		x /= 1000.0;
+		y /= 1000.0;
 
 		if (circleDistance.x <= (rect.width / 2)) { return true; }
 		if (circleDistance.y <= (rect.height / 2)) { return true; }
