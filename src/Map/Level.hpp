@@ -507,13 +507,13 @@ public:
 			getCellMiniMapObject(x, y) = e;
 		}
 
+		void addEntityToMiniMap(Entity_ptr &e, sf::Vector2i pos)
+		{
+			addEntityToMiniMap(e, pos.x, pos.y);
+		}
 		void addNewItem(Entity_ptr& e){
 			addEntity(e);
 			addEntityToMiniMap(e, getMapCoordinates(e->getCenterPosition()));
 		}
 
-		void addEntityToMiniMap(Entity_ptr &e, sf::Vector2i pos)
-		{
-			addEntityToMiniMap(e, pos.x, pos.y);
-		}
 	};
