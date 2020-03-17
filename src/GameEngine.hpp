@@ -22,18 +22,26 @@ private:
 	TextureStorage textureStorage;
 	Level *level;
 	PlayerEntity *player;
+	std::vector<Enemy_ptr> enemies;
 
 public:
 	Game() {
 		level = new Level();
 		player = new PlayerEntity();
-		std::shared_ptr<EnemyEntity> e1 = std::make_shared<EnemyEntity>(Balloon());
-		std::shared_ptr<EnemyEntity> e2 = std::make_shared<EnemyEntity>(Ice());
-		std::shared_ptr<EnemyEntity> e3 = std::make_shared<EnemyEntity>(Barrel());
-		std::shared_ptr<EnemyEntity> e4 = std::make_shared<EnemyEntity>(Coin());
-		std::shared_ptr<EnemyEntity> e5 = std::make_shared<EnemyEntity>(Blob());
-		std::shared_ptr<EnemyEntity> e6 = std::make_shared<EnemyEntity>(Ghost());
-		std::shared_ptr<EnemyEntity> e7 = std::make_shared<EnemyEntity>(Hypo());
+		Enemy_ptr e1 = std::make_shared<EnemyEntity>(Balloon());
+		Enemy_ptr e2 = std::make_shared<EnemyEntity>(Ice());
+		Enemy_ptr e3 = std::make_shared<EnemyEntity>(Barrel());
+		Enemy_ptr e4 = std::make_shared<EnemyEntity>(Coin());
+		Enemy_ptr e5 = std::make_shared<EnemyEntity>(Blob());
+		Enemy_ptr e6 = std::make_shared<EnemyEntity>(Ghost());
+		Enemy_ptr e7 = std::make_shared<EnemyEntity>(Hypo());
+		enemies.push_back(e1);
+		enemies.push_back(e2);
+		enemies.push_back(e3);
+		enemies.push_back(e4);
+		enemies.push_back(e5);
+		enemies.push_back(e6);
+		enemies.push_back(e7);
 		//level->addEntity(e1);
 		//level->addEntity(e2);
 		//level->addEntity(e3);
@@ -58,12 +66,19 @@ public:
 			//level->addEntityToMiniMap(b, level->getMapCoordinates(b->getPosition() ) );
 			//}
 		}
+		for(Enemy_ptr &e : this->enemies){
+			e->update();
+			level->checkAndFixCollisions(*e);
+		}
 		level->checkAndFixCollisions(*player);
 
 	}
 
 	void draw(RenderWindow& w) {
 		level->draw(w);
+		for(Enemy_ptr &e : this->enemies){
+			w.draw(*e);
+		}
 		w.draw(*player);
 		if (HITBOX_DEBUG_MODE) {
 			level->drawEntityHitbox(w, *player);

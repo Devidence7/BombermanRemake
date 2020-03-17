@@ -18,6 +18,9 @@ typedef std::shared_ptr<Bomb> Bomb_ptr;
 typedef std::shared_ptr<Fire> Fire_ptr;
 typedef std::shared_ptr<Pillar> Pillar_ptr;
 typedef std::shared_ptr<BrickWall> BrickWall_ptr;
+typedef std::shared_ptr<EnemyEntity> Enemy_ptr;
+
+
 
 /**
  *
