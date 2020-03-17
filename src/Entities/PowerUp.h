@@ -22,8 +22,6 @@ public:
 
 		// Texture Controller:
 		powerUpTexture = &TextureStorage::getPowerUpTexture();
-		// Set starting sprite
-		setTextureRect(powerUpTexture->getDefaultIntRect());
 		// Set sprite Sheet texture
 		setTexture(powerUpTexture->getTexture());
 	}
@@ -35,5 +33,9 @@ public:
 };
 
 class MoreFirePowerUp : public PowerUp {
-	powerUpType = moreFire;
+	MoreFirePowerUp() {
+		powerUpType = moreFire;
+		// Set starting sprite
+		setTextureRect(powerUpTexture->getFrame(3, 0));
+	}
 };

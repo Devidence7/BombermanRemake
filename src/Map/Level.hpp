@@ -115,7 +115,7 @@ public:
 	/*
 	 * This is a DEBUG method, draws in the RenderWindow the hitbox of the Entity
 	*/
-	void drawEntityHitbox(sf::RenderWindow &w, Entity& e) {
+	void drawEntityHitbox(sf::RenderWindow& w, Entity& e) {
 		sf::FloatRect dim = e.getGlobalBounds();
 		sf::VertexArray lines(sf::Lines, 2);
 
@@ -163,18 +163,19 @@ public:
 		entities.push_back(e);
 	}
 
-	void createFire(int type, int posX, int posY) {
+	bool createFire(int type, int posX, int posY) {
 		// If it is a bomb
 		Entity_ptr e = getCellObject(getMapCoordinates(posX, posY));
 		std::shared_ptr<BrickWall> bw;
 		std::shared_ptr<Pillar> p;
-		
+
 		if ((bw = std::dynamic_pointer_cast<BrickWall>(e)) != nullptr) {
-			;
 			bw->isDestroyed = true;
+			return true;
 		}
 		else if (std::dynamic_pointer_cast<Pillar>(e) != nullptr) {
 			// Do nothing
+			return true;
 		}
 		else {
 			//Collider2d colFire(sf::Vector2f(0, 0), sf::FloatRect(0, 0, 48, 48), true);
@@ -182,19 +183,42 @@ public:
 			f->setPosition(posX, posY);
 			addEntity(f);
 		}
+		return false;
 	}
 
 	void createFires(Bomb& b) {
+		sf::Vector2f pos = b.getPosition();
+
 		// Central:
-		createFire(0, b.getPosition().x, b.getPosition().y);
+		createFire(0, pos.x, pos.y);
 		// Down:
-		createFire(2, b.getPosition().x, b.getPosition().y + 48);
+		for (int i = 1; i <= b.bombPower; i++) {
+			int fireType = i == b.bombPower ? 2 : 1;
+			if (createFire(fireType, pos.x, pos.y + 48 * i)) {
+				break;
+			}
+		}
 		// Up:
-		createFire(3, b.getPosition().x, b.getPosition().y - 48);
+		for (int i = 1; i <= b.bombPower; i++) {
+			int fireType = i == b.bombPower ? 3 : 1;
+			if (createFire(fireType, pos.x, pos.y - 48 * i)) {
+				break;
+			}
+		}
 		// Left:
-		createFire(6, b.getPosition().x - 48, b.getPosition().y);
+		for (int i = 1; i <= b.bombPower; i++) {
+			int fireType = i == b.bombPower ? 6 : 4;
+			if (createFire(fireType, pos.x - 48 * i, pos.y)) {
+				break;
+			}
+		}
 		// Right:
-		createFire(5, b.getPosition().x + 48, b.getPosition().y);
+		for (int i = 1; i <= b.bombPower; i++) {
+			int fireType = i == b.bombPower ? 5 : 4;
+			if (createFire(fireType, pos.x + 48 * i, pos.y)) {
+				break;
+			}
+		}
 	}
 
 	bool circIntersect(Entity& e1, Entity& e2) {
@@ -248,14 +272,14 @@ public:
 	}
 
 	void checkAndFixCollisions(Entity& eCollisioning) {
-		for(Entity_ptr _e : entities){
+		for (Entity_ptr _e : entities) {
 			if (_e->getExpiredEntity()) {
 				_e = nullptr;
 				continue;
 			}
 
 			double dumb1, dumb2;
-			if (intersectsCircleRect(eCollisioning,*_e,dumb1, dumb2)) {
+			if (intersectsCircleRect(eCollisioning, *_e, dumb1, dumb2)) {
 
 
 				//calcular centro
@@ -296,7 +320,7 @@ public:
 					e.setPosition(e.getPosition().x + t.x / 100, e.getPosition().y + t.y / 100);
 				}*/
 
-				if (std::dynamic_pointer_cast<Fire>(_e) != nullptr){
+				if (std::dynamic_pointer_cast<Fire>(_e) != nullptr) {
 					eCollisioning.setExpiredEntity();
 				}
 				else if (dynamic_cast<PlayerEntity*>(&eCollisioning) != nullptr && std::dynamic_pointer_cast<EnemyEntity>(_e) != nullptr) {
@@ -327,7 +351,7 @@ public:
 									eCollisioning.move(x, y);
 								}
 							}
-							
+
 						}
 						else {
 							if (x < 0) {
@@ -347,10 +371,9 @@ public:
 								}
 							}
 						}
-						
 					}
 				}
-			}	
+			}
 		}
 	}
 

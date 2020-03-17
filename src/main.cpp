@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 	// Create the main window
 	//unsigned int desktopWidth = sf::VideoMode::getDesktopMode().width;
 	//unsigned int desktopHeight = sf::VideoMode::getDesktopMode().height;
-	sf::RenderWindow window(sf::VideoMode(27 * 48, 17 * 48), "BomberMenaman"); // sf::Style::Fullscreen
+	sf::RenderWindow window(sf::VideoMode(27 * 48, 17 * 48), "Bombermenaman"); // sf::Style::Fullscreen
 	
 	// Make maximum FPSs to 60. Somewhat control the player speed.
 	window.setFramerateLimit(60);

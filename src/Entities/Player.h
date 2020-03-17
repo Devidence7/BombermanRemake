@@ -10,8 +10,10 @@ class PlayerEntity : public Entity
 {
 public:
 	// Gameplay variables:
-	unsigned int lifes;
-	unsigned int speedBoost = 1;
+	int lifes;
+	int speedBoost = 1;
+	int numOfBombs = 1;
+	int powerOfBombs = 10;
 
 	unsigned int bombsTimeLimit = 30;
 
@@ -43,6 +45,10 @@ public:
 
 		// TODO: Remove this
 		move(100, 100);
+	}
+
+	int getPowerOfBombs() {
+		return powerOfBombs;
 	}
 
 	void setExpiredEntity() override {

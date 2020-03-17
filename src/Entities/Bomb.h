@@ -3,23 +3,29 @@
 #include "../Textures/BombTexture.h"
 #include "../Textures/FireTexture.h"
 #include "../Textures/TextureStorage.h"
+#include "../Logic/Time.h"
 #include "Entity.h"
 
 class Bomb : public Entity {
 public:
-	BombTexture* bombTexture;
-	int spriteCounter;
-	int spriteSpeed;
-	int actualFrame;
-	int spriteFrames;
+	// Gameplay Variables:
+	int bombPower;
 
-	int explosionCounter;
-	Bomb() : Entity() {
-		spriteCounter = 0;
-		spriteSpeed = 15;
-		actualFrame = 0;
-		spriteFrames = 3;
-		explosionCounter = 0;
+	// Texture Variables:
+	BombTexture* bombTexture;
+	double spriteCounter;
+	const double spriteSpeed = 0.2;
+	int actualFrame = 0;
+	const int spriteFrames = 4;
+
+	double explosionCounter;
+	const double explosionTime = 1.35;
+
+	Bomb(int bombPower) : Entity() {
+		this->bombPower = bombPower;
+
+		explosionCounter = GameTime::getTimeNow();
+		spriteCounter = GameTime::getTimeNow();
 
 		// Texture Controller:
 		bombTexture = &TextureStorage::getBombTexture();
@@ -30,16 +36,15 @@ public:
 	}
 
 	void update() {
-		explosionCounter++;
-		if (explosionCounter >= 135) {
+		// If it is time to explote:
+		if (GameTime::getTimeNow() - explosionCounter > explosionTime) {
 			expiredEntity = true;
 		}
 
-		spriteCounter++;
-		spriteCounter %= spriteSpeed;
-		if (spriteCounter == 0) {
+		if (GameTime::getTimeNow() - spriteCounter > spriteSpeed) {
 			actualFrame = (actualFrame + 1) % spriteFrames;
 			setTextureRect(bombTexture->getFrame(actualFrame));
+			spriteCounter = GameTime::getTimeNow();
 		}
 	}
 };
