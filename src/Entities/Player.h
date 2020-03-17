@@ -32,6 +32,9 @@ public:
 	*/
 	PlayerEntity() : Entity()
 	{
+		isFireDestroyable = true;
+		fireCanGoThroght = true;
+
 		animLastTic = GameTime::getTimeNow();
 		baseSpeed = 2.5;
 		lastMovement = LookingAt::down;

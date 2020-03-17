@@ -14,6 +14,9 @@ public:
 
 	int explosionCounter;
 	PowerUp() : Entity() {
+		isFireDestroyable = true;
+		fireCanGoThroght = true;
+
 		spriteCounter = 0;
 		spriteSpeed = 15;
 		actualFrame = 0;

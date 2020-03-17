@@ -12,6 +12,8 @@ public:
 	bool isDestroyed = false;
 	
 	BrickWall(int &xloc, int &yloc) : Entity() {
+		isFireDestroyable = true;
+
 		spriteCounter = 0;
 		spriteSpeed = 3;
 		actualFrame = 0;
@@ -42,5 +44,9 @@ public:
 				}
 			}
 		}
+	}
+
+	void setExpiredEntity() override {
+		isDestroyed = true;
 	}
 };

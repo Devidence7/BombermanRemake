@@ -10,7 +10,14 @@ protected:
 	float baseSpeed = 1;// Base Entity Speed 
 	sf::Vector2f velocity; // Speed of the Entity right now.
 	//sf::Vector2f size; // Size of the Entity
-	bool expiredEntity = false; // Mark the entity as expired to be deleted
+	bool expiredEntity = false; // Mark the entity as expired to be delete
+
+	// Can be destroyed:
+	bool isFireDestroyable = false;
+	bool fireCanGoThroght = false;
+
+	bool canHurtPlayers;	// Can hurt players:
+	bool canHurtEntities;	// Can hurt the playes, walls, enemies and objects:
 
 public:
 	Entity() : Sprite() {}
@@ -39,6 +46,14 @@ public:
 
 	virtual void setExpiredEntity() {
 		expiredEntity = true;
+	}
+
+	bool getIsFireDestroyable() {
+		return isFireDestroyable;
+	}
+
+	bool getFireCanGoThroght() {
+		return fireCanGoThroght;
 	}
 	
 };

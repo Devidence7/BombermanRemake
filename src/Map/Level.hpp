@@ -29,6 +29,7 @@ class Level {
 	int dimX = 25;
 	std::vector<std::vector<Entity_ptr>> map;
 	sf::RectangleShape floor;
+
 public:
 	Level() {
 		// Reserve space for faster insert, delete of the entities
@@ -167,29 +168,22 @@ public:
 	}
 
 	bool createFire(int type, int posX, int posY) {
-		// If it is a bomb
+		// Get the object in cell
 		Entity_ptr e = getCellObject(getMapCoordinates(posX, posY));
-		std::shared_ptr<BrickWall> bw;
-		if ((bw = std::dynamic_pointer_cast<BrickWall>(e))) {
-			bw->isDestroyed = true;
-			return true;
-		}
-		else if (std::dynamic_pointer_cast<PowerUp>(e)) {
-			// Do nothing
+
+		if (e && e->getIsFireDestroyable()) {
 			e->setExpiredEntity();
-			return false;
 		}
-		else if (std::dynamic_pointer_cast<Pillar>(e)) {
-			// Do nothing
-			return true;
-		}
-		else {
+
+		if (!e || e->getFireCanGoThroght()) {
 			//Collider2d colFire(sf::Vector2f(0, 0), sf::FloatRect(0, 0, 48, 48), true);
 			std::shared_ptr<Fire> f = std::make_shared<Fire>(Fire(type));
 			f->setPosition(posX, posY);
 			addEntity(f);
+			return false;
 		}
-		return false;
+
+		return true;
 	}
 
 	void createFires(Bomb& b) {

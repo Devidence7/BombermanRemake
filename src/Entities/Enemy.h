@@ -19,6 +19,9 @@ protected:
 public:
 	EnemyEntity() : Entity()
 	{
+		isFireDestroyable = true;
+		fireCanGoThroght = true;
+
 		velocity.x = baseSpeed;
 		velocity.y = baseSpeed;
 

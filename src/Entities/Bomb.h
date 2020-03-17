@@ -23,6 +23,8 @@ public:
 
 	Bomb(int bombPower) : Entity() {
 		this->bombPower = bombPower;
+		isFireDestroyable = true;
+		fireCanGoThroght = true;
 
 		explosionCounter = GameTime::getTimeNow();
 		spriteCounter = GameTime::getTimeNow();
