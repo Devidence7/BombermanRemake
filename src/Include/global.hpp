@@ -30,8 +30,8 @@ enum EnemyType {
 };
 
 enum PowerUpType {
-	moreFire = 0,
-	lessFire = 1
+	moreFire = 2,
+	lessFire = 3
 };
 
 const int TOTAL_ENEMY_FRAMES = 13;

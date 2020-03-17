@@ -13,7 +13,7 @@ public:
 	int lifes;
 	int speedBoost = 1;
 	int numOfBombs = 1;
-	int powerOfBombs = 10;
+	int powerOfBombs = 1;
 
 	unsigned int bombsTimeLimit = 30;
 

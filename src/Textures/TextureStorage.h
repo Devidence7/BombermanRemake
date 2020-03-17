@@ -52,5 +52,6 @@ WallTexture TextureStorage::level1WallTexture;
 BombTexture TextureStorage::bombTexture;
 FireTexture TextureStorage::fireTexture;
 EnemyTexture TextureStorage::enemyTexture;
+PowerUpTexture TextureStorage::powerUpTexture;
 
 

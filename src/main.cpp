@@ -3,6 +3,7 @@
 #include <memory>
 #include "GameEngine.hpp"
 #include "Logic/Time.h"
+#include "Logic/Random.h"
 //#include "Map/Map.hpp"
 
 int windowsHeight = 600;
@@ -25,6 +26,9 @@ int main(int argc, char *argv[])
 
 	// Start counting the time:
 	GameTime::GameTime();
+
+	// Start Random Generator
+	Random::initilizeRandomGen();
 	
 
 	Game game;

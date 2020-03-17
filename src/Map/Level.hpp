@@ -5,13 +5,14 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 
-
 #include "../Entities/Bomb.h"
 #include "../Entities/BrickWall.h"
-#include "../Textures/WallTexture.h"
-#include "wall.hpp"
 #include "../Entities/Pillar.hpp"
+#include "../Entities/PowerUp.h"
+#include "../Textures/WallTexture.h"
 #include "../Include/global.hpp"
+#include "../Logic/Random.h"
+
 typedef std::shared_ptr<Entity> Entity_ptr;
 
 /**
@@ -32,11 +33,6 @@ public:
 	Level() {
 		// Reserve space for faster insert, delete of the entities
 		entities.reserve(10000);
-
-		// Todo use Random class
-		std::random_device rd;
-		std::mt19937 mt(rd());
-		std::uniform_int_distribution<int> dist(0, 3);
 
 		// Create map matrix:
 		map = std::vector<std::vector<Entity_ptr>>(dimY + 2, std::vector<Entity_ptr>(dimX + 2, nullptr));
@@ -60,7 +56,7 @@ public:
 			for (int y = 1; y < dimY + 1; y++) {
 				if (x % 2 == 1 || y % 2 == 1) {
 					// Create random Bricks:
-					if (!dist(mt)) {
+					if (!Random::getIntNumberBetween(0, 3)) {
 						addWall(x, y);
 					}
 				}
@@ -72,13 +68,13 @@ public:
 	}
 
 	void addPillar(int x, int y) {
-		map[y][x] = std::make_shared<Pillar>(Pillar(x, y));
-		entities.push_back(Entity_ptr(map[y][x]));
+		Entity_ptr e = std::make_shared<Pillar>(Pillar(x, y));
+		addEntityToMap(e, x, y);
 	}
 
 	void addWall(int x, int y) {
-		map[y][x] = std::make_shared<BrickWall>(BrickWall(x, y));
-		entities.push_back(Entity_ptr(map[y][x]));
+		Entity_ptr e = std::make_shared<BrickWall>(BrickWall(x, y));
+		addEntityToMap(e, x, y);
 	}
 
 	void update() {
@@ -99,6 +95,13 @@ public:
 
 					// When adding entities vector iterator can be invalidated:
 					it = entities.begin() + counter;
+				}
+
+				if (std::dynamic_pointer_cast<BrickWall>((*it)) != nullptr) {
+					if (!Random::getIntNumberBetween(0,3)) {
+						Entity_ptr powerUp = std::make_shared<MoreFirePowerUp>(MoreFirePowerUp((*it)->getPosition()));
+						addEntityToMap(powerUp, getMapCoordinates((*it)->getPosition()));
+					}
 				}
 
 				// Remove the entity from the list of entities if it expired.
@@ -167,13 +170,16 @@ public:
 		// If it is a bomb
 		Entity_ptr e = getCellObject(getMapCoordinates(posX, posY));
 		std::shared_ptr<BrickWall> bw;
-		std::shared_ptr<Pillar> p;
-
-		if ((bw = std::dynamic_pointer_cast<BrickWall>(e)) != nullptr) {
+		if ((bw = std::dynamic_pointer_cast<BrickWall>(e))) {
 			bw->isDestroyed = true;
 			return true;
 		}
-		else if (std::dynamic_pointer_cast<Pillar>(e) != nullptr) {
+		else if (std::dynamic_pointer_cast<PowerUp>(e)) {
+			// Do nothing
+			e->setExpiredEntity();
+			return false;
+		}
+		else if (std::dynamic_pointer_cast<Pillar>(e)) {
 			// Do nothing
 			return true;
 		}
@@ -271,13 +277,10 @@ public:
 		return (cornerDistance_sq <= pow(circle.width / 2, 2));
 	}
 
+
+	// TODO: divide between enemies collition and player collitions:
 	void checkAndFixCollisions(Entity& eCollisioning) {
 		for (Entity_ptr _e : entities) {
-			if (_e->getExpiredEntity()) {
-				_e = nullptr;
-				continue;
-			}
-
 			double dumb1, dumb2;
 			if (intersectsCircleRect(eCollisioning, *_e, dumb1, dumb2)) {
 
@@ -320,11 +323,17 @@ public:
 					e.setPosition(e.getPosition().x + t.x / 100, e.getPosition().y + t.y / 100);
 				}*/
 
+				PlayerEntity *p;
+				std::shared_ptr<PowerUp> pu;
 				if (std::dynamic_pointer_cast<Fire>(_e) != nullptr) {
 					eCollisioning.setExpiredEntity();
 				}
 				else if (dynamic_cast<PlayerEntity*>(&eCollisioning) != nullptr && std::dynamic_pointer_cast<EnemyEntity>(_e) != nullptr) {
 					eCollisioning.setExpiredEntity();
+				}
+				else if ((p = dynamic_cast<PlayerEntity*>(&eCollisioning)) && (pu = std::dynamic_pointer_cast<PowerUp>(_e))) {
+					pu->setPlayerStatus(*p);
+					pu->setExpiredEntity();
 				}
 				else {
 					double x;
@@ -385,7 +394,6 @@ public:
 		return getMapCoordinates(pos.x, pos.y);
 	}
 
-
 	sf::Vector2f getMapCellCorner(sf::Vector2f pos) {
 		return sf::Vector2f((int)pos.x / SIZE_PILLAR * SIZE_PILLAR, (int)pos.y / SIZE_PILLAR * SIZE_PILLAR);
 	}
@@ -399,5 +407,14 @@ public:
 
 	Entity_ptr& getCellObject(sf::Vector2i pos) {
 		return getCellObject(pos.x, pos.y);
+	}
+
+	void addEntityToMap(Entity_ptr& e, int x, int y) {
+		getCellObject(x, y) = e;
+		addEntity(Entity_ptr(e)); // Create new smart pointer.
+	}
+
+	void addEntityToMap(Entity_ptr &e, sf::Vector2i pos) {
+		addEntityToMap(e, pos.x, pos.y);
 	}
 };

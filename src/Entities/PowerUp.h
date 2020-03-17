@@ -30,12 +30,26 @@ public:
 	void update() {
 
 	}
+
+	virtual void setPlayerStatus(PlayerEntity &pe) {
+		throw NoImplementedException("Intentando ejecutar UPDATE Entity");
+	}
+
 };
 
 class MoreFirePowerUp : public PowerUp {
-	MoreFirePowerUp() {
+public:
+	MoreFirePowerUp(sf::Vector2f pos) : PowerUp() {
 		powerUpType = moreFire;
+
+		// Set position
+		setPosition(pos);
+
 		// Set starting sprite
-		setTextureRect(powerUpTexture->getFrame(3, 0));
+		setTextureRect(powerUpTexture->getFrame(powerUpType, 0));
+	}
+
+	void setPlayerStatus(PlayerEntity& pe) {
+		pe.powerOfBombs += 1;
 	}
 };

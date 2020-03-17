@@ -9,8 +9,8 @@ class PowerUpTexture : public TextureVector {
 
 public:
 	PowerUpTexture() {
-		if (!this->texture.loadFromFile("../textures/Entities/bombs.png")) {
-			throw ExceptionLoadImage("Imagen no cargada: ../textures/Entities/bombs.png");
+		if (!this->texture.loadFromFile("../textures/Entities/PowerUps.png")) {
+			throw ExceptionLoadImage("Imagen no cargada: ../textures/Entities/PowerUps.png");
 		}
 
 		for (int y = 0; y < 2; y++) {
