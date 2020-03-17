@@ -14,13 +14,18 @@
 #include "../Logic/Random.h"
 
 typedef std::shared_ptr<Entity> Entity_ptr;
+typedef std::shared_ptr<Bomb> Bomb_ptr;
+typedef std::shared_ptr<Fire> Fire_ptr;
+typedef std::shared_ptr<Pillar> Pillar_ptr;
+typedef std::shared_ptr<BrickWall> BrickWall_ptr;
 
 /**
  *
- * Esta clase se encarga de gestionar la lógica del juego
+ * Esta clase se encarga de gestionar la lï¿½gica del juego
  *
  */
-class Level {
+class Level
+{
 	// All entities vector:
 	std::vector<Entity_ptr> entities;
 
@@ -28,88 +33,111 @@ class Level {
 	int dimY = 15;
 	int dimX = 25;
 	std::vector<std::vector<Entity_ptr>> map;
+	std::vector<std::vector<Entity_ptr>> miniMap;
 	sf::RectangleShape floor;
 
 public:
-	Level() {
+	Level()
+	{
 		// Reserve space for faster insert, delete of the entities
 		entities.reserve(10000);
 
 		// Create map matrix:
 		map = std::vector<std::vector<Entity_ptr>>(dimY + 2, std::vector<Entity_ptr>(dimX + 2, nullptr));
-
+		miniMap = std::vector<std::vector<Entity_ptr>>(dimY + 2, std::vector<Entity_ptr>(dimX + 2, nullptr));
 		// Background:
 		floor.setSize(sf::Vector2f((dimX + 2) * sizeTextureX, (dimY + 2) * sizeTextureY));
 		floor.setFillColor(sf::Color(0, 100, 0));
 
 		// Create all pillars:
-		for (int x = 0; x < dimX + 2; x++) {
+		for (int x = 0; x < dimX + 2; x++)
+		{
 			addPillar(x, 0);
 			addPillar(x, dimY + 1);
 		}
 
-		for (int y = 0; y < dimY + 2; y++) {
+		for (int y = 0; y < dimY + 2; y++)
+		{
 			addPillar(0, y);
 			addPillar(dimX + 1, y);
 		}
 
-		for (int x = 1; x < dimX + 1; x++) {
-			for (int y = 1; y < dimY + 1; y++) {
-				if (x % 2 == 1 || y % 2 == 1) {
+		for (int x = 1; x < dimX + 1; x++)
+		{
+			for (int y = 1; y < dimY + 1; y++)
+			{
+				if (x % 2 == 1 || y % 2 == 1)
+				{
 					// Create random Bricks:
-					if (!Random::getIntNumberBetween(0, 3)) {
+					if (!Random::getIntNumberBetween(0, 3))
+					{
 						addWall(x, y);
 					}
 				}
-				else {
+				else
+				{
 					addPillar(x, y);
 				}
 			}
 		}
 	}
 
-	void addPillar(int x, int y) {
+	void addPillar(int x, int y)
+	{
 		Entity_ptr e = std::make_shared<Pillar>(Pillar(x, y));
 		addEntityToMap(e, x, y);
+		addEntityToMiniMap(e, x, y);
 	}
 
-	void addWall(int x, int y) {
+	void addWall(int x, int y)
+	{
 		Entity_ptr e = std::make_shared<BrickWall>(BrickWall(x, y));
 		addEntityToMap(e, x, y);
+		addEntityToMiniMap(e, x, y);
 	}
 
-	void update() {
+	void update()
+	{
 		auto it = entities.begin();
 		int counter = 0;
 		// This is made this way because we need to erase element from a vector while we are iterating
-		while (it != entities.end()) {
+		while (it != entities.end())
+		{
 
 			// Update the entities.
 			(*it)->update();
-			if ((*it)->getExpiredEntity()) {
+			if ((*it)->getExpiredEntity())
+			{
 
 				// If it is a bomb
 				std::shared_ptr<Bomb> b;
-				if ((b = std::dynamic_pointer_cast<Bomb>(*it)) != nullptr) {
+				if ((b = std::dynamic_pointer_cast<Bomb>(*it)) != nullptr)
+				{
 					// Create fires
 					createFires(*b);
 
 					// When adding entities vector iterator can be invalidated:
 					it = entities.begin() + counter;
-				}
-
-				if (std::dynamic_pointer_cast<BrickWall>((*it)) != nullptr) {
-					if (!Random::getIntNumberBetween(0,3)) {
+				}else if (std::dynamic_pointer_cast<BrickWall>((*it)) != nullptr)
+				{
+					if (!Random::getIntNumberBetween(0, 0))
+					{
 						Entity_ptr powerUp = std::make_shared<MoreFirePowerUp>(MoreFirePowerUp((*it)->getPosition()));
-						addEntityToMap(powerUp, getMapCoordinates((*it)->getPosition()));
+						addEntityToMiniMap(powerUp, getMapCoordinates((*it)->getPosition()));
+						//addNewItem(powerUp);
 					}
+				}else{
+					this->getCellMiniMapObject(this->getMapCoordinates((*it)->getPosition())) = nullptr;
+					this->getCellObject(this->getMapCoordinates((*it)->getPosition())) = nullptr;
 				}
 
 				// Remove the entity from the list of entities if it expired.
+
 				it->reset();
 				it = entities.erase(it);
 			}
-			else {
+			else
+			{
 				++it;
 				counter++;
 			}
@@ -119,7 +147,8 @@ public:
 	/*
 	 * This is a DEBUG method, draws in the RenderWindow the hitbox of the Entity
 	*/
-	void drawEntityHitbox(sf::RenderWindow& w, Entity& e) {
+	void drawEntityHitbox(sf::RenderWindow &w, Entity &e)
+	{
 		sf::FloatRect dim = e.getGlobalBounds();
 		sf::VertexArray lines(sf::Lines, 2);
 
@@ -150,78 +179,112 @@ public:
 		w.draw(lines);
 	}
 
-	void draw(sf::RenderWindow& w) {
+	void draw(sf::RenderWindow &w)
+	{
 		// Draw the floor:
 		w.draw(floor);
 
 		// Draw the entities
-		for (auto e : entities) {
-			w.draw(*e);
-			if (HITBOX_DEBUG_MODE) {
-				drawEntityHitbox(w, *e);
+		//for (auto e : entities) {
+		//	w.draw(*e);
+		//	if (HITBOX_DEBUG_MODE) {
+		//		drawEntityHitbox(w, *e);
+		//	}
+		//}
+		for (std::vector<Entity_ptr> &v : miniMap)
+		{
+			for (Entity_ptr &e : v)
+			{
+				if (e != nullptr)
+				{
+					w.draw(*e);
+					//if(std::dynamic_pointer_cast<PowerUp>(e) != nullptr){
+					//	std::cout << "PoweUp\n";
+					//}
+					if (HITBOX_DEBUG_MODE)
+					{
+						drawEntityHitbox(w, *e);
+					}
+				}
 			}
 		}
 	}
 
-	void addEntity(Entity_ptr e) {
+	void addEntity(Entity_ptr e)
+	{
 		entities.push_back(e);
 	}
 
-	bool createFire(int type, int posX, int posY) {
+	bool createFire(int type, int posX, int posY)
+	{
 		// Get the object in cell
-		Entity_ptr e = getCellObject(getMapCoordinates(posX, posY));
+		Entity_ptr e = getCellMiniMapObject(getMapCoordinates(posX, posY));
 
-		if (e && e->getIsFireDestroyable()) {
+		if (e && e->getIsFireDestroyable() && !e->getFireCanGoThroght())
+		{
 			e->setExpiredEntity();
+			addEntity(e);
 		}
 
-		if (!e || e->getFireCanGoThroght()) {
-			//Collider2d colFire(sf::Vector2f(0, 0), sf::FloatRect(0, 0, 48, 48), true);
-			std::shared_ptr<Fire> f = std::make_shared<Fire>(Fire(type));
+		if (!e || e->getFireCanGoThroght())
+		{
+			e = nullptr;
+			Entity_ptr f = std::make_shared<Fire>(Fire(type));
 			f->setPosition(posX, posY);
-			addEntity(f);
+			addNewItem(f);
+			//addEntity(f);
+			//addEntityToMiniMap(f, posX, posY);
 			return false;
 		}
-
 		return true;
 	}
 
-	void createFires(Bomb& b) {
+	void createFires(Bomb &b)
+	{
 		sf::Vector2f pos = b.getPosition();
 
 		// Central:
 		createFire(0, pos.x, pos.y);
 		// Down:
-		for (int i = 1; i <= b.bombPower; i++) {
+		for (int i = 1; i <= b.bombPower; i++)
+		{
 			int fireType = i == b.bombPower ? 2 : 1;
-			if (createFire(fireType, pos.x, pos.y + 48 * i)) {
+			if (createFire(fireType, pos.x, pos.y + 48 * i))
+			{
 				break;
 			}
 		}
 		// Up:
-		for (int i = 1; i <= b.bombPower; i++) {
+		for (int i = 1; i <= b.bombPower; i++)
+		{
 			int fireType = i == b.bombPower ? 3 : 1;
-			if (createFire(fireType, pos.x, pos.y - 48 * i)) {
+			if (createFire(fireType, pos.x, pos.y - 48 * i))
+			{
 				break;
 			}
 		}
 		// Left:
-		for (int i = 1; i <= b.bombPower; i++) {
+		for (int i = 1; i <= b.bombPower; i++)
+		{
 			int fireType = i == b.bombPower ? 6 : 4;
-			if (createFire(fireType, pos.x - 48 * i, pos.y)) {
+			if (createFire(fireType, pos.x - 48 * i, pos.y))
+			{
 				break;
 			}
 		}
 		// Right:
-		for (int i = 1; i <= b.bombPower; i++) {
+		for (int i = 1; i <= b.bombPower; i++)
+		{
 			int fireType = i == b.bombPower ? 5 : 4;
-			if (createFire(fireType, pos.x + 48 * i, pos.y)) {
+			if (createFire(fireType, pos.x + 48 * i, pos.y))
+			{
 				break;
 			}
 		}
 	}
 
-	bool circIntersect(Entity& e1, Entity& e2) {
+	bool circIntersect(Entity &e1, Entity &e2)
+	{
 		sf::FloatRect shape1 = e1.getGlobalBounds();
 		sf::FloatRect shape2 = e2.getGlobalBounds();
 
@@ -232,7 +295,8 @@ public:
 		return (distance <= (shape1.width / 2) + (shape2.width / 2));
 	}
 
-	bool intersectsCircleRect(Entity& e1circle, Entity& e2rect, double& x, double& y) {
+	bool intersectsCircleRect(Entity &e1circle, Entity &e2rect, double &x, double &y)
+	{
 		sf::FloatRect circle = e1circle.getGlobalBounds();
 		sf::Vector2f circleC = e1circle.getCenterPosition();
 		sf::FloatRect rect = e2rect.getGlobalBounds();
@@ -250,8 +314,14 @@ public:
 		//std::cout << "2" << std::endl;
 
 		// circle.width and circle.height should be the same (it is the radius).
-		if (circleDistance.x > (rect.width / 2 + circle.width / 2)) { return false; }
-		if (circleDistance.y > (rect.height / 2 + circle.height / 2)) { return false; }
+		if (circleDistance.x > (rect.width / 2 + circle.width / 2))
+		{
+			return false;
+		}
+		if (circleDistance.y > (rect.height / 2 + circle.height / 2))
+		{
+			return false;
+		}
 
 		// Move one pixel modulus
 		float moduloCentro = sqrtf(x * x + y * y);
@@ -261,154 +331,182 @@ public:
 		x /= 1000.0;
 		y /= 1000.0;
 
-		if (circleDistance.x <= (rect.width / 2)) { return true; }
-		if (circleDistance.y <= (rect.height / 2)) { return true; }
+		if (circleDistance.x <= (rect.width / 2))
+		{
+			return true;
+		}
+		if (circleDistance.y <= (rect.height / 2))
+		{
+			return true;
+		}
 
 		double cornerDistance_sq;
 		cornerDistance_sq = pow((circleDistance.x - rect.width / 2), 2) +
-			pow((circleDistance.y - rect.height / 2), 2);
+							pow((circleDistance.y - rect.height / 2), 2);
 
 		return (cornerDistance_sq <= pow(circle.width / 2, 2));
 	}
 
-
 	// TODO: divide between enemies collition and player collitions:
-	void checkAndFixCollisions(Entity& eCollisioning) {
-		for (Entity_ptr _e : entities) {
-			double dumb1, dumb2;
-			if (intersectsCircleRect(eCollisioning, *_e, dumb1, dumb2)) {
-
-
-				//calcular centro
-
-				//sf::Vector2f position = e.getPosition();
-
-
-				//if (_e->getGlobalBounds().contains(position))
-				//{
-				//}
-				//else if (_e->getGlobalBounds().contains(position.x, position.y + e.getGlobalBounds().width))
-				//{
-				//	position.y = position.y + e.getGlobalBounds().width;
-				//}
-				//else if (_e->getGlobalBounds().contains(position.x + e.getGlobalBounds().height, position.y))
-				//{
-				//	position.x + e.getGlobalBounds().height;
-				//}
-				//else if (_e->getGlobalBounds().contains(position.x + e.getGlobalBounds().height, position.y + e.getGlobalBounds().width))
-				//{
-				//	position.x + e.getGlobalBounds().height;
-				//	position.y = position.y + e.getGlobalBounds().width;
-				//}
-
-				/**/
-
-				/*sf::Vector2f positionC = e.getPosition();
-
-				positionC.x += (e.getGlobalBounds().width / 2);
-				positionC.y += (e.getGlobalBounds().height / 2);
-				sf::Vector2f positionCollision = _e->getPosition();
-				positionCollision.x += (_e->getGlobalBounds().width / 2);
-				positionCollision.y += (_e->getGlobalBounds().height / 2);
-				sf::Vector2f t(positionC.x - positionCollision.x, positionC.y - positionCollision.y);
-				float moduloCentro = sqrtf(t.x * t.x + t.y * t.y);
-				t = t / moduloCentro;
-				while (e.getGlobalBounds().intersects(_e->getGlobalBounds())) {
-					e.setPosition(e.getPosition().x + t.x / 100, e.getPosition().y + t.y / 100);
-				}*/
-
-				PlayerEntity *p;
-				std::shared_ptr<PowerUp> pu;
-				if (std::dynamic_pointer_cast<Fire>(_e) != nullptr) {
-					eCollisioning.setExpiredEntity();
+	void checkAndFixCollisions(Entity &eCollisioning)
+	{
+		//for (Entity_ptr _e : entities) {
+		for (std::vector<Entity_ptr> &v : miniMap)
+		{
+			for (Entity_ptr &_e : v)
+			{
+				if(_e == nullptr){
+					continue;
 				}
-				else if (dynamic_cast<PlayerEntity*>(&eCollisioning) != nullptr && std::dynamic_pointer_cast<EnemyEntity>(_e) != nullptr) {
-					eCollisioning.setExpiredEntity();
-				}
-				else if ((p = dynamic_cast<PlayerEntity*>(&eCollisioning)) && (pu = std::dynamic_pointer_cast<PowerUp>(_e))) {
-					pu->setPlayerStatus(*p);
-					pu->setExpiredEntity();
-				}
-				else {
-					double x;
-					double y;
-					while (intersectsCircleRect(eCollisioning, *_e, x, y)) {
-						sf::Vector2f blockCpos = _e->getCenterPosition();
-						sf::Vector2i mapPos = getMapCoordinates(blockCpos);
+				double dumb1, dumb2;
+				if (intersectsCircleRect(eCollisioning, *_e, dumb1, dumb2))
+				{
+					PlayerEntity *p;
+					std::shared_ptr<PowerUp> pu;
+					if (std::dynamic_pointer_cast<Fire>(_e) != nullptr)
+					{
+						eCollisioning.setExpiredEntity();
+					}
+					else if (dynamic_cast<PlayerEntity *>(&eCollisioning) != nullptr && std::dynamic_pointer_cast<EnemyEntity>(_e) != nullptr)
+					{
+						eCollisioning.setExpiredEntity();
+					}
+					else if ((p = dynamic_cast<PlayerEntity *>(&eCollisioning)) && (pu = std::dynamic_pointer_cast<PowerUp>(_e)))
+					{
+						pu->setPlayerStatus(*p);
+						pu->setExpiredEntity();
+						_e = nullptr;
+					}
+					else
+					{
+						double x;
+						double y;
+						while (intersectsCircleRect(eCollisioning, *_e, x, y))
+						{
+							sf::Vector2f blockCpos = _e->getCenterPosition();
+							sf::Vector2i mapPos = getMapCoordinates(blockCpos);
 
-						// This is for not guide Bomberman to a hole if he can't go there
-						if (abs(x) > abs(y)) {
-							if (y < 0) {
-								if (getCellObject(mapPos.x, mapPos.y - 1)) {
-									eCollisioning.move(x, 0);
+							// This is for not guide Bomberman to a hole if he can't go there
+							if (abs(x) > abs(y))
+							{
+								if (y < 0)
+								{
+									if (getCellObject(mapPos.x, mapPos.y - 1))
+									{
+										eCollisioning.move(x, 0);
+									}
+									else
+									{
+										eCollisioning.move(x, y);
+									}
 								}
-								else {
-									eCollisioning.move(x, y);
+								else
+								{
+									if (getCellObject(mapPos.x, mapPos.y + 1))
+									{
+										eCollisioning.move(x, 0);
+									}
+									else
+									{
+										eCollisioning.move(x, y);
+									}
 								}
 							}
-							else {
-								if (getCellObject(mapPos.x, mapPos.y + 1)) {
-									eCollisioning.move(x, 0);
+							else
+							{
+								if (x < 0)
+								{
+									if (getCellObject(mapPos.x - 1, mapPos.y))
+									{
+										eCollisioning.move(0, y);
+									}
+									else
+									{
+										eCollisioning.move(x, y);
+									}
 								}
-								else {
-									eCollisioning.move(x, y);
-								}
-							}
-
-						}
-						else {
-							if (x < 0) {
-								if (getCellObject(mapPos.x - 1, mapPos.y)) {
-									eCollisioning.move(0, y);
-								}
-								else {
-									eCollisioning.move(x, y);
-								}
-							}
-							else {
-								if (getCellObject(mapPos.x + 1, mapPos.y)) {
-									eCollisioning.move(0, y);
-								}
-								else {
-									eCollisioning.move(x, y);
+								else
+								{
+									if (getCellObject(mapPos.x + 1, mapPos.y))
+									{
+										eCollisioning.move(0, y);
+									}
+									else
+									{
+										eCollisioning.move(x, y);
+									}
 								}
 							}
 						}
 					}
 				}
 			}
+			}
 		}
-	}
 
-	sf::Vector2i getMapCoordinates(int x, int y) {
-		return sf::Vector2i((int)x / SIZE_PILLAR, (int)y / SIZE_PILLAR);
-	}
-
-	sf::Vector2i getMapCoordinates(sf::Vector2f pos) {
-		return getMapCoordinates(pos.x, pos.y);
-	}
-
-	sf::Vector2f getMapCellCorner(sf::Vector2f pos) {
-		return sf::Vector2f((int)pos.x / SIZE_PILLAR * SIZE_PILLAR, (int)pos.y / SIZE_PILLAR * SIZE_PILLAR);
-	}
-
-	Entity_ptr& getCellObject(int x, int y) {
-		if (map[y][x].get() != nullptr && map[y][x].get()->getExpiredEntity()) {
-			map[y][x].reset();
+		sf::Vector2i getMapCoordinates(int x, int y)
+		{
+			return sf::Vector2i((int)x / SIZE_PILLAR, (int)y / SIZE_PILLAR);
 		}
-		return map[y][x];
-	}
 
-	Entity_ptr& getCellObject(sf::Vector2i pos) {
-		return getCellObject(pos.x, pos.y);
-	}
+		sf::Vector2i getMapCoordinates(sf::Vector2f pos)
+		{
+			return getMapCoordinates(pos.x, pos.y);
+		}
 
-	void addEntityToMap(Entity_ptr& e, int x, int y) {
-		getCellObject(x, y) = e;
-		addEntity(Entity_ptr(e)); // Create new smart pointer.
-	}
+		sf::Vector2f getMapCellCorner(sf::Vector2f pos)
+		{
+			return sf::Vector2f((int)pos.x / SIZE_PILLAR * SIZE_PILLAR, (int)pos.y / SIZE_PILLAR * SIZE_PILLAR);
+		}
 
-	void addEntityToMap(Entity_ptr &e, sf::Vector2i pos) {
-		addEntityToMap(e, pos.x, pos.y);
-	}
-};
+		Entity_ptr &getCellObject(int x, int y)
+		{
+			if (map[y][x].get() != nullptr && map[y][x].get()->getExpiredEntity())
+			{
+				map[y][x].reset();
+			}
+			return map[y][x];
+		}
+
+		Entity_ptr &getCellMiniMapObject(int x, int y)
+		{
+			if (miniMap[y][x].get() != nullptr && miniMap[y][x].get()->getExpiredEntity())
+			{
+				miniMap[y][x].reset();
+			}
+			return miniMap[y][x];
+		}
+
+		Entity_ptr &getCellMiniMapObject(sf::Vector2i pos)
+		{
+			return getCellMiniMapObject(pos.x, pos.y);
+		}
+		Entity_ptr &getCellObject(sf::Vector2i pos)
+		{
+			return getCellObject(pos.x, pos.y);
+		}
+
+		void addEntityToMap(Entity_ptr e, int x, int y)
+		{
+			getCellObject(x, y) = e;
+		}
+
+		void addEntityToMap(Entity_ptr e, sf::Vector2i pos)
+		{
+			addEntityToMap(e, pos.x, pos.y);
+		}
+		void addEntityToMiniMap(Entity_ptr e, int x, int y)
+		{
+			getCellMiniMapObject(x, y) = e;
+		}
+
+		void addNewItem(Entity_ptr& e){
+			addEntity(e);
+			addEntityToMiniMap(e, getMapCoordinates(e->getCenterPosition()));
+		}
+
+		void addEntityToMiniMap(Entity_ptr &e, sf::Vector2i pos)
+		{
+			addEntityToMiniMap(e, pos.x, pos.y);
+		}
+	};

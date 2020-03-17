@@ -51,9 +51,11 @@ public:
 			// If there is nothing in that cell:
 			//if(level.map.getCellObject(level.map.getMapCoordinates(player.getCenterPosition())) == nullptr) {
 			//Collider2d colFire(sf::Vector2f(0, 0), sf::FloatRect(0, 0, 1, 1), true);
-			std::shared_ptr<Bomb> b = std::make_shared<Bomb>(Bomb(player->getPowerOfBombs()));
+			Entity_ptr b = std::make_shared<Bomb>(Bomb(player->getPowerOfBombs()));
 			b->setPosition(level->getMapCellCorner(player->getCenterPosition()));
-			level->addEntity(b);
+			level->addNewItem(b);
+			//level->addEntity(b);
+			//level->addEntityToMiniMap(b, level->getMapCoordinates(b->getPosition() ) );
 			//}
 		}
 		level->checkAndFixCollisions(*player);

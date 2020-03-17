@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 	window.setFramerateLimit(60);
 
 	// Start counting the time:
-	GameTime::GameTime();
+	GameTime();
 
 	// Start Random Generator
 	Random::initilizeRandomGen();
