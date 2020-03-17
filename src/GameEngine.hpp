@@ -82,6 +82,9 @@ public:
 		w.draw(*player);
 		if (HITBOX_DEBUG_MODE) {
 			level->drawEntityHitbox(w, *player);
+			for(Enemy_ptr &e : this->enemies){
+			level->drawEntityHitbox(w, *e);
+			}
 		}
 	}
 };

@@ -359,8 +359,8 @@ public:
 		//{
 		//	for (Entity_ptr &_e : v)
 		sf::Vector2i position = this->getMapCoordinates(eCollisioning.getCenterPosition());
-		for(int i = position.y-1;i< position.y+2;i++){
-		for(int j = position.x-1; j< position.x+2;j++){
+		for(int i = position.y-1 > 0 ? position.y-1 : 0;i< position.y+2;i++){
+		for(int j = position.x-1  > 0 ? position.x-1 : 0; j< position.x+2;j++){
 			Entity_ptr _e = getCellMiniMapObject(sf::Vector2i(j,i));
 				if(_e == nullptr){
 					continue;
@@ -368,6 +368,7 @@ public:
 				double dumb1, dumb2;
 				if (intersectsCircleRect(eCollisioning, *_e, dumb1, dumb2))
 				{
+					eCollisioning.setCollision();
 					PlayerEntity *p;
 					std::shared_ptr<PowerUp> pu;
 					if (std::dynamic_pointer_cast<Fire>(_e) != nullptr)

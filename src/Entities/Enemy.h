@@ -34,6 +34,20 @@ public:
 	}
 
 	void updateVelocity() {
+		if(onCollision){
+			int mul = Random::getIntNumberBetween(0, 1);
+			if(!mul){
+				mul = -1;
+			}
+			if(Random::getIntNumberBetween(0, 1)){
+				velocity.y = baseSpeed*mul;
+				velocity.x = 0;
+			}else{
+				velocity.y = 0;
+				velocity.x = baseSpeed*mul;
+			}
+			onCollision = false;
+		}
 		if (getGlobalBounds().top <= 0 && velocity.y < 0) {
 			velocity.y = -velocity.y;
 		}

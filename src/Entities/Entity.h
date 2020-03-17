@@ -3,7 +3,7 @@
 
 
 #include "../Exceptions/ExceptionsGame.hpp"
-
+#include "../Logic/Random.h"
 
 class Entity : public sf::Sprite {
 protected:
@@ -19,6 +19,8 @@ protected:
 	bool canHurtPlayers;	// Can hurt players:
 	bool canHurtEntities;	// Can hurt the playes, walls, enemies and objects:
 
+	bool onCollision = false; //if just have collision
+
 public:
 	Entity() : Sprite() {}
 
@@ -32,9 +34,14 @@ public:
 		return sf::Vector2f(p.left + p.width / 2, p.top + p.height / 2);
 	}
 
+	void setCollision(){
+		onCollision = true;
+	}
+
 	bool collision(const Entity & e) const{
 		return this->Entity::getGlobalBounds().intersects(e.getGlobalBounds());
 	}
+	
 
 	virtual void update() {
 		throw NoImplementedException("Intentando ejecutar UPDATE Entity");
