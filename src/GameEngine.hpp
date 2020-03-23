@@ -42,13 +42,6 @@ public:
 		enemies.push_back(e5);
 		enemies.push_back(e6);
 		enemies.push_back(e7);
-		//level->addEntity(e1);
-		//level->addEntity(e2);
-		//level->addEntity(e3);
-		//level->addEntity(e4);
-		//level->addEntity(e5);
-		//level->addEntity(e6);
-		//level->addEntity(e7);
 	}
 	void start();
 

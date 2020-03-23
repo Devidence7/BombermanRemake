@@ -56,3 +56,54 @@ public:
 		pe.powerOfBombs += 1;
 	}
 };
+
+class LessFirePowerUp : public PowerUp {
+public:
+	LessFirePowerUp(sf::Vector2f pos) : PowerUp() {
+		powerUpType = lessFire;
+
+		// Set position
+		setPosition(pos);
+
+		// Set starting sprite
+		setTextureRect(powerUpTexture->getFrame(powerUpType, 0));
+	}
+
+	void setPlayerStatus(PlayerEntity& pe) {
+		pe.powerOfBombs -= 1;
+	}
+};
+
+class MoreSpeedPowerUp : public PowerUp {
+public:
+	MoreSpeedPowerUp(sf::Vector2f pos) : PowerUp() {
+		powerUpType = moreSpeed;
+
+		// Set position
+		setPosition(pos);
+
+		// Set starting sprite
+		setTextureRect(powerUpTexture->getFrame(powerUpType, 0));
+	}
+
+	void setPlayerStatus(PlayerEntity& pe) {
+		pe.speedBoost += 0.2;
+	}
+};
+
+class MoreBombsPowerUp : public PowerUp {
+public:
+	MoreBombsPowerUp(sf::Vector2f pos) : PowerUp() {
+		powerUpType = moreBombs;
+
+		// Set position
+		setPosition(pos);
+
+		// Set starting sprite
+		setTextureRect(powerUpTexture->getFrame(powerUpType, 0));
+	}
+
+	void setPlayerStatus(PlayerEntity& pe) {
+		pe.powerOfBombs += 1;
+	}
+};

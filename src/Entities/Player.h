@@ -11,7 +11,7 @@ class PlayerEntity : public Entity
 public:
 	// Gameplay variables:
 	int lifes;
-	int speedBoost = 1;
+	double speedBoost = 1;
 	int numOfBombs = 1;
 	int powerOfBombs = 1;
 

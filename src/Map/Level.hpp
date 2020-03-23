@@ -121,18 +121,46 @@ public:
 
 					// When adding entities vector iterator can be invalidated:
 					it = entities.begin() + counter;
-				}else if (std::dynamic_pointer_cast<BrickWall>((*it)) != nullptr)
+				} else if (std::dynamic_pointer_cast<BrickWall>((*it)) != nullptr)
 				{
-					if (!Random::getIntNumberBetween(0, 0))
+					
+					if (!Random::getIntNumberBetween(0, 3))
 					{
-						Entity_ptr powerUp = std::make_shared<MoreFirePowerUp>(MoreFirePowerUp((*it)->getPosition()));
+						int randomObject = Random::getIntNumberBetween(0, 3);
+						Entity_ptr powerUp;
+						
+
+						switch (randomObject) {
+							case 0:
+								powerUp = std::make_shared<MoreFirePowerUp>(MoreFirePowerUp((*it)->getPosition()));
+								break;
+							case 1:
+								powerUp = std::make_shared<LessFirePowerUp>(LessFirePowerUp((*it)->getPosition()));
+								break;
+							case 2:
+								powerUp = std::make_shared<MoreBombsPowerUp>(MoreBombsPowerUp((*it)->getPosition()));
+								break;
+							default:
+								powerUp = std::make_shared<MoreSpeedPowerUp>(MoreSpeedPowerUp((*it)->getPosition()));
+								break;
+						}
+
 						addEntityToMiniMap(powerUp, getMapCoordinates((*it)->getPosition()));
 						//addNewItem(powerUp);
 					}
-				}else{
+					else {
+						// Do this always?
+						this->getCellMiniMapObject(this->getMapCoordinates((*it)->getPosition())) = nullptr;
+						this->getCellObject(this->getMapCoordinates((*it)->getPosition())) = nullptr;
+					}
+				}
+				else {
+					// Do this always?
 					this->getCellMiniMapObject(this->getMapCoordinates((*it)->getPosition())) = nullptr;
 					this->getCellObject(this->getMapCoordinates((*it)->getPosition())) = nullptr;
 				}
+
+				
 
 				// Remove the entity from the list of entities if it expired.
 
