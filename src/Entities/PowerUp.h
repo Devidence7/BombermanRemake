@@ -104,6 +104,6 @@ public:
 	}
 
 	void setPlayerStatus(PlayerEntity& pe) {
-		pe.powerOfBombs += 1;
+		pe.numOfBombs += 1;
 	}
 };

@@ -128,20 +128,6 @@ public:
 
 		bool playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
 
-		// TODO: Remove this
-		if (playerBOMB)
-		{
-			if (bombsTimeLimit < 30)
-			{
-				playerBOMB = false;
-			}
-			else
-			{
-				bombsTimeLimit = 0;
-			}
-		}
-		bombsTimeLimit++;
-
 		velocity.x = 0;
 		velocity.y = 0;
 
@@ -175,9 +161,7 @@ public:
 			move(velocity.x, velocity.y);
 		}
 		
-
-		if (playerBOMB)
-		{
+		if (playerBOMB && numOfBombs > 0) {
 			return true;
 		}
 		return false;

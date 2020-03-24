@@ -5,6 +5,7 @@
 #include "../Textures/TextureStorage.h"
 #include "../Logic/Time.h"
 #include "Entity.h"
+#include "Player.h"
 
 class Bomb : public Entity {
 public:
@@ -21,8 +22,13 @@ public:
 	double explosionCounter;
 	const double explosionTime = 1.35;
 
-	Bomb(int bombPower) : Entity() {
-		this->bombPower = bombPower;
+	// Player which bomb is from:
+	PlayerEntity *player;
+
+	Bomb(PlayerEntity *p) : Entity() {
+		player = p;
+		p->numOfBombs -= 1;
+		this->bombPower = p->getPowerOfBombs();
 		isFireDestroyable = true;
 		fireCanGoThroght = true;
 
@@ -37,10 +43,15 @@ public:
 		setTexture(bombTexture->getTexture());
 	}
 
+	void setExpiredEntity() override {
+		expiredEntity = true;
+		player->numOfBombs += 1;
+	}
+
 	void update() {
 		// If it is time to explote:
 		if (GameTime::getTimeNow() - explosionCounter > explosionTime) {
-			expiredEntity = true;
+			setExpiredEntity();
 		}
 
 		if (GameTime::getTimeNow() - spriteCounter > spriteSpeed) {
