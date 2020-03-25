@@ -4,10 +4,12 @@
 #include "GameEngine.hpp"
 #include "Logic/Time.h"
 #include "Logic/Random.h"
+#include "Interface/MainMenu.h"
 //#include "Map/Map.hpp"
 
 int windowsHeight = 600;
 int windowsWidth = 800;
+bool primero=true;
 
 
 int main(int argc, char *argv[])
@@ -32,6 +34,7 @@ int main(int argc, char *argv[])
 	
 
 	Game game;
+	MainMenu menu(window);
 	// Start game loop
 	while (window.isOpen())
 	{		
@@ -41,6 +44,25 @@ int main(int argc, char *argv[])
 		{
 			switch (event.type)
 			{
+				case sf::Event::KeyReleased:
+					switch (event.key.code){
+						case sf::Keyboard::Up:
+							menu.moveUp();
+							break;
+
+						case sf::Keyboard::Down:
+							menu.moveDown();
+							break;
+						
+						case sf::Keyboard::P:
+							if(menu.itemSelected()==0){
+								primero=false;
+							}
+					}
+				break;
+
+
+
 			// window closed
 			case sf::Event::Closed:
 			// Close window -> exit
@@ -58,17 +80,24 @@ int main(int argc, char *argv[])
 				break;
 			}
 		}
+		if(primero){
+			menu.draw(window);
+		}
+		else{
 
 		// TODO PLAYER MOVEMENT MUST NOT DEPEND ON PROCESSOR SPEED THIS IS SHIIIIIIIIT
-		game.update();
+			game.update();
 
 		// Clear screen from previous drawings
-		window.clear();
+			window.clear();
 
 		// Draw the player and the scene
-		game.draw(window);
+			game.draw(window);
+		}
 
 		// Update window
 		window.display();
+
+
 	}
 }
