@@ -1,4 +1,6 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+
 #include <iostream>
 #include <memory>
 #include "GameEngine.hpp"
@@ -35,6 +37,12 @@ int main(int argc, char *argv[])
 
 	Game game;
 	MainMenu menu(window);
+
+	sf::Music music;
+	if (!music.openFromFile("../music/Title.flac"))
+		return -1; // error
+	music.play();
+
 	// Start game loop
 	while (window.isOpen())
 	{		
@@ -56,6 +64,9 @@ int main(int argc, char *argv[])
 						
 						case sf::Keyboard::P:
 							if(menu.itemSelected()==0){
+								if (!music.openFromFile("../music/World 1.flac"))
+									return -1; // error
+								music.play();
 								primero=false;
 							}
 					}
@@ -84,7 +95,6 @@ int main(int argc, char *argv[])
 			menu.draw(window);
 		}
 		else{
-
 		// TODO PLAYER MOVEMENT MUST NOT DEPEND ON PROCESSOR SPEED THIS IS SHIIIIIIIIT
 			game.update();
 
