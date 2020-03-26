@@ -37,19 +37,19 @@ public:
         }
     
         menuOption[0].setFont(font);
-        menuOption[0].setColor(sf::Color::Red);
+        menuOption[0].setFillColor(sf::Color::Red);
         menuOption[0].setString("Empezar juego");
        menuOption[0].setPosition((window.getSize().x) /2.f,(window.getSize().y/(MAX_NUMBER_OF_ITEMS+1)));
 
 
        menuOption[1].setFont(font);
-        menuOption[1].setColor(sf::Color::White);
+        menuOption[1].setFillColor(sf::Color::White);
         menuOption[1].setString("Opciones");
         menuOption[1].setPosition((window.getSize().x) /2.f,(window.getSize().y/(MAX_NUMBER_OF_ITEMS+1)*2));
 
 
         menuOption[2].setFont(font);
-        menuOption[2].setColor(sf::Color::White);
+        menuOption[2].setFillColor(sf::Color::White);
         menuOption[2].setString("Salir");
         menuOption[2].setPosition((window.getSize().x) /2.f,(window.getSize().y/(MAX_NUMBER_OF_ITEMS+1)*3));
 
@@ -71,16 +71,16 @@ public:
         if(selectedItem<0){
             selectedItem=MAX_NUMBER_OF_ITEMS-1;
         }
-         menuOption[anteriorItem].setColor(sf::Color::White);
-         menuOption[selectedItem].setColor(sf::Color::Red);
+         menuOption[anteriorItem].setFillColor(sf::Color::White);
+         menuOption[selectedItem].setFillColor(sf::Color::Red);
 
     }
 
     void moveDown(){
         int anteriorItem=selectedItem;
         selectedItem=(selectedItem+1)%MAX_NUMBER_OF_ITEMS;
-        menuOption[selectedItem].setColor(sf::Color::Red);
-        menuOption[anteriorItem].setColor(sf::Color::White);
+        menuOption[selectedItem].setFillColor(sf::Color::Red);
+        menuOption[anteriorItem].setFillColor(sf::Color::White);
     }
     
     void draw(sf::RenderWindow& w) {
