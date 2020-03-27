@@ -7,7 +7,7 @@
 
 class Entity : public sf::Sprite {
 protected:
-	float baseSpeed = 1;// Base Entity Speed 
+	double baseSpeed = 1;// Base Entity Speed 
 	sf::Vector2f velocity; // Speed of the Entity right now.
 	//sf::Vector2f size; // Size of the Entity
 	bool expiredEntity = false; // Mark the entity as expired to be delete
