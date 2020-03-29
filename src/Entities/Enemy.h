@@ -87,6 +87,12 @@ public:
 			}
 		}
 	}
+
+	sf::FloatRect getGlobalBounds() const override
+	{
+		sf::FloatRect dim = sf::Sprite::getGlobalBounds();
+		return sf::FloatRect(dim.left + 6, dim.top + 3, dim.width-6, dim.height-6);
+	}
 };
 
 

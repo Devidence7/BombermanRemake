@@ -1,6 +1,5 @@
 #pragma once
 
-
 #define sizeTextureX 48
 #define sizeTextureY 48
 

@@ -61,9 +61,9 @@ public:
 		}
 		for(Enemy_ptr &e : this->enemies){
 			e->update();
-			level->checkAndFixCollisions(*e);
+			level->checkAndFixCollisions2(*e);
 		}
-		level->checkAndFixCollisions(*player);
+		level->checkAndFixCollisions2(*player);
 
 	}
 

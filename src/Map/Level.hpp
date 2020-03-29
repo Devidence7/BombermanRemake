@@ -20,8 +20,6 @@ typedef std::shared_ptr<Pillar> Pillar_ptr;
 typedef std::shared_ptr<BrickWall> BrickWall_ptr;
 typedef std::shared_ptr<EnemyEntity> Enemy_ptr;
 
-
-
 /**
  *
  * Esta clase se encarga de gestionar la l�gica del juego
@@ -31,6 +29,7 @@ class Level
 {
 	// All entities vector:
 	std::vector<Entity_ptr> entities;
+	std::vector<Enemy_ptr> enemies;
 
 	// Level map:
 	int dimY = 15;
@@ -121,46 +120,47 @@ public:
 
 					// When adding entities vector iterator can be invalidated:
 					it = entities.begin() + counter;
-				} else if (std::dynamic_pointer_cast<BrickWall>((*it)) != nullptr)
+				}
+				else if (std::dynamic_pointer_cast<BrickWall>((*it)) != nullptr)
 				{
-					
+
 					if (!Random::getIntNumberBetween(0, 3))
 					{
 						int randomObject = Random::getIntNumberBetween(0, 3);
 						Entity_ptr powerUp;
-						
 
-						switch (randomObject) {
-							case 0:
-								powerUp = std::make_shared<MoreFirePowerUp>(MoreFirePowerUp((*it)->getPosition()));
-								break;
-							case 1:
-								powerUp = std::make_shared<LessFirePowerUp>(LessFirePowerUp((*it)->getPosition()));
-								break;
-							case 2:
-								powerUp = std::make_shared<MoreBombsPowerUp>(MoreBombsPowerUp((*it)->getPosition()));
-								break;
-							default:
-								powerUp = std::make_shared<MoreSpeedPowerUp>(MoreSpeedPowerUp((*it)->getPosition()));
-								break;
+						switch (randomObject)
+						{
+						case 0:
+							powerUp = std::make_shared<MoreFirePowerUp>(MoreFirePowerUp((*it)->getPosition()));
+							break;
+						case 1:
+							powerUp = std::make_shared<LessFirePowerUp>(LessFirePowerUp((*it)->getPosition()));
+							break;
+						case 2:
+							powerUp = std::make_shared<MoreBombsPowerUp>(MoreBombsPowerUp((*it)->getPosition()));
+							break;
+						default:
+							powerUp = std::make_shared<MoreSpeedPowerUp>(MoreSpeedPowerUp((*it)->getPosition()));
+							break;
 						}
 
 						addEntityToMiniMap(powerUp, getMapCoordinates((*it)->getPosition()));
 						//addNewItem(powerUp);
 					}
-					else {
+					else
+					{
 						// Do this always?
 						this->getCellMiniMapObject(this->getMapCoordinates((*it)->getPosition())) = nullptr;
 						this->getCellObject(this->getMapCoordinates((*it)->getPosition())) = nullptr;
 					}
 				}
-				else {
+				else
+				{
 					// Do this always?
 					this->getCellMiniMapObject(this->getMapCoordinates((*it)->getPosition())) = nullptr;
 					this->getCellObject(this->getMapCoordinates((*it)->getPosition())) = nullptr;
 				}
-
-				
 
 				// Remove the entity from the list of entities if it expired.
 
@@ -326,6 +326,144 @@ public:
 		return (distance <= (shape1.width / 2) + (shape2.width / 2));
 	}
 
+	inline bool dieEntity(Entity &eCollisioning, Entity_ptr &eCollisioner)
+	{
+		if (std::dynamic_pointer_cast<Fire>(eCollisioner) != nullptr)
+		{
+			eCollisioning.setExpiredEntity();
+			return true;
+		}
+		else if (dynamic_cast<PlayerEntity *>(&eCollisioning) != nullptr && std::dynamic_pointer_cast<EnemyEntity>(eCollisioner) != nullptr)
+		{
+			eCollisioning.setExpiredEntity();
+			return true;
+		}
+		return false;
+	}
+
+
+	inline bool getEntity(Entity &eCollisioning, Entity_ptr &eCollisioner){
+		PlayerEntity *p;
+		std::shared_ptr<PowerUp> pu;
+		if ((p = dynamic_cast<PlayerEntity *>(&eCollisioning)) && (pu = std::dynamic_pointer_cast<PowerUp>(eCollisioner)))
+		{
+			pu->setPlayerStatus(*p);
+			pu->setExpiredEntity();
+			eCollisioner = nullptr;
+			return true;
+		}
+	}
+	//Devuelve true si y solo si eCollisioner hace expirar a eCollisioning o si eCollisioner es un consumible
+	// Habra generado una iteraccion de no colision (si existe) entre eCollisioner y eCollisioning
+	inline bool getOrDie(Entity &eCollisioning, Entity_ptr &eCollisioner)
+	{
+		
+		return dieEntity(eCollisioning, eCollisioner) || getEntity(eCollisioning, eCollisioner);
+	}
+
+	//Return true if eCollisioning vector with direction new position on X
+	inline float moveGetOrDie_x(Entity &eCollisioning, Entity_ptr &eCollisioner)
+	{
+		if (getOrDie(eCollisioning, eCollisioner))
+		{
+			return 0;
+		}
+		sf::Vector2f position = eCollisioning.getCenterPosition();
+		sf::FloatRect body = eCollisioning.getGlobalBounds();
+		sf::Vector2f position2 = eCollisioner->getCenterPosition();
+		sf::FloatRect body2 = eCollisioner->getGlobalBounds();
+		float x = calculate_penetration(body.width / 2, body2.width / 2, abs(position.x - position2.x)) + 1;
+		if (position.x < position2.x)
+		{
+			x = -x;
+		} //retroceder
+		return x;
+	}
+
+
+	inline float moveGetOrDie_y(Entity &eCollisioning, Entity_ptr &eCollisioner)
+	{
+		if (getOrDie(eCollisioning, eCollisioner))
+		{
+			return 0;
+		}
+		sf::Vector2f position = eCollisioning.getCenterPosition();
+		sf::FloatRect body = eCollisioning.getGlobalBounds();
+		sf::Vector2f position2 = eCollisioner->getCenterPosition();
+		sf::FloatRect body2 = eCollisioner->getGlobalBounds();
+
+		float y = calculate_penetration(body.height / 2, body2.height / 2, abs(position.y - position2.y)) + 1;
+		if (position.y < position2.y)
+		{
+			y = -y;
+		} //retroceder
+		return y;
+	}
+
+	inline float dot(sf::Vector2f &v1, sf::Vector2f &v2){
+		return v1.x * v2.x + v1.y * v2.y;
+	}
+
+	inline float moduleVector(sf::Vector2f &v){
+		return sqrt(v.x*v.x + v.y*v.y);
+	}
+	inline float moduleVector(const sf::Vector2f &v){
+		return sqrt(v.x*v.x + v.y*v.y);
+	}
+
+	inline float intersectPoint_planeVector(sf::Vector2f origin, sf::Vector2f dir, sf::Vector2f N, sf::Vector2f pRect ) {
+		float denom = dot(N,dir);
+		//p0 = 1*distOrigen, 0
+		sf::Vector2f p0 = pRect - origin;
+		return dot(p0, N)/denom;
+		//return dir * t;
+		//
+	}
+
+	//eCirle tiene una colision con eRect. El centro de no está eCricle no está dentro de eRect
+	//Devuelve el la direccion (cuyo modulo es la cantidad) al que se tiene que mover la entidad eCircle que esta colisionando con eRect
+	inline sf::Vector2f moveOverCorner(Entity &eCircle, float r_Circle, Entity_ptr eRect){
+
+		sf::Vector2f CenterCircle = eCircle.getCenterPosition();
+		//sf::FloatRect body = eCircle.getGlobalBounds();
+		sf::Vector2f centerRect = eRect->getCenterPosition();
+		sf::FloatRect bodyRect = eRect->getGlobalBounds();
+
+		
+		sf::Vector2f dir_centros = centerRect - CenterCircle;
+		float distanciaCentros = moduleVector(dir_centros);
+		dir_centros = dir_centros/distanciaCentros;
+		float intersec_x;
+		float intersec_y;
+
+		//Buscar coordenadas referecia
+		sf::Vector2f puntoReferenciaRect(bodyRect.left, bodyRect.top);
+
+		if (CenterCircle.y > centerRect.y){
+			puntoReferenciaRect.y +=  bodyRect.height;
+		}
+		if (CenterCircle.x > centerRect.x){
+			puntoReferenciaRect.x += bodyRect.width;
+		}
+		intersec_x = intersectPoint_planeVector(CenterCircle, dir_centros, sf::Vector2f(1,0), puntoReferenciaRect);
+		intersec_y = intersectPoint_planeVector(CenterCircle, dir_centros, sf::Vector2f(0,1), puntoReferenciaRect);
+
+		float referencia = 0;
+		float intersec = 0;
+		if(CenterCircle.x >= bodyRect.left && CenterCircle.x <= bodyRect.left+ bodyRect.width)
+		{		
+			referencia = intersec_y;
+		}else if(CenterCircle.y >= bodyRect.top && CenterCircle.y <= bodyRect.top+ bodyRect.height)
+		{
+				referencia = intersec_x;
+		}else{ //Esquina
+			referencia = intersec_x > intersec_y ? intersec_x : intersec_y;
+		}
+		intersec = ((distanciaCentros - referencia) + r_Circle) - distanciaCentros;
+
+		return (-dir_centros) * intersec;
+	}
+
 	bool intersectsCircleRect(Entity &e1circle, Entity &e2rect, double &x, double &y)
 	{
 		sf::FloatRect circle = e1circle.getGlobalBounds();
@@ -378,19 +516,182 @@ public:
 		return (cornerDistance_sq <= pow(circle.width / 2, 2));
 	}
 
+	void checkAndFixCollisions2(Entity &eCollisioning)
+	{
+		sf::Vector2f centerPosition = eCollisioning.getCenterPosition();
+		sf::Vector2i position = this->getMapCoordinates(centerPosition);
+		Entity_ptr currentPos;
+		if ((currentPos = this->getCellMiniMapObject(position)) != nullptr)
+		{
+			if (this->getOrDie(eCollisioning, currentPos))
+			{
+				return;
+			}
+		}
+		//detectar caso
+		sf::FloatRect body = eCollisioning.getGlobalBounds();
+		float size = body.width / 2;
+		sf::Vector2i position_plus = this->getMapCoordinates(centerPosition.x + size, centerPosition.y + size);
+		sf::Vector2i position_minus = this->getMapCoordinates(centerPosition.x - size, centerPosition.y - size);
+		bool horizontal = false;
+		bool vertical = false;
+		sf::Vector2i position2(position.x, position.y);
+		//ver posiblida colision horizontal
+		if (position_plus.x != position.x)
+		{
+			//sobre sale por la dch
+			position2.x++;
+			horizontal = true;
+		}
+		else if (position_minus.x != position.x)
+		{
+			//sobre sale por la izq
+			position2.x--;
+			horizontal = true;
+		}
+
+		//ver posiblida colision vertical
+		if (position_plus.y  != position.y)
+		{
+			//sobre sale por la dch
+			position2.y++;
+			vertical = true;
+		}
+		else if (position_minus.y != position.y)
+		{
+			//sobre sale por la izq
+			position2.y--;
+			vertical = true;
+		}
+
+		if (!horizontal && !vertical)
+		{
+			//Dentro de la celda. Sin colision (Caso 0)
+			return;
+		}
+		if ((!horizontal && vertical) || (horizontal && !vertical))
+		{
+			//Posiblidad de interseccion con 1 solo
+			Entity_ptr e;
+			if ((e = this->getCellMiniMapObject(position2.x, position2.y)) == nullptr)
+			{
+				return; //sin colision
+			}
+			//Caso 1.1 o 1.2 1.3 1.4
+			sf::Vector2f pos = eCollisioning.getPosition();
+			if (horizontal)
+			{
+				//eCollisioning.setPosition(moveGetOrDie_x(eCollisioning, e) , eCollisioning.getPosition().y);
+				pos.x += moveGetOrDie_x(eCollisioning, e);
+				if(pos.x != 0 ){
+					eCollisioning.setCollision();
+				}
+			}
+			if (vertical)
+			{
+				//eCollisioning.setPosition(eCollisioning.getPosition().x, moveGetOrDie_y(eCollisioning, e));
+				pos.y += moveGetOrDie_y(eCollisioning, e);
+				if(pos.y != 0 ){
+					eCollisioning.setCollision();
+				}
+			}
+			
+			eCollisioning.setPosition(pos);
+			return;
+		}
+
+		sf::Vector2f RealPos = eCollisioning.getPosition();
+		//Posible interseccion en 3 celdas
+		Entity_ptr e_horizontal, e_vertical, e_diagonal;
+		int numIntersecciones = 0;
+		e_horizontal = this->getCellMiniMapObject(position2.x, position.y);
+		numIntersecciones++;
+		e_vertical = this->getCellMiniMapObject(position.x, position2.y);
+		numIntersecciones++;
+		e_diagonal = this->getCellMiniMapObject(position2.x, position2.y);
+		numIntersecciones++;
+
+		if (e_horizontal && e_vertical)
+		{
+			//Casos 4 y 5
+			RealPos.x += moveGetOrDie_x(eCollisioning, e_horizontal);
+			RealPos.y += moveGetOrDie_y(eCollisioning, e_vertical);
+			//eCollisioning.setPosition(moveGetOrDie_x(eCollisioning, e_horizontal) , eCollisioning.getPosition().y);
+			//eCollisioning.setPosition(eCollisioning.getPosition().x, moveGetOrDie_y(eCollisioning, e_vertical));
+		}
+		else if (e_diagonal && e_horizontal)
+		{
+			//caso 3.1
+			RealPos.x += moveGetOrDie_x(eCollisioning, e_horizontal);
+		}
+		else if (e_diagonal && e_vertical)
+		{
+			//caso 3.2
+			RealPos.y += moveGetOrDie_y(eCollisioning, e_vertical);
+		}
+		else
+		{
+			//caso2
+			//TODO: mejorar
+			Entity_ptr col;
+			if (e_horizontal)
+			{
+				col = e_horizontal;
+		//		RealPos.x += moveGetOrDie_x(eCollisioning, e_horizontal);
+			}
+			if (e_vertical)
+			{
+				col = e_vertical;
+		//		RealPos.y += moveGetOrDie_y(eCollisioning, e_vertical);
+			}
+			if (e_diagonal)
+			{
+		//		RealPos.x += moveGetOrDie_x(eCollisioning, e_diagonal);
+		//		RealPos.y += moveGetOrDie_y(eCollisioning, e_diagonal);
+				col = e_diagonal;
+			}
+			if (!col)
+			{
+				return;
+			} //No hay colision
+			  //Calcular desplazamiento
+			if(!getOrDie(eCollisioning, col)){
+				sf::Vector2f move =  moveOverCorner(eCollisioning, size,col);
+				RealPos.x += move.x;
+				RealPos.y += move.y;
+				eCollisioning.setCollision();
+			}
+			//float x = moveGetOrDie_x(eCollisioning, col);
+			//float y = moveGetOrDie_y(eCollisioning, col);
+			//float h = sqrt(x*x + y*y);
+			//sf::Vector2f posCenterObject = col->getCenterPosition();
+			//sf::Vector2f dir(posCenterObject.x - centerPosition.x, posCenterObject.y - centerPosition.y );
+			//float sq = sqrt(dir.x*dir.x + dir.y*dir.y);
+			//dir.x = dir.x*h /sq;
+			//dir.y = dir.y*h /sq;
+			//std::cout << dir.x << " " << dir.y << std::endl;
+			//RealPos.x += dir.x;
+			//RealPos.y += dir.y;
+
+		}
+		eCollisioning.setPosition(RealPos);
+	}
 	// TODO: divide between enemies collition and player collitions:
 	void checkAndFixCollisions(Entity &eCollisioning)
 	{
 		//for (Entity_ptr _e : entities) {
-		
+
 		//for (std::vector<Entity_ptr> &v : miniMap)
 		//{
 		//	for (Entity_ptr &_e : v)
 		sf::Vector2i position = this->getMapCoordinates(eCollisioning.getCenterPosition());
-		for(int i = position.y-1 > 0 ? position.y-1 : 0;i< position.y+2;i++){
-		for(int j = position.x-1  > 0 ? position.x-1 : 0; j< position.x+2;j++){
-			Entity_ptr _e = getCellMiniMapObject(sf::Vector2i(j,i));
-				if(_e == nullptr){
+		for (int i = position.y - 1 > 0 ? position.y - 1 : 0; i < position.y + 2; i++)
+		{
+			for (int j = position.x - 1 > 0 ? position.x - 1 : 0; j < position.x + 2; j++)
+			{
+				Entity_ptr _e = getCellMiniMapObject(sf::Vector2i(j, i));
+				if (_e == nullptr)
+				{
 					continue;
 				}
 				double dumb1, dumb2;
@@ -477,72 +778,72 @@ public:
 					}
 				}
 			}
-			}
 		}
+	}
 
-		sf::Vector2i getMapCoordinates(int x, int y)
-		{
-			return sf::Vector2i((int)x / SIZE_PILLAR, (int)y / SIZE_PILLAR);
-		}
+	sf::Vector2i getMapCoordinates(int x, int y)
+	{
+		return sf::Vector2i((int)x / SIZE_PILLAR, (int)y / SIZE_PILLAR);
+	}
 
-		sf::Vector2i getMapCoordinates(sf::Vector2f pos)
-		{
-			return getMapCoordinates(pos.x, pos.y);
-		}
+	sf::Vector2i getMapCoordinates(sf::Vector2f pos)
+	{
+		return getMapCoordinates(pos.x, pos.y);
+	}
 
-		sf::Vector2f getMapCellCorner(sf::Vector2f pos)
-		{
-			return sf::Vector2f((int)pos.x / SIZE_PILLAR * SIZE_PILLAR, (int)pos.y / SIZE_PILLAR * SIZE_PILLAR);
-		}
+	sf::Vector2f getMapCellCorner(sf::Vector2f pos)
+	{
+		return sf::Vector2f((int)pos.x / SIZE_PILLAR * SIZE_PILLAR, (int)pos.y / SIZE_PILLAR * SIZE_PILLAR);
+	}
 
-		Entity_ptr &getCellObject(int x, int y)
+	Entity_ptr &getCellObject(int x, int y)
+	{
+		if (map[y][x].get() != nullptr && map[y][x].get()->getExpiredEntity())
 		{
-			if (map[y][x].get() != nullptr && map[y][x].get()->getExpiredEntity())
-			{
-				map[y][x].reset();
-			}
-			return map[y][x];
+			map[y][x].reset();
 		}
+		return map[y][x];
+	}
 
-		Entity_ptr &getCellMiniMapObject(int x, int y)
+	Entity_ptr &getCellMiniMapObject(int x, int y)
+	{
+		if (miniMap[y][x].get() != nullptr && miniMap[y][x].get()->getExpiredEntity())
 		{
-			if (miniMap[y][x].get() != nullptr && miniMap[y][x].get()->getExpiredEntity())
-			{
-				miniMap[y][x].reset();
-			}
-			return miniMap[y][x];
+			miniMap[y][x].reset();
 		}
+		return miniMap[y][x];
+	}
 
-		Entity_ptr &getCellMiniMapObject(sf::Vector2i pos)
-		{
-			return getCellMiniMapObject(pos.x, pos.y);
-		}
-		Entity_ptr &getCellObject(sf::Vector2i pos)
-		{
-			return getCellObject(pos.x, pos.y);
-		}
+	Entity_ptr &getCellMiniMapObject(sf::Vector2i pos)
+	{
+		return getCellMiniMapObject(pos.x, pos.y);
+	}
+	Entity_ptr &getCellObject(sf::Vector2i pos)
+	{
+		return getCellObject(pos.x, pos.y);
+	}
 
-		void addEntityToMap(Entity_ptr e, int x, int y)
-		{
-			getCellObject(x, y) = e;
-		}
+	void addEntityToMap(Entity_ptr e, int x, int y)
+	{
+		getCellObject(x, y) = e;
+	}
 
-		void addEntityToMap(Entity_ptr e, sf::Vector2i pos)
-		{
-			addEntityToMap(e, pos.x, pos.y);
-		}
-		void addEntityToMiniMap(Entity_ptr e, int x, int y)
-		{
-			getCellMiniMapObject(x, y) = e;
-		}
+	void addEntityToMap(Entity_ptr e, sf::Vector2i pos)
+	{
+		addEntityToMap(e, pos.x, pos.y);
+	}
+	void addEntityToMiniMap(Entity_ptr e, int x, int y)
+	{
+		getCellMiniMapObject(x, y) = e;
+	}
 
-		void addEntityToMiniMap(Entity_ptr &e, sf::Vector2i pos)
-		{
-			addEntityToMiniMap(e, pos.x, pos.y);
-		}
-		void addNewItem(Entity_ptr& e){
-			addEntity(e);
-			addEntityToMiniMap(e, getMapCoordinates(e->getCenterPosition()));
-		}
-
-	};
+	void addEntityToMiniMap(Entity_ptr &e, sf::Vector2i pos)
+	{
+		addEntityToMiniMap(e, pos.x, pos.y);
+	}
+	void addNewItem(Entity_ptr &e)
+	{
+		addEntity(e);
+		addEntityToMiniMap(e, getMapCoordinates(e->getCenterPosition()));
+	}
+};

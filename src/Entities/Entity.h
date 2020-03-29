@@ -1,9 +1,11 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-
+#include "../Pishics/phisics.hpp"
 #include "../Exceptions/ExceptionsGame.hpp"
 #include "../Logic/Random.h"
+
+
 
 class Entity : public sf::Sprite {
 protected:
@@ -64,3 +66,4 @@ public:
 	}
 	
 };
+

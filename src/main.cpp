@@ -7,7 +7,7 @@
 #include "Logic/Time.h"
 #include "Logic/Random.h"
 #include "Interface/MainMenu.h"
-#include "Music/GameMusic.h"
+//#include "Music/GameMusic.h"
 
 //#include "Map/Map.hpp"
 
@@ -37,8 +37,8 @@ int main(int argc, char* argv[]) {
 
 	Game game;
 	MainMenu menu(window);
-	GameMusic::playTitleMusic();
-	GameMusic::setVolume(10);
+	//GameMusic::playTitleMusic();
+	//GameMusic::setVolume(10);
 
 	// Start game loop
 	while (window.isOpen()) {
@@ -58,7 +58,7 @@ int main(int argc, char* argv[]) {
 
 				case sf::Keyboard::P:
 					if (menu.itemSelected() == 0) {
-						GameMusic::playWorld1Music();
+						//GameMusic::playWorld1Music();
 						primero = false;
 					}
 				}
@@ -96,9 +96,8 @@ int main(int argc, char* argv[]) {
 			game.draw(window);
 		}
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num9)) { GameMusic::volumeUp(); std::cout << GameMusic::getVolume() << std::endl; }
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num0)) { GameMusic::volumeDown(); std::cout << GameMusic::getVolume() << std::endl;
-		}
+		//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num9)) { GameMusic::volumeUp(); std::cout << GameMusic::getVolume() << std::endl; }
+		//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num0)) { GameMusic::volumeDown(); std::cout << GameMusic::getVolume() << std::endl;}
 
 		// Update window
 		window.display();
