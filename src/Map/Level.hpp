@@ -64,6 +64,8 @@ public:
 			addPillar(dimX + 1, y);
 		}
 
+		insertarEnemigos();
+		//create Pillars
 		for (int x = 1; x < dimX + 1; x++)
 		{
 			for (int y = 1; y < dimY + 1; y++)
@@ -73,7 +75,17 @@ public:
 					// Create random Bricks:
 					if (!Random::getIntNumberBetween(0, 3))
 					{
-						addWall(x, y);
+						bool intersec = false;
+						for(Enemy_ptr e : enemies){
+							sf::Vector2i p = getMapCoordinates(e->getCenterPosition());
+							if(p.x == x && p.y == y){
+								intersec = true;
+								break;
+							}
+						}
+						if(!intersec){
+							addWall(x, y);
+						}
 					}
 				}
 				else
@@ -81,6 +93,31 @@ public:
 					addPillar(x, y);
 				}
 			}
+		}
+	}
+
+	void insertarEnemigos()
+	{
+		Enemy_ptr e1 = std::make_shared<EnemyEntity>(Balloon());
+		Enemy_ptr e2 = std::make_shared<EnemyEntity>(Ice());
+		Enemy_ptr e3 = std::make_shared<EnemyEntity>(Barrel());
+		Enemy_ptr e4 = std::make_shared<EnemyEntity>(Coin());
+		Enemy_ptr e5 = std::make_shared<EnemyEntity>(Blob());
+		Enemy_ptr e6 = std::make_shared<EnemyEntity>(Ghost());
+		Enemy_ptr e7 = std::make_shared<EnemyEntity>(Hypo());
+		enemies.push_back(e1);
+		enemies.push_back(e2);
+		enemies.push_back(e3);
+		enemies.push_back(e4);
+		enemies.push_back(e5);
+		enemies.push_back(e6);
+		enemies.push_back(e7);
+
+		for (Enemy_ptr e : enemies)
+		{
+			int x = Random::getIntNumberBetween(0, dimX/2);
+			int y = Random::getIntNumberBetween(0, dimY/2);
+			e->setPosition(sf::Vector2f((x*2 +1) * SIZE_PILLAR, (y*2+1) * SIZE_PILLAR));
 		}
 	}
 
@@ -98,11 +135,55 @@ public:
 		addEntityToMiniMap(e, x, y);
 	}
 
+	void drawEnemies(sf::RenderWindow& w){
+		for(Enemy_ptr &e : this->enemies){
+			w.draw(*e);
+			if (HITBOX_DEBUG_MODE){
+
+				drawEntityHitbox(w, *e);
+			}
+		}
+	}
+
+	bool colissionWithEnemies(Entity &eCol){
+		bool intersec = false;
+		for(Enemy_ptr &e : this->enemies){
+			intersec = intersec || e->collision(eCol);
+		}
+		return intersec;
+	}
+
+	void updateEnemies()
+	{
+		auto it = enemies.begin();
+		int counter = 0;
+		while (it != enemies.end())
+		{
+			// Update the enemies.
+			(*it)->update();
+			checkAndFixCollisions2(*(*it));
+			if ((*it)->getExpiredEntity())
+			{
+				// Do this always?
+				this->getCellMiniMapObject(this->getMapCoordinates((*it)->getCenterPosition())) = nullptr;
+				this->getCellObject(this->getMapCoordinates((*it)->getCenterPosition())) = nullptr;
+				it->reset();
+				it = enemies.erase(it);
+			}
+			else
+			{
+				++it;
+				counter++;
+			}
+		}
+	}
+
 	void update()
 	{
 		auto it = entities.begin();
 		int counter = 0;
 		// This is made this way because we need to erase element from a vector while we are iterating
+		updateEnemies();
 		while (it != entities.end())
 		{
 
@@ -216,12 +297,6 @@ public:
 		w.draw(floor);
 
 		// Draw the entities
-		//for (auto e : entities) {
-		//	w.draw(*e);
-		//	if (HITBOX_DEBUG_MODE) {
-		//		drawEntityHitbox(w, *e);
-		//	}
-		//}
 		for (std::vector<Entity_ptr> &v : miniMap)
 		{
 			for (Entity_ptr &e : v)
@@ -229,9 +304,6 @@ public:
 				if (e != nullptr)
 				{
 					w.draw(*e);
-					//if(std::dynamic_pointer_cast<PowerUp>(e) != nullptr){
-					//	std::cout << "PoweUp\n";
-					//}
 					if (HITBOX_DEBUG_MODE)
 					{
 						drawEntityHitbox(w, *e);
@@ -239,6 +311,7 @@ public:
 				}
 			}
 		}
+		drawEnemies(w);
 	}
 
 	void addEntity(Entity_ptr e)
@@ -341,8 +414,8 @@ public:
 		return false;
 	}
 
-
-	inline bool getEntity(Entity &eCollisioning, Entity_ptr &eCollisioner){
+	inline bool getEntity(Entity &eCollisioning, Entity_ptr &eCollisioner)
+	{
 		PlayerEntity *p;
 		std::shared_ptr<PowerUp> pu;
 		if ((p = dynamic_cast<PlayerEntity *>(&eCollisioning)) && (pu = std::dynamic_pointer_cast<PowerUp>(eCollisioner)))
@@ -357,7 +430,7 @@ public:
 	// Habra generado una iteraccion de no colision (si existe) entre eCollisioner y eCollisioning
 	inline bool getOrDie(Entity &eCollisioning, Entity_ptr &eCollisioner)
 	{
-		
+
 		return dieEntity(eCollisioning, eCollisioner) || getEntity(eCollisioning, eCollisioner);
 	}
 
@@ -380,7 +453,6 @@ public:
 		return x;
 	}
 
-
 	inline float moveGetOrDie_y(Entity &eCollisioning, Entity_ptr &eCollisioner)
 	{
 		if (getOrDie(eCollisioning, eCollisioner))
@@ -400,63 +472,72 @@ public:
 		return y;
 	}
 
-	inline float dot(sf::Vector2f &v1, sf::Vector2f &v2){
+	inline float dot(sf::Vector2f &v1, sf::Vector2f &v2)
+	{
 		return v1.x * v2.x + v1.y * v2.y;
 	}
 
-	inline float moduleVector(sf::Vector2f &v){
-		return sqrt(v.x*v.x + v.y*v.y);
+	inline float moduleVector(sf::Vector2f &v)
+	{
+		return sqrt(v.x * v.x + v.y * v.y);
 	}
-	inline float moduleVector(const sf::Vector2f &v){
-		return sqrt(v.x*v.x + v.y*v.y);
+	inline float moduleVector(const sf::Vector2f &v)
+	{
+		return sqrt(v.x * v.x + v.y * v.y);
 	}
 
-	inline float intersectPoint_planeVector(sf::Vector2f origin, sf::Vector2f dir, sf::Vector2f N, sf::Vector2f pRect ) {
-		float denom = dot(N,dir);
+	inline float intersectPoint_planeVector(sf::Vector2f origin, sf::Vector2f dir, sf::Vector2f N, sf::Vector2f pRect)
+	{
+		float denom = dot(N, dir);
 		//p0 = 1*distOrigen, 0
 		sf::Vector2f p0 = pRect - origin;
-		return dot(p0, N)/denom;
+		return dot(p0, N) / denom;
 		//return dir * t;
 		//
 	}
 
 	//eCirle tiene una colision con eRect. El centro de no está eCricle no está dentro de eRect
 	//Devuelve el la direccion (cuyo modulo es la cantidad) al que se tiene que mover la entidad eCircle que esta colisionando con eRect
-	inline sf::Vector2f moveOverCorner(Entity &eCircle, float r_Circle, Entity_ptr eRect){
+	inline sf::Vector2f moveOverCorner(Entity &eCircle, float r_Circle, Entity_ptr eRect)
+	{
 
 		sf::Vector2f CenterCircle = eCircle.getCenterPosition();
 		//sf::FloatRect body = eCircle.getGlobalBounds();
 		sf::Vector2f centerRect = eRect->getCenterPosition();
 		sf::FloatRect bodyRect = eRect->getGlobalBounds();
 
-		
 		sf::Vector2f dir_centros = centerRect - CenterCircle;
 		float distanciaCentros = moduleVector(dir_centros);
-		dir_centros = dir_centros/distanciaCentros;
+		dir_centros = dir_centros / distanciaCentros;
 		float intersec_x;
 		float intersec_y;
 
 		//Buscar coordenadas referecia
 		sf::Vector2f puntoReferenciaRect(bodyRect.left, bodyRect.top);
 
-		if (CenterCircle.y > centerRect.y){
-			puntoReferenciaRect.y +=  bodyRect.height;
+		if (CenterCircle.y > centerRect.y)
+		{
+			puntoReferenciaRect.y += bodyRect.height;
 		}
-		if (CenterCircle.x > centerRect.x){
+		if (CenterCircle.x > centerRect.x)
+		{
 			puntoReferenciaRect.x += bodyRect.width;
 		}
-		intersec_x = intersectPoint_planeVector(CenterCircle, dir_centros, sf::Vector2f(1,0), puntoReferenciaRect);
-		intersec_y = intersectPoint_planeVector(CenterCircle, dir_centros, sf::Vector2f(0,1), puntoReferenciaRect);
+		intersec_x = intersectPoint_planeVector(CenterCircle, dir_centros, sf::Vector2f(1, 0), puntoReferenciaRect);
+		intersec_y = intersectPoint_planeVector(CenterCircle, dir_centros, sf::Vector2f(0, 1), puntoReferenciaRect);
 
 		float referencia = 0;
 		float intersec = 0;
-		if(CenterCircle.x >= bodyRect.left && CenterCircle.x <= bodyRect.left+ bodyRect.width)
-		{		
-			referencia = intersec_y;
-		}else if(CenterCircle.y >= bodyRect.top && CenterCircle.y <= bodyRect.top+ bodyRect.height)
+		if (CenterCircle.x >= bodyRect.left && CenterCircle.x <= bodyRect.left + bodyRect.width)
 		{
-				referencia = intersec_x;
-		}else{ //Esquina
+			referencia = intersec_y;
+		}
+		else if (CenterCircle.y >= bodyRect.top && CenterCircle.y <= bodyRect.top + bodyRect.height)
+		{
+			referencia = intersec_x;
+		}
+		else
+		{ //Esquina
 			referencia = intersec_x > intersec_y ? intersec_x : intersec_y;
 		}
 		intersec = ((distanciaCentros - referencia) + r_Circle) - distanciaCentros;
@@ -528,6 +609,7 @@ public:
 				return;
 			}
 		}
+		
 		//detectar caso
 		sf::FloatRect body = eCollisioning.getGlobalBounds();
 		float size = body.width / 2;
@@ -551,7 +633,7 @@ public:
 		}
 
 		//ver posiblida colision vertical
-		if (position_plus.y  != position.y)
+		if (position_plus.y != position.y)
 		{
 			//sobre sale por la dch
 			position2.y++;
@@ -567,38 +649,41 @@ public:
 		if (!horizontal && !vertical)
 		{
 			//Dentro de la celda. Sin colision (Caso 0)
-			return;
+			//No hacer nada
 		}
-		if ((!horizontal && vertical) || (horizontal && !vertical))
+		else if ((!horizontal && vertical) || (horizontal && !vertical))
 		{
 			//Posiblidad de interseccion con 1 solo
 			Entity_ptr e;
-			if ((e = this->getCellMiniMapObject(position2.x, position2.y)) == nullptr)
+			if ((e = this->getCellMiniMapObject(position2.x, position2.y)) != nullptr)
 			{
-				return; //sin colision
-			}
-			//Caso 1.1 o 1.2 1.3 1.4
-			sf::Vector2f pos = eCollisioning.getPosition();
-			if (horizontal)
-			{
-				//eCollisioning.setPosition(moveGetOrDie_x(eCollisioning, e) , eCollisioning.getPosition().y);
-				pos.x += moveGetOrDie_x(eCollisioning, e);
-				if(pos.x != 0 ){
-					eCollisioning.setCollision();
+				
+				//Caso 1.1 o 1.2 1.3 1.4
+				sf::Vector2f pos = eCollisioning.getPosition();
+				if (horizontal)
+				{
+					//eCollisioning.setPosition(moveGetOrDie_x(eCollisioning, e) , eCollisioning.getPosition().y);
+					pos.x += moveGetOrDie_x(eCollisioning, e);
+					if (pos.x != 0)
+					{
+						eCollisioning.setCollision();
+					}
 				}
-			}
-			if (vertical)
-			{
-				//eCollisioning.setPosition(eCollisioning.getPosition().x, moveGetOrDie_y(eCollisioning, e));
-				pos.y += moveGetOrDie_y(eCollisioning, e);
-				if(pos.y != 0 ){
-					eCollisioning.setCollision();
+				if (vertical)
+				{
+					//eCollisioning.setPosition(eCollisioning.getPosition().x, moveGetOrDie_y(eCollisioning, e));
+					pos.y += moveGetOrDie_y(eCollisioning, e);
+					if (pos.y != 0)
+					{
+						eCollisioning.setCollision();
+					}
 				}
-			}
-			
+
 			eCollisioning.setPosition(pos);
-			return;
-		}
+			}
+		
+		}else{
+
 
 		sf::Vector2f RealPos = eCollisioning.getPosition();
 		//Posible interseccion en 3 celdas
@@ -637,44 +722,43 @@ public:
 			if (e_horizontal)
 			{
 				col = e_horizontal;
-		//		RealPos.x += moveGetOrDie_x(eCollisioning, e_horizontal);
+				//		RealPos.x += moveGetOrDie_x(eCollisioning, e_horizontal);
 			}
 			if (e_vertical)
 			{
 				col = e_vertical;
-		//		RealPos.y += moveGetOrDie_y(eCollisioning, e_vertical);
+				//		RealPos.y += moveGetOrDie_y(eCollisioning, e_vertical);
 			}
 			if (e_diagonal)
 			{
-		//		RealPos.x += moveGetOrDie_x(eCollisioning, e_diagonal);
-		//		RealPos.y += moveGetOrDie_y(eCollisioning, e_diagonal);
+				//		RealPos.x += moveGetOrDie_x(eCollisioning, e_diagonal);
+				//		RealPos.y += moveGetOrDie_y(eCollisioning, e_diagonal);
 				col = e_diagonal;
 			}
 			if (!col)
 			{
 				return;
-			} //No hay colision
-			  //Calcular desplazamiento
-			if(!getOrDie(eCollisioning, col)){
-				sf::Vector2f move =  moveOverCorner(eCollisioning, size,col);
+			} else{
+
+			if (!getOrDie(eCollisioning, col))
+			{
+				sf::Vector2f move = moveOverCorner(eCollisioning, size, col);
 				RealPos.x += move.x;
 				RealPos.y += move.y;
 				eCollisioning.setCollision();
 			}
-			//float x = moveGetOrDie_x(eCollisioning, col);
-			//float y = moveGetOrDie_y(eCollisioning, col);
-			//float h = sqrt(x*x + y*y);
-			//sf::Vector2f posCenterObject = col->getCenterPosition();
-			//sf::Vector2f dir(posCenterObject.x - centerPosition.x, posCenterObject.y - centerPosition.y );
-			//float sq = sqrt(dir.x*dir.x + dir.y*dir.y);
-			//dir.x = dir.x*h /sq;
-			//dir.y = dir.y*h /sq;
-			//std::cout << dir.x << " " << dir.y << std::endl;
-			//RealPos.x += dir.x;
-			//RealPos.y += dir.y;
-
+			}
+			
 		}
 		eCollisioning.setPosition(RealPos);
+		if (dynamic_cast<PlayerEntity *>(&eCollisioning) != nullptr){
+			for(Enemy_ptr e : enemies){
+				if(eCollisioning.collision(*e)){
+
+				}
+			}
+		}
+		}
 	}
 	// TODO: divide between enemies collition and player collitions:
 	void checkAndFixCollisions(Entity &eCollisioning)

@@ -21,9 +21,8 @@ public:
 	{
 		isFireDestroyable = true;
 		fireCanGoThroght = true;
-
-		velocity.x = baseSpeed;
-		velocity.y = baseSpeed;
+		onCollision = true;
+		updateVelocity();
 
 		// Texture Controller
 		enemyTexture = &TextureStorage::getEnemyTexture();
@@ -48,22 +47,22 @@ public:
 			}
 			onCollision = false;
 		}
-		if (getGlobalBounds().top <= 0 && velocity.y < 0) {
-			velocity.y = -velocity.y;
-		}
-		if (getGlobalBounds().top + enemyTexture->frameSize.y >= 600 && velocity.y > 0) {
-			velocity.y = -velocity.y;
-		}
-		if (getGlobalBounds().left <= 0 && velocity.x < 0) {
-			velocity.x = -velocity.x;
-			lookingDir = bRight;
-
-		}
-		if (getGlobalBounds().left + enemyTexture->frameSize.x >= 800 && velocity.x > 0) {
-			velocity.x = -velocity.x;
-			lookingDir = bLeft;
-		}
-		// Move Entity position
+		//if (getGlobalBounds().top <= 0 && velocity.y < 0) {
+		//	velocity.y = -velocity.y;
+		//}
+		//if (getGlobalBounds().top + enemyTexture->frameSize.y >= 600 && velocity.y > 0) {
+		//	velocity.y = -velocity.y;
+		//}
+		//if (getGlobalBounds().left <= 0 && velocity.x < 0) {
+		//	velocity.x = -velocity.x;
+		//	lookingDir = bRight;
+//
+		//}
+		//if (getGlobalBounds().left + enemyTexture->frameSize.x >= 800 && velocity.x > 0) {
+		//	velocity.x = -velocity.x;
+		//	lookingDir = bLeft;
+		//}
+		//// Move Entity position
 		move(velocity.x, velocity.y);
 	}
 
@@ -101,7 +100,7 @@ public:
 
 	Balloon() :EnemyEntity() {
 		enemyType = balloon;
-		move(500, 100);
+		//move(500, 100);
 	}
 };
 
@@ -110,7 +109,7 @@ public:
 
 	Ice() :EnemyEntity() {
 		enemyType = ice;
-		move(200, 200);
+		//move(200, 200);
 	}
 };
 
@@ -119,7 +118,7 @@ public:
 
 	Barrel() :EnemyEntity() {
 		enemyType = barrel;
-		move(120, 500);
+		//move(120, 500);
 	}
 };
 
@@ -128,7 +127,7 @@ public:
 
 	Coin() :EnemyEntity() {
 		enemyType = coin;
-		move(500, 450);
+		//move(500, 450);
 	}
 };
 
@@ -137,7 +136,7 @@ public:
 
 	Blob() :EnemyEntity() {
 		enemyType = blob;
-		move(400, 300);
+	//	move(400, 300);
 	}
 };
 
@@ -146,7 +145,7 @@ public:
 
 	Ghost() :EnemyEntity() {
 		enemyType = ghost;
-		move(200, 400);
+	//	move(200, 400);
 	}
 };
 
@@ -155,6 +154,6 @@ public:
 
 	Hypo() :EnemyEntity() {
 		enemyType = hypo;
-		move(400,600);
+	//	move(400,600);
 	}
 };
