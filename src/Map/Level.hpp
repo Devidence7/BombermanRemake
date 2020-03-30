@@ -165,8 +165,8 @@ public:
 			if ((*it)->getExpiredEntity())
 			{
 				// Do this always?
-				this->getCellMiniMapObject(this->getMapCoordinates((*it)->getCenterPosition())) = nullptr;
-				this->getCellObject(this->getMapCoordinates((*it)->getCenterPosition())) = nullptr;
+				//this->getCellMiniMapObject(this->getMapCoordinates((*it)->getCenterPosition())) = nullptr;
+				//this->getCellObject(this->getMapCoordinates((*it)->getCenterPosition())) = nullptr;
 				it->reset();
 				it = enemies.erase(it);
 			}
