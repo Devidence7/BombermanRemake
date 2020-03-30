@@ -164,9 +164,6 @@ public:
 			checkAndFixCollisions2(*(*it));
 			if ((*it)->getExpiredEntity())
 			{
-				// Do this always?
-				//this->getCellMiniMapObject(this->getMapCoordinates((*it)->getCenterPosition())) = nullptr;
-				//this->getCellObject(this->getMapCoordinates((*it)->getCenterPosition())) = nullptr;
 				it->reset();
 				it = enemies.erase(it);
 			}
@@ -472,29 +469,6 @@ public:
 		return y;
 	}
 
-	inline float dot(sf::Vector2f &v1, sf::Vector2f &v2)
-	{
-		return v1.x * v2.x + v1.y * v2.y;
-	}
-
-	inline float moduleVector(sf::Vector2f &v)
-	{
-		return sqrt(v.x * v.x + v.y * v.y);
-	}
-	inline float moduleVector(const sf::Vector2f &v)
-	{
-		return sqrt(v.x * v.x + v.y * v.y);
-	}
-
-	inline float intersectPoint_planeVector(sf::Vector2f origin, sf::Vector2f dir, sf::Vector2f N, sf::Vector2f pRect)
-	{
-		float denom = dot(N, dir);
-		//p0 = 1*distOrigen, 0
-		sf::Vector2f p0 = pRect - origin;
-		return dot(p0, N) / denom;
-		//return dir * t;
-		//
-	}
 
 	//eCirle tiene una colision con eRect. El centro de no está eCricle no está dentro de eRect
 	//Devuelve el la direccion (cuyo modulo es la cantidad) al que se tiene que mover la entidad eCircle que esta colisionando con eRect

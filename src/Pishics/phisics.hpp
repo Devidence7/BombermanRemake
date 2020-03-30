@@ -29,3 +29,9 @@ inline float distancie_to_squere(sf::Vector2f origin, sf::Vector2f dir, sf::Vect
     return dot(p0, N) / denom;
 }
 
+inline float intersectPoint_planeVector(sf::Vector2f origin, sf::Vector2f dir, sf::Vector2f N, sf::Vector2f pRect)
+{
+	float denom = dot(N, dir);
+	sf::Vector2f p0 = pRect - origin;
+	return dot(p0, N) / denom;
+}
