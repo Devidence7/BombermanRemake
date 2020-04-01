@@ -288,15 +288,12 @@ window.addEventListener("mousemove", function (event) {
     }
     console.log(mCB);
 
-    let targetInOrigin = mult(inverse(mCB), vec4(target[0], target[1], target[2], 1));
-    targetInOrigin = vec4(targetInOrigin[0] / targetInOrigin[3],
-        targetInOrigin[1] / targetInOrigin[3],
-        targetInOrigin[2] / targetInOrigin[3],
-        targetInOrigin[3] / targetInOrigin[3])
-    console.log(eye);
-    // targetInOrigin = vec4(eye,1);
-    console.log(targetInOrigin);
-    targetInOrigin = mult(rotate(0.1, normalize(cross(normalize(vec3(targetInOrigin[0], targetInOrigin[1], targetInOrigin[2])), normalize(vec3(0, directionMov[1], -directionMov[0]))))), targetInOrigin);
+    distance = Math.sqrt(Math.pow(x[0], 2) + Math.pow(x[1], 2) + Math.pow(x[2], 2));
+    let targetInOrigin = vec4(distance, 0, 0, 1);
+
+    targetInOrigin = mult(rotate(0.5,
+        normalize(cross(normalize(vec3(targetInOrigin[0], targetInOrigin[1], targetInOrigin[2])),
+            normalize(vec3(0, directionMov[1], -directionMov[0]))))), targetInOrigin);
     console.log(targetInOrigin);
     let tempTarget = mult(mCB, targetInOrigin);
 
