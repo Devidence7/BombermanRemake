@@ -228,10 +228,12 @@ window.addEventListener('keydown', function (event) {
 	}
 });
 
+lastPostion = undefined;
 clicked = false;
 window.addEventListener("mousedown", function(event) {
 	event.preventDefault();
 	clicked = true;
+	lastPostion = [event.clientX, event.clientY];
 	console.log("clicked\n");
 });
 window.addEventListener("mouseup", function(event) {
@@ -245,7 +247,12 @@ window.addEventListener("mousemove", function(event) {
 	if(!clicked){
 		return;
 	}
-	console.log("(X,Y): " + event.clientX + ", " +  event.clientY )
+	position = [event.clientX, event.clientY];
+	directionMovimiento = [position[0] - lastPostion[0],  position[1] - lastPostion[1]];
+	//Rotar camara
+
+	lastPostion = position;
+	console.log("(X,Y): " + direction[0] + ", " +  direction[1] )
 });
 
 
