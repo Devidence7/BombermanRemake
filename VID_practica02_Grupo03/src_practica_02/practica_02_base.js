@@ -9,88 +9,86 @@
 
 // Variable to store the WebGL rendering context
 var gl;
-
+var canvas;
 //----------------------------------------------------------------------------
 // MODEL DATA 
 //----------------------------------------------------------------------------
 
 //Define points' position vectors
 const cubeVerts = [
-	[ 0.5, 0.5, 0.5, 1], //0
-	[ 0.5, 0.5,-0.5, 1], //1
-	[ 0.5,-0.5, 0.5, 1], //2
-	[ 0.5,-0.5,-0.5, 1], //3
+	[0.5, 0.5, 0.5, 1], //0
+	[0.5, 0.5, -0.5, 1], //1
+	[0.5, -0.5, 0.5, 1], //2
+	[0.5, -0.5, -0.5, 1], //3
 	[-0.5, 0.5, 0.5, 1], //4
-	[-0.5, 0.5,-0.5, 1], //5
-	[-0.5,-0.5, 0.5, 1], //6
-	[-0.5,-0.5,-0.5, 1], //7
+	[-0.5, 0.5, -0.5, 1], //5
+	[-0.5, -0.5, 0.5, 1], //6
+	[-0.5, -0.5, -0.5, 1], //7
 ];
 
 const wireCubeIndices = [
-//Wire Cube - use LINE_STRIP, starts at 0, 30 vertices
-	0,4,6,2,0, //front
-	1,0,2,3,1, //right
-	5,1,3,7,5, //back
-	4,5,7,6,4, //right
-	4,0,1,5,4, //top
-	6,7,3,2,6, //bottom
+	//Wire Cube - use LINE_STRIP, starts at 0, 30 vertices
+	0, 4, 6, 2, 0, //front
+	1, 0, 2, 3, 1, //right
+	5, 1, 3, 7, 5, //back
+	4, 5, 7, 6, 4, //right
+	4, 0, 1, 5, 4, //top
+	6, 7, 3, 2, 6, //bottom
 ];
 
-const cubeIndices = [	
-//Solid Cube - use TRIANGLES, starts at 0, 36 vertices
-	0,4,6, //front
-	0,6,2,
-	1,0,2, //right
-	1,2,3, 
-	5,1,3, //back
-	5,3,7,
-	4,5,7, //left
-	4,7,6,
-	4,0,1, //top
-	4,1,5,
-	6,7,3, //bottom
-	6,3,2,
+const cubeIndices = [
+	//Solid Cube - use TRIANGLES, starts at 0, 36 vertices
+	0, 4, 6, //front
+	0, 6, 2,
+	1, 0, 2, //right
+	1, 2, 3,
+	5, 1, 3, //back
+	5, 3, 7,
+	4, 5, 7, //left
+	4, 7, 6,
+	4, 0, 1, //top
+	4, 1, 5,
+	6, 7, 3, //bottom
+	6, 3, 2,
 ];
 
 const pointsAxes = [];
-pointsAxes.push([ 2.0, 0.0, 0.0, 1.0]); //x axis is green
+pointsAxes.push([2.0, 0.0, 0.0, 1.0]); //x axis is green
 pointsAxes.push([-2.0, 0.0, 0.0, 1.0]);
-pointsAxes.push([ 0.0, 2.0, 0.0, 1.0]); //y axis is red
-pointsAxes.push([ 0.0,-2.0, 0.0, 1.0]); 
-pointsAxes.push([ 0.0, 0.0, 2.0, 1.0]); //z axis is blue
-pointsAxes.push([ 0.0, 0.0,-2.0, 1.0]);
+pointsAxes.push([0.0, 2.0, 0.0, 1.0]); //y axis is red
+pointsAxes.push([0.0, -2.0, 0.0, 1.0]);
+pointsAxes.push([0.0, 0.0, 2.0, 1.0]); //z axis is blue
+pointsAxes.push([0.0, 0.0, -2.0, 1.0]);
 
 const pointsWireCube = [];
-for (let i=0; i < wireCubeIndices.length; i++)
-{
+for (let i = 0; i < wireCubeIndices.length; i++) {
 	pointsWireCube.push(cubeVerts[wireCubeIndices[i]]);
 }
 
 const pointsCube = [];
-for (let i=0; i < cubeIndices.length; i++)
-{
+for (let i = 0; i < cubeIndices.length; i++) {
 	pointsCube.push(cubeVerts[cubeIndices[i]]);
 }
 
 const shapes = {
-	wireCube: {Start: 0, Vertices: 30},
-	cube: {Start: 0, Vertices: 36},
-	axes: {Start: 0, Vertices: 6}
+	wireCube: { Start: 0, Vertices: 30 },
+	cube: { Start: 0, Vertices: 36 },
+	axes: { Start: 0, Vertices: 6 }
 };
-	
-const red =			[1.0, 0.0, 0.0, 1.0];
-const green =		[0.0, 1.0, 0.0, 1.0];
-const blue =		[0.0, 0.0, 1.0, 1.0];
-const lightred =	[1.0, 0.5, 0.5, 1.0];
-const lightgreen =	[0.5, 1.0, 0.5, 1.0];
-const lightblue = 	[0.5, 0.5, 1.0, 1.0];
-const white =		[1.0, 1.0, 1.0, 1.0];
+
+const red = [1.0, 0.0, 0.0, 1.0];
+const green = [0.0, 1.0, 0.0, 1.0];
+const blue = [0.0, 0.0, 1.0, 1.0];
+const lightred = [1.0, 0.5, 0.5, 1.0];
+const lightgreen = [0.5, 1.0, 0.5, 1.0];
+const lightblue = [0.5, 0.5, 1.0, 1.0];
+const white = [1.0, 1.0, 1.0, 1.0];
 
 const colorsAxes = [
 	green, green, //x
 	red, red,     //y
 	blue, blue,   //z
-];	
+];
 
 const colorsWireCube = [
 	white, white, white, white, white,
@@ -101,14 +99,14 @@ const colorsWireCube = [
 	white, white, white, white, white,
 ];
 
-const colorsCube = [	
+const colorsCube = [
 	lightblue, lightblue, lightblue, lightblue, lightblue, lightblue,
 	lightgreen, lightgreen, lightgreen, lightgreen, lightgreen, lightgreen,
 	lightred, lightred, lightred, lightred, lightred, lightred,
 	blue, blue, blue, blue, blue, blue,
 	red, red, red, red, red, red,
 	green, green, green, green, green, green,
-];	
+];
 
 //----------------------------------------------------------------------------
 // OTHER DATA 
@@ -128,138 +126,182 @@ var uLocations = {};
 var aLocations = {};
 
 var programInfo = {
-			program,
-			uniformLocations: {},
-			attribLocations: {},
+	program,
+	uniformLocations: {},
+	attribLocations: {},
 };
 
 var objectsToDraw = [
-		{
-		  programInfo: programInfo,
-		  pointsArray: pointsAxes, 
-		  colorsArray: colorsAxes, 
-		  uniforms: {
+	{
+		programInfo: programInfo,
+		pointsArray: pointsAxes,
+		colorsArray: colorsAxes,
+		uniforms: {
 			u_colorMult: [1.0, 1.0, 1.0, 1.0],
 			u_model: new mat4(),
-		  },
-		  primType: "lines",
 		},
-		{
-		  programInfo: programInfo,
-		  pointsArray: pointsWireCube,
-		  colorsArray: colorsWireCube, 
-		  uniforms: {
+		primType: "lines",
+	},
+	{
+		programInfo: programInfo,
+		pointsArray: pointsWireCube,
+		colorsArray: colorsWireCube,
+		uniforms: {
 			u_colorMult: [1.0, 1.0, 1.0, 1.0],
 			u_model: new mat4(),
-		  },
-		  primType: "line_strip",
-		},	
-		{
-		  programInfo: programInfo,
-		  pointsArray: pointsCube, 
-		  colorsArray: colorsCube, 
-		  uniforms: {
+		},
+		primType: "line_strip",
+	},
+	{
+		programInfo: programInfo,
+		pointsArray: pointsCube,
+		colorsArray: colorsCube,
+		uniforms: {
 			u_colorMult: [1.0, 1.0, 1.0, 1.0],
 			u_model: new mat4(),
-		  },
-		  primType: "triangles",
-		},		
-		{
-		  programInfo: programInfo,
-		  pointsArray: pointsCube, 
-		  colorsArray: colorsCube, 
-		  uniforms: {
+		},
+		primType: "triangles",
+	},
+	{
+		programInfo: programInfo,
+		pointsArray: pointsCube,
+		colorsArray: colorsCube,
+		uniforms: {
 			u_colorMult: [0.5, 0.5, 0.5, 1.0],
 			u_model: new mat4(),
-		  },
-		  primType: "triangles",
 		},
+		primType: "triangles",
+	},
 ];
 
+
+
+function moveEye(x, y, z) {
+	return vec3(eye[0] + x, eye[1] + y, eye[2] + z);
+}
+function moveTarget(x, y, z) {
+	return vec3(target[0] + x, target[1] + y, target[2] + z);
+}
+
+
+
+function linealCameraMove(x, y, z) {
+	eye = moveEye(x, y, z);
+	target = moveTarget(x, y, z);
+}
+function updateCamera() {
+	view = lookAt(eye, target, up);
+	gl.uniformMatrix4fv(programInfo.uniformLocations.view, gl.FALSE, view); // copy view to uniform value in shader	
+}
+
 function moveLeft() {
-	console.log("LEFT")
+	moveEye(0, 0, -1);
 }
 
 function moveRight() {
-	console.log("RIGHT")
+	moveEye(0, 0, 1);
 }
 
 function moveUp() {
-	console.log("UP")
+	moveEye(1, 0, 0);
 }
 
 function moveDown() {
-	console.log("DOWN")
+	moveEye(-1, 0, 0);
 }
 
-
+fovy = 45.0
 
 window.addEventListener('keydown', function (event) {
 	event.preventDefault();
 	const keyName = event.key;
+	this.console.log("pulsado " + event.keyCode)
 
-	switch (keyName) {
-		case 'w':
-			moveUp();
-			break;
-		case 'W':
-			moveUp();
-			break;
-		case 'a':
-			moveLeft();
-			break;
-		case 'A':
-			moveLeft();
-			break;
-		case 's':
-			moveDown();
-			break;
-		case 'S':
-			moveDown();
-			break;
-		case 'd':
-			moveRight();
-			break;
-		case 'D':
-			moveRight();
-			break;
-		default:
-			break;
+	if(event.keyCode == 107){
+		//+
+		fovy++;
+		if (fovy > 179){
+			fovy = 179;
+		}
+		projection = perspective(fovy, canvas.width / canvas.height, 0.1, 100.0);
+		gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, projection); // copy projection to uniform value in shader
+	}else if(event.keyCode == 109){
+		//-
+		if (fovy < 1){
+			fovy = 1;
+		}
+		fovy--;
+		projection = perspective(fovy, canvas.width / canvas.height, 0.1, 100.0);
+		gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, projection); // copy projection to uniform value in shader
+
 	}
+	if (event.keyCode == 87) {
+		console.log("UP")
+		t = translate(1.0,0, 0);
+		l = cross(target, up);
+		mCB = mat4()
+		for(pCB =0; pCB < 3; pCB++ ){
+			mCB[pCB + 0] = target[pCB]
+			mCB[pCB + 1] = up[pCB]
+			mCB[pCB + 2] = l[pCB]
+			mCB[pCB + 3] = eye[pCB]
+		}
+		result = mult(mCB, t);
+		
+
+	}
+	if (event.keyCode == 65){
+		
+		//LEFT
+		console.log("LEFT")
+		linealCameraMove(-1, 0, 0);
+		
+	}
+	if(event.keyCode == 83){
+		console.log("DOWN")
+		//DOWN
+		linealCameraMove(0, 0, 1);
+		
+	}
+	if(event.keyCode == 68){
+		console.log("RIGHT")
+		linealCameraMove(1, 0, 0);
+	}
+	updateCamera()
 });
 
 lastPostion = undefined;
 clicked = false;
-window.addEventListener("mousedown", function(event) {
+window.addEventListener("mousedown", function (event) {
 	event.preventDefault();
 	clicked = true;
 	lastPostion = [event.clientX, event.clientY];
 	console.log("clicked\n");
 });
-window.addEventListener("mouseup", function(event) {
+window.addEventListener("mouseup", function (event) {
 	event.preventDefault();
 	clicked = false;
 	console.log("not clicked\n");
 });
 
-window.addEventListener("mousemove", function(event) {
+window.addEventListener("mousemove", function (event) {
 	event.preventDefault();
-	if(!clicked){
+	if (!clicked) {
 		return;
 	}
 	position = [event.clientX, event.clientY];
-	directionMovimiento = [position[0] - lastPostion[0],  position[1] - lastPostion[1]];
+	directionMovimiento = [position[0] - lastPostion[0], position[1] - lastPostion[1]];
 	//Rotar camara
 
 	lastPostion = position;
-	console.log("(X,Y): " + direction[0] + ", " +  direction[1] )
+	console.log("(X,Y): " + direction[0] + ", " + direction[1])
 });
 
 
 function generateColors() {
 	color = [Math.random(), Math.random(), Math.random(), 1];
 	colorCube = []
-	for(i = 0; i < 6*6; i++){
+	for (i = 0; i < 6 * 6; i++) {
 		colorCube.push(color);
 	}
 	return colorCube;
@@ -270,23 +312,23 @@ function getRandomArbitrary(min, max) {
 }
 
 function getRndInteger(min, max) {
-	return Math.floor(Math.random() * (max - min + 1) ) + min;
+	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 class Cube {
 	constructor(init_pos, color) {
 		this.initPos = init_pos;
-		this.rotationAxis = cross(init_pos, vec3(getRandomArbitrary(-1,1),getRandomArbitrary(-1,1),getRandomArbitrary(-1,1)));
-		this.rotationDirection = getRndInteger(0,1) === 0 ? -1 : 1;
+		this.rotationAxis = cross(init_pos, vec3(getRandomArbitrary(-1, 1), getRandomArbitrary(-1, 1), getRandomArbitrary(-1, 1)));
+		this.rotationDirection = getRndInteger(0, 1) === 0 ? -1 : 1;
 
 		this.programInfo = programInfo;
 		this.pointsArray = pointsCube;
 		this.colorsArray = color;
-		this.uniforms=  {
+		this.uniforms = {
 			u_colorMult: [0.5, 0.5, 0.5, 1.0],
 			u_model: new mat4(),
 		};
-		this.primType= "triangles";
+		this.primType = "triangles";
 		this.uniforms.u_model = translate(init_pos[0], init_pos[1], init_pos[2]);
 	}
 }
@@ -296,9 +338,9 @@ class Cube {
 //----------------------------------------------------------------------------
 
 window.onload = function init() {
-	
+
 	// Set up a WebGL Rendering Context in an HTML5 Canvas
-	var canvas = document.getElementById("gl-canvas");
+	canvas = document.getElementById("gl-canvas");
 	gl = WebGLUtils.setupWebGL(canvas);
 	if (!gl) {
 		alert("WebGL isn't available");
@@ -317,7 +359,7 @@ window.onload = function init() {
 	// Set up a WebGL program
 	// Load shaders and initialize attribute buffers
 	program = initShaders(gl, "vertex-shader", "fragment-shader");
-	  
+
 	// Save the attribute and uniform locations
 	uLocations.model = gl.getUniformLocation(program, "model");
 	uLocations.view = gl.getUniformLocation(program, "view");
@@ -331,19 +373,19 @@ window.onload = function init() {
 	programInfo.program = program;
 
 	gl.useProgram(programInfo.program);
-	
+
 	// Set up viewport 
 	gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 
 	// Set up camera
 	// Projection matrix
-	projection = perspective( 45.0, canvas.width/canvas.height, 0.1, 100.0 );
-	gl.uniformMatrix4fv( programInfo.uniformLocations.projection, gl.FALSE, projection ); // copy projection to uniform value in shader
-    // View matrix (static cam)
+	projection = perspective(45.0, canvas.width / canvas.height, 0.1, 100.0);
+	gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, projection); // copy projection to uniform value in shader
+	// View matrix (static cam)
 	eye = vec3(-5.0, 5.0, 10.0);
-	target =  vec3(0.0, 0.0, 0.0);
-	up =  vec3(0.0, 1.0, 0.0);
-	view = lookAt(eye,target,up);
+	target = vec3(0.0, 0.0, 0.0);
+	up = vec3(0.0, 1.0, 0.0);
+	view = lookAt(eye, target, up);
 	gl.uniformMatrix4fv(programInfo.uniformLocations.view, gl.FALSE, view); // copy view to uniform value in shader
 
 	requestAnimFrame(render)
@@ -356,7 +398,7 @@ window.onload = function init() {
 function render() {
 
 	gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
-	
+
 	//----------------------------------------------------------------------------
 	// MOVE STUFF AROUND
 	//----------------------------------------------------------------------------
@@ -366,12 +408,12 @@ function render() {
 
 	objectsToDraw[2].uniforms.u_model = translate(1.0, 1.0, 3.0);
 	objectsToDraw[2].uniforms.u_model = mult(objectsToDraw[2].uniforms.u_model, R);
-	
+
 	objectsToDraw[3].uniforms.u_model = translate(1.0, 0.0, 3.0);
 	objectsToDraw[3].uniforms.u_model = mult(R, objectsToDraw[3].uniforms.u_model);
 
 
-	for(let i = 4; i < objectsToDraw.length; i++){
+	for (let i = 4; i < objectsToDraw.length; i++) {
 		objectsToDraw[i].uniforms.u_model = mult(rotate(rotChange * objectsToDraw[i].rotationDirection,
 			objectsToDraw[i].rotationAxis), objectsToDraw[i].uniforms.u_model);
 	}
@@ -380,7 +422,7 @@ function render() {
 	// DRAW
 	//----------------------------------------------------------------------------
 
-	objectsToDraw.forEach(function(object) {
+	objectsToDraw.forEach(function (object) {
 
 
 		gl.useProgram(object.programInfo.program);
@@ -393,36 +435,36 @@ function render() {
 
 		// Draw
 		gl.drawArrays(object.primitive, 0, object.pointsArray.length);
-    });	
-    
+	});
+
 	rotAngle += rotChange;
-	
+
 	requestAnimationFrame(render);
-	
+
 }
 
 //----------------------------------------------------------------------------
 // Utils functions
 //----------------------------------------------------------------------------
 
-function setPrimitive(objectsToDraw) {	
-	
-	objectsToDraw.forEach(function(object) {
-		switch(object.primType) {
-		  case "lines":
-			object.primitive = gl.LINES;
-			break;
-		  case "line_strip":
-			object.primitive = gl.LINE_STRIP;
-			break;
-		  case "triangles":
-		    object.primitive = gl.TRIANGLES;
-		    break;
-		  default:
-			object.primitive = gl.TRIANGLES;
+function setPrimitive(objectsToDraw) {
+
+	objectsToDraw.forEach(function (object) {
+		switch (object.primType) {
+			case "lines":
+				object.primitive = gl.LINES;
+				break;
+			case "line_strip":
+				object.primitive = gl.LINE_STRIP;
+				break;
+			case "triangles":
+				object.primitive = gl.TRIANGLES;
+				break;
+			default:
+				object.primitive = gl.TRIANGLES;
 		}
-	});	
-}	
+	});
+}
 
 function setUniforms(pInfo, uniforms) {
 	// Copy uniform model values to corresponding values in shaders
@@ -434,15 +476,15 @@ function setBuffersAndAttributes(pInfo, ptsArray, colArray) {
 	// Load the data into GPU data buffers
 	// Vertices
 	var vertexBuffer = gl.createBuffer();
-	gl.bindBuffer( gl.ARRAY_BUFFER, vertexBuffer );
-	gl.bufferData( gl.ARRAY_BUFFER,  flatten(ptsArray), gl.STATIC_DRAW );
-	gl.vertexAttribPointer( pInfo.attribLocations.vPosition, 4, gl.FLOAT, gl.FALSE, 0, 0 );
-	gl.enableVertexAttribArray( pInfo.attribLocations.vPosition );
+	gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+	gl.bufferData(gl.ARRAY_BUFFER, flatten(ptsArray), gl.STATIC_DRAW);
+	gl.vertexAttribPointer(pInfo.attribLocations.vPosition, 4, gl.FLOAT, gl.FALSE, 0, 0);
+	gl.enableVertexAttribArray(pInfo.attribLocations.vPosition);
 
 	// Colors
 	var colorBuffer = gl.createBuffer();
-	gl.bindBuffer( gl.ARRAY_BUFFER, colorBuffer );
-	gl.bufferData( gl.ARRAY_BUFFER,  flatten(colArray), gl.STATIC_DRAW );
-	gl.vertexAttribPointer( pInfo.attribLocations.vColor, 4, gl.FLOAT, gl.FALSE, 0, 0 );
-	gl.enableVertexAttribArray( pInfo.attribLocations.vColor );
+	gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+	gl.bufferData(gl.ARRAY_BUFFER, flatten(colArray), gl.STATIC_DRAW);
+	gl.vertexAttribPointer(pInfo.attribLocations.vColor, 4, gl.FLOAT, gl.FALSE, 0, 0);
+	gl.enableVertexAttribArray(pInfo.attribLocations.vColor);
 }
