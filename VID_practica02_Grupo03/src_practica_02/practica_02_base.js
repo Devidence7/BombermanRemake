@@ -174,40 +174,29 @@ var objectsToDraw = [
 	},
 ];
 
+function linealCameraMove(vec) {
+    let x_no_norm = subtract(target, eye);
+    let x = normalize(x_no_norm);
+    let l = normalize(cross(x, up));
+
+    let mCB = mat4();
+    for(let pCB = 0; pCB < 3; pCB++ ){
+        mCB[4 * pCB] = x[pCB];
+        mCB[4 * pCB + 1] = up[pCB];
+        mCB[4 * pCB + 2] = l[pCB];
+        mCB[4 * pCB + 3] = eye[pCB];
+    }
 
 
-function moveEye(x, y, z) {
-	return vec3(eye[0] + x, eye[1] + y, eye[2] + z);
+    let tempEye = mult(mCB, vec);
+
+    eye = vec3(tempEye[0], tempEye[1], tempEye[2]);
+    target = add(eye,x_no_norm);
 }
-function moveTarget(x, y, z) {
-	return vec3(target[0] + x, target[1] + y, target[2] + z);
-}
 
-
-
-function linealCameraMove(x, y, z) {
-	eye = moveEye(x, y, z);
-	target = moveTarget(x, y, z);
-}
 function updateCamera() {
 	view = lookAt(eye, target, up);
 	gl.uniformMatrix4fv(programInfo.uniformLocations.view, gl.FALSE, view); // copy view to uniform value in shader	
-}
-
-function moveLeft() {
-	moveEye(0, 0, -1);
-}
-
-function moveRight() {
-	moveEye(0, 0, 1);
-}
-
-function moveUp() {
-	moveEye(1, 0, 0);
-}
-
-function moveDown() {
-	moveEye(-1, 0, 0);
 }
 
 fovy = 45.0
@@ -217,7 +206,7 @@ window.addEventListener('keydown', function (event) {
 	const keyName = event.key;
 	this.console.log("pulsado " + event.keyCode)
 
-	if(event.keyCode == 107){
+	if(event.keyCode === 107){
 		//+
 		fovy++;
 		if (fovy > 179){
@@ -225,7 +214,7 @@ window.addEventListener('keydown', function (event) {
 		}
 		projection = perspective(fovy, canvas.width / canvas.height, 0.1, 100.0);
 		gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, projection); // copy projection to uniform value in shader
-	}else if(event.keyCode == 109){
+	}else if(event.keyCode === 109){
 		//-
 		if (fovy < 1){
 			fovy = 1;
@@ -235,37 +224,26 @@ window.addEventListener('keydown', function (event) {
 		gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, projection); // copy projection to uniform value in shader
 
 	}
-	if (event.keyCode == 87) {
-		console.log("UP")
-		t = translate(1.0,0, 0);
-		l = cross(target, up);
-		mCB = mat4()
-		for(pCB =0; pCB < 3; pCB++ ){
-			mCB[pCB + 0] = target[pCB]
-			mCB[pCB + 1] = up[pCB]
-			mCB[pCB + 2] = l[pCB]
-			mCB[pCB + 3] = eye[pCB]
-		}
-		result = mult(mCB, t);
-		
-
+	if (event.keyCode === 87) {
+		console.log("UP");
+        linealCameraMove(vec4(1,0,0,1));
 	}
 	if (event.keyCode == 65){
 		
 		//LEFT
 		console.log("LEFT")
-		linealCameraMove(-1, 0, 0);
+        linealCameraMove(vec4(0,0,-1,1));
 		
 	}
 	if(event.keyCode == 83){
 		console.log("DOWN")
 		//DOWN
-		linealCameraMove(0, 0, 1);
+        linealCameraMove(vec4(-1,0,0,1));
 		
 	}
 	if(event.keyCode == 68){
 		console.log("RIGHT")
-		linealCameraMove(1, 0, 0);
+        linealCameraMove(vec4(0,0,1,1));
 	}
 	updateCamera()
 });
