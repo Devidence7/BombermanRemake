@@ -173,8 +173,111 @@ var objectsToDraw = [
 			u_model: new mat4(),
 		  },
 		  primType: "triangles",
-		},				
+		},
 ];
+
+function moveLeft() {
+	console.log("LEFT")
+}
+
+function moveRight() {
+	console.log("RIGHT")
+}
+
+function moveUp() {
+	console.log("UP")
+}
+
+function moveDown() {
+	console.log("DOWN")
+}
+
+
+
+window.addEventListener('keydown', function (event) {
+	event.preventDefault();
+	const keyName = event.key;
+
+	switch (keyName) {
+		case 'w':
+			moveUp();
+			break;
+		case 'W':
+			moveUp();
+			break;
+		case 'a':
+			moveLeft();
+			break;
+		case 'A':
+			moveLeft();
+			break;
+		case 's':
+			moveDown();
+			break;
+		case 'S':
+			moveDown();
+			break;
+		case 'd':
+			moveRight();
+			break;
+		case 'D':
+			moveRight();
+			break;
+		default:
+			break;
+	}
+});
+
+clicked = false;
+window.addEventListener("mousedown", function(event) {
+	event.preventDefault();
+	clicked = true;
+	console.log("clicked\n");
+});
+window.addEventListener("mouseup", function(event) {
+	event.preventDefault();
+	clicked = false;
+	console.log("not clicked\n");
+});
+
+window.addEventListener("mousemove", function(event) {
+	event.preventDefault();
+	if(!clicked){
+		return;
+	}
+	console.log("(X,Y): " + event.clientX + ", " +  event.clientY )
+});
+
+
+function generateColors() {
+	color = [Math.random(), Math.random(), Math.random(), 1];
+	colorCube = []
+	for(i = 0; i < 6*6; i++){
+		colorCube.push(color);
+	}
+	return colorCube;
+}
+
+function getRandomArbitrary(min, max) {
+	return Math.random() * (max - min) + min;
+}
+
+class Cube {
+	constructor(init_pos, color) {
+		this.initPos = init_pos;
+		this.rotationAxis = cross(init_pos, vec3(getRandomArbitrary(-1,1),getRandomArbitrary(-1,1),getRandomArbitrary(-1,1)));
+
+		this.programInfo = programInfo;
+		this.pointsArray = pointsCube;
+		this.colorsArray = color;
+		this.uniforms=  {
+			u_colorMult: [0.5, 0.5, 0.5, 1.0],
+			u_model: new mat4(),
+		};
+		this.primType= "triangles";
+		this.uniforms.u_model = translate(init_pos[0], init_pos[1], init_pos[2]);
+	}
+}
 
 //----------------------------------------------------------------------------
 // Initialization function
@@ -192,6 +295,10 @@ window.onload = function init() {
 	//  Configure WebGL
 	gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	gl.enable(gl.DEPTH_TEST);
+
+	for (let i = 0; i < 30; i++) {
+		objectsToDraw.push(new Cube(vec3(getRandomArbitrary(-5, 5), getRandomArbitrary(-5, 5), getRandomArbitrary(-5, 5)), generateColors()));
+	}
 
 	setPrimitive(objectsToDraw);
 
@@ -226,9 +333,8 @@ window.onload = function init() {
 	up =  vec3(0.0, 1.0, 0.0);
 	view = lookAt(eye,target,up);
 	gl.uniformMatrix4fv(programInfo.uniformLocations.view, gl.FALSE, view); // copy view to uniform value in shader
-	
-	requestAnimFrame(render);
-  
+
+	requestAnimFrame(render)
 };
 
 //----------------------------------------------------------------------------
@@ -244,19 +350,25 @@ function render() {
 	//----------------------------------------------------------------------------
 
 	let ejeY = vec3(0.0, 1.0, 0.0);
-	let R = rotate(rotAngle, ejeY);	
+	let R = rotate(rotAngle, ejeY);
 
 	objectsToDraw[2].uniforms.u_model = translate(1.0, 1.0, 3.0);
 	objectsToDraw[2].uniforms.u_model = mult(objectsToDraw[2].uniforms.u_model, R);
 	
 	objectsToDraw[3].uniforms.u_model = translate(1.0, 0.0, 3.0);
 	objectsToDraw[3].uniforms.u_model = mult(R, objectsToDraw[3].uniforms.u_model);
-	
+
+
+	for(let i = 4; i < objectsToDraw.length; i++){
+		objectsToDraw[i].uniforms.u_model = mult(rotate(rotChange, objectsToDraw[i].rotationAxis), objectsToDraw[i].uniforms.u_model);
+	}
+
 	//----------------------------------------------------------------------------
 	// DRAW
 	//----------------------------------------------------------------------------
 
 	objectsToDraw.forEach(function(object) {
+
 
 		gl.useProgram(object.programInfo.program);
 
