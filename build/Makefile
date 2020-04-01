@@ -4,7 +4,7 @@ build=.
 CC=g++
 std=-std=c++17
 O=-O3
-libsSFML=-lsfml-graphics -lsfml-window -lsfml-system
+libsSFML=-lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
 bomberman: $(src)/main.cpp 
 	$(CC) -o bomberman $(src)/main.cpp  $(std) $(libsSFML)
