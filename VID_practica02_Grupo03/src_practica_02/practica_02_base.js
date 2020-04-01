@@ -262,10 +262,15 @@ function getRandomArbitrary(min, max) {
 	return Math.random() * (max - min) + min;
 }
 
+function getRndInteger(min, max) {
+	return Math.floor(Math.random() * (max - min + 1) ) + min;
+}
+
 class Cube {
 	constructor(init_pos, color) {
 		this.initPos = init_pos;
 		this.rotationAxis = cross(init_pos, vec3(getRandomArbitrary(-1,1),getRandomArbitrary(-1,1),getRandomArbitrary(-1,1)));
+		this.rotationDirection = getRndInteger(0,1) === 0 ? -1 : 1;
 
 		this.programInfo = programInfo;
 		this.pointsArray = pointsCube;
@@ -360,7 +365,8 @@ function render() {
 
 
 	for(let i = 4; i < objectsToDraw.length; i++){
-		objectsToDraw[i].uniforms.u_model = mult(rotate(rotChange, objectsToDraw[i].rotationAxis), objectsToDraw[i].uniforms.u_model);
+		objectsToDraw[i].uniforms.u_model = mult(rotate(rotChange * objectsToDraw[i].rotationDirection,
+			objectsToDraw[i].rotationAxis), objectsToDraw[i].uniforms.u_model);
 	}
 
 	//----------------------------------------------------------------------------
