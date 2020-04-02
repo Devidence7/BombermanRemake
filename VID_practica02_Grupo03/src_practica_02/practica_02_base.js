@@ -137,7 +137,6 @@ var rotAngle = 0.0;
 var rotChange = 0.5;
 
 var NUM_P2_ORBITING_CUBES = 30;
-var ROTATION_ANGLE_P2_CUBES = 0.75;
 
 var program;
 var uLocations = {};
@@ -293,7 +292,7 @@ window.addEventListener('keydown', function(event) {
     }
     if (event.code === "KeyO") {
         //O
-        setOrtoCam();
+        setOrthoCam();
     }
     if (event.code === "KeyP") {
         //P
@@ -442,7 +441,8 @@ class Cube {
         // Rotation around center, creates a perpendicular axis that goes through the center (0,0,0).
         this.rotationAxis = cross(init_pos, vec3(getRndFloat(-1, 1), getRndFloat(-1, 1), getRndFloat(-1, 1)));
         // Set random rotation dir (clockwise or counterclockwise).
-        this.rotationDirection = getRndInteger(0, 1) === 0 ? -1 : 1;
+        this.rotationDirection = getRndFloat(-2, 2);
+        this.rotationDirectionThemselves = getRndFloat(-5, 5);
 
         this.programInfo = programInfo;
         this.pointsArray = pointsCube;
@@ -543,11 +543,11 @@ function render() {
     for (let i = 4; i < objectsToDraw.length; i++) {
         // Rotate then around themselves:
         objectsToDraw[i].uniforms.u_model = mult(objectsToDraw[i].uniforms.u_model,
-            rotate(ROTATION_ANGLE_P2_CUBES * objectsToDraw[i].rotationDirection,
+            rotate(objectsToDraw[i].rotationDirectionThemselves,
                 objectsToDraw[i].itselfRotationAxis));
 
         // Rotate them around the center position (0,0,0):
-        objectsToDraw[i].uniforms.u_model = mult(rotate(ROTATION_ANGLE_P2_CUBES * objectsToDraw[i].rotationDirection,
+        objectsToDraw[i].uniforms.u_model = mult(rotate(objectsToDraw[i].rotationDirection,
             objectsToDraw[i].rotationAxis), objectsToDraw[i].uniforms.u_model);
     }
 
