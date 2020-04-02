@@ -4,8 +4,15 @@
  * Videojuegos (30262) - Curso 2019-2020
  * 
  * Parte adaptada de: Alex Clarke, 2016, y Ed Angel, 2015.
+ *
+ *Autores: Víctor.M Lafuente,Alonso Muñoz,José M. Romero
+ *NIAs:747325,745016,740914
  * 
+ * 
+ *  
  */
+
+
 
 // Variable to store the WebGL rendering context
 var gl;
