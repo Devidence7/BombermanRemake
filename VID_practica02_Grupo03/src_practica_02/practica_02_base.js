@@ -193,7 +193,16 @@ function linealCameraMove(vec) {
     eye = vec3(tempEye[0], tempEye[1], tempEye[2]);
     target = add(eye, x_no_norm);
 }
-
+function module(v) { val = 0; v.forEach(element => {
+    val = val +(element*element)
+}); 
+    return Math.sqrt(val)
+}
+function setOrtoCam() {
+    //( left, right, bottom, top, near, far )
+    ortograph = ortho(-canvas.width / canvas.height , canvas.width / canvas.height,  -canvas.width / canvas.height, canvas.width / canvas.height, 0.1, 10);
+    gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, ortograph); // copy projection to uniform value in shader
+  }
 function updateCamera() {
     view = lookAt(eye, target, up);
     gl.uniformMatrix4fv(programInfo.uniformLocations.view, gl.FALSE, view); // copy view to uniform value in shader
@@ -201,49 +210,60 @@ function updateCamera() {
 
 fovy = 45.0
 
+function setPerspectiveCam() {  
+    //( fovy, aspect, near, far )
+    projection = perspective(fovy, canvas.width / canvas.height, 0.1, 100.0);
+    gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, projection); // copy projection to uniform value in shader
+}
+
 window.addEventListener('keydown', function (event) {
     event.preventDefault();
     const keyName = event.key;
     this.console.log("pulsado " + event.keyCode)
 
-    if (event.keyCode === 107) {
+    if (event.keyCode === 107 || event.keyCode === 171) {
         //+
         fovy++;
         if (fovy > 179) {
             fovy = 179;
         }
-        projection = perspective(fovy, canvas.width / canvas.height, 0.1, 100.0);
-        gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, projection); // copy projection to uniform value in shader
-    } else if (event.keyCode === 109) {
+        setPerspectiveCam();
+    } else if (event.keyCode === 109 || event.keyCode === 173) {
         //-
         if (fovy < 1) {
             fovy = 1;
         }
         fovy--;
-        projection = perspective(fovy, canvas.width / canvas.height, 0.1, 100.0);
-        gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, projection); // copy projection to uniform value in shader
-
+        setPerspectiveCam();
     }
-    if (event.keyCode === 87) {
+    if (event.code === "KeyW") {
         console.log("UP");
         linealCameraMove(vec4(1, 0, 0, 1));
     }
-    if (event.keyCode == 65) {
+    if (event.code == "KeyA") {
 
         //LEFT
         console.log("LEFT")
         linealCameraMove(vec4(0, 0, -1, 1));
 
     }
-    if (event.keyCode == 83) {
+    if (event.code == "KeyS") {
         console.log("DOWN")
         //DOWN
         linealCameraMove(vec4(-1, 0, 0, 1));
 
     }
-    if (event.keyCode == 68) {
+    if (event.code == "KeyD") {
         console.log("RIGHT")
         linealCameraMove(vec4(0, 0, 1, 1));
+    }
+    if (event.code == "KeyO"){
+        //O
+        setOrtoCam();
+    }
+    if(event.code == "KeyP"){
+        //P
+        setPerspectiveCam();
     }
     updateCamera()
 });
@@ -252,14 +272,16 @@ lastPostion = undefined;
 clicked = false;
 window.addEventListener("mousedown", function (event) {
     event.preventDefault();
-    clicked = true;
-    lastPostion = [event.clientX, event.clientY];
-    console.log("clicked\n");
+    if(event.button == 0){
+        clicked = true;
+        lastPostion = [event.clientX, event.clientY];
+    }
 });
 window.addEventListener("mouseup", function (event) {
     event.preventDefault();
-    clicked = false;
-    console.log("not clicked\n");
+    if(event.button == 0){
+        clicked = false;
+    }
 });
 
 window.addEventListener("mousemove", function (event) {
