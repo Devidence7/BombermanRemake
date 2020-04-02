@@ -1,15 +1,16 @@
 /*
-* 
-* Practica_02_base.js
-* Videojuegos (30262) - Curso 2019-2020
-* 
-* Parte adaptada de: Alex Clarke, 2016, y Ed Angel, 2015.
-* 
-*/
+ * 
+ * Practica_02_base.js
+ * Videojuegos (30262) - Curso 2019-2020
+ * 
+ * Parte adaptada de: Alex Clarke, 2016, y Ed Angel, 2015.
+ * 
+ */
 
 // Variable to store the WebGL rendering context
 var gl;
 var canvas;
+var perspectiva = true;
 //----------------------------------------------------------------------------
 // MODEL DATA 
 //----------------------------------------------------------------------------
@@ -71,9 +72,9 @@ for (let i = 0; i < cubeIndices.length; i++) {
 }
 
 const shapes = {
-    wireCube: {Start: 0, Vertices: 30},
-    cube: {Start: 0, Vertices: 36},
-    axes: {Start: 0, Vertices: 6}
+    wireCube: { Start: 0, Vertices: 30 },
+    cube: { Start: 0, Vertices: 36 },
+    axes: { Start: 0, Vertices: 6 }
 };
 
 const red = [1.0, 0.0, 0.0, 1.0];
@@ -86,8 +87,8 @@ const white = [1.0, 1.0, 1.0, 1.0];
 
 const colorsAxes = [
     green, green, //x
-    red, red,     //y
-    blue, blue,   //z
+    red, red, //y
+    blue, blue, //z
 ];
 
 const colorsWireCube = [
@@ -112,11 +113,11 @@ const colorsCube = [
 // OTHER DATA 
 //----------------------------------------------------------------------------
 
-var model = new mat4();   		// create a model matrix and set it to the identity matrix
-var view = new mat4();   		// create a view matrix and set it to the identity matrix
-var projection = new mat4();	// create a projection matrix and set it to the identity matrix
+var model = new mat4(); // create a model matrix and set it to the identity matrix
+var view = new mat4(); // create a view matrix and set it to the identity matrix
+var projection = new mat4(); // create a projection matrix and set it to the identity matrix
 
-var eye, target, up;			// for view matrix
+var eye, target, up; // for view matrix
 
 var rotAngle = 0.0;
 var rotChange = 0.5;
@@ -131,8 +132,7 @@ var programInfo = {
     attribLocations: {},
 };
 
-var objectsToDraw = [
-    {
+var objectsToDraw = [{
         programInfo: programInfo,
         pointsArray: pointsAxes,
         colorsArray: colorsAxes,
@@ -193,16 +193,27 @@ function linealCameraMove(vec) {
     eye = vec3(tempEye[0], tempEye[1], tempEye[2]);
     target = add(eye, x_no_norm);
 }
-function module(v) { val = 0; v.forEach(element => {
-    val = val +(element*element)
-}); 
+
+function module(v) {
+    val = 0;
+    v.forEach(element => {
+        val = val + (element * element)
+    });
     return Math.sqrt(val)
 }
+
 function setOrtoCam() {
     //( left, right, bottom, top, near, far )
-    ortograph = ortho(-canvas.width / canvas.height , canvas.width / canvas.height,  -canvas.width / canvas.height, canvas.width / canvas.height, 0.1, 10);
+    persepectiva = false;
+    t = subtract(target, eye)
+    dis = module(t)
+    prop = canvas.height / canvas.width;
+    ortograph = ortho(-10, 10, -10 * prop, 10 * prop, -10, 1000);
+
+    //ortograph = ortho(-50, 50, -50 * prop, 50 * prop, dis / 10, dis);
     gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, ortograph); // copy projection to uniform value in shader
-  }
+}
+
 function updateCamera() {
     view = lookAt(eye, target, up);
     gl.uniformMatrix4fv(programInfo.uniformLocations.view, gl.FALSE, view); // copy view to uniform value in shader
@@ -210,25 +221,26 @@ function updateCamera() {
 
 fovy = 45.0
 
-function setPerspectiveCam() {  
+function setPerspectiveCam() {
     //( fovy, aspect, near, far )
+    persepectiva = true;
     projection = perspective(fovy, canvas.width / canvas.height, 0.1, 100.0);
     gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, projection); // copy projection to uniform value in shader
 }
 
-window.addEventListener('keydown', function (event) {
+window.addEventListener('keydown', function(event) {
     event.preventDefault();
     const keyName = event.key;
     this.console.log("pulsado " + event.keyCode)
 
-    if (event.keyCode === 107 || event.keyCode === 171) {
+    if ((event.keyCode === 107 || event.keyCode === 171) && (persepectiva)) {
         //+
         fovy++;
         if (fovy > 179) {
             fovy = 179;
         }
         setPerspectiveCam();
-    } else if (event.keyCode === 109 || event.keyCode === 173) {
+    } else if ((event.keyCode === 109 || event.keyCode === 173) && (persepectiva)) {
         //-
         if (fovy < 1) {
             fovy = 1;
@@ -249,7 +261,7 @@ window.addEventListener('keydown', function (event) {
     }
     if (event.code == "KeyS") {
         console.log("DOWN")
-        //DOWN
+            //DOWN
         linealCameraMove(vec4(-1, 0, 0, 1));
 
     }
@@ -257,11 +269,11 @@ window.addEventListener('keydown', function (event) {
         console.log("RIGHT")
         linealCameraMove(vec4(0, 0, 1, 1));
     }
-    if (event.code == "KeyO"){
+    if (event.code == "KeyO") {
         //O
         setOrtoCam();
     }
-    if(event.code == "KeyP"){
+    if (event.code == "KeyP") {
         //P
         setPerspectiveCam();
     }
@@ -270,21 +282,21 @@ window.addEventListener('keydown', function (event) {
 
 lastPostion = undefined;
 clicked = false;
-window.addEventListener("mousedown", function (event) {
+window.addEventListener("mousedown", function(event) {
     event.preventDefault();
-    if(event.button == 0){
+    if (event.button == 0) {
         clicked = true;
         lastPostion = [event.clientX, event.clientY];
     }
 });
-window.addEventListener("mouseup", function (event) {
+window.addEventListener("mouseup", function(event) {
     event.preventDefault();
-    if(event.button == 0){
+    if (event.button == 0) {
         clicked = false;
     }
 });
 
-window.addEventListener("mousemove", function (event) {
+window.addEventListener("mousemove", function(event) {
     event.preventDefault();
     if (!clicked) {
         return;
@@ -451,7 +463,7 @@ function render() {
     // DRAW
     //----------------------------------------------------------------------------
 
-    objectsToDraw.forEach(function (object) {
+    objectsToDraw.forEach(function(object) {
 
 
         gl.useProgram(object.programInfo.program);
@@ -478,7 +490,7 @@ function render() {
 
 function setPrimitive(objectsToDraw) {
 
-    objectsToDraw.forEach(function (object) {
+    objectsToDraw.forEach(function(object) {
         switch (object.primType) {
             case "lines":
                 object.primitive = gl.LINES;
@@ -516,4 +528,4 @@ function setBuffersAndAttributes(pInfo, ptsArray, colArray) {
     gl.bufferData(gl.ARRAY_BUFFER, flatten(colArray), gl.STATIC_DRAW);
     gl.vertexAttribPointer(pInfo.attribLocations.vColor, 4, gl.FLOAT, gl.FALSE, 0, 0);
     gl.enableVertexAttribArray(pInfo.attribLocations.vColor);
-}
+};
