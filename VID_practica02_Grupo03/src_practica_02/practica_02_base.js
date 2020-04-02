@@ -440,7 +440,7 @@ class Cube {
         this.itselfRotationAxis = vec3(getRndFloat(-1, 1), getRndFloat(-1, 1), getRndFloat(-1, 1));
         // Rotation around center, creates a perpendicular axis that goes through the center (0,0,0).
         this.rotationAxis = cross(init_pos, vec3(getRndFloat(-1, 1), getRndFloat(-1, 1), getRndFloat(-1, 1)));
-        // Set random rotation dir (clockwise or counterclockwise).
+        // Set random rotation dir (clockwise or counterclockwise) and speed.
         this.rotationDirection = getRndFloat(-2, 2);
         this.rotationDirectionThemselves = getRndFloat(-5, 5);
 
