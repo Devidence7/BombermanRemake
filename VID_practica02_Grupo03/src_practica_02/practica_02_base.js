@@ -12,12 +12,10 @@
  *  
  */
 
-
-
 // Variable to store the WebGL rendering context
 var gl;
 var canvas;
-var perspectiva = true;
+
 //----------------------------------------------------------------------------
 // MODEL DATA 
 //----------------------------------------------------------------------------
@@ -79,9 +77,9 @@ for (let i = 0; i < cubeIndices.length; i++) {
 }
 
 const shapes = {
-    wireCube: { Start: 0, Vertices: 30 },
-    cube: { Start: 0, Vertices: 36 },
-    axes: { Start: 0, Vertices: 6 }
+    wireCube: {Start: 0, Vertices: 30},
+    cube: {Start: 0, Vertices: 36},
+    axes: {Start: 0, Vertices: 6}
 };
 
 const red = [1.0, 0.0, 0.0, 1.0];
@@ -124,10 +122,22 @@ var model = new mat4(); // create a model matrix and set it to the identity matr
 var view = new mat4(); // create a view matrix and set it to the identity matrix
 var projection = new mat4(); // create a projection matrix and set it to the identity matrix
 
+// Camera:
 var eye, target, up; // for view matrix
+var perspectiveMode = true;
+var fovy = 45.0;
 
+var CAM_ROTATION_SPEED = 1.0;
+
+var lastPostion = undefined;
+var clicked = false;
+
+// Cubes:
 var rotAngle = 0.0;
 var rotChange = 0.5;
+
+var NUM_P2_ORBITING_CUBES = 30;
+var ROTATION_ANGLE_P2_CUBES = 0.75;
 
 var program;
 var uLocations = {};
@@ -140,15 +150,15 @@ var programInfo = {
 };
 
 var objectsToDraw = [{
-        programInfo: programInfo,
-        pointsArray: pointsAxes,
-        colorsArray: colorsAxes,
-        uniforms: {
-            u_colorMult: [1.0, 1.0, 1.0, 1.0],
-            u_model: new mat4(),
-        },
-        primType: "lines",
+    programInfo: programInfo,
+    pointsArray: pointsAxes,
+    colorsArray: colorsAxes,
+    uniforms: {
+        u_colorMult: [1.0, 1.0, 1.0, 1.0],
+        u_model: new mat4(),
     },
+    primType: "lines",
+},
     {
         programInfo: programInfo,
         pointsArray: pointsWireCube,
@@ -181,26 +191,27 @@ var objectsToDraw = [{
     },
 ];
 
+/**
+ * Moves the camera to a relative position from the camera.
+ * @param vec Relative position from the camera to move.
+ */
 function linealCameraMove(vec) {
-    let x_no_norm = subtract(target, eye);
-    let x = normalize(x_no_norm);
-    let l = normalize(cross(x, up));
+    let x = subtract(target, eye);
+    let l = cross(x, up);
 
-    let mCB = mat4();
-    for (let pCB = 0; pCB < 3; pCB++) {
-        mCB[4 * pCB] = x[pCB];
-        mCB[4 * pCB + 1] = up[pCB];
-        mCB[4 * pCB + 2] = l[pCB];
-        mCB[4 * pCB + 3] = eye[pCB];
-    }
-
+    let mCB = createChangeOfBaseMatrix(x, up, l, eye);
 
     let tempEye = mult(mCB, vec);
 
     eye = vec3(tempEye[0], tempEye[1], tempEye[2]);
-    target = add(eye, x_no_norm);
+    target = add(eye, x);
 }
 
+/**
+ * Calculates the module of vector
+ * @param v Vector
+ * @returns {number}
+ */
 function module(v) {
     val = 0;
     v.forEach(element => {
@@ -209,11 +220,27 @@ function module(v) {
     return Math.sqrt(val)
 }
 
-function setOrtoCam() {
+function updateCamera() {
+    view = lookAt(eye, target, up);
+    gl.uniformMatrix4fv(programInfo.uniformLocations.view, gl.FALSE, view); // copy view to uniform value in shader
+}
+
+/**
+ * Change to Perspective cam mode whit field of view.
+ */
+function setPerspectiveCam() {
+    perspectiveMode = true;
+    //( fovy, aspect, near, far )
+    projection = perspective(fovy, canvas.width / canvas.height, 0.1, 100.0);
+    gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, projection); // copy projection to uniform value in shader
+}
+
+/**
+ * Change to Orthogonal perspective camera mode.
+ */
+function setOrthoCam() {
     //( left, right, bottom, top, near, far )
-    persepectiva = false;
-    t = subtract(target, eye)
-    dis = module(t)
+    perspectiveMode = false;
     prop = canvas.height / canvas.width;
     ortograph = ortho(-10, 10, -10 * prop, 10 * prop, -10, 1000);
 
@@ -221,19 +248,8 @@ function setOrtoCam() {
     gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, ortograph); // copy projection to uniform value in shader
 }
 
-function updateCamera() {
-    view = lookAt(eye, target, up);
-    gl.uniformMatrix4fv(programInfo.uniformLocations.view, gl.FALSE, view); // copy view to uniform value in shader
-}
 
-fovy = 45.0
-
-function setPerspectiveCam() {
-    //( fovy, aspect, near, far )
-    persepectiva = true;
-    projection = perspective(fovy, canvas.width / canvas.height, 0.1, 100.0);
-    gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, projection); // copy projection to uniform value in shader
-}
+let vectTranslate = vec4(0,0,0,1);
 
 window.addEventListener('keydown', function(event) {
     event.preventDefault();
@@ -249,124 +265,183 @@ window.addEventListener('keydown', function(event) {
         setPerspectiveCam();
     } else if ((event.keyCode === 109 || event.keyCode === 173) && (persepectiva)) {
         //-
+        fovy--;
         if (fovy < 1) {
             fovy = 1;
         }
-        fovy--;
         setPerspectiveCam();
     }
     if (event.code === "KeyW") {
         console.log("UP");
-        linealCameraMove(vec4(1, 0, 0, 1));
+        vectTranslate[0] = 1;
     }
-    if (event.code == "KeyA") {
+    if (event.code === "KeyA") {
 
         //LEFT
-        console.log("LEFT")
-        linealCameraMove(vec4(0, 0, -1, 1));
+        console.log("LEFT");
+        vectTranslate[2] = -1;
 
     }
-    if (event.code == "KeyS") {
-        console.log("DOWN")
-            //DOWN
-        linealCameraMove(vec4(-1, 0, 0, 1));
-
+    if (event.code === "KeyS") {
+        console.log("DOWN");
+        //DOWN
+        vectTranslate[0] = -1;
     }
-    if (event.code == "KeyD") {
-        console.log("RIGHT")
-        linealCameraMove(vec4(0, 0, 1, 1));
+    if (event.code === "KeyD") {
+        console.log("RIGHT");
+        vectTranslate[2] = 1;
     }
-    if (event.code == "KeyO") {
+    if (event.code === "KeyO") {
         //O
         setOrtoCam();
     }
-    if (event.code == "KeyP") {
+    if (event.code === "KeyP") {
         //P
         setPerspectiveCam();
     }
     updateCamera()
 });
 
-lastPostion = undefined;
-clicked = false;
-window.addEventListener("mousedown", function(event) {
+
+window.addEventListener('keyup', function(event) {
     event.preventDefault();
-    if (event.button == 0) {
+
+    if (event.code === "KeyW") {
+        console.log("UP");
+        vectTranslate[0] = 0;
+    }
+    if (event.code === "KeyA") {
+
+        //LEFT
+        console.log("LEFT");
+        vectTranslate[2] = 0;
+
+    }
+    if (event.code === "KeyS") {
+        console.log("DOWN");
+        //DOWN
+        vectTranslate[0] = 0;
+    }
+    if (event.code === "KeyD") {
+        console.log("RIGHT");
+        vectTranslate[2] = 0;
+    }
+//    updateCamera()
+});
+
+window.addEventListener("mousedown", function (event) {
+    event.preventDefault();
+    if (event.button === 0) {
         clicked = true;
         lastPostion = [event.clientX, event.clientY];
     }
 });
-window.addEventListener("mouseup", function(event) {
+window.addEventListener("mouseup", function (event) {
     event.preventDefault();
-    if (event.button == 0) {
+    if (event.button === 0) {
         clicked = false;
     }
 });
 
-window.addEventListener("mousemove", function(event) {
+window.addEventListener("mousemove", function (event) {
     event.preventDefault();
     if (!clicked) {
         return;
     }
-    position = [event.clientX, event.clientY];
-    directionMov = [position[0] - lastPostion[0], position[1] - lastPostion[1]];
-    //Rotar camara
+    let position = [event.clientX, event.clientY];
+    let directionMov = [position[0] - lastPostion[0], position[1] - lastPostion[1]];
 
     lastPostion = position;
-    console.log("(X,Y): " + directionMov[0] + ", " + directionMov[1])
+    console.log("(X,Y): " + directionMov[0] + ", " + directionMov[1]);
 
+    // Save last position if user makes more movements
     lastPostion = position;
+
+    // Move target to center position to rotate:
     let x = subtract(target, eye);
-    let xNorm = normalize(x);
-    let l = normalize(cross(x, up));
-
-    let mCB = mat4();
-    for (let pCB = 0; pCB < 3; pCB++) {
-        mCB[4 * pCB] = xNorm[pCB];
-        mCB[4 * pCB + 1] = up[pCB];
-        mCB[4 * pCB + 2] = l[pCB];
-        mCB[4 * pCB + 3] = eye[pCB];
-    }
-    console.log(mCB);
-
-    distance = Math.sqrt(Math.pow(x[0], 2) + Math.pow(x[1], 2) + Math.pow(x[2], 2));
+    let distance = module(x);
     let targetInOrigin = vec4(distance, 0, 0, 1);
 
-    targetInOrigin = mult(rotate(0.5,
-        normalize(cross(normalize(vec3(targetInOrigin[0], targetInOrigin[1], targetInOrigin[2])),
-            normalize(vec3(0, directionMov[1], -directionMov[0]))))), targetInOrigin);
-    console.log(targetInOrigin);
-    let tempTarget = mult(mCB, targetInOrigin);
+    // Rotate target as user input says:
+    let rotationAxis = normalize(cross(normalize(vec3(targetInOrigin[0], targetInOrigin[1], targetInOrigin[2])),
+             normalize(vec3(0, directionMov[1], -directionMov[0]))));
+    targetInOrigin = mult(rotate(CAM_ROTATION_SPEED, rotationAxis), targetInOrigin);
 
-    console.log(tempTarget);
+    // Return target to its position with a change of base:
+    let l = normalize(cross(x, up));
+    let m = createChangeOfBaseMatrix(x, up, l, eye);
+
+    let tempTarget = mult(m, targetInOrigin);
     target = vec3(tempTarget[0], tempTarget[1], tempTarget[2]);
-    console.log(target);
-
+    
     updateCamera();
 });
 
 
+/**
+ * Creates a change of base matrix transformation.
+ * @param xAxis
+ * @param yAxis
+ * @param zAxis
+ * @param originPoint
+ * @returns {[]} Change of Base Matrix
+ */
+function createChangeOfBaseMatrix(xAxis, yAxis, zAxis, originPoint) {
+    xAxis = normalize(xAxis);
+    yAxis = normalize(yAxis);
+    zAxis = normalize(zAxis);
+
+    let mCB = mat4();
+    for (let pCB = 0; pCB < 3; pCB++) {
+        mCB[4 * pCB]     =  xAxis[pCB];
+        mCB[4 * pCB + 1] =  yAxis[pCB];
+        mCB[4 * pCB + 2] =  zAxis[pCB];
+        mCB[4 * pCB + 3] =  originPoint[pCB];
+    }
+
+    return mCB;
+}
+
+/**
+ * Generates a list of one color for each triangle from a cube. The color is generated randomly.
+ * @returns {[]|*[]}
+ */
 function generateColors() {
     color = [Math.random(), Math.random(), Math.random(), 1];
-    colorCube = []
+    colorCube = [];
     for (i = 0; i < 6 * 6; i++) {
         colorCube.push(color);
     }
     return colorCube;
 }
 
-function getRandomArbitrary(min, max) {
+/**
+ * Returns a random float value with a uniform distribution between min and max.
+ * @param min Float. Minimum return value.
+ * @param max Float. Maximum return value.
+ * @returns Random float value.
+ */
+function getRndFloat(min, max) {
     return Math.random() * (max - min) + min;
 }
 
+/**
+ * Returns a random integer with a uniform distribution between min and max (included).
+ * @param min Integer. Minimum return value.
+ * @param max Integer. Maximum return value.
+ * @returns Random int value.
+ */
 function getRndInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 class Cube {
     constructor(init_pos, color) {
-        this.initPos = init_pos;
-        this.rotationAxis = cross(init_pos, vec3(getRandomArbitrary(-1, 1), getRandomArbitrary(-1, 1), getRandomArbitrary(-1, 1)));
+        // Rotation around itself, creates a random axis to rotate:
+        this.itselfRotationAxis = vec3(getRndFloat(-1, 1), getRndFloat(-1, 1), getRndFloat(-1, 1));
+        // Rotation around center, creates a perpendicular axis that goes through the center (0,0,0).
+        this.rotationAxis = cross(init_pos, vec3(getRndFloat(-1, 1), getRndFloat(-1, 1), getRndFloat(-1, 1)));
+        // Set random rotation dir (clockwise or counterclockwise).
         this.rotationDirection = getRndInteger(0, 1) === 0 ? -1 : 1;
 
         this.programInfo = programInfo;
@@ -398,8 +473,9 @@ window.onload = function init() {
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.enable(gl.DEPTH_TEST);
 
-    for (let i = 0; i < 30; i++) {
-        objectsToDraw.push(new Cube(vec3(getRandomArbitrary(-5, 5), getRandomArbitrary(-5, 5), getRandomArbitrary(-5, 5)), generateColors()));
+    // Add the orbiting cubes to the list of objects:
+    for (let i = 0; i < NUM_P2_ORBITING_CUBES; i++) {
+        objectsToDraw.push(new Cube(vec3(getRndFloat(-5, 5), getRndFloat(-5, 5), getRndFloat(-5, 5)), generateColors()));
     }
 
     setPrimitive(objectsToDraw);
@@ -444,6 +520,9 @@ window.onload = function init() {
 //----------------------------------------------------------------------------
 
 function render() {
+    // Translate camera is needed:
+    linealCameraMove(vectTranslate);
+    updateCamera();
 
     gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
 
@@ -460,9 +539,15 @@ function render() {
     objectsToDraw[3].uniforms.u_model = translate(1.0, 0.0, 3.0);
     objectsToDraw[3].uniforms.u_model = mult(R, objectsToDraw[3].uniforms.u_model);
 
-
+    // For the rest objects in the list:
     for (let i = 4; i < objectsToDraw.length; i++) {
-        objectsToDraw[i].uniforms.u_model = mult(rotate(rotChange * objectsToDraw[i].rotationDirection,
+        // Rotate then around themselves:
+        objectsToDraw[i].uniforms.u_model = mult(objectsToDraw[i].uniforms.u_model,
+            rotate(ROTATION_ANGLE_P2_CUBES * objectsToDraw[i].rotationDirection,
+                objectsToDraw[i].itselfRotationAxis));
+
+        // Rotate them around the center position (0,0,0):
+        objectsToDraw[i].uniforms.u_model = mult(rotate(ROTATION_ANGLE_P2_CUBES * objectsToDraw[i].rotationDirection,
             objectsToDraw[i].rotationAxis), objectsToDraw[i].uniforms.u_model);
     }
 
@@ -470,9 +555,7 @@ function render() {
     // DRAW
     //----------------------------------------------------------------------------
 
-    objectsToDraw.forEach(function(object) {
-
-
+    objectsToDraw.forEach(function (object) {
         gl.useProgram(object.programInfo.program);
 
         // Setup buffers and attributes
@@ -486,9 +569,7 @@ function render() {
     });
 
     rotAngle += rotChange;
-
     requestAnimationFrame(render);
-
 }
 
 //----------------------------------------------------------------------------
@@ -497,7 +578,7 @@ function render() {
 
 function setPrimitive(objectsToDraw) {
 
-    objectsToDraw.forEach(function(object) {
+    objectsToDraw.forEach(function (object) {
         switch (object.primType) {
             case "lines":
                 object.primitive = gl.LINES;
@@ -535,4 +616,4 @@ function setBuffersAndAttributes(pInfo, ptsArray, colArray) {
     gl.bufferData(gl.ARRAY_BUFFER, flatten(colArray), gl.STATIC_DRAW);
     gl.vertexAttribPointer(pInfo.attribLocations.vColor, 4, gl.FLOAT, gl.FALSE, 0, 0);
     gl.enableVertexAttribArray(pInfo.attribLocations.vColor);
-};
+}
