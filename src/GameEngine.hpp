@@ -16,68 +16,139 @@ using namespace sf;
  * Mostrará al morir el Game Over
  */
 
-class Game {
+class Game
+{
 private:
+	// Dim level map:
+	int dimY = 15;
+	int dimX = 25;
 	// Initialize textures
 	TextureStorage textureStorage;
 	Level *level;
-	Player_ptr player;
+	std::vector<Enemy_ptr> enemies;
 	//std::vector<Enemy_ptr> enemies;
 
 public:
-	Game() {
-		level = new Level();
-		player = std::make_shared<PlayerEntity>(PlayerEntity());
-		// Enemy_ptr e1 = std::make_shared<EnemyEntity>(Balloon());
-		// Enemy_ptr e2 = std::make_shared<EnemyEntity>(Ice());
-		// Enemy_ptr e3 = std::make_shared<EnemyEntity>(Barrel());
-		// Enemy_ptr e4 = std::make_shared<EnemyEntity>(Coin());
-		// Enemy_ptr e5 = std::make_shared<EnemyEntity>(Blob());
-		// Enemy_ptr e6 = std::make_shared<EnemyEntity>(Ghost());
-		// Enemy_ptr e7 = std::make_shared<EnemyEntity>(Hypo());
-		// enemies.push_back(e1);
-		// enemies.push_back(e2);
-		// enemies.push_back(e3);
-		// enemies.push_back(e4);
-		// enemies.push_back(e5);
-		// enemies.push_back(e6);
-		// enemies.push_back(e7);
+	Game()
+	{
+		insertPlayers();
+		insertarEnemigos();
+		level = new Level(enemies, dimX, dimY);
+		
 	}
 	void start();
 
-	void update() {
-		level->update();
-
-		if (player->updatePlayer()) {
-			// If there is nothing in that cell:
-			//if(level.map.getCellObject(level.map.getMapCoordinates(player.getCenterPosition())) == nullptr) {
-			//Collider2d colFire(sf::Vector2f(0, 0), sf::FloatRect(0, 0, 1, 1), true);
-			Entity_ptr b = std::make_shared<Bomb>(Bomb(player));
-			b->setPosition(level->getMapCellCorner(player->getCenterPosition()));
-			level->addNewItem(b);
-			//level->addEntity(b);
-			//level->addEntityToMiniMap(b, level->getMapCoordinates(b->getPosition() ) );
-			//}
+	void updatePlayers(){
+		for(Player_ptr &player : players){
+			if (player->updatePlayer())
+			{
+				// If there is nothing in that cell:
+				Entity_ptr b = std::make_shared<Bomb>(Bomb(player));
+				b->setPosition(level->getMapCellCorner(player->getCenterPosition()));
+				level->addNewItem(b);
+			}
+			level->checkAndFixCollisions(player);
 		}
-		//for(Enemy_ptr &e : this->enemies){
-		//	e->update();
-		//	level->checkAndFixCollisions(*e);
-		//}
-		level->checkAndFixCollisions(player);
-
 	}
 
-	void draw(RenderWindow& w) {
-		level->draw(w);
-		//for(Enemy_ptr &e : this->enemies){
-		//	w.draw(*e);
-		//}
-		w.draw(*player);
-		if (HITBOX_DEBUG_MODE) {
-			level->drawEntityHitbox(w, *player);
-			//for(Enemy_ptr &e : this->enemies){
-			//level->drawEntityHitbox(w, *e);
-			//}
+	void update()
+	{
+		level->update();
+		updatePlayers();
+		updateEnemies();
+	}
+
+	void drawPlayers(sf::RenderWindow &w){
+
+		for (Player_ptr &player : players)
+		{
+			w.draw(*player);
+#ifdef HITBOX_DEBUG_MODE
+			player->drawEntityHitbox(w);
+#endif
 		}
+	}
+
+	void drawEnemies(sf::RenderWindow &w)
+	{
+		for (Enemy_ptr &e : this->enemies)
+		{
+			w.draw(*e);
+#ifdef HITBOX_DEBUG_MODE
+			e->drawEntityHitbox(w);
+#endif
+		}
+	}
+
+	bool colissionWithEnemies(Entity &eCol)
+	{
+		bool intersec = false;
+		for (Enemy_ptr &e : this->enemies)
+		{
+			intersec = intersec || e->collision(eCol);
+		}
+		return intersec;
+	}
+
+	void insertarEnemigos()
+	{
+		Enemy_ptr e1 = std::make_shared<EnemyEntity>(Balloon());
+		Enemy_ptr e2 = std::make_shared<EnemyEntity>(Ice());
+		Enemy_ptr e3 = std::make_shared<EnemyEntity>(Barrel());
+		Enemy_ptr e4 = std::make_shared<EnemyEntity>(Coin());
+		Enemy_ptr e5 = std::make_shared<EnemyEntity>(Blob());
+		Enemy_ptr e6 = std::make_shared<EnemyEntity>(Ghost());
+		Enemy_ptr e7 = std::make_shared<EnemyEntity>(Hypo());
+		enemies.push_back(e1);
+		enemies.push_back(e2);
+		enemies.push_back(e3);
+		enemies.push_back(e4);
+		enemies.push_back(e5);
+		enemies.push_back(e6);
+		enemies.push_back(e7);
+
+		for (Enemy_ptr e : enemies)
+		{
+			int x, y;
+			do
+			{
+				x = Random::getIntNumberBetween(0, dimX / 2);
+
+			} while (x < 3);
+			do
+			{
+				y = Random::getIntNumberBetween(0, dimY / 2);
+			} while (y < 3);
+			e->setPosition(sf::Vector2f((x * 2 + 1) * SIZE_PILLAR, (y * 2 + 1) * SIZE_PILLAR));
+		}
+	}
+
+	void updateEnemies()
+	{
+		auto it = enemies.begin();
+		int counter = 0;
+		while (it != enemies.end())
+		{
+			// Update the enemies.
+			(*it)->update();
+			level->checkAndFixCollisions((*it));
+			if ((*it)->getExpiredEntity())
+			{
+				it->reset();
+				it = enemies.erase(it);
+			}
+			else
+			{
+				++it;
+				counter++;
+			}
+		}
+	}
+
+	void draw(RenderWindow &w)
+	{
+		level->draw(w);
+		drawPlayers(w);
+		drawEnemies(w);
 	}
 };

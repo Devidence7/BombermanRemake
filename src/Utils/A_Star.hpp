@@ -118,7 +118,7 @@ float sizeY;
     }
 
 
-    std::vector<sf::Vector2i> & pathFinding(const sf::Vector2i & positionEnemy, const sf::Vector2i & positionObjetive){
+    std::vector<sf::Vector2i> &pathFinding(const sf::Vector2i & positionEnemy, const sf::Vector2i & positionObjetive){
 	    Heap<ANode>frontera;
         std::map<vec2i, ANode *> expanded;
         ANode *currentNode = new ANode(positionEnemy, sf::Vector2i(0,0), positionObjetive, 0.0f);
@@ -152,7 +152,7 @@ float sizeY;
         }
         
         std::list<sf::Vector2i> list_actions;
-        std::vector<sf::Vector2i> result;
+        std::vector<sf::Vector2i>* result = new std::vector<sf::Vector2i>();
         if(finded){
             while (currentNode != nullptr)
             {
@@ -165,10 +165,10 @@ float sizeY;
                 sf::Vector2i i = list_actions.back() ;
                 sf::Vector2i j = i;
                 list_actions.pop_back();
-                result.push_back(j);
+                result->push_back(j);
             }
         }
-        return result;
+        return *result;
 
     }
 }

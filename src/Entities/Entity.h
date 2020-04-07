@@ -191,4 +191,37 @@ public:
 		return (-dir_centros) * intersec;
 	}
 
+
+	void drawEntityHitbox(sf::RenderWindow &w)
+	{
+		sf::FloatRect dim = this->getGlobalBounds();
+		sf::VertexArray lines(sf::Lines, 2);
+
+		// Left
+		lines[0].position = sf::Vector2f(dim.left, dim.top);
+		lines[0].color = sf::Color::Red;
+		lines[1].position = sf::Vector2f(dim.left, dim.top + dim.height);
+		lines[1].color = sf::Color::Red;
+		w.draw(lines);
+
+		// top
+		lines[0].position = sf::Vector2f(dim.left, dim.top);
+		lines[0].color = sf::Color::Red;
+		lines[1].position = sf::Vector2f(dim.left + dim.width, dim.top);
+		lines[1].color = sf::Color::Red;
+		w.draw(lines);
+
+		lines[0].position = sf::Vector2f(dim.left, dim.top + dim.height);
+		lines[0].color = sf::Color::Red;
+		lines[1].position = sf::Vector2f(dim.left + dim.width, dim.top + dim.height);
+		lines[1].color = sf::Color::Red;
+		w.draw(lines);
+
+		lines[0].position = sf::Vector2f(dim.left + dim.width, dim.top);
+		lines[0].color = sf::Color::Red;
+		lines[1].position = sf::Vector2f(dim.left + dim.width, dim.top + dim.height);
+		lines[1].color = sf::Color::Red;
+		w.draw(lines);
+	}
+
 };

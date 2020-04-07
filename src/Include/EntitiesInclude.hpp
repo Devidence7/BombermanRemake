@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 #include "../Entities/Entity.h"
 #include "../Entities/Bomb.h"
@@ -19,3 +20,13 @@ typedef std::shared_ptr<BrickWall> BrickWall_ptr;
 typedef std::shared_ptr<EnemyEntity> Enemy_ptr;
 typedef std::shared_ptr<PlayerEntity> Player_ptr;
 
+
+std::vector<Player_ptr> players;
+
+void addPlayer(){
+    players.push_back(std::make_shared<PlayerEntity>(PlayerEntity()));
+}
+
+void insertPlayers(int numPlayers = 1){
+    addPlayer();
+}

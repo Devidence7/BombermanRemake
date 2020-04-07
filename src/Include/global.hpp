@@ -56,7 +56,7 @@ enum CollisionType
 const int TOTAL_ENEMY_FRAMES = 13;
 
 // Debug features:
-bool HITBOX_DEBUG_MODE = true;
+#define HITBOX_DEBUG_MODE true;
 
 ////////////////////////////////////////////
 ///////// MAP COORDENATE OPERATOR /////////

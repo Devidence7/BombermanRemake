@@ -20,17 +20,13 @@ class Level
 {
 	// All entities vector:
 	std::vector<Entity_ptr> entities;
-	std::vector<Enemy_ptr> enemies;
 
-	// Level map:
-	int dimY = 15;
-	int dimX = 25;
 	std::vector<std::vector<Entity_ptr>> map;
 	std::vector<std::vector<Entity_ptr>> miniMap;
 	sf::RectangleShape floor;
 
 public:
-	Level()
+	Level(std::vector<Enemy_ptr> &enemies, int dimX, int dimY)
 	{
 		// Reserve space for faster insert, delete of the entities
 		entities.reserve(10000);
@@ -55,7 +51,6 @@ public:
 			addPillar(dimX + 1, y);
 		}
 
-		insertarEnemigos();
 		//create Pillars
 		for (int x = 1; x < dimX + 1; x++)
 		{
@@ -90,56 +85,12 @@ public:
 		}
 	}
 
-	void drawEnemies(sf::RenderWindow &w)
-	{
-		for (Enemy_ptr &e : this->enemies)
-		{
-			w.draw(*e);
-			if (HITBOX_DEBUG_MODE)
-			{
-				drawEntityHitbox(w, *e);
-			}
-		}
-	}
-
-	bool colissionWithEnemies(Entity &eCol)
-	{
-		bool intersec = false;
-		for (Enemy_ptr &e : this->enemies)
-		{
-			intersec = intersec || e->collision(eCol);
-		}
-		return intersec;
-	}
-
-	void updateEnemies()
-	{
-		auto it = enemies.begin();
-		int counter = 0;
-		while (it != enemies.end())
-		{
-			// Update the enemies.
-			(*it)->update();
-			checkAndFixCollisions((*it));
-			if ((*it)->getExpiredEntity())
-			{
-				it->reset();
-				it = enemies.erase(it);
-			}
-			else
-			{
-				++it;
-				counter++;
-			}
-		}
-	}
-
+	
 	void update()
 	{
 		auto it = entities.begin();
 		int counter = 0;
 		// This is made this way because we need to erase element from a vector while we are iterating
-		updateEnemies();
 		while (it != entities.end())
 		{
 			// Update the entities.
@@ -210,37 +161,6 @@ public:
 	/*
 	 * This is a DEBUG method, draws in the RenderWindow the hitbox of the Entity
 	*/
-	void drawEntityHitbox(sf::RenderWindow &w, Entity &e)
-	{
-		sf::FloatRect dim = e.getGlobalBounds();
-		sf::VertexArray lines(sf::Lines, 2);
-
-		// Left
-		lines[0].position = sf::Vector2f(dim.left, dim.top);
-		lines[0].color = sf::Color::Red;
-		lines[1].position = sf::Vector2f(dim.left, dim.top + dim.height);
-		lines[1].color = sf::Color::Red;
-		w.draw(lines);
-
-		// top
-		lines[0].position = sf::Vector2f(dim.left, dim.top);
-		lines[0].color = sf::Color::Red;
-		lines[1].position = sf::Vector2f(dim.left + dim.width, dim.top);
-		lines[1].color = sf::Color::Red;
-		w.draw(lines);
-
-		lines[0].position = sf::Vector2f(dim.left, dim.top + dim.height);
-		lines[0].color = sf::Color::Red;
-		lines[1].position = sf::Vector2f(dim.left + dim.width, dim.top + dim.height);
-		lines[1].color = sf::Color::Red;
-		w.draw(lines);
-
-		lines[0].position = sf::Vector2f(dim.left + dim.width, dim.top);
-		lines[0].color = sf::Color::Red;
-		lines[1].position = sf::Vector2f(dim.left + dim.width, dim.top + dim.height);
-		lines[1].color = sf::Color::Red;
-		w.draw(lines);
-	}
 
 	void draw(sf::RenderWindow &w)
 	{
@@ -255,14 +175,12 @@ public:
 				if (e != nullptr)
 				{
 					w.draw(*e);
-					if (HITBOX_DEBUG_MODE)
-					{
-						drawEntityHitbox(w, *e);
-					}
+					#ifdef HITBOX_DEBUG_MODE
+						e->drawEntityHitbox(w);
+					#endif
 				}
 			}
 		}
-		drawEnemies(w);
 	}
 
 	bool createFire(int type, int posX, int posY)
@@ -486,16 +404,6 @@ public:
 				}
 			}
 		}
-		if (std::dynamic_pointer_cast<PlayerEntity>(eCollisioning) != nullptr)
-		{
-			for (Enemy_ptr e : enemies)
-			{
-				if (eCollisioning->collision(*e))
-				{
-					eCollisioning->setExpiredEntity();
-				}
-			}
-		}
 	}
 
 	////////////////////////////////////////////////
@@ -563,36 +471,7 @@ public:
 		entities.push_back(e);
 	}
 
-	void insertarEnemigos()
-	{
-		Enemy_ptr e1 = std::make_shared<EnemyEntity>(Balloon());
-		Enemy_ptr e2 = std::make_shared<EnemyEntity>(Ice());
-		Enemy_ptr e3 = std::make_shared<EnemyEntity>(Barrel());
-		Enemy_ptr e4 = std::make_shared<EnemyEntity>(Coin());
-		Enemy_ptr e5 = std::make_shared<EnemyEntity>(Blob());
-		Enemy_ptr e6 = std::make_shared<EnemyEntity>(Ghost());
-		Enemy_ptr e7 = std::make_shared<EnemyEntity>(Hypo());
-		enemies.push_back(e1);
-		enemies.push_back(e2);
-		enemies.push_back(e3);
-		enemies.push_back(e4);
-		enemies.push_back(e5);
-		enemies.push_back(e6);
-		enemies.push_back(e7);
-
-		for (Enemy_ptr e : enemies)
-		{
-			int x, y;
-			do{
-				x = Random::getIntNumberBetween(0, dimX / 2);
-
-			}while (x < 3);
-			do{
-			 y = Random::getIntNumberBetween(0, dimY / 2);
-			}while(y < 3);
-			e->setPosition(sf::Vector2f((x * 2 + 1) * SIZE_PILLAR, (y * 2 + 1) * SIZE_PILLAR));
-		}
-	}
+	
 
 	void addPillar(int x, int y)
 	{
