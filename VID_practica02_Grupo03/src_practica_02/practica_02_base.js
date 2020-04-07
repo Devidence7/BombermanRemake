@@ -241,7 +241,7 @@ function setOrthoCam() {
     //( left, right, bottom, top, near, far )
     perspectiveMode = false;
     prop = canvas.height / canvas.width;
-    ortograph = ortho(-10, 10, -10 * prop, 10 * prop, -10, 1000);
+    ortograph = ortho(-10, 10, -10 * prop, 10 * prop, -10, 100);
 
     //ortograph = ortho(-50, 50, -50 * prop, 50 * prop, dis / 10, dis);
     gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, ortograph); // copy projection to uniform value in shader
@@ -255,14 +255,14 @@ window.addEventListener('keydown', function(event) {
     const keyName = event.key;
     this.console.log("pulsado " + event.keyCode)
 
-    if ((event.keyCode === 107 || event.keyCode === 171) && (persepectiva)) {
+    if ((event.keyCode === 107 || event.keyCode === 171) && (perspectiveMode)) {
         //+
         fovy++;
         if (fovy > 179) {
             fovy = 179;
         }
         setPerspectiveCam();
-    } else if ((event.keyCode === 109 || event.keyCode === 173) && (persepectiva)) {
+    } else if ((event.keyCode === 109 || event.keyCode === 173) && (perspectiveMode)) {
         //-
         fovy--;
         if (fovy < 1) {
@@ -365,6 +365,8 @@ window.addEventListener("mousemove", function (event) {
     let rotationAxis = normalize(cross(normalize(vec3(targetInOrigin[0], targetInOrigin[1], targetInOrigin[2])),
              normalize(vec3(0, directionMov[1], -directionMov[0]))));
     targetInOrigin = mult(rotate(CAM_ROTATION_SPEED, rotationAxis), targetInOrigin);
+
+    // MAX AND MIN ROTATION IS NOT IMPLEMENTED
 
     // Return target to its position with a change of base:
     let l = normalize(cross(x, up));
