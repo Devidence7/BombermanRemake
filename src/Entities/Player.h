@@ -34,6 +34,7 @@ public:
 	{
 		isFireDestroyable = true;
 		fireCanGoThroght = true;
+		collisioner = false;
 
 		animLastTic = GameTime::getTimeNow();
 		baseSpeed = 2.5;
@@ -107,6 +108,10 @@ public:
 
 	void update() override
 	{
+		return;
+	}
+
+	void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) override{
 		return;
 	}
 

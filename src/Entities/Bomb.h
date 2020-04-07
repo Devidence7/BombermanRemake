@@ -6,6 +6,7 @@
 #include "../Logic/Time.h"
 #include "Entity.h"
 #include "Player.h"
+#include "Enemy.h"
 
 class Bomb : public Entity {
 public:
@@ -23,9 +24,9 @@ public:
 	const double explosionTime = 1.35;
 
 	// Player which bomb is from:
-	PlayerEntity *player;
+	std::shared_ptr<PlayerEntity> player;
 
-	Bomb(PlayerEntity *p) : Entity() {
+	Bomb(std::shared_ptr<PlayerEntity> p) : Entity() {
 		player = p;
 		p->numOfBombs -= 1;
 		this->bombPower = p->getPowerOfBombs();
@@ -48,6 +49,17 @@ public:
 		player->numOfBombs += 1;
 	}
 
+	void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) override{
+		if(dynamic_pointer_cast<PlayerEntity>(eCollisioning) != nullptr){
+			//check jump or kick
+			Entity::onCollission(eCollisioning, colT);
+		}else if(dynamic_pointer_cast<EnemyEntity>(eCollisioning) != nullptr){
+			Entity::onCollission(eCollisioning, colT);
+		}else{
+			//stop Bomb? Fire?
+			Entity::onCollission(eCollisioning, colT);
+		}
+	}
 	void update() {
 		// If it is time to explote:
 		if (GameTime::getTimeNow() - explosionCounter > explosionTime) {
@@ -89,6 +101,10 @@ public:
 		setTextureRect(fireTexture->getFrame(0, type));
 		// Set sprite Sheet texture
 		setTexture(fireTexture->getTexture());
+	}
+
+	void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) override{
+		eCollisioning->setExpiredEntity();
 	}
 
 	void update() override{

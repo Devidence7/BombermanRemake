@@ -1,9 +1,9 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+
 #include "Include/global.hpp"
-#include "Entities/Bomb.h"
-#include "Entities/Player.h"
-#include "Entities/Enemy.h"
+#include "Include/EntitiesInclude.hpp"
+
 #include "Map/Level.hpp"
 #include "Textures/TextureStorage.h"
 
@@ -21,13 +21,13 @@ private:
 	// Initialize textures
 	TextureStorage textureStorage;
 	Level *level;
-	PlayerEntity *player;
+	Player_ptr player;
 	//std::vector<Enemy_ptr> enemies;
 
 public:
 	Game() {
 		level = new Level();
-		player = new PlayerEntity();
+		player = std::make_shared<PlayerEntity>(PlayerEntity());
 		// Enemy_ptr e1 = std::make_shared<EnemyEntity>(Balloon());
 		// Enemy_ptr e2 = std::make_shared<EnemyEntity>(Ice());
 		// Enemy_ptr e3 = std::make_shared<EnemyEntity>(Barrel());
@@ -61,9 +61,9 @@ public:
 		}
 		//for(Enemy_ptr &e : this->enemies){
 		//	e->update();
-		//	level->checkAndFixCollisions2(*e);
+		//	level->checkAndFixCollisions(*e);
 		//}
-		level->checkAndFixCollisions2(*player);
+		level->checkAndFixCollisions(player);
 
 	}
 

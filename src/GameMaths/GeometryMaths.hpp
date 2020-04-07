@@ -1,7 +1,13 @@
 #pragma once
-#include<math.h>
+
+#include <math.h>
 
 #include <SFML/Graphics.hpp>
+
+#include "../Entities/Entity.h"
+#include "../Include/EntitiesInclude.hpp"
+
+//Basic operators
 
 inline float calculate_penetration(float r1, float r2, float d)
 {
@@ -22,7 +28,9 @@ inline float moduleVector(const sf::Vector2f &v)
     return sqrt(v.x * v.x + v.y * v.y);
 }
 
-inline float distancie_to_squere(sf::Vector2f origin, sf::Vector2f dir, sf::Vector2f N, sf::Vector2f pRect)
+//Poligon maths
+
+inline float distance_to_squere(sf::Vector2f origin, sf::Vector2f dir, sf::Vector2f N, sf::Vector2f pRect)
 {
     float denom = dot(N, dir);
     sf::Vector2f p0 = pRect - origin;
@@ -31,7 +39,7 @@ inline float distancie_to_squere(sf::Vector2f origin, sf::Vector2f dir, sf::Vect
 
 inline float intersectPoint_planeVector(sf::Vector2f origin, sf::Vector2f dir, sf::Vector2f N, sf::Vector2f pRect)
 {
-	float denom = dot(N, dir);
-	sf::Vector2f p0 = pRect - origin;
-	return dot(p0, N) / denom;
+    float denom = dot(N, dir);
+    sf::Vector2f p0 = pRect - origin;
+    return dot(p0, N) / denom;
 }

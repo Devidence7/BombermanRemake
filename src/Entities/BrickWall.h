@@ -46,6 +46,16 @@ public:
 		}
 	}
 
+	void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) override{
+		if(std::dynamic_pointer_cast<EnemyEntity>(eCollisioning)){
+			//Puede atravesar????
+			Entity::onCollission(eCollisioning, colT);
+		}else{
+			Entity::onCollission(eCollisioning, colT);
+		}
+	}
+
+
 	void setExpiredEntity() override {
 		isDestroyed = true;
 	}
