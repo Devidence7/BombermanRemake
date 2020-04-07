@@ -42,6 +42,10 @@ public:
 		return this->collisioner;
 	}
 
+	bool CanHurtPlayer(){
+		return canHurtPlayers;
+	}
+
 	virtual void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT )
 	{
 		sf::Vector2f position = eCollisioning->getPosition();
@@ -74,7 +78,7 @@ public:
 
 	bool collision(const Entity &e) const
 	{
-		return this->Entity::getGlobalBounds().intersects(e.getGlobalBounds());
+		return this->getGlobalBounds().intersects(e.getGlobalBounds());
 	}
 
 	virtual void update()

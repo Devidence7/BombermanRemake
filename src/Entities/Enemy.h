@@ -31,6 +31,7 @@ public:
 	{
 		isFireDestroyable = true;
 		fireCanGoThroght = true;
+		canHurtPlayers = true;
 		onCollision = true;
 		collisioner = false;
 
