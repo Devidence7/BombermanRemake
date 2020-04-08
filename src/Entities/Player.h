@@ -10,7 +10,7 @@ class PlayerEntity : public Entity
 {
 public:
 	// Gameplay variables:
-	int lifes;
+	int lives;
 	double speedBoost = 1;
 	int numOfBombs = 1;
 	int powerOfBombs = 1;
@@ -34,7 +34,7 @@ public:
 	{
 		isFireDestroyable = true;
 		fireCanGoThroght = true;
-
+		lives=3;
 		animLastTic = GameTime::getTimeNow();
 		baseSpeed = 2.5;
 		lastMovement = LookingAt::down;
@@ -54,12 +54,17 @@ public:
 		return powerOfBombs;
 	}
 
+	int getLives() {
+		return lives;
+	}
+
 	void setExpiredEntity() override {
 		if (!expiredEntity) {
 			expiredEntity = true;
 			currentFrame = 0;
 			animLastTic = GameTime::getTimeNow();
 		}
+		
 	}
 
 
@@ -71,6 +76,7 @@ public:
 		// If the player has died:
 		if(!expiredEntity)
 		{
+			
 			if (velocity.x == 0 && velocity.y == 0) {
 				// If there is not speed set idle sprite
 				setTextureRect(playerTexture->getIdleSprite(lastMovement));

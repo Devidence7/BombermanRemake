@@ -10,4 +10,3 @@ bomberman: $(src)/main.cpp
 	$(CC) -o bomberman $(src)/main.cpp  $(std) $(libsSFML)
 
 GameEngine.o: $(src)/GameEngine.cpp $(src)/GameEngine.hpp
-	$(CC) -c $(src)/GameEngine.cpp -o $(build)/GameEngine.o $(std)

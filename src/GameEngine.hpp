@@ -6,6 +6,8 @@
 #include "Entities/Enemy.h"
 #include "Map/Level.hpp"
 #include "Textures/TextureStorage.h"
+#include "Interface/GameInterface.h"
+#include "Interface/MainMenu.h"
 
 using namespace sf;
 
@@ -22,12 +24,16 @@ private:
 	TextureStorage textureStorage;
 	Level *level;
 	PlayerEntity *player;
+	//GameInterface gameI;
+	//MainMenu mainMenu;
 	//std::vector<Enemy_ptr> enemies;
 
 public:
-	Game() {
+	Game(sf::RenderWindow& w) {
 		level = new Level();
 		player = new PlayerEntity();
+	//	mainMenu=MainMenu(w);
+	//	gameI=GameInterface(w);
 		// Enemy_ptr e1 = std::make_shared<EnemyEntity>(Balloon());
 		// Enemy_ptr e2 = std::make_shared<EnemyEntity>(Ice());
 		// Enemy_ptr e3 = std::make_shared<EnemyEntity>(Barrel());
@@ -43,7 +49,9 @@ public:
 		// enemies.push_back(e6);
 		// enemies.push_back(e7);
 	}
-	void start();
+	void start(sf::RenderWindow& w){
+	//	mainMenu.draw(w);
+	}
 
 	void update() {
 		level->update();

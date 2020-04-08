@@ -7,13 +7,14 @@
 #include "Logic/Time.h"
 #include "Logic/Random.h"
 #include "Interface/MainMenu.h"
-//#include "Music/GameMusic.h"
+#include "Music/GameMusic.h"
 
 //#include "Map/Map.hpp"
 
 int windowsHeight = 600;
 int windowsWidth = 800;
 bool primero = true;
+bool multi=false;
 
 
 int main(int argc, char* argv[]) {
@@ -30,15 +31,16 @@ int main(int argc, char* argv[]) {
 	window.setFramerateLimit(60);
 
 	// Start counting the time:
-	GameTime();
+	GameTime time=GameTime();
 
 	// Start Random Generator
 	Random::initilizeRandomGen();
 
-	Game game;
+	Game game=Game();
 	MainMenu menu(window);
-	//GameMusic::playTitleMusic();
-	//GameMusic::setVolume(10);
+	GameInterface gameI=GameInterface();
+	GameMusic::playTitleMusic();
+	GameMusic::setVolume(10);
 
 	// Start game loop
 	while (window.isOpen()) {
@@ -58,8 +60,17 @@ int main(int argc, char* argv[]) {
 
 				case sf::Keyboard::P:
 					if (menu.itemSelected() == 0) {
-						//GameMusic::playWorld1Music();
+						GameMusic::playWorld1Music();
 						primero = false;
+					}
+
+					else if (menu.itemSelected() == 1) {
+						GameMusic::playWorld1Music();
+						primero = false;
+						multi=true;
+					}
+					else if (menu.itemSelected() == 3) {
+						window.close();
 					}
 				}
 				break;
@@ -83,6 +94,7 @@ int main(int argc, char* argv[]) {
 		}
 
 		if (primero) {
+			//game.start(window);
 			menu.draw(window);
 		}
 		else {
@@ -91,9 +103,17 @@ int main(int argc, char* argv[]) {
 
 			// Clear screen from previous drawings
 			window.clear();
-
+		     gameI.update(time.getTimeNow());
+	        
+			
 			// Draw the player and the scene
-			game.draw(window);
+		game.draw(window);
+		if(multi){
+		 	gameI.drawMulti(window);
+		}
+		else{
+			gameI.draw(window);
+		}
 		}
 
 		//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num9)) { GameMusic::volumeUp(); std::cout << GameMusic::getVolume() << std::endl; }
