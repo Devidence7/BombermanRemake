@@ -5,20 +5,29 @@
 
 #define SIZE_PILLAR 48
 
-
-enum LookingAt {
-		down = 0, up = 1, left = 2, right = 3
-	};
-
-enum LookingAtBi {
-	bRight = 1, bLeft = 0
+enum LookingAt
+{
+	down = 0,
+	up = 1,
+	left = 2,
+	right = 3
 };
 
-enum PlayerEvent{
-    MOVE = 0, PUT_BOMB, STOPED
+enum LookingAtBi
+{
+	bRight = 1,
+	bLeft = 0
 };
 
-enum EnemyType {
+enum PlayerEvent
+{
+	MOVE = 0,
+	PUT_BOMB,
+	STOPED
+};
+
+enum EnemyType
+{
 	balloon = 0,
 	ice = 1,
 	barrel = 4,
@@ -28,15 +37,37 @@ enum EnemyType {
 	hypo = 8
 };
 
-enum PowerUpType {
+enum PowerUpType
+{
 	moreSpeed = 1,
 	moreFire = 2,
 	lessFire = 3,
 	moreBombs = 4
 };
 
+enum CollisionType
+{
+	NONE = 0,
+	HORIZONTAL = 1,
+	VERTICAL = 2,
+	CORNER = 3,
+};
+
 const int TOTAL_ENEMY_FRAMES = 13;
 
-
 // Debug features:
-bool HITBOX_DEBUG_MODE = true;
+#define HITBOX_DEBUG_MODE true;
+
+////////////////////////////////////////////
+///////// MAP COORDENATE OPERATOR /////////
+///////////////////////////////////////////
+
+inline sf::Vector2i getMapCoordinates(int x, int y)
+{
+	return sf::Vector2i((int)x / SIZE_PILLAR, (int)y / SIZE_PILLAR);
+}
+
+inline  sf::Vector2i getMapCoordinates(sf::Vector2f pos)
+{
+	return getMapCoordinates(pos.x, pos.y);
+}

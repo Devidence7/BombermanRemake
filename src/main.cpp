@@ -116,8 +116,8 @@ int main(int argc, char* argv[]) {
 		}
 		}
 
-		//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num9)) { GameMusic::volumeUp(); std::cout << GameMusic::getVolume() << std::endl; }
-		//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num0)) { GameMusic::volumeDown(); std::cout << GameMusic::getVolume() << std::endl;}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num9)) { GameMusic::volumeUp(); std::cout << GameMusic::getVolume() << std::endl; }
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num0)) { GameMusic::volumeDown(); std::cout << GameMusic::getVolume() << std::endl;}
 
 		// Update window
 		window.display();

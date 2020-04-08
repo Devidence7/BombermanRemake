@@ -1,6 +1,11 @@
 #pragma once
+
+#include <vector>
+#include <SFML/Graphics.hpp>
+
 #include "../Include/global.hpp"
 #include "../Textures/EnemyTexture.h"
+#include "../Utils/A_Star.hpp"
 #include "Entity.h"
 
 class EnemyEntity : public Entity {
@@ -17,6 +22,7 @@ private:
 
 	bool dyingEntity = false;			// Starts entity dying animation
 
+
 protected:
 	EnemyType enemyType;
 	
@@ -26,6 +32,8 @@ public:
 		isFireDestroyable = true;
 		fireCanGoThroght = true;
 		onCollision = true;
+		collisioner = false;
+
 		updateVelocity();
 
 		// Texture Controller
@@ -73,8 +81,12 @@ public:
 	void setExpiredEntity() override {
 		dyingEntity = true;
 	}
-
-
+	
+	void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) override{
+		if(std::dynamic_pointer_cast<PlayerEntity>(eCollisioning)){
+			eCollisioning->setExpiredEntity();
+		}
+	}
 
 	void update() override
 	{

@@ -16,6 +16,7 @@ public:
 	PowerUp() : Entity() {
 		isFireDestroyable = true;
 		fireCanGoThroght = true;
+		this->collisioner = false;
 
 		spriteCounter = 0;
 		spriteSpeed = 15;
@@ -30,12 +31,19 @@ public:
 	}
 
 
-	void update() {
+	void update() {	}
 
+	void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) override{
+		std::cout<< "POWER UP\n";
+		std::shared_ptr<PlayerEntity> pe;
+		if(!this->expiredEntity && (pe = std::dynamic_pointer_cast<PlayerEntity>(eCollisioning)) != nullptr){
+			this->setPlayerStatus(*pe);
+			this->setExpiredEntity();
+		}
 	}
 
 	virtual void setPlayerStatus(PlayerEntity &pe) {
-		throw NoImplementedException("Intentando ejecutar UPDATE Entity");
+		throw NoImplementedException("Intentando asignar clase virtual");
 	}
 
 };

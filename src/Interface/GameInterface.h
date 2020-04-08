@@ -65,9 +65,6 @@ public:
         
 
 
-
-
-
         player2.setFont(font);
         player2.setColor(sf::Color::White);
         player2.setString("Player 2");
@@ -126,13 +123,13 @@ public:
         
 	}
 
-    void update(double timeNow) {
+    void update(double timeNow,double lives1,double lives2) {
 
-        lives1.setString("Lives: "+to_string(numLives));
+        lives1.setString("Lives: "+to_string(lives1));
         
 
          
-        lives2.setString("Lives: "+to_string(numLives2));
+        lives2.setString("Lives: "+to_string(lives2));
       
 
        timeLeft=timeLeft-timeNow; 
