@@ -16,8 +16,9 @@ libEntities=-L$(bin) -lEntities
 
 bomberman: $(src)/main.cpp $(bin)/libEntities.a $(bin)/libTextures.a $(bin)/Random.o $(bin)/Time.o $(bin)/A_Star.o
 	$(CC) -o bomberman  $(src)/main.cpp  \
-	$(libs) \
-	$(bin)/Random.o $(bin)/Time.o $(bin)/A_Star.o $(std) $(libsSFML) $(O) 
+		$(libs) \
+		$(bin)/Random.o $(bin)/Time.o $(bin)/A_Star.o \
+		$(std) $(libsSFML) $(O) 
 
 GameEngine.o: $(src)/GameEngine.cpp $(src)/GameEngine.hpp
 	$(CC) -c $(src)/GameEngine.cpp -o $(build)/GameEngine.o $(std)
