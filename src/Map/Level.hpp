@@ -1,3 +1,5 @@
+#pragma once
+
 #include <vector>
 #include <iostream>
 #include <math.h>
@@ -18,10 +20,9 @@
  */
 class Level
 {
-	// All entities vector:
+	// Entities to update vector:
 	std::vector<Entity_ptr> entities;
 
-	std::vector<std::vector<Entity_ptr>> map;
 	std::vector<std::vector<Entity_ptr>> miniMap;
 	sf::RectangleShape floor;
 
@@ -30,9 +31,9 @@ public:
 	{
 		// Reserve space for faster insert, delete of the entities
 		entities.reserve(10000);
-
+		
 		// Create map matrix:
-		map = std::vector<std::vector<Entity_ptr>>(dimY + 2, std::vector<Entity_ptr>(dimX + 2, nullptr));
+		EntityMap = std::vector<std::vector<Entity_ptr>>(dimY + 2, std::vector<Entity_ptr>(dimX + 2, nullptr));
 		miniMap = std::vector<std::vector<Entity_ptr>>(dimY + 2, std::vector<Entity_ptr>(dimX + 2, nullptr));
 		// Background:
 		floor.setSize(sf::Vector2f((dimX + 2) * sizeTextureX, (dimY + 2) * sizeTextureY));
@@ -134,15 +135,15 @@ public:
 					else
 					{
 						// Do this always?
-						this->getCellMiniMapObject(getMapCoordinates((*it)->getPosition())) = nullptr;
-						this->getCellObject(getMapCoordinates((*it)->getPosition())) = nullptr;
+						this->getCellMiniMapObject(getMapCoordinates((*it)->getPosition())).reset();
+						this->getCellObject(getMapCoordinates((*it)->getPosition())).reset();
 					}
 				}
 				else
 				{
 					// Do this always?
-					this->getCellMiniMapObject(getMapCoordinates((*it)->getPosition())) = nullptr;
-					this->getCellObject(getMapCoordinates((*it)->getPosition())) = nullptr;
+					this->getCellMiniMapObject(getMapCoordinates((*it)->getPosition())).reset();
+					this->getCellObject(getMapCoordinates((*it)->getPosition())).reset();
 				}
 
 				// Remove the entity from the list of entities if it expired.
@@ -417,11 +418,11 @@ public:
 
 	Entity_ptr &getCellObject(int x, int y)
 	{
-		if (map[y][x].get() != nullptr && map[y][x].get()->getExpiredEntity())
+		if (EntityMap[y][x].get() != nullptr && EntityMap[y][x].get()->getExpiredEntity())
 		{
-			map[y][x].reset();
+			EntityMap[y][x].reset();
 		}
-		return map[y][x];
+		return EntityMap[y][x];
 	}
 
 	Entity_ptr &getCellMiniMapObject(int x, int y)

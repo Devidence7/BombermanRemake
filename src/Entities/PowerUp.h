@@ -1,5 +1,6 @@
 #pragma once
 #include "Entity.h"
+#include "Player.h"
 #include "../Textures/PowerUpTexture.h"
 #include "../Textures/TextureStorage.h"
 
@@ -13,105 +14,37 @@ public:
 	int spriteFrames;
 
 	int explosionCounter;
-	PowerUp() : Entity() {
-		isFireDestroyable = true;
-		fireCanGoThroght = true;
-		this->collisioner = false;
+	PowerUp();
 
-		spriteCounter = 0;
-		spriteSpeed = 15;
-		actualFrame = 0;
-		spriteFrames = 3;
-		explosionCounter = 0;
+	void update();
 
-		// Texture Controller:
-		powerUpTexture = &TextureStorage::getPowerUpTexture();
-		// Set sprite Sheet texture
-		setTexture(powerUpTexture->getTexture());
-	}
+	void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) override;
 
-
-	void update() {	}
-
-	void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) override{
-		std::cout<< "POWER UP\n";
-		std::shared_ptr<PlayerEntity> pe;
-		if(!this->expiredEntity && (pe = std::dynamic_pointer_cast<PlayerEntity>(eCollisioning)) != nullptr){
-			this->setPlayerStatus(*pe);
-			this->setExpiredEntity();
-		}
-	}
-
-	virtual void setPlayerStatus(PlayerEntity &pe) {
-		throw NoImplementedException("Intentando asignar clase virtual");
-	}
+	virtual void setPlayerStatus(PlayerEntity &pe);
 
 };
 
 class MoreFirePowerUp : public PowerUp {
 public:
-	MoreFirePowerUp(sf::Vector2f pos) : PowerUp() {
-		powerUpType = moreFire;
+	MoreFirePowerUp(sf::Vector2f pos);
 
-		// Set position
-		setPosition(pos);
-
-		// Set starting sprite
-		setTextureRect(powerUpTexture->getFrame(powerUpType, 0));
-	}
-
-	void setPlayerStatus(PlayerEntity& pe) {
-		pe.powerOfBombs += 1;
-	}
+	void setPlayerStatus(PlayerEntity& pe);
 };
 
 class LessFirePowerUp : public PowerUp {
 public:
-	LessFirePowerUp(sf::Vector2f pos) : PowerUp() {
-		powerUpType = lessFire;
-
-		// Set position
-		setPosition(pos);
-
-		// Set starting sprite
-		setTextureRect(powerUpTexture->getFrame(powerUpType, 0));
-	}
-
-	void setPlayerStatus(PlayerEntity& pe) {
-		pe.powerOfBombs -= 1;
-	}
+	LessFirePowerUp(sf::Vector2f pos);
+	void setPlayerStatus(PlayerEntity& pe);
 };
 
 class MoreSpeedPowerUp : public PowerUp {
 public:
-	MoreSpeedPowerUp(sf::Vector2f pos) : PowerUp() {
-		powerUpType = moreSpeed;
-
-		// Set position
-		setPosition(pos);
-
-		// Set starting sprite
-		setTextureRect(powerUpTexture->getFrame(powerUpType, 0));
-	}
-
-	void setPlayerStatus(PlayerEntity& pe) {
-		pe.speedBoost += 0.2;
-	}
+	MoreSpeedPowerUp(sf::Vector2f pos);
+	void setPlayerStatus(PlayerEntity& pe);
 };
 
 class MoreBombsPowerUp : public PowerUp {
 public:
-	MoreBombsPowerUp(sf::Vector2f pos) : PowerUp() {
-		powerUpType = moreBombs;
-
-		// Set position
-		setPosition(pos);
-
-		// Set starting sprite
-		setTextureRect(powerUpTexture->getFrame(powerUpType, 0));
-	}
-
-	void setPlayerStatus(PlayerEntity& pe) {
-		pe.numOfBombs += 1;
-	}
+	MoreBombsPowerUp(sf::Vector2f pos);
+	void setPlayerStatus(PlayerEntity& pe);
 };

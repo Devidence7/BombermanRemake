@@ -9,26 +9,11 @@
 
 class WallTexture : public TextureVector {
 	public:
-	WallTexture(){
-		if(!this->texture.loadFromFile("../textures/Entities/blocks.png")){
-			throw ExceptionLoadImage("Imagen no cargada: ../textures/Entities/blocks.png");
-		}
+	WallTexture();
 
-		for(int i = 0; i < 8; i++)
-		{
-			this->frames.push_back(sf::IntRect(51 * i, 0, sizePillar, sizePillar));
-		}
-	}
+	sf::IntRect& getDefaultIntRect() override;
 
-	sf::IntRect& getDefaultIntRect() override {
-		return frames[1];
-	}
+	sf::IntRect &getRectWall(int i);
 
-	sf::IntRect &getRectWall(int i){
-		return this->frames[i];
-	}
-
-	sf::IntRect &getRectPillar(){
-		return this->frames[0];
-	}
+	sf::IntRect &getRectPillar();
 };

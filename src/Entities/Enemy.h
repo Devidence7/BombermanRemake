@@ -3,10 +3,10 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 
-#include "../Include/global.hpp"
-#include "../Textures/EnemyTexture.h"
-#include "../Utils/A_Star.hpp"
 #include "Entity.h"
+#include "../Textures/EnemyTexture.h"
+#include "../Include/global.hpp"
+#include "../Utils/A_Star.hpp"
 
 class EnemyEntity : public Entity {
 private:
@@ -27,161 +27,59 @@ protected:
 	EnemyType enemyType;
 	
 public:
-	EnemyEntity() : Entity()
-	{
-		isFireDestroyable = true;
-		fireCanGoThroght = true;
-		canHurtPlayers = true;
-		onCollision = true;
-		collisioner = false;
+	EnemyEntity();
+	virtual void generateMovements();
 
-		updateVelocity();
+	void updateVelocity();
 
-		// Texture Controller
-		enemyTexture = &TextureStorage::getEnemyTexture();
-		// Set starting sprite
-		setTextureRect(enemyTexture->getDefaultIntRect());
-		// Set sprite Sheet texture
-		setTexture(enemyTexture->getTexture());
-	}
-
-	void updateVelocity() {
-		if(onCollision){
-			int mul = Random::getIntNumberBetween(0, 1);
-			if(!mul){
-				mul = -1;
-			}
-			if(Random::getIntNumberBetween(0, 1)){
-				velocity.y = baseSpeed*mul;
-				velocity.x = 0;
-			}else{
-				velocity.y = 0;
-				velocity.x = baseSpeed*mul;
-			}
-			onCollision = false;
-		}
-		//if (getGlobalBounds().top <= 0 && velocity.y < 0) {
-		//	velocity.y = -velocity.y;
-		//}
-		//if (getGlobalBounds().top + enemyTexture->frameSize.y >= 600 && velocity.y > 0) {
-		//	velocity.y = -velocity.y;
-		//}
-		//if (getGlobalBounds().left <= 0 && velocity.x < 0) {
-		//	velocity.x = -velocity.x;
-		//	lookingDir = bRight;
-//
-		//}
-		//if (getGlobalBounds().left + enemyTexture->frameSize.x >= 800 && velocity.x > 0) {
-		//	velocity.x = -velocity.x;
-		//	lookingDir = bLeft;
-		//}
-		//// Move Entity position
-		move(velocity.x, velocity.y);
-	}
-
-	void setExpiredEntity() override {
-		dyingEntity = true;
-	}
+	void setExpiredEntity() override;
 	
-	void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) override{
-		if(std::dynamic_pointer_cast<PlayerEntity>(eCollisioning)){
-			eCollisioning->setExpiredEntity();
-		}
-	}
+	void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) override;
 
-	void update() override
-	{
-		updateVelocity();
+	void update() override;
 
-		// If the enemy has died:
-		if (!dyingEntity) {
-			// If there is speed we must update animation sprite every X time
-			if (GameTime::getTimeNow() - animLastTic > frameSpeed) {
-				setTextureRect(enemyTexture->getWalkingSprite(lookingDir, currentFrame, enemyType));
-				currentFrame = (currentFrame + 1) % walkFrames;
-				animLastTic = GameTime::getTimeNow();
-			}
-		}
-		else {
-			if (currentFrame == deathFrames - 1 && GameTime::getTimeNow() - animLastTic > frameSpeed) {
-				expiredEntity = true;
-			}
-
-			else if (GameTime::getTimeNow() - animLastTic > frameSpeed) {
-				setTextureRect(enemyTexture->getDeathSprite(currentFrame, enemyType));
-				currentFrame = (currentFrame + 1) % deathFrames;
-				animLastTic = GameTime::getTimeNow();
-			}
-		}
-	}
-
-	sf::FloatRect getGlobalBounds() const override
-	{
-		sf::FloatRect dim = sf::Sprite::getGlobalBounds();
-		return sf::FloatRect(dim.left + 6, dim.top + 3, dim.width-6, dim.height-6);
-	}
+	sf::FloatRect getGlobalBounds() const override;
 };
 
 
 class Balloon : public EnemyEntity {
 public:
 
-	Balloon() :EnemyEntity() {
-		enemyType = balloon;
-		//move(500, 100);
-	}
+	Balloon();
 };
 
 class Ice : public EnemyEntity {
 public:
 
-	Ice() :EnemyEntity() {
-		enemyType = ice;
-		//move(200, 200);
-	}
+	Ice();
 };
 
 class Barrel : public EnemyEntity {
 public:
 
-	Barrel() :EnemyEntity() {
-		enemyType = barrel;
-		//move(120, 500);
-	}
+	Barrel();
 };
 
 class Coin : public EnemyEntity {
 public:
 
-	Coin() :EnemyEntity() {
-		enemyType = coin;
-		//move(500, 450);
-	}
+	Coin();
 };
 
 class Blob : public EnemyEntity {
 public:
 
-	Blob() :EnemyEntity() {
-		enemyType = blob;
-	//	move(400, 300);
-	}
+	Blob();
 };
 
 class Ghost : public EnemyEntity {
 public:
 
-	Ghost() :EnemyEntity() {
-		enemyType = ghost;
-	//	move(200, 400);
-	}
+	Ghost();
 };
 
 class Hypo : public EnemyEntity {
 public:
 
-	Hypo() :EnemyEntity() {
-		enemyType = hypo;
-	//	move(400,600);
-	}
+	Hypo();
 };

@@ -71,3 +71,5 @@ inline  sf::Vector2i getMapCoordinates(sf::Vector2f pos)
 {
 	return getMapCoordinates(pos.x, pos.y);
 }
+
+

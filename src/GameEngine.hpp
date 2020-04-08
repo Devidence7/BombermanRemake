@@ -27,14 +27,12 @@ private:
 	Level *level;
 	std::vector<Enemy_ptr> enemies;
 	//std::vector<Enemy_ptr> enemies;
-
 public:
 	Game()
 	{
 		insertPlayers();
 		insertarEnemigos();
 		level = new Level(enemies, dimX, dimY);
-		
 	}
 	void start();
 
