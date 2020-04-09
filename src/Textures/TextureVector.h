@@ -8,11 +8,7 @@ protected:
 	sf::Texture texture; // Entity Texture
 
 public:
-	sf::Texture& getTexture() {
-		return texture;
-	}
+	sf::Texture& getTexture();
 
-	virtual sf::IntRect& getDefaultIntRect() {
-		return frames[0];
-	}
+	virtual sf::IntRect& getDefaultIntRect();
 };

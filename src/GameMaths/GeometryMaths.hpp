@@ -5,7 +5,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "../Entities/Entity.h"
-#include "../Include/EntitiesInclude.hpp"
+//#include "../Include/EntitiesInclude.hpp"
 
 //Basic operators
 

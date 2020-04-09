@@ -30,11 +30,10 @@ private:
 	std::vector<Enemy_ptr> enemies;
 	//MainMenu mainMenu;
 	//std::vector<Enemy_ptr> enemies;
-
 public:
 	Game()
 	{
-		insertPlayers();
+		PLayers::insertPlayers();
 		insertarEnemigos();
 		level = new Level(enemies, dimX, dimY);
 		//mainMenu(w);
@@ -45,7 +44,7 @@ public:
 	}
 
 	void updatePlayers(){
-		for(Player_ptr &player : players){
+		for(Player_ptr &player : PLayers::getVectorPlayer()){
 			if (player->updatePlayer())
 			{
 				// If there is nothing in that cell:
@@ -54,6 +53,9 @@ public:
 				level->addNewItem(b);
 			}
 			level->checkAndFixCollisions(player);
+			if(colissionWithEnemies(player)){
+				player->setExpiredEntity();
+			}
 		}
 	}
 
@@ -66,7 +68,7 @@ public:
 
 	void drawPlayers(sf::RenderWindow &w){
 
-		for (Player_ptr &player : players)
+		for (Player_ptr &player : PLayers::getVectorPlayer())
 		{
 			w.draw(*player);
 #ifdef HITBOX_DEBUG_MODE
@@ -82,16 +84,18 @@ public:
 			w.draw(*e);
 #ifdef HITBOX_DEBUG_MODE
 			e->drawEntityHitbox(w);
+			e->generateMovements();
+			e->drawMovements(w);
 #endif
 		}
 	}
 
-	bool colissionWithEnemies(Entity &eCol)
+	bool colissionWithEnemies(Entity_ptr eCol)
 	{
 		bool intersec = false;
 		for (Enemy_ptr &e : this->enemies)
 		{
-			intersec = intersec || e->collision(eCol);
+			intersec = intersec || (e->CanHurtPlayer() && e->collision(*eCol));
 		}
 		return intersec;
 	}
@@ -125,7 +129,7 @@ public:
 			{
 				y = Random::getIntNumberBetween(0, dimY / 2);
 			} while (y < 3);
-			e->setPosition(sf::Vector2f((x * 2 + 1) * SIZE_PILLAR, (y * 2 + 1) * SIZE_PILLAR));
+			e->setPosition(sf::Vector2f((x * 2 + 1) * SIZE_PILLAR - 3, (y * 2 + 1) * SIZE_PILLAR - 3));
 		}
 	}
 
@@ -154,7 +158,7 @@ public:
 	void draw(RenderWindow &w)
 	{
 		level->draw(w);
-		drawPlayers(w);
 		drawEnemies(w);
+		drawPlayers(w);
 	}
 };

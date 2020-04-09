@@ -16,42 +16,18 @@ class TextureStorage {
 
 public:
 
-	TextureStorage()
-	{
-		
-	}
+	TextureStorage();
 
-	static PlayerTexture& getPlayerTexture() {
-		return playerTexture;
-	}
+	static PlayerTexture& getPlayerTexture();
 
-	static WallTexture& getlevel1WallTexture() {
-		return level1WallTexture;
-	}
+	static WallTexture& getlevel1WallTexture();
 
-	static BombTexture& getBombTexture() {
-		return bombTexture;
-	}
+	static BombTexture& getBombTexture();
 
-	static FireTexture& getFireTexture() {
-		return fireTexture;
-	}
+	static FireTexture& getFireTexture();
 
-	static EnemyTexture& getEnemyTexture() {
-		return enemyTexture;
-	}
+	static EnemyTexture& getEnemyTexture();
 
-	static PowerUpTexture& getPowerUpTexture() {
-		return powerUpTexture;
-	}
+	static PowerUpTexture& getPowerUpTexture();
 };
-
-
-PlayerTexture TextureStorage::playerTexture;
-WallTexture TextureStorage::level1WallTexture;
-BombTexture TextureStorage::bombTexture;
-FireTexture TextureStorage::fireTexture;
-EnemyTexture TextureStorage::enemyTexture;
-PowerUpTexture TextureStorage::powerUpTexture;
-
 

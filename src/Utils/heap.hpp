@@ -12,7 +12,7 @@
 #include <iostream>
 using namespace std;
 
-const int MAX = 100000;
+const int MAX = 20*30;
 
 template <typename T>
 class Heap{
@@ -40,6 +40,7 @@ class Heap{
 			for(int i = 0; i < tam && !contains; i++){
 				contains = *t == *elementos[i];
 			}
+			return contains;
 		}
 
 		//Duelve el primer elemento del monticulo y lo elimina del mismo, siguiendo el algoritmo del monticulo
@@ -62,5 +63,11 @@ class Heap{
 			}
 			return ret;
 		}
-	
+
+	~Heap() {
+		//for(int t = 0; t < tam; t++){
+		//	delete elementos[t];
+		//}
+		
+	}	
 };

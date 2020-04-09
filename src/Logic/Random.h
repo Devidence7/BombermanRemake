@@ -6,18 +6,11 @@ class Random {
 
 	std::mt19937 mt;
 
-	Random() : mt(std::random_device()()) {
-	}
-
+	Random();
 public:
-	static void initilizeRandomGen() {
-		randomGen = Random();
-	}
+	static void initilizeRandomGen();
 
-	static int getIntNumberBetween(int a, int b) {
-		std::uniform_int_distribution<int> dist(a, b);
-		return dist(randomGen.mt);
-	}
+	static int getIntNumberBetween(int a, int b);
 };
+//Random Random::randomGen;
 
-Random Random::randomGen;
