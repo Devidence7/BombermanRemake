@@ -62,7 +62,7 @@ const int TOTAL_ENEMY_FRAMES = 13;
 ///////// MAP COORDENATE OPERATOR /////////
 ///////////////////////////////////////////
 
-inline sf::Vector2i getMapCoordinates(int x, int y)
+inline sf::Vector2i getMapCoordinates(float x, float y)
 {
 	return sf::Vector2i((int)x / SIZE_PILLAR, (int)y / SIZE_PILLAR);
 }
@@ -72,4 +72,14 @@ inline  sf::Vector2i getMapCoordinates(sf::Vector2f pos)
 	return getMapCoordinates(pos.x, pos.y);
 }
 
+
+inline sf::Vector2f MapCoordinates2GlobalCoorCenter(const int x, const int y)
+{
+	return sf::Vector2f((float)x * SIZE_PILLAR + SIZE_PILLAR/2, (float)y * SIZE_PILLAR + SIZE_PILLAR/2);
+}
+
+inline  sf::Vector2f MapCoordinates2GlobalCoorCenter(const sf::Vector2i pos)
+{
+	return MapCoordinates2GlobalCoorCenter(pos.x, pos.y);
+}
 

@@ -9,7 +9,6 @@
 
 #include "heap.hpp"
 
-#include "../Include/EntitiesInclude.hpp"
 
 inline float manhattan(const sf::Vector2i &currentP, const sf::Vector2i &objetivePosition)
 {
@@ -113,6 +112,7 @@ public:
     ~ANode() {}
 };
 
+
 //class AStar{
 //
 //float sizeX;
@@ -126,5 +126,6 @@ inline bool checkValidPosition(const sf::Vector2i &v);
 
 sf::Vector2i selectCloseObjetive(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives);
 
-std::vector<sf::Vector2i> &pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives);
+std::vector<ANode> &pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives);
+#include "../Include/EntitiesInclude.hpp"
 //};

@@ -33,7 +33,7 @@ public:
 		entities.reserve(10000);
 		
 		// Create map matrix:
-		EntityMap = std::vector<std::vector<Entity_ptr>>(dimY + 2, std::vector<Entity_ptr>(dimX + 2, nullptr));
+		EntityMap::entityMap = std::vector<std::vector<Entity_ptr>>(dimY + 2, std::vector<Entity_ptr>(dimX + 2, nullptr));
 		miniMap = std::vector<std::vector<Entity_ptr>>(dimY + 2, std::vector<Entity_ptr>(dimX + 2, nullptr));
 		// Background:
 		floor.setSize(sf::Vector2f((dimX + 2) * sizeTextureX, (dimY + 2) * sizeTextureY));
@@ -60,7 +60,7 @@ public:
 				if (x % 2 == 1 || y % 2 == 1)
 				{
 					// Create random Bricks:
-					if ((y > 3|| x > 3 || (y != 3 && x == 2) || (x == 3 && y <= 3)) && !Random::getIntNumberBetween(0, 3))
+					if ((y > 3|| x > 3 || (y != 3 && x == 2) || (x == 3 && y <= 3)) && !Random::getIntNumberBetween(0, 30))
 					{
 						bool intersec = false;
 						for (Enemy_ptr e : enemies)
@@ -418,11 +418,11 @@ public:
 
 	Entity_ptr &getCellObject(int x, int y)
 	{
-		if (EntityMap[y][x].get() != nullptr && EntityMap[y][x].get()->getExpiredEntity())
+		if (EntityMap::entityMap[y][x].get() != nullptr && EntityMap::entityMap[y][x].get()->getExpiredEntity())
 		{
-			EntityMap[y][x].reset();
+			EntityMap::entityMap[y][x].reset();
 		}
-		return EntityMap[y][x];
+		return EntityMap::entityMap[y][x];
 	}
 
 	Entity_ptr &getCellMiniMapObject(int x, int y)

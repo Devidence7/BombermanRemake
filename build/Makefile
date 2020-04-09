@@ -14,10 +14,10 @@ texturesPath=../src/Textures
 libs=-L$(bin) -lEntities -lTextures
 libEntities=-L$(bin) -lEntities 
 
-bomberman: $(src)/main.cpp $(bin)/libEntities.a $(bin)/libTextures.a $(bin)/Random.o $(bin)/Time.o $(bin)/A_Star.o
+bomberman: $(src)/main.cpp $(bin)/libEntities.a $(bin)/libTextures.a $(bin)/Random.o $(bin)/Time.o $(bin)/A_Star.o $(bin)/EntitiesInclude.o $(src)/Include/EntitiesInclude.cpp $(src)/Utils/A_Star.cpp
 	$(CC) -o bomberman  $(src)/main.cpp  \
+		$(bin)/Random.o $(bin)/Time.o  $(src)/Include/EntitiesInclude.cpp $(src)/Utils/A_Star.cpp\
 		$(libs) \
-		$(bin)/Random.o $(bin)/Time.o $(bin)/A_Star.o \
 		$(std) $(libsSFML) $(O) 
 
 GameEngine.o: $(src)/GameEngine.cpp $(src)/GameEngine.hpp
@@ -37,8 +37,11 @@ $(bin)/Time.o: $(logicPath)/Time.cpp $(logicPath)/Time.h
 $(bin)/EntitiesInclude.o: $(src)/Include/EntitiesInclude.hpp $(src)/Include/EntitiesInclude.cpp
 	$(CC) -o $(bin)/EntitiesInclude.o -c $(src)/Include/EntitiesInclude.cpp  $(std) $(O)
 
-$(bin)/A_Star.o: $(src)/Utils/A_Star.hpp $(src)/Utils/A_Star.cpp
-	$(CC) -o $(bin)/A_Star.o -c $(src)/Utils/A_Star.cpp
+# $(bin)/EntitiesInclude.o:  $(src)/Include/EntitiesInclude.hpp $(src)/Include/EntitiesInclude.cpp
+# 	$(CC) -o $(bin)/A_Star.o -c $(src)/Include/EntitiesInclude.cpp
+
+# $(bin)/A_Star.o: $(src)/Utils/A_Star.hpp $(src)/Utils/A_Star.cpp
+# 	$(CC) -o $(bin)/A_Star.o -c $(src)/Utils/A_Star.cpp
 
 
 ##################################
@@ -59,7 +62,7 @@ $(bin)/A_Star.o: $(src)/Utils/A_Star.hpp $(src)/Utils/A_Star.cpp
 ../bin/BrickWall.o: $(entityPath)/BrickWall.cpp $(entityPath)/BrickWall.h 
 	$(CC) -o $(bin)/BrickWall.o -c $(entityPath)/BrickWall.cpp $(std) $(O)
 
-../bin/Enemy.o: $(entityPath)/Enemy.cpp $(entityPath)/Enemy.h 
+../bin/Enemy.o: $(entityPath)/Enemy.cpp $(entityPath)/Enemy.h
 	$(CC) -o $(bin)/Enemy.o -c $(entityPath)/Enemy.cpp $(std) $(O)
 
 ../bin/Pillar.o: $(entityPath)/Pillar.cpp $(entityPath)/Pillar.hpp 

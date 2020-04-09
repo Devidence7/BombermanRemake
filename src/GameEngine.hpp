@@ -30,14 +30,14 @@ private:
 public:
 	Game()
 	{
-		insertPlayers();
+		PLayers::insertPlayers();
 		insertarEnemigos();
 		level = new Level(enemies, dimX, dimY);
 	}
 	void start();
 
 	void updatePlayers(){
-		for(Player_ptr &player : players){
+		for(Player_ptr &player : PLayers::getVectorPlayer()){
 			if (player->updatePlayer())
 			{
 				// If there is nothing in that cell:
@@ -61,7 +61,7 @@ public:
 
 	void drawPlayers(sf::RenderWindow &w){
 
-		for (Player_ptr &player : players)
+		for (Player_ptr &player : PLayers::getVectorPlayer())
 		{
 			w.draw(*player);
 #ifdef HITBOX_DEBUG_MODE
@@ -79,6 +79,8 @@ public:
 			e->drawEntityHitbox(w);
 #endif
 		}
+		//enemies[0]->generateMovements();
+		//enemies[0]->drawMovements(w);
 	}
 
 	bool colissionWithEnemies(Entity_ptr eCol)

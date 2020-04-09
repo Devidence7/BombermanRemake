@@ -24,6 +24,7 @@ private:
 
 
 protected:
+	std::vector<ANode> movements;
 	EnemyType enemyType;
 	
 public:
@@ -39,6 +40,9 @@ public:
 	void update() override;
 
 	sf::FloatRect getGlobalBounds() const override;
+
+	void drawMovements(sf::RenderWindow &w);
+
 };
 
 

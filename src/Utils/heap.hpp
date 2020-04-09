@@ -62,5 +62,11 @@ class Heap{
 			}
 			return ret;
 		}
-	
+
+	~Heap() {
+		//for(int t = 0; t < tam; t++){
+		//	delete elementos[t];
+		//}
+		
+	}	
 };

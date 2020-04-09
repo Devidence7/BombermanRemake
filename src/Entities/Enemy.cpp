@@ -9,23 +9,42 @@ EnemyEntity::EnemyEntity() : Entity()
 	collisioner = false;
 
 	updateVelocity();
-
 	// Texture Controller
 	enemyTexture = &TextureStorage::getEnemyTexture();
 	// Set starting sprite
 	setTextureRect(enemyTexture->getDefaultIntRect());
 	// Set sprite Sheet texture
 	setTexture(enemyTexture->getTexture());
+
 }
 
 void EnemyEntity::generateMovements()
 {
 	std::vector<sf::Vector2i> objetives;
-	for (std::shared_ptr<PlayerEntity> player : players)
+	for (Player_ptr player : PLayers::getVectorPlayer())
 	{
-		objetives.push_back(getMapCoordinates(player->getCenterPosition()));
+		sf::Vector2f posPlayer = player->getCenterPosition();
+		objetives.push_back(getMapCoordinates(posPlayer));
 	}
-	pathFinding(getMapCoordinates(this->getCenterPosition()), objetives);
+
+	movements = pathFinding(getMapCoordinates(this->getCenterPosition()), objetives);
+
+}
+
+void EnemyEntity::drawMovements(sf::RenderWindow &w){
+
+	sf::FloatRect dim = this->getGlobalBounds();
+	for(ANode &an : movements){
+		sf::RectangleShape rece;
+		rece.setSize(sf::Vector2f((dim.width/2), (dim.height/2)));
+		rece.setFillColor(sf::Color(255, 255, 0));
+		sf::Vector2i posi = an.getPosition();
+		sf::Vector2f posf = MapCoordinates2GlobalCoorCenter(an.getPosition());
+		//std::cout << "pos " << posi.x << "( " << posf.x<< ")" << posi.y << "( " << posf.y<< ")" << std::endl;
+		posf -= sf::Vector2f(dim.width/4, dim.height/4);
+		rece.setPosition(posf);
+		w.draw(rece);
+	}
 }
 
 void EnemyEntity::updateVelocity()
@@ -84,6 +103,8 @@ void EnemyEntity::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionT
 void EnemyEntity::update()
 {
 	updateVelocity();
+	
+
 
 	// If the enemy has died:
 	if (!dyingEntity)
