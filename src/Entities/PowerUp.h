@@ -22,6 +22,8 @@ public:
 
 	virtual void setPlayerStatus(PlayerEntity &pe);
 
+	//void PowerUp::addPowerUp2Player(PlayerEntity &pe);
+
 };
 
 class MoreFirePowerUp : public PowerUp {

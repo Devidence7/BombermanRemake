@@ -14,6 +14,9 @@
 int windowsHeight = 600;
 int windowsWidth = 800;
 bool primero = true;
+bool multi=false;
+int numPlayers;
+list<int> playersLives;
 
 
 int main(int argc, char* argv[]) {
@@ -30,13 +33,14 @@ int main(int argc, char* argv[]) {
 	window.setFramerateLimit(60);
 
 	// Start counting the time:
-	GameTime();
+	GameTime time=GameTime();
 
 	// Start Random Generator
 	Random::initilizeRandomGen();
 
-	Game game;
-	MainMenu menu(window);
+	Game game=Game();
+	MainMenu menu;
+	GameInterface gameI=GameInterface();
 	GameMusic::playTitleMusic();
 	GameMusic::setVolume(10);
 
@@ -60,6 +64,17 @@ int main(int argc, char* argv[]) {
 					if (menu.itemSelected() == 0) {
 						GameMusic::playWorld1Music();
 						primero = false;
+						
+					}
+
+					else if (menu.itemSelected() == 1) {
+						GameMusic::playWorld1Music();
+						primero = false;
+						multi=true;
+					
+					}
+					else if (menu.itemSelected() == 3) {
+						window.close();
 					}
 				}
 				break;
@@ -83,6 +98,7 @@ int main(int argc, char* argv[]) {
 		}
 
 		if (primero) {
+			//game.start(window);
 			menu.draw(window);
 		}
 		else {
@@ -91,9 +107,25 @@ int main(int argc, char* argv[]) {
 
 			// Clear screen from previous drawings
 			window.clear();
-
+		      
+	        
+			
 			// Draw the player and the scene
-			game.draw(window);
+		game.draw(window);
+		/*for(Player_ptr &player : PLayers::getVectorPlayer()){
+			playersLives.push_back(player->getLives());
+			cout<<playersLives.front();
+		}*/
+		gameI.update(time.getTimeNow());
+		if(multi){
+			//gameI.update(time.getTimeNow(),playersLives.front(),playersLives.back());
+		 	gameI.drawMulti(window);
+		}
+		else{
+			
+			gameI.draw(window);
+		}
+	
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num9)) { GameMusic::volumeUp(); std::cout << GameMusic::getVolume() << std::endl; }

@@ -6,6 +6,8 @@
 
 #include "Map/Level.hpp"
 #include "Textures/TextureStorage.h"
+#include "Interface/GameInterface.h"
+#include "Interface/MainMenu.h"
 
 using namespace sf;
 
@@ -26,6 +28,7 @@ private:
 	TextureStorage textureStorage;
 	Level *level;
 	std::vector<Enemy_ptr> enemies;
+	//MainMenu mainMenu;
 	//std::vector<Enemy_ptr> enemies;
 public:
 	Game()
@@ -33,8 +36,12 @@ public:
 		PLayers::insertPlayers();
 		insertarEnemigos();
 		level = new Level(enemies, dimX, dimY);
+		//mainMenu(w);
+		
 	}
-	void start();
+	void start(sf::RenderWindow& w){
+	//	mainMenu.draw(w);
+	}
 
 	void updatePlayers(){
 		for(Player_ptr &player : PLayers::getVectorPlayer()){

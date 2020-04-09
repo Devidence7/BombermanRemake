@@ -31,6 +31,12 @@ void PowerUp::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType 
 	}
 }
 
+/*void PowerUp::addPowerUp2Player(PlayerEntity &pe){
+	pe.activatedPowerUps.push_back(powerUpTexture);
+}*/
+
+
+
 void PowerUp::setPlayerStatus(PlayerEntity &pe)
 {
 	throw NoImplementedException("Intentando asignar clase ");
