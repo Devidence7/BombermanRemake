@@ -14,7 +14,7 @@ texturesPath=../src/Textures
 libs=-L$(bin) -lEntities -lTextures
 libEntities=-L$(bin) -lEntities 
 
-bomberman: $(src)/main.cpp $(bin)/libEntities.a $(bin)/libTextures.a $(bin)/Random.o $(bin)/Time.o $(bin)/A_Star.o $(bin)/EntitiesInclude.o $(src)/Include/EntitiesInclude.cpp $(src)/Utils/A_Star.cpp
+bomberman: $(src)/main.cpp $(bin)/libEntities.a $(bin)/libTextures.a $(bin)/Random.o $(bin)/Time.o $(bin)/EntitiesInclude.o $(src)/Include/EntitiesInclude.cpp $(src)/Utils/A_Star.cpp
 	$(CC) -o bomberman  $(src)/main.cpp  \
 		$(bin)/Random.o $(bin)/Time.o  $(src)/Include/EntitiesInclude.cpp $(src)/Utils/A_Star.cpp\
 		$(libs) \
