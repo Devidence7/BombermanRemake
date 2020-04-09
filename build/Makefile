@@ -14,7 +14,7 @@ texturesPath=../src/Textures
 libs=-L$(bin) -lEntities -lTextures
 libEntities=-L$(bin) -lEntities 
 
-bomberman: $(src)/main.cpp $(bin)/libEntities.a $(bin)/libTextures.a $(bin)/Random.o $(bin)/Time.o $(bin)/EntitiesInclude.o $(src)/Include/EntitiesInclude.cpp $(src)/Utils/A_Star.cpp
+bomberman: $(src)/main.cpp $(bin)/libEntities.a $(bin)/libTextures.a $(bin)/Random.o $(bin)/Time.o  $(src)/Include/EntitiesInclude.cpp $(src)/Utils/A_Star.cpp
 	$(CC) -o bomberman  $(src)/main.cpp $(src)/Include/EntitiesInclude.cpp $(src)/Utils/A_Star.cpp \
 		$(bin)/Random.o $(bin)/Time.o  \
 		$(libs) \
@@ -39,10 +39,6 @@ $(bin)/Random.o: $(logicPath)/Random.cpp $(logicPath)/Random.h
 
 $(bin)/Time.o: $(logicPath)/Time.cpp $(logicPath)/Time.h
 	$(CC) -o $(bin)/Time.o -c $(logicPath)/Time.cpp  $(std) $(O)
-
-$(bin)/EntitiesInclude.o: $(src)/Include/EntitiesInclude.hpp $(src)/Include/EntitiesInclude.cpp
-	$(CC) -o $(bin)/EntitiesInclude.o -c $(src)/Include/EntitiesInclude.cpp  $(std) $(O)
-
 
 
 ##################################
