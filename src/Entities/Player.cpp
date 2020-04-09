@@ -11,6 +11,7 @@ PlayerEntity::PlayerEntity() : Entity()
 	animLastTic = GameTime::getTimeNow();
 	baseSpeed = 2.5;
 	lastMovement = LookingAt::down;
+	lives=3;
 
 	// Texture Controller
 	playerTexture = &TextureStorage::getPlayerTexture();
@@ -38,6 +39,11 @@ void PlayerEntity::setExpiredEntity()
 	}
 }
 
+
+int PlayerEntity::getLives(){
+	return lives;
+}
+
 /*
 	Animate Entity by changing the actual sprite.
 	*/
@@ -46,6 +52,7 @@ void PlayerEntity::animate(sf::Vector2f velocity)
 	// If the player has died:
 	if (!expiredEntity)
 	{
+	
 		if (velocity.x == 0 && velocity.y == 0)
 		{
 			// If there is not speed set idle sprite
@@ -66,12 +73,13 @@ void PlayerEntity::animate(sf::Vector2f velocity)
 	{
 		if (currentFrame == 6 && GameTime::getTimeNow() - animLastTic > frameSpeed)
 		{
+		    lives--;
 			expiredEntity = false;
 			setPosition(100, 100);
 		}
 
 		if (GameTime::getTimeNow() - animLastTic > frameSpeed)
-		{
+		{	
 			setTextureRect(playerTexture->getDeathSprite(currentFrame));
 			currentFrame = (currentFrame + 1) % deathFrames;
 			animLastTic = GameTime::getTimeNow();
@@ -134,6 +142,7 @@ bool PlayerEntity::updatePlayer()
 	{
 		velocity.x = baseSpeed * speedBoost;
 		lastMovement = LookingAt::right;
+		//lives--;
 	}
 
 	// Call animate function to change current sprite if needed.

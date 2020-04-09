@@ -14,6 +14,8 @@ public:
 	double speedBoost = 1;
 	int numOfBombs = 1;
 	int powerOfBombs = 1;
+	//list<PowerUpTexture*>activatedPowerUps;
+
 
 	unsigned int bombsTimeLimit = 30;
 
@@ -36,6 +38,7 @@ public:
 
 	void setExpiredEntity() override;
 
+	int getLives();
 
 	/*
 	Animate Entity by changing the actual sprite.

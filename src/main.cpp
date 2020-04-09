@@ -64,14 +64,14 @@ int main(int argc, char* argv[]) {
 					if (menu.itemSelected() == 0) {
 						GameMusic::playWorld1Music();
 						primero = false;
-						numPlayers=1;
+						
 					}
 
 					else if (menu.itemSelected() == 1) {
 						GameMusic::playWorld1Music();
 						primero = false;
 						multi=true;
-						numPlayers=2;
+					
 					}
 					else if (menu.itemSelected() == 3) {
 						window.close();
@@ -112,18 +112,20 @@ int main(int argc, char* argv[]) {
 			
 			// Draw the player and the scene
 		game.draw(window);
-		for(Player_ptr &player : players){
+		/*for(Player_ptr &player : PLayers::getVectorPlayer()){
 			playersLives.push_back(player->getLives());
 			cout<<playersLives.front();
-		}
+		}*/
+		gameI.update(time.getTimeNow());
 		if(multi){
-			gameI.update(time.getTimeNow(),playersLives.front(),playersLives.back());
+			//gameI.update(time.getTimeNow(),playersLives.front(),playersLives.back());
 		 	gameI.drawMulti(window);
 		}
 		else{
-			gameI.update(time.getTimeNow(),playersLives.front());
+			
 			gameI.draw(window);
 		}
+	
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num9)) { GameMusic::volumeUp(); std::cout << GameMusic::getVolume() << std::endl; }
