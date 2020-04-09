@@ -30,4 +30,3 @@ public:
 
 	static PowerUpTexture& getPowerUpTexture();
 };
-
