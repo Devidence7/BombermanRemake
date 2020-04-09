@@ -24,6 +24,12 @@ GameEngine.o: $(src)/GameEngine.cpp $(src)/GameEngine.hpp
 	$(CC) -c $(src)/GameEngine.cpp -o $(build)/GameEngine.o $(std)
 
 
+clear: 
+	rm bomberman || true
+	rm $(bin)/*.o  || true
+	rm $(bin)/*.a || true
+	rm *.o || true
+
 ##################################
 #	Compile Utils 			#
 #################################
@@ -37,11 +43,6 @@ $(bin)/Time.o: $(logicPath)/Time.cpp $(logicPath)/Time.h
 $(bin)/EntitiesInclude.o: $(src)/Include/EntitiesInclude.hpp $(src)/Include/EntitiesInclude.cpp
 	$(CC) -o $(bin)/EntitiesInclude.o -c $(src)/Include/EntitiesInclude.cpp  $(std) $(O)
 
-# $(bin)/EntitiesInclude.o:  $(src)/Include/EntitiesInclude.hpp $(src)/Include/EntitiesInclude.cpp
-# 	$(CC) -o $(bin)/A_Star.o -c $(src)/Include/EntitiesInclude.cpp
-
-# $(bin)/A_Star.o: $(src)/Utils/A_Star.hpp $(src)/Utils/A_Star.cpp
-# 	$(CC) -o $(bin)/A_Star.o -c $(src)/Utils/A_Star.cpp
 
 
 ##################################
