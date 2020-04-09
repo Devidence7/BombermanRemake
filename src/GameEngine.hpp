@@ -28,20 +28,20 @@ private:
 	TextureStorage textureStorage;
 	Level *level;
 	std::vector<Enemy_ptr> enemies;
-	MainMenu mainMenu;
+	//MainMenu mainMenu;
 	//std::vector<Enemy_ptr> enemies;
 
 public:
-	Game(sf::RenderWindow& w)
+	Game()
 	{
 		insertPlayers();
 		insertarEnemigos();
 		level = new Level(enemies, dimX, dimY);
-		mainMenu=MainMenu(w);
+		//mainMenu(w);
 		
 	}
 	void start(sf::RenderWindow& w){
-		mainMenu.draw(w);
+	//	mainMenu.draw(w);
 	}
 
 	void updatePlayers(){

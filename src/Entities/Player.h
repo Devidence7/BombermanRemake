@@ -57,6 +57,7 @@ public:
 	}
 
 	int getLives() {
+	
 		return lives;
 	}
 
@@ -162,6 +163,7 @@ public:
 		{
 			velocity.x = baseSpeed * speedBoost;
 			lastMovement = LookingAt::right;
+			lives--;
 		}
 
 		// Call animate function to change current sprite if needed.

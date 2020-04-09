@@ -123,23 +123,25 @@ public:
         
 	}
 
-    void update(double timeNow,double lives1,double lives2) {
+    void update(double timeNow,int numLivesP1,int numLivesP2) {
 
-        lives1.setString("Lives: "+to_string(lives1));
-        
-
-         
-        lives2.setString("Lives: "+to_string(lives2));
-      
-
-       timeLeft=timeLeft-timeNow; 
+        lives1.setString("Lives: "+to_string(numLivesP1));   
+        lives2.setString("Lives: "+to_string(numLivesP2));
+        timeLeft=timeLeft-timeNow; 
         if(timeLeft<0){
             timeLeft=0;
-        }
-       
+        }  
         time.setString("Time: "+to_string(timeLeft/60)+":"+to_string(timeLeft%60));
-        
-        
+	}
+
+    void update(double timeNow,int numLivesP1) {
+
+        lives1.setString("Lives: "+to_string(numLivesP1));   
+        timeLeft=timeLeft-timeNow; 
+        if(timeLeft<0){
+            timeLeft=0;
+        }  
+        time.setString("Time: "+to_string(timeLeft/60)+":"+to_string(timeLeft%60));
 	}
 
     

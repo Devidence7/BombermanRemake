@@ -15,6 +15,8 @@ int windowsHeight = 600;
 int windowsWidth = 800;
 bool primero = true;
 bool multi=false;
+int numPlayers;
+list<int> playersLives;
 
 
 int main(int argc, char* argv[]) {
@@ -37,7 +39,7 @@ int main(int argc, char* argv[]) {
 	Random::initilizeRandomGen();
 
 	Game game=Game();
-	MainMenu menu(window);
+	MainMenu menu;
 	GameInterface gameI=GameInterface();
 	GameMusic::playTitleMusic();
 	GameMusic::setVolume(10);
@@ -62,12 +64,14 @@ int main(int argc, char* argv[]) {
 					if (menu.itemSelected() == 0) {
 						GameMusic::playWorld1Music();
 						primero = false;
+						numPlayers=1;
 					}
 
 					else if (menu.itemSelected() == 1) {
 						GameMusic::playWorld1Music();
 						primero = false;
 						multi=true;
+						numPlayers=2;
 					}
 					else if (menu.itemSelected() == 3) {
 						window.close();
@@ -103,15 +107,21 @@ int main(int argc, char* argv[]) {
 
 			// Clear screen from previous drawings
 			window.clear();
-		     gameI.update(time.getTimeNow());
+		      
 	        
 			
 			// Draw the player and the scene
 		game.draw(window);
+		for(Player_ptr &player : players){
+			playersLives.push_back(player->getLives());
+			cout<<playersLives.front();
+		}
 		if(multi){
+			gameI.update(time.getTimeNow(),playersLives.front(),playersLives.back());
 		 	gameI.drawMulti(window);
 		}
 		else{
+			gameI.update(time.getTimeNow(),playersLives.front());
 			gameI.draw(window);
 		}
 		}
