@@ -54,7 +54,7 @@ enum CollisionType
 };
 
 const int TOTAL_ENEMY_FRAMES = 13;
-
+const int THRESHOLD_CENTER_CELL = 2;
 // Debug features:
 #define HITBOX_DEBUG_MODE true;
 
@@ -83,3 +83,11 @@ inline  sf::Vector2f MapCoordinates2GlobalCoorCenter(const sf::Vector2i pos)
 	return MapCoordinates2GlobalCoorCenter(pos.x, pos.y);
 }
 
+inline bool checkArrivePosition(const sf::Vector2f &currentPos, const sf::Vector2i &objetive, const sf::Vector2i &direction){
+	sf::Vector2f objetiveGlobalCoord = MapCoordinates2GlobalCoorCenter(objetive);
+	//cruzar el objetivo
+	objetiveGlobalCoord.x += direction.x;
+	objetiveGlobalCoord.y += direction.y;
+
+	return abs(objetiveGlobalCoord.x - currentPos.x) < THRESHOLD_CENTER_CELL && abs(objetiveGlobalCoord.y - currentPos.y) < THRESHOLD_CENTER_CELL;
+}

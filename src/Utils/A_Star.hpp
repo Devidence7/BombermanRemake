@@ -67,10 +67,17 @@ class ANode
     float f, h;
 
 public:
+    ANode(){}
     ANode(const sf::Vector2i &cp, sf::Vector2i dir, const sf::Vector2i &objetive, float fAcum, ANode *p = nullptr)
         : currentPostion(cp), direction_to_arrive(dir), f(fAcum), parent(p)
     {
         h = manhattan(cp, objetive);
+    }
+
+    inline void inverseDirection(){
+        direction_to_arrive = -direction_to_arrive;
+        currentPostion += direction_to_arrive;
+        currentPostion += direction_to_arrive;
     }
     inline float costNode() const { return h + f; }
     inline bool isObjetive() const { return h == 0; }
@@ -126,6 +133,6 @@ inline bool checkValidPosition(const sf::Vector2i &v);
 
 sf::Vector2i selectCloseObjetive(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives);
 
-std::vector<ANode> &pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives);
+std::list<ANode> &pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives);
 #include "../Include/EntitiesInclude.hpp"
 //};

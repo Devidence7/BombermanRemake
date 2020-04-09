@@ -84,7 +84,7 @@ public:
 			w.draw(*e);
 #ifdef HITBOX_DEBUG_MODE
 			e->drawEntityHitbox(w);
-			e->generateMovements();
+	//		e->generateMovements();
 			e->drawMovements(w);
 #endif
 		}
@@ -130,6 +130,7 @@ public:
 				y = Random::getIntNumberBetween(0, dimY / 2);
 			} while (y < 3);
 			e->setPosition(sf::Vector2f((x * 2 + 1) * SIZE_PILLAR - 3, (y * 2 + 1) * SIZE_PILLAR - 3));
+			e->startMovement();
 		}
 	}
 

@@ -29,7 +29,7 @@ sf::Vector2i selectCloseObjetive(const sf::Vector2i &positionEnemy, const std::v
     return objetive;
 }
 
-std::vector<ANode> &pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives)
+std::list<ANode> &pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives)
 {
     Heap<ANode> frontera;
     std::map<vec2i, ANode *> expanded;
@@ -37,14 +37,12 @@ std::vector<ANode> &pathFinding(const sf::Vector2i &positionEnemy, const std::ve
 
     ANode *currentNode = new ANode(positionEnemy, sf::Vector2i(0, 0), objetive, 0.0f);
 
-    //std::cout <<"Size Map " << EntityMap::entityMap[0].size() << std::endl;
     bool finded = false;
     while (!finded)
     {
 
         expanded[vec2i(currentNode->getPosition())] = currentNode;
         //expandir nodos
-        //std::cout << "Current Pos " << currentNode->xPosition() << " " << currentNode->yPosition() << std::endl;
         for (int i = -1; i < 2; i++)
         {
             for (int j = -1; j < 2; j++)
@@ -67,7 +65,6 @@ std::vector<ANode> &pathFinding(const sf::Vector2i &positionEnemy, const std::ve
         //Extraer nodo
         if (frontera.isEmpty())
         {
-            std::cout << "BREAKING\n";
             break;
         }
         currentNode = frontera.pop();
@@ -78,10 +75,9 @@ std::vector<ANode> &pathFinding(const sf::Vector2i &positionEnemy, const std::ve
             finded = true;
         }
     }
-    std::cout << "Ended\n";
 
     std::list<ANode *> list_actions;
-    std::vector<ANode> *result = new std::vector<ANode>();
+    std::list<ANode> *result = new std::list<ANode>();
     if (finded)
     {
         while (currentNode != nullptr)

@@ -39,7 +39,6 @@ void Entity::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType c
 		position.y += this->moveOnY(eCollisioning);
 		break;
 	case CORNER:
-		eCollisioning->setCollision();
 		position += this->moveCircleOverCorner(eCollisioning);
 		break;
 

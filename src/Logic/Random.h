@@ -12,5 +12,6 @@ public:
 
 	static int getIntNumberBetween(int a, int b);
 };
+
 //Random Random::randomGen;
 
