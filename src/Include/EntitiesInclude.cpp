@@ -39,5 +39,5 @@ Entity_ptr &EntityMap::getCellEntMapObject(sf::Vector2i pos)
 }
 
 bool EntityMap::isValidCell(sf::Vector2i v){
-    return entityMap.size() > v.y && entityMap[0].size() > v.x;
+    return v.x > -1 && v.y > -1 && entityMap.size() > v.y && entityMap[0].size() > v.x;
 }

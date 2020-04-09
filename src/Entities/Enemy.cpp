@@ -15,7 +15,7 @@ EnemyEntity::EnemyEntity() : Entity()
 	setTextureRect(enemyTexture->getDefaultIntRect());
 	// Set sprite Sheet texture
 	setTexture(enemyTexture->getTexture());
-
+	colorPath = sf::Color(Random::getIntNumberBetween(0,255), Random::getIntNumberBetween(0,255), Random::getIntNumberBetween(0,255));
 }
 
 void EnemyEntity::generateMovements()
@@ -37,7 +37,7 @@ void EnemyEntity::drawMovements(sf::RenderWindow &w){
 	for(ANode &an : movements){
 		sf::RectangleShape rece;
 		rece.setSize(sf::Vector2f((dim.width/2), (dim.height/2)));
-		rece.setFillColor(sf::Color(255, 255, 0));
+		rece.setFillColor(colorPath);
 		sf::Vector2i posi = an.getPosition();
 		sf::Vector2f posf = MapCoordinates2GlobalCoorCenter(an.getPosition());
 		//std::cout << "pos " << posi.x << "( " << posf.x<< ")" << posi.y << "( " << posf.y<< ")" << std::endl;

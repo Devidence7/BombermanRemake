@@ -77,10 +77,10 @@ public:
 			w.draw(*e);
 #ifdef HITBOX_DEBUG_MODE
 			e->drawEntityHitbox(w);
+			e->generateMovements();
+			e->drawMovements(w);
 #endif
 		}
-		//enemies[0]->generateMovements();
-		//enemies[0]->drawMovements(w);
 	}
 
 	bool colissionWithEnemies(Entity_ptr eCol)

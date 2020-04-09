@@ -60,7 +60,7 @@ public:
 				if (x % 2 == 1 || y % 2 == 1)
 				{
 					// Create random Bricks:
-					if ((y > 3|| x > 3 || (y != 3 && x == 2) || (x == 3 && y <= 3)) && !Random::getIntNumberBetween(0, 30))
+					if ((y > 3|| x > 3 || (y != 3 && x == 2) || (x == 3 && y <= 3)) && !Random::getIntNumberBetween(0, 3))
 					{
 						bool intersec = false;
 						for (Enemy_ptr e : enemies)

@@ -7,7 +7,10 @@ bool checkObjetive(const sf::Vector2i &currentP, const sf::Vector2i &objetivePos
 
 bool checkValidPosition(const sf::Vector2i &v)
 {
-    return (v.x > 0 && v.y > 0 && EntityMap::isValidCell(v) && EntityMap::getCellEntMapObject(v) == nullptr);
+    if(!EntityMap::isValidCell(v)){
+        std::cout << "NOT VALID " << v.x << " " << v.y << std::endl;
+    }
+    return (EntityMap::isValidCell(v) && EntityMap::getCellEntMapObject(v) == nullptr);
 }
 
 sf::Vector2i selectCloseObjetive(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives)
@@ -34,29 +37,30 @@ std::vector<ANode> &pathFinding(const sf::Vector2i &positionEnemy, const std::ve
 
     ANode *currentNode = new ANode(positionEnemy, sf::Vector2i(0, 0), objetive, 0.0f);
 
-    std::cout <<"Size Map " << EntityMap::entityMap[0].size() << std::endl;
-
-    expanded[vec2i(positionEnemy)] = nullptr;
+    //std::cout <<"Size Map " << EntityMap::entityMap[0].size() << std::endl;
     bool finded = false;
     while (!finded)
     {
+
+        expanded[vec2i(currentNode->getPosition())] = currentNode;
         //expandir nodos
         //std::cout << "Current Pos " << currentNode->xPosition() << " " << currentNode->yPosition() << std::endl;
         for (int i = -1; i < 2; i++)
         {
             for (int j = -1; j < 2; j++)
             {   
-                if(abs(i) == abs(j)){continue;}
-                sf::Vector2i nodePosition(currentNode->xPosition() + i, currentNode->yPosition() + j);
-                sf::Vector2i objetiveP = selectCloseObjetive(positionEnemy, objetives);
-                ANode *newNode = new ANode(nodePosition, sf::Vector2i(i, j), objetiveP, currentNode->fAcum() + 1, currentNode);
-                if (checkValidPosition(nodePosition) && !expanded.count(vec2i(nodePosition)) && !frontera.containsNode(currentNode))
-                { //Si es una posicion valida y no se ha expandido
-                    frontera.add(newNode);
-                }
-                else
-                {
-                    delete newNode;
+                if(abs(i) != abs(j)){
+                    sf::Vector2i nodePosition(currentNode->xPosition() + i, currentNode->yPosition() + j);
+                    sf::Vector2i objetiveP = selectCloseObjetive(positionEnemy, objetives);
+                    ANode *newNode = new ANode(nodePosition, sf::Vector2i(i, j), objetiveP, currentNode->fAcum() + 1, currentNode);
+                    if (checkValidPosition(nodePosition) && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(currentNode))
+                    { //Si es una posicion valida y no se ha expandido
+                        frontera.add(newNode);
+                    }
+                    else
+                    {
+                        delete newNode;
+                    }
                 }
             }
         }

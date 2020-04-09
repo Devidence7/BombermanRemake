@@ -22,6 +22,7 @@ private:
 
 	bool dyingEntity = false;			// Starts entity dying animation
 
+	sf::Color colorPath;
 
 protected:
 	std::vector<ANode> movements;
