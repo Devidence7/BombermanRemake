@@ -22,14 +22,23 @@ private:
 
 	bool dyingEntity = false;			// Starts entity dying animation
 
+	ANode currentMovement;
+
 	sf::Color colorPath;
 
 protected:
-	std::vector<ANode> movements;
+	std::list<ANode> movements;
 	EnemyType enemyType;
 	
 public:
 	EnemyEntity();
+
+	void startMovement();
+
+	ANode generateRandomMovement(sf::Vector2i fromPosition);
+
+	void generateRandomPath();
+
 	virtual void generateMovements();
 
 	void updateVelocity();

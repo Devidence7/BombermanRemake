@@ -23,7 +23,6 @@ void PowerUp::update() {}
 
 void PowerUp::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT)
 {
-	std::cout << "POWER UP\n";
 	std::shared_ptr<PlayerEntity> pe;
 	if (!this->expiredEntity && (pe = std::dynamic_pointer_cast<PlayerEntity>(eCollisioning)) != nullptr)
 	{

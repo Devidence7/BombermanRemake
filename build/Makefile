@@ -15,8 +15,8 @@ libs=-L$(bin) -lEntities -lTextures
 libEntities=-L$(bin) -lEntities 
 
 bomberman: $(src)/main.cpp $(bin)/libEntities.a $(bin)/libTextures.a $(bin)/Random.o $(bin)/Time.o $(bin)/EntitiesInclude.o $(src)/Include/EntitiesInclude.cpp $(src)/Utils/A_Star.cpp
-	$(CC) -o bomberman  $(src)/main.cpp  \
-		$(bin)/Random.o $(bin)/Time.o  $(src)/Include/EntitiesInclude.cpp $(src)/Utils/A_Star.cpp\
+	$(CC) -o bomberman  $(src)/main.cpp $(src)/Include/EntitiesInclude.cpp $(src)/Utils/A_Star.cpp \
+		$(bin)/Random.o $(bin)/Time.o  \
 		$(libs) \
 		$(std) $(libsSFML) $(O) 
 
