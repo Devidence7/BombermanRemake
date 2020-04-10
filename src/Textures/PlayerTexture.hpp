@@ -20,3 +20,18 @@ public:
 
 	sf::IntRect& getDeathSprite(int i);
 };
+
+class PlayerColor : public TextureVector {
+
+public:
+	// Size of the Entity Sprite
+	const int FRAME_SIZE_X = 57;
+	const int FRAME_SIZE_Y = 75;
+
+	PlayerColor();
+	sf::IntRect& getIdleSprite(LookingAt lookat);
+
+	sf::IntRect& getMoveSprite(LookingAt lookat, int i);
+
+	sf::IntRect& getDeathSprite(int i);
+};

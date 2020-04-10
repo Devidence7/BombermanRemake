@@ -1,7 +1,5 @@
 #include "../Include/EntitiesInclude.hpp"
 
-
-
 PlayerEntity::PlayerEntity() : Entity()
 {
 	isFireDestroyable = true;
@@ -19,6 +17,14 @@ PlayerEntity::PlayerEntity() : Entity()
 	setTextureRect(playerTexture->getDefaultIntRect());
 	// Set sprite Sheet texture
 	setTexture(playerTexture->getTexture());
+
+	// Texture Controller
+	playerColor = &TextureStorage::getPlayerColor();
+	// Set starting sprite
+	playerColorEntity.setTextureRect(playerColor->getDefaultIntRect());
+	// Set sprite Sheet texture
+	playerColorEntity.setTexture(playerColor->getTexture());
+	playerColorEntity.setColor(sf::Color(0,0,0,200));
 
 	// TODO: Remove this
 	move(100, 100);
@@ -57,6 +63,7 @@ void PlayerEntity::animate(sf::Vector2f velocity)
 		{
 			// If there is not speed set idle sprite
 			setTextureRect(playerTexture->getIdleSprite(lastMovement));
+			playerColorEntity.setTextureRect(playerTexture->getIdleSprite(lastMovement));
 		}
 		else
 		{
@@ -64,6 +71,7 @@ void PlayerEntity::animate(sf::Vector2f velocity)
 			if (GameTime::getTimeNow() - animLastTic > frameSpeed)
 			{
 				setTextureRect(playerTexture->getMoveSprite(lastMovement, currentFrame));
+				playerColorEntity.setTextureRect(playerTexture->getMoveSprite(lastMovement, currentFrame));
 				currentFrame = (currentFrame + 1) % walkFrames;
 				animLastTic = GameTime::getTimeNow();
 			}
@@ -81,6 +89,7 @@ void PlayerEntity::animate(sf::Vector2f velocity)
 		if (GameTime::getTimeNow() - animLastTic > frameSpeed)
 		{	
 			setTextureRect(playerTexture->getDeathSprite(currentFrame));
+			playerColorEntity.setTextureRect(playerTexture->getDeathSprite(currentFrame));
 			currentFrame = (currentFrame + 1) % deathFrames;
 			animLastTic = GameTime::getTimeNow();
 		}

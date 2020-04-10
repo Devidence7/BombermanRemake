@@ -8,6 +8,7 @@
 
 class TextureStorage {
 	static PlayerTexture playerTexture;
+	static PlayerColor playerColor;
 	static WallTexture level1WallTexture;
 	static BombTexture bombTexture;
 	static FireTexture fireTexture;
@@ -19,6 +20,8 @@ public:
 	TextureStorage();
 
 	static PlayerTexture& getPlayerTexture();
+
+	static PlayerColor& getPlayerColor();
 
 	static WallTexture& getlevel1WallTexture();
 
