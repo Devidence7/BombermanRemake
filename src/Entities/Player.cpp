@@ -24,7 +24,7 @@ PlayerEntity::PlayerEntity() : Entity()
 	playerColorEntity.setTextureRect(playerColor->getDefaultIntRect());
 	// Set sprite Sheet texture
 	playerColorEntity.setTexture(playerColor->getTexture());
-	playerColorEntity.setColor(sf::Color(0,0,0,200));
+	playerColorEntity.setColor(sf::Color(Random::getIntNumberBetween(0,255), Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255),225));
 
 	// TODO: Remove this
 	move(100, 100);
@@ -43,6 +43,10 @@ void PlayerEntity::setExpiredEntity()
 		currentFrame = 0;
 		animLastTic = GameTime::getTimeNow();
 	}
+}
+
+inline Entity& PlayerEntity::getPlayerColorEntity() {
+	return playerColorEntity;
 }
 
 
@@ -100,6 +104,11 @@ sf::FloatRect PlayerEntity::getGlobalBounds() const
 {
 	sf::FloatRect dim = sf::Sprite::getGlobalBounds();
 	return sf::FloatRect(dim.left + 15, dim.top + 45, 27, 27);
+}
+
+Entity& PlayerEntity::playerUpdateColor() {
+	playerColorEntity.setPosition(getPosition());
+	return playerColorEntity;
 }
 
 void PlayerEntity::update()

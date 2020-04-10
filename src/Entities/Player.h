@@ -40,9 +40,7 @@ public:
 
 	void setExpiredEntity() override;
 
-	Entity &getPlayerColorEntity() {
-		return playerColorEntity;
-	}
+	Entity& getPlayerColorEntity();
 
 	int getLives();
 
@@ -50,12 +48,10 @@ public:
 	Animate Entity by changing the actual sprite.
 	*/
 	void animate(sf::Vector2f velocity);
+
 	sf::FloatRect getGlobalBounds() const override;
 
-	Sprite &playerUpdateColor() {
-		playerColorEntity.setPosition(getPosition());
-		return playerColorEntity;
-	}
+	Entity& playerUpdateColor();
 
 	void update() override;
 	void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) override;
