@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
 	MainMenu menu;
 	GameInterface gameI=GameInterface();
 	GameMusic::playTitleMusic();
-	GameMusic::setVolume(10);
+	GameMusic::setVolume(2);
 	
 	unsigned int pixelsX = window.getSize().x;
 	unsigned int pixelsY = window.getSize().y;

@@ -33,21 +33,21 @@ public:
              static_cast<float>(window.getSize().x) /2.f,
               static_cast<float>(window.getSize().y) /2.f
         );*/
-        if(!font.loadFromFile("../textures/mainMenu/OpenSans-Bold.ttf")){
+        if(!font.loadFromFile("../textures/mainMenu/BOMBERMAM.ttf")){
             //cosas
         }
     
         menuOption[0].setFont(font);
         menuOption[0].setFillColor(sf::Color::Red);
         menuOption[0].setString("Un jugador");
-        menuOption[0].setPosition(550,200);
+        menuOption[0].setPosition(250,350);
       //menuOption[0].setPosition((window.getSize().x) /2.5,(window.getSize().y/2.75));
 
 
         menuOption[1].setFont(font);
         menuOption[1].setFillColor(sf::Color::Black);
         menuOption[1].setString("Multijugador");
-        menuOption[1].setPosition(550,300);
+        menuOption[1].setPosition(250,450);
         //menuOption[1].setPosition((window.getSize().x) /2.5,(window.getSize().y/2.35));
 
 
@@ -56,21 +56,21 @@ public:
         menuOption[2].setFillColor(sf::Color::Black);
         menuOption[2].setString("Opciones");
        // menuOption[2].setPosition((window.getSize().x) /2.5,(window.getSize().y/2.0));
-       menuOption[2].setPosition(550,400);
+       menuOption[2].setPosition(250,550);
 
 
         menuOption[3].setFont(font);
         menuOption[3].setFillColor(sf::Color::Black);
         menuOption[3].setString("Salir");
        // menuOption[3].setPosition((window.getSize().x) /2.5,(window.getSize().y/1.75));
-        menuOption[3].setPosition(550,500);
+        menuOption[3].setPosition(250,650);
 
        /* background.loadFromFile(MAIN_MENU_BACKGROUND_PATH);
         background.setSize(sf::Vector2f((dimX + 2) * sizeTextureX, (dimY + 2) * sizeTextureY));*/
        
        texture.loadFromFile(MAIN_MENU_BACKGROUND_PATH);
-	    background.setTexture(texture,true);
-        background.setScale(4.6,5);
+	    background.setTexture(texture);
+        background.setScale(0.75,0.75);
         selectedItem=0;
 
 
