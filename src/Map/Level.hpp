@@ -109,9 +109,9 @@ public:
 				}
 				else if (std::dynamic_pointer_cast<BrickWall>((*it)) != nullptr)
 				{
-					if (!Random::getIntNumberBetween(0, 3))
+					if (!Random::getIntNumberBetween(0, 1))
 					{
-						int randomObject = Random::getIntNumberBetween(0, 3);
+						int randomObject = Random::getIntNumberBetween(0, 7);
 						Entity_ptr powerUp;
 						switch (randomObject)
 						{
@@ -124,8 +124,20 @@ public:
 						case 2:
 							powerUp = std::make_shared<MoreBombsPowerUp>(MoreBombsPowerUp((*it)->getPosition()));
 							break;
+						case 3:
+							powerUp = std::make_shared<LessSpeedPowerUp>(LessSpeedPowerUp((*it)->getPosition()));
+							break;
+						case 4:
+							powerUp = std::make_shared<MoreTimePowerUp>(MoreTimePowerUp((*it)->getPosition()));
+							break;
+						case 5:
+							powerUp = std::make_shared<GrabBombsPowerUp>(GrabBombsPowerUp((*it)->getPosition()));
+							break;
+						case 6:
+							powerUp = std::make_shared<KickBombsPowerUp>(KickBombsPowerUp((*it)->getPosition()));
+							break;
 						default:
-							powerUp = std::make_shared<MoreSpeedPowerUp>(MoreSpeedPowerUp((*it)->getPosition()));
+							powerUp = std::make_shared<ExtraLifePowerUp>(ExtraLifePowerUp((*it)->getPosition()));
 							break;
 						}
 

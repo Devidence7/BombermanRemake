@@ -42,7 +42,12 @@ enum PowerUpType
 	moreSpeed = 1,
 	moreFire = 2,
 	lessFire = 3,
-	moreBombs = 4
+	moreBombs = 4,
+	kickBombs = 6,
+	grabBombs = 7,
+	extraLife = 14,
+	moreTime = 18,
+	lessSpeed = 19
 };
 
 enum CollisionType

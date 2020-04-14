@@ -19,7 +19,6 @@ public:
 	int powerOfBombs = 1;
 	list <sf::Texture>activatedPowerUps;
 
-
 	unsigned int bombsTimeLimit = 30;
 
 	// Texture varibles:
@@ -29,8 +28,11 @@ public:
 	const int deathFrames = 7;			// Number of death sprites
 	const double frameSpeed = 0.15;		// Time between frames
 
-	PlayerTexture *playerTexture;
+	PlayerTexture* playerTexture;
+	PlayerColor* playerColor;
 	LookingAt lastMovement; // Save last looked direction
+
+	Entity playerColorEntity;
 	
 	/*
 	Constructor of Entity
@@ -41,13 +43,18 @@ public:
 
 	void setExpiredEntity() override;
 
+	Entity& getPlayerColorEntity();
+
 	int getLives();
 
 	/*
 	Animate Entity by changing the actual sprite.
 	*/
 	void animate(sf::Vector2f velocity);
+
 	sf::FloatRect getGlobalBounds() const override;
+
+	Entity& playerUpdateColor();
 
 	void update() override;
 	void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) override;

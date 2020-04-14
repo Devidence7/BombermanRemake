@@ -37,7 +37,7 @@ public:
         );*/
        this->container.setSize( sf::Vector2f((27) * sizeTextureX,  sizeTextureY));
         this->container.setFillColor(sf::Color(0,0,0,100));
-        this->container.setPosition(0,0);
+        this->container.setPosition(0,-48);
        // this->container.setScale(1,0.5);
         if(!font.loadFromFile("../textures/mainMenu/OpenSans-Bold.ttf")){
             //cosas

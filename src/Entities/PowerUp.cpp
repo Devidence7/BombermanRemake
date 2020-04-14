@@ -71,8 +71,11 @@ LessFirePowerUp::LessFirePowerUp(sf::Vector2f pos) : PowerUp()
 
 void LessFirePowerUp::setPlayerStatus(PlayerEntity &pe)
 {
-	pe.powerOfBombs -= 1;
+	if (pe.powerOfBombs > 1) {
+		pe.powerOfBombs -= 1;
+	}
 }
+
 MoreSpeedPowerUp::MoreSpeedPowerUp(sf::Vector2f pos) : PowerUp()
 {
 	powerUpType = moreSpeed;
@@ -89,6 +92,22 @@ void MoreSpeedPowerUp::setPlayerStatus(PlayerEntity &pe)
 	pe.speedBoost += 0.2;
 }
 
+LessSpeedPowerUp::LessSpeedPowerUp(sf::Vector2f pos) : PowerUp() {
+	powerUpType = lessSpeed;
+
+	// Set position
+	setPosition(pos);
+
+	// Set starting sprite
+	setTextureRect(powerUpTexture->getFrame(powerUpType, 0));
+}
+
+void LessSpeedPowerUp::setPlayerStatus(PlayerEntity& pe) {
+	if (pe.speedBoost > 1.0) {
+		pe.speedBoost -= 0.2;
+	}
+}
+
 MoreBombsPowerUp::MoreBombsPowerUp(sf::Vector2f pos) : PowerUp()
 {
 	powerUpType = moreBombs;
@@ -103,4 +122,61 @@ MoreBombsPowerUp::MoreBombsPowerUp(sf::Vector2f pos) : PowerUp()
 void MoreBombsPowerUp::setPlayerStatus(PlayerEntity &pe)
 {
 	pe.numOfBombs += 1;
+}
+
+MoreTimePowerUp::MoreTimePowerUp(sf::Vector2f pos) : PowerUp() {
+	powerUpType = moreTime;
+
+	// Set position
+	setPosition(pos);
+
+	// Set starting sprite
+	setTextureRect(powerUpTexture->getFrame(powerUpType, 0));
+}
+
+void MoreTimePowerUp::setPlayerStatus(PlayerEntity& pe) {
+	
+}
+
+GrabBombsPowerUp::GrabBombsPowerUp(sf::Vector2f pos) : PowerUp() {
+	powerUpType = grabBombs;
+
+	// Set position
+	setPosition(pos);
+
+	// Set starting sprite
+	setTextureRect(powerUpTexture->getFrame(powerUpType, 0));
+}
+
+void GrabBombsPowerUp::setPlayerStatus(PlayerEntity& pe) {
+	
+}
+
+KickBombsPowerUp::KickBombsPowerUp(sf::Vector2f pos) : PowerUp() {
+	powerUpType = kickBombs;
+
+	// Set position
+	setPosition(pos);
+
+	// Set starting sprite
+	setTextureRect(powerUpTexture->getFrame(powerUpType, 0));
+}
+
+void KickBombsPowerUp::setPlayerStatus(PlayerEntity& pe) {
+	
+}
+
+
+ExtraLifePowerUp::ExtraLifePowerUp(sf::Vector2f pos) : PowerUp() {
+	powerUpType = extraLife;
+
+	// Set position
+	setPosition(pos);
+
+	// Set starting sprite
+	setTextureRect(powerUpTexture->getFrame(powerUpType, 0));
+}
+
+void ExtraLifePowerUp::setPlayerStatus(PlayerEntity& pe) {
+	
 }

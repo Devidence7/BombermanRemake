@@ -42,8 +42,16 @@ int main(int argc, char* argv[]) {
 	MainMenu menu(window);
 	GameInterface gameI=GameInterface();
 	GameMusic::playTitleMusic();
-	GameMusic::setVolume(10);
-
+	GameMusic::setVolume(2);
+	
+	unsigned int pixelsX = window.getSize().x;
+	unsigned int pixelsY = window.getSize().y;
+	
+	sf::View view(sf::FloatRect(0.f, 0.f, pixelsX, pixelsY));
+	view.move(sf::Vector2f(0, -48));
+	
+	window.setView(view);
+	
 	// Start game loop
 	while (window.isOpen()) {
 		// Process events

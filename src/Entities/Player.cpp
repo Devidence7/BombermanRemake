@@ -1,7 +1,5 @@
 #include "../Include/EntitiesInclude.hpp"
 
-
-
 PlayerEntity::PlayerEntity() : Entity()
 {
 	isFireDestroyable = true;
@@ -19,6 +17,14 @@ PlayerEntity::PlayerEntity() : Entity()
 	setTextureRect(playerTexture->getDefaultIntRect());
 	// Set sprite Sheet texture
 	setTexture(playerTexture->getTexture());
+
+	// Texture Controller
+	playerColor = &TextureStorage::getPlayerColor();
+	// Set starting sprite
+	playerColorEntity.setTextureRect(playerColor->getDefaultIntRect());
+	// Set sprite Sheet texture
+	playerColorEntity.setTexture(playerColor->getTexture());
+	playerColorEntity.setColor(sf::Color(Random::getIntNumberBetween(0,255), Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255),225));
 
 	// TODO: Remove this
 	move(100, 100);
@@ -39,6 +45,10 @@ void PlayerEntity::setExpiredEntity()
 	}
 }
 
+inline Entity& PlayerEntity::getPlayerColorEntity() {
+	return playerColorEntity;
+}
+
 
 int PlayerEntity::getLives(){
 	return lives;
@@ -57,6 +67,7 @@ void PlayerEntity::animate(sf::Vector2f velocity)
 		{
 			// If there is not speed set idle sprite
 			setTextureRect(playerTexture->getIdleSprite(lastMovement));
+			playerColorEntity.setTextureRect(playerTexture->getIdleSprite(lastMovement));
 		}
 		else
 		{
@@ -64,6 +75,7 @@ void PlayerEntity::animate(sf::Vector2f velocity)
 			if (GameTime::getTimeNow() - animLastTic > frameSpeed)
 			{
 				setTextureRect(playerTexture->getMoveSprite(lastMovement, currentFrame));
+				playerColorEntity.setTextureRect(playerTexture->getMoveSprite(lastMovement, currentFrame));
 				currentFrame = (currentFrame + 1) % walkFrames;
 				animLastTic = GameTime::getTimeNow();
 			}
@@ -81,6 +93,7 @@ void PlayerEntity::animate(sf::Vector2f velocity)
 		if (GameTime::getTimeNow() - animLastTic > frameSpeed)
 		{	
 			setTextureRect(playerTexture->getDeathSprite(currentFrame));
+			playerColorEntity.setTextureRect(playerTexture->getDeathSprite(currentFrame));
 			currentFrame = (currentFrame + 1) % deathFrames;
 			animLastTic = GameTime::getTimeNow();
 		}
@@ -91,6 +104,11 @@ sf::FloatRect PlayerEntity::getGlobalBounds() const
 {
 	sf::FloatRect dim = sf::Sprite::getGlobalBounds();
 	return sf::FloatRect(dim.left + 15, dim.top + 45, 27, 27);
+}
+
+Entity& PlayerEntity::playerUpdateColor() {
+	playerColorEntity.setPosition(getPosition());
+	return playerColorEntity;
 }
 
 void PlayerEntity::update()

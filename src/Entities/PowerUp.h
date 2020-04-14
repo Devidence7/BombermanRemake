@@ -29,7 +29,6 @@ public:
 class MoreFirePowerUp : public PowerUp {
 public:
 	MoreFirePowerUp(sf::Vector2f pos);
-
 	void setPlayerStatus(PlayerEntity& pe);
 };
 
@@ -45,8 +44,39 @@ public:
 	void setPlayerStatus(PlayerEntity& pe);
 };
 
+class LessSpeedPowerUp : public PowerUp {
+public:
+	LessSpeedPowerUp(sf::Vector2f pos);
+	void setPlayerStatus(PlayerEntity& pe);
+};
+
 class MoreBombsPowerUp : public PowerUp {
 public:
 	MoreBombsPowerUp(sf::Vector2f pos);
 	void setPlayerStatus(PlayerEntity& pe);
 };
+
+class MoreTimePowerUp : public PowerUp {
+public:
+	MoreTimePowerUp(sf::Vector2f pos);
+	void setPlayerStatus(PlayerEntity& pe);
+};
+
+class GrabBombsPowerUp : public PowerUp {
+public:
+	GrabBombsPowerUp(sf::Vector2f pos);
+	void setPlayerStatus(PlayerEntity& pe);
+};
+
+class KickBombsPowerUp : public PowerUp {
+public:
+	KickBombsPowerUp(sf::Vector2f pos);
+	void setPlayerStatus(PlayerEntity& pe);
+};
+
+class ExtraLifePowerUp : public PowerUp {
+public:
+	ExtraLifePowerUp(sf::Vector2f pos);
+	void setPlayerStatus(PlayerEntity& pe);
+};
+

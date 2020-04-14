@@ -18,90 +18,80 @@ using namespace sf;
  * Mostrará al morir el Game Over
  */
 
-class Game
-{
+class Game {
 private:
 	// Dim level map:
 	int dimY = 15;
 	int dimX = 25;
 	// Initialize textures
 	TextureStorage textureStorage;
-	Level *level;
+	Level* level;
 	std::vector<Enemy_ptr> enemies;
 	//MainMenu mainMenu;
 	//std::vector<Enemy_ptr> enemies;
 public:
-	Game()
-	{
+	Game() {
 		PLayers::insertPlayers();
 		insertarEnemigos();
 		level = new Level(enemies, dimX, dimY);
 		//mainMenu(w);
-		
 	}
-	void start(sf::RenderWindow& w){
-	//	mainMenu.draw(w);
+	void start(sf::RenderWindow& w) {
+		//	mainMenu.draw(w);
 	}
 
-	void updatePlayers(){
-		for(Player_ptr &player : PLayers::getVectorPlayer()){
-			if (player->updatePlayer())
-			{
+	void updatePlayers() {
+		for (Player_ptr& player : PLayers::getVectorPlayer()) {
+			if (player->updatePlayer()) {
 				// If there is nothing in that cell:
 				Entity_ptr b = std::make_shared<Bomb>(Bomb(player));
 				b->setPosition(level->getMapCellCorner(player->getCenterPosition()));
 				level->addNewItem(b);
 			}
 			level->checkAndFixCollisions(player);
-			if(colissionWithEnemies(player)){
+			if (colissionWithEnemies(player)) {
 				player->setExpiredEntity();
 			}
 		}
 	}
 
-	void update()
-	{
+	void update() {
 		level->update();
 		updatePlayers();
 		updateEnemies();
 	}
 
-	void drawPlayers(sf::RenderWindow &w){
+	void drawPlayers(sf::RenderWindow& w) {
 
-		for (Player_ptr &player : PLayers::getVectorPlayer())
-		{
+		for (Player_ptr& player : PLayers::getVectorPlayer()) {
 			w.draw(*player);
+			w.draw(player->playerUpdateColor());
 #ifdef HITBOX_DEBUG_MODE
 			player->drawEntityHitbox(w);
 #endif
 		}
 	}
 
-	void drawEnemies(sf::RenderWindow &w)
-	{
-		for (Enemy_ptr &e : this->enemies)
-		{
+	void drawEnemies(sf::RenderWindow& w) {
+		for (Enemy_ptr& e : this->enemies) {
 			w.draw(*e);
 #ifdef HITBOX_DEBUG_MODE
 			e->drawEntityHitbox(w);
-	//		e->generateMovements();
+			//		e->generateMovements();
 			e->drawMovements(w);
 #endif
 		}
 	}
 
-	bool colissionWithEnemies(Entity_ptr eCol)
-	{
+	bool colissionWithEnemies(Entity_ptr eCol) {
 		bool intersec = false;
-		for (Enemy_ptr &e : this->enemies)
-		{
+		for (Enemy_ptr& e : this->enemies) {
 			intersec = intersec || (e->CanHurtPlayer() && e->collision(*eCol));
 		}
 		return intersec;
 	}
 
-	void insertarEnemigos()
-	{
+	void insertarEnemigos() {
 		Enemy_ptr e1 = std::make_shared<EnemyEntity>(Balloon());
 		Enemy_ptr e2 = std::make_shared<EnemyEntity>(Ice());
 		Enemy_ptr e3 = std::make_shared<EnemyEntity>(Barrel());
@@ -117,16 +107,13 @@ public:
 		enemies.push_back(e6);
 		enemies.push_back(e7);
 
-		for (Enemy_ptr e : enemies)
-		{
+		for (Enemy_ptr e : enemies) {
 			int x, y;
-			do
-			{
+			do {
 				x = Random::getIntNumberBetween(0, dimX / 2);
 
 			} while (x < 3);
-			do
-			{
+			do {
 				y = Random::getIntNumberBetween(0, dimY / 2);
 			} while (y < 3);
 			e->setPosition(sf::Vector2f((x * 2 + 1) * SIZE_PILLAR - 3, (y * 2 + 1) * SIZE_PILLAR - 3));
@@ -134,30 +121,25 @@ public:
 		}
 	}
 
-	void updateEnemies()
-	{
+	void updateEnemies() {
 		auto it = enemies.begin();
 		int counter = 0;
-		while (it != enemies.end())
-		{
+		while (it != enemies.end()) {
 			// Update the enemies.
 			(*it)->update();
 			level->checkAndFixCollisions((*it));
-			if ((*it)->getExpiredEntity())
-			{
+			if ((*it)->getExpiredEntity()) {
 				it->reset();
 				it = enemies.erase(it);
 			}
-			else
-			{
+			else {
 				++it;
 				counter++;
 			}
 		}
 	}
 
-	void draw(RenderWindow &w)
-	{
+	void draw(RenderWindow& w) {
 		level->draw(w);
 		drawEnemies(w);
 		drawPlayers(w);

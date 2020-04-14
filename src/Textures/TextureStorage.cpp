@@ -1,6 +1,7 @@
 #include "TextureStorage.h"
 
 PlayerTexture TextureStorage::playerTexture;
+PlayerColor TextureStorage::playerColor;
 WallTexture TextureStorage::level1WallTexture;
 BombTexture TextureStorage::bombTexture;
 FireTexture TextureStorage::fireTexture;
@@ -13,6 +14,10 @@ TextureStorage::TextureStorage() {}
 PlayerTexture &TextureStorage::getPlayerTexture()
 {
 	return playerTexture;
+}
+
+PlayerColor &TextureStorage::getPlayerColor() {
+	return playerColor;
 }
 
 WallTexture &TextureStorage::getlevel1WallTexture()
