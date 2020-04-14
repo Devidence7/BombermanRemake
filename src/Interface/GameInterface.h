@@ -4,30 +4,21 @@
 #include "../Include/global.hpp"
 #include <iostream>
 #define MAX_NUMBER_OF_ITEMS 4
+#define MAX_NUMBER_OF_PLAYERS 2
+#define MAX_NUMBER_OF_PU 4
 using namespace std;
 
 class GameInterface {
     sf::RectangleShape container;
     sf::Font font;
-    sf::Text lives[MAX_NUMBER_OF_ITEMS];
-   /* sf::Text lives1;
-    sf::Text lives2;*/
-    sf::Sprite powerUps[MAX_NUMBER_OF_ITEMS];
-    /*sf::Sprite powerUps;
-    sf::Sprite powerUps2;*/
-    sf::Texture powerUpTexture;
-    sf::Sprite lifeSprite[MAX_NUMBER_OF_ITEMS];
-   /* sf::Sprite lifeSprite;
-    sf::Sprite lifeSprite2;*/
+    sf::Text lives[ MAX_NUMBER_OF_PLAYERS ];
+    sf::Sprite powerUps[ MAX_NUMBER_OF_PLAYERS ][MAX_NUMBER_OF_PU];
+    sf::Sprite lifeSprite[ MAX_NUMBER_OF_PLAYERS ];
     sf::Texture lifeTexture; 
-    int numLives[MAX_NUMBER_OF_ITEMS];
-    /*int numLives=3;
-    int numLives2=3;*/
+    int numLives[ MAX_NUMBER_OF_PLAYERS ];
+    int numOfPowerUps [MAX_NUMBER_OF_PLAYERS];
     sf::Text time;
-    sf::Text player[MAX_NUMBER_OF_ITEMS];
-    /*sf::Text player1;
-    sf::Text player2;*/
-    //sf::Text powerUps;
+    sf::Text player[ MAX_NUMBER_OF_PLAYERS ];
     int timeLeft=299;
     int dimY = 15;
 	int dimX = 25;
@@ -105,8 +96,11 @@ public:
         lifeSprite[1].setScale(0.1,0.1);
         lifeSprite[1].setPosition(lives[1].getPosition().x-30,lives[1].getPosition().y-7.5);
     
-    /*    powerUps.setScale(0.1,0.1);
-        powerUps.setPosition(lives1.getPosition().x+30,lives1.getPosition().y-7.5);*/
+        for(int i=0;i<MAX_NUMBER_OF_PLAYERS;i++){
+            powerUps[i][0].setScale(0.1,0.1);
+            powerUps[i][0].setPosition(lives[i].getPosition().x+30,lives[i].getPosition().y-7.5);
+        }
+        
 
          
 
@@ -116,22 +110,25 @@ public:
         w.draw(lifeSprite[0]);
 		w.draw(container);
         w.draw(lives[0]);
-        w.draw(player[1]);
+        w.draw(player[0]);
+        if(numOfPowerUps[0]>0){
+            for(int i=0;i<=numOfPowerUps[0];i++){
+                w.draw(powerUps[0][i]);
+            }
+        }
         w.draw(time);
         
 	}
 
 
    void drawMulti(sf::RenderWindow& w) {
-        w.draw(lifeSprite[0]);
-		w.draw(container);
-        w.draw(lives[0]);
-        w.draw(player[0]);
-        w.draw(lifeSprite[1]);
-        w.draw(lives[1]);
-        w.draw(player[1]);
+        w.draw(container);
+        for (int i=0;i<MAX_NUMBER_OF_PLAYERS;i++){
+            w.draw(lifeSprite[i]);
+            w.draw(lives[i]);
+            w.draw(player[i]);
+        }
         w.draw(time);
-        
 	}
 
     void update(double timeNow) {
@@ -139,6 +136,16 @@ public:
         for(Player_ptr &player : PLayers::getVectorPlayer()){
             lives[i].setString("Lives: "+to_string(player->getLives()));
             i++;
+            int j=0;
+            //EL iterador se pone al inicio de una lista que no existe si no hay power ups. Asegurse de que activatedPU no esta vacio.Contar powerUps activos
+            for(list<sf::Texture>::iterator ci = player->activatedPowerUps.begin(); ci !=player->activatedPowerUps.end(); ++ci){
+                powerUps[i][j].setTexture(*ci);
+                if(j!=0){
+                    powerUps[i][j].setPosition(powerUps[i][j-1].getPosition().x+5,powerUps[i][j-1].getPosition().y);
+                }
+                j++;
+            }
+            numOfPowerUps[i]=j;
         }
      //   lives1.setString("Lives: "+to_string(pe.getLives()));   
        // lives2.setString("Lives: "+to_string(pe2.getLives()));

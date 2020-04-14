@@ -19,8 +19,8 @@ class MainMenu {
 	
 
 public:
-	//MainMenu(sf::RenderWindow &window){
-    MainMenu(){
+	MainMenu(sf::RenderWindow &window){
+    //MainMenu(){
         /*this->container.setSize(
             sf::Vector2f(
             static_cast<float>(window.getSize().x) /4.f,
@@ -32,7 +32,7 @@ public:
         this->container.setPosition(
              static_cast<float>(window.getSize().x) /2.f,
               static_cast<float>(window.getSize().y) /2.f
-        );*/
+        )*/
         if(!font.loadFromFile("../textures/mainMenu/OpenSans-Bold.ttf")){
             //cosas
         }

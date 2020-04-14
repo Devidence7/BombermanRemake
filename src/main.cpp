@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
 	Random::initilizeRandomGen();
 
 	Game game=Game();
-	MainMenu menu;
+	MainMenu menu(window);
 	GameInterface gameI=GameInterface();
 	GameMusic::playTitleMusic();
 	GameMusic::setVolume(10);

@@ -22,7 +22,7 @@ public:
 
 	virtual void setPlayerStatus(PlayerEntity &pe);
 
-	//void PowerUp::addPowerUp2Player(PlayerEntity &pe);
+	void addPowerUp2Player(PlayerEntity &pe);
 
 };
 

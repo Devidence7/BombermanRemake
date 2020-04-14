@@ -4,7 +4,10 @@
 #include "../Textures/PlayerTexture.hpp"
 #include "../Textures/TextureStorage.h"
 #include "../Logic/Time.h"
+#include <memory>
 #include "Entity.h"
+#include <list>
+using namespace std;
 
 class PlayerEntity : public Entity
 {
@@ -14,7 +17,7 @@ public:
 	double speedBoost = 1;
 	int numOfBombs = 1;
 	int powerOfBombs = 1;
-	//list<PowerUpTexture*>activatedPowerUps;
+	list <sf::Texture>activatedPowerUps;
 
 
 	unsigned int bombsTimeLimit = 30;
