@@ -2,8 +2,7 @@
 
 std::chrono::time_point<std::chrono::system_clock> GameTime::start;
 
-GameTime::GameTime()
-{
+void GameTime::startGameTime() {
 	GameTime::start = std::chrono::system_clock::now();
 }
 

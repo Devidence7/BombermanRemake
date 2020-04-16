@@ -1,112 +1,108 @@
 #pragma once
-#include <SFML/Graphics.hpp>
-#include "InterfacePaths.h"
 #include <iostream>
-#define MAX_NUMBER_OF_ITEMS 4
-using namespace std;
+
+#include <SFML/Graphics.hpp>
+#include "GUI/GameGUI.hpp"
+#include "GUI/Theme.hpp"
+#include "Music/GameMusic.h"
+
+#include "InterfacePaths.h"
+#include "GameInterface.h"
+#include "../GameEngine.hpp"
+#include "PauseMenu.h"
 
 class MainMenu {
-  //  RectangleShape container;
-    sf::Font font;
-    sf::Text menuOption[MAX_NUMBER_OF_ITEMS];
-    int selectedItem;
-    sf::Sprite background;
-    sf::Texture texture; 
-    int dimY = 15;
-	int dimX = 25;
+	sf::Sprite background;
+	sf::Texture texture;
 
+	GameGUI::Menu* menu;
 
-	
+	enum ButtonActions {
+		SINGLEPLAYER,
+		MULTIPLAYER,
+		OPCIONS,
+		QUIT
+	};
 
 public:
-	//MainMenu(sf::RenderWindow &window){
-    MainMenu(){
-        /*this->container.setSize(
-            sf::Vector2f(
-            static_cast<float>(window.getSize().x) /4.f,
-            static_cast<float>(window.getSize().y) /2.f
+	MainMenu(sf::RenderWindow& window) {
+		texture.loadFromFile(MAIN_MENU_BACKGROUND_PATH);
+		background.setTexture(texture);
 
-            )
-        );
-        this->container.setFillColor(sf::Color(20,20,20,200));
-        this->container.setPosition(
-             static_cast<float>(window.getSize().x) /2.f,
-              static_cast<float>(window.getSize().y) /2.f
-        );*/
-        if(!font.loadFromFile("../textures/mainMenu/BOMBERMAM.ttf")){
-            //cosas
-        }
-    
-        menuOption[0].setFont(font);
-        menuOption[0].setFillColor(sf::Color::Red);
-        menuOption[0].setString("Un jugador");
-        menuOption[0].setPosition(250,350);
-      //menuOption[0].setPosition((window.getSize().x) /2.5,(window.getSize().y/2.75));
+		background.setScale((float)window.getSize().x / texture.getSize().x, (float)window.getSize().x / texture.getSize().x);
 
+		menu = new GameGUI::Menu(window);
+		menu->setPosition(sf::Vector2f(100, 500));
 
-        menuOption[1].setFont(font);
-        menuOption[1].setFillColor(sf::Color::Black);
-        menuOption[1].setString("Multijugador");
-        menuOption[1].setPosition(250,450);
-        //menuOption[1].setPosition((window.getSize().x) /2.5,(window.getSize().y/2.35));
+		GameGUI::Theme::loadFont("../textures/mainMenu/BOMBERMAM.ttf");
+		GameGUI::Theme::loadTexture("../textures/interface/round.png");
+		GameGUI::Theme::textCharacterSize = 26;
+		GameGUI::Theme::click.textColor = sf::Color::Black;
+		GameGUI::Theme::click.textColorHover = sf::Color::Red;
+		GameGUI::Theme::click.textColorFocus = sf::Color::Red;
+		GameGUI::Theme::PADDING = 10.f;
 
-
-
-        menuOption[2].setFont(font);
-        menuOption[2].setFillColor(sf::Color::Black);
-        menuOption[2].setString("Opciones");
-       // menuOption[2].setPosition((window.getSize().x) /2.5,(window.getSize().y/2.0));
-       menuOption[2].setPosition(250,550);
-
-
-        menuOption[3].setFont(font);
-        menuOption[3].setFillColor(sf::Color::Black);
-        menuOption[3].setString("Salir");
-       // menuOption[3].setPosition((window.getSize().x) /2.5,(window.getSize().y/1.75));
-        menuOption[3].setPosition(250,650);
-
-       /* background.loadFromFile(MAIN_MENU_BACKGROUND_PATH);
-        background.setSize(sf::Vector2f((dimX + 2) * sizeTextureX, (dimY + 2) * sizeTextureY));*/
-       
-       texture.loadFromFile(MAIN_MENU_BACKGROUND_PATH);
-	    background.setTexture(texture);
-        background.setScale(0.75,0.75);
-        selectedItem=0;
-
-
-    }
-
-
-    void moveUp(){
-        int anteriorItem=selectedItem;
-        selectedItem--;
-        if(selectedItem<0){
-            selectedItem=MAX_NUMBER_OF_ITEMS-1;
-        }
-         menuOption[anteriorItem].setFillColor(sf::Color::Black);
-         menuOption[selectedItem].setFillColor(sf::Color::Red);
-
-    }
-
-    void moveDown(){
-        int anteriorItem=selectedItem;
-        selectedItem=(selectedItem+1)%MAX_NUMBER_OF_ITEMS;
-        menuOption[selectedItem].setFillColor(sf::Color::Red);
-        menuOption[anteriorItem].setFillColor(sf::Color::Black);
-    }
-    
-    void draw(sf::RenderWindow& w) {
-	//	w.draw(container);
-        w.draw(background);
-        for (int i=0;i<MAX_NUMBER_OF_ITEMS;i++){
-           
-            w.draw(menuOption[i]);
-        }
+		menu->addButton("Un Jugador", ButtonActions::SINGLEPLAYER);
+		menu->addButton("Multijugador", ButtonActions::MULTIPLAYER);
+		menu->addButton("Opciones", ButtonActions::OPCIONS);
+		menu->addButton("Salir", ButtonActions::QUIT);
 	}
 
-    int itemSelected(){
-        return selectedItem;
-    }
 
-    
+private:
+	void userActions(sf::RenderWindow& window, GameInterface::GameState& gameState, Game game) {
+		sf::Event event;
+		while (window.pollEvent(event)) {
+			// Process events
+			switch (event.type) {
+				// window closed
+			case sf::Event::Closed:
+				// Close window -> exit
+				window.close();
+				break;
+			case sf::Event::LostFocus:
+				// Pause
+				break;
+			case sf::Event::GainedFocus:
+				// Resume
+				break;
+				//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				//													BUTTON PRESSED
+				//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			default:
+				int id = menu->onEvent(event);
+				switch (id) {
+				case ButtonActions::SINGLEPLAYER:
+					gameState = GameInterface::GameState::PLAYING;
+					game.gameOptions.multiplayerGame = false;
+					game.startNewGame(window);
+					break;
+				case ButtonActions::MULTIPLAYER:
+					gameState = GameInterface::GameState::PLAYING;
+					game.gameOptions.multiplayerGame = true;
+					game.startNewGame(window);
+					break;
+				case ButtonActions::OPCIONS:
+					gameState = GameInterface::GameState::LITTLE_MENU;
+					
+					break;
+				case ButtonActions::QUIT:
+					window.close();
+					break;
+				}
+			}
+		}
+	}
+
+
+public:
+	void draw(sf::RenderWindow& window) {
+		window.draw(background);
+		window.draw(*menu);
+	}
+
+	void menuActions(sf::RenderWindow& window, GameInterface::GameState& gameState, Game game) {
+		userActions(window, gameState, game);
+		draw(window);
+	}
 };

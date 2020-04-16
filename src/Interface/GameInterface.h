@@ -4,7 +4,7 @@
 #include "../Include/global.hpp"
 #include <iostream>
 #define MAX_NUMBER_OF_ITEMS 4
-using namespace std;
+// using namespace std;
 
 class GameInterface {
     sf::RectangleShape container;
@@ -25,6 +25,7 @@ class GameInterface {
     int numLives2=3;*/
     sf::Text time;
     sf::Text player[MAX_NUMBER_OF_ITEMS];
+
     /*sf::Text player1;
     sf::Text player2;*/
     //sf::Text powerUps;
@@ -32,10 +33,13 @@ class GameInterface {
     int dimY = 15;
 	int dimX = 25;
 
-
-	
-
 public:
+    enum GameState {
+        MAIN_MENU,
+        PLAYING,
+        LITTLE_MENU
+    };
+
 	GameInterface(){
       /* this->container.setSize(
             sf::Vector2f(
@@ -51,9 +55,6 @@ public:
         if(!font.loadFromFile("../textures/mainMenu/OpenSans-Bold.ttf")){
             //cosas
         }
-    
-
-
 
         player[0].setFont(font);
         player[0].setFillColor(sf::Color::White);

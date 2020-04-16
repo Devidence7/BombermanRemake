@@ -7,7 +7,7 @@
 #include "Map/Level.hpp"
 #include "Textures/TextureStorage.h"
 #include "Interface/GameInterface.h"
-#include "Interface/MainMenu.h"
+#include "Music/GameMusic.h"
 
 using namespace sf;
 
@@ -30,6 +30,11 @@ private:
 	//MainMenu mainMenu;
 	//std::vector<Enemy_ptr> enemies;
 public:
+	struct GameOptions {
+		bool multiplayerGame = false;
+	};
+	GameOptions gameOptions;
+
 	Game() {
 		PLayers::insertPlayers();
 		insertarEnemigos();
@@ -38,6 +43,16 @@ public:
 	}
 	void start(sf::RenderWindow& w) {
 		//	mainMenu.draw(w);
+	}
+
+	void startNewGame(sf::RenderWindow& window){
+		unsigned int pixelsX = window.getSize().x;
+		unsigned int pixelsY = window.getSize().y;
+		sf::View view(sf::FloatRect(0.f, 0.f, pixelsX, pixelsY));
+		view.move(sf::Vector2f(0, -48));
+		window.setView(view);
+
+		GameMusic::playWorld1Music();
 	}
 
 	void updatePlayers() {

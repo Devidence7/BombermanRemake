@@ -9,139 +9,78 @@
 #include "Interface/MainMenu.h"
 #include "Music/GameMusic.h"
 
+#include "Interface/GUI/GameGUI.hpp"
+#include "Interface/GUI/Theme.hpp"
+
 //#include "Map/Map.hpp"
 
 int windowsHeight = 600;
 int windowsWidth = 800;
 bool primero = true;
-bool multi=false;
+bool multi = false;
 int numPlayers;
 list<int> playersLives;
 
+GameInterface::GameState gameState;
 
 int main(int argc, char* argv[]) {
-	//Inicializar Texturas
-
-	//Inicializar ventana
-
 	// Create the main window
 	//unsigned int desktopWidth = sf::VideoMode::getDesktopMode().width;
 	//unsigned int desktopHeight = sf::VideoMode::getDesktopMode().height;
-	sf::RenderWindow window(sf::VideoMode(27 * 48, 17 * 48), "Bombermenaman"); // sf::Style::Fullscreen
+	sf::RenderWindow window(sf::VideoMode(27 * 48, 17 * 48), "Bombermenaman"); // , sf::Style::Titlebar | sf::Style::Close | sf::Style::Fullscreen
 
 	// Make maximum FPSs to 60. Somewhat control the player speed.
 	window.setFramerateLimit(60);
 
 	// Start counting the time:
-	GameTime time=GameTime();
+	GameTime::startGameTime();
 
 	// Start Random Generator
 	Random::initilizeRandomGen();
 
-	Game game=Game();
-	MainMenu menu;
-	GameInterface gameI=GameInterface();
+	Game game = Game();
+	MainMenu gameMainMenu(window);
+	PauseMenu pauseMenu(window);
+	GameInterface gameI = GameInterface();
 	GameMusic::playTitleMusic();
 	GameMusic::setVolume(2);
-	
-	unsigned int pixelsX = window.getSize().x;
-	unsigned int pixelsY = window.getSize().y;
-	
-	sf::View view(sf::FloatRect(0.f, 0.f, pixelsX, pixelsY));
-	view.move(sf::Vector2f(0, -48));
-	
-	window.setView(view);
-	
+
 	// Start game loop
 	while (window.isOpen()) {
-		// Process events
-		sf::Event event;
-		while (window.pollEvent(event)) {
-			switch (event.type) {
-			case sf::Event::KeyReleased:
-				switch (event.key.code) {
-				case sf::Keyboard::Up:
-					menu.moveUp();
-					break;
+		switch (gameState) {
+		case GameInterface::GameState::MAIN_MENU:
+			gameMainMenu.menuActions(window, gameState, game);
+			break;
 
-				case sf::Keyboard::Down:
-					menu.moveDown();
-					break;
+		case GameInterface::GameState::LITTLE_MENU:
+			pauseMenu.menuActions(window, gameState, game);
+			break;
 
-				case sf::Keyboard::P:
-					if (menu.itemSelected() == 0) {
-						GameMusic::playWorld1Music();
-						primero = false;
-						
-					}
-
-					else if (menu.itemSelected() == 1) {
-						GameMusic::playWorld1Music();
-						primero = false;
-						multi=true;
-					
-					}
-					else if (menu.itemSelected() == 3) {
-						window.close();
-					}
-				}
-				break;
-
-				// window closed
-			case sf::Event::Closed:
-				// Close window -> exit
-				window.close();
-				break;
-			case sf::Event::LostFocus:
-				//Pause
-				break;
-			case sf::Event::GainedFocus:
-				//resume
-				break;
-
-				// we don't process other types of events
-			default:
-				break;
-			}
-		}
-
-		if (primero) {
-			//game.start(window);
-			menu.draw(window);
-		}
-		else {
+		case GameInterface::GameState::PLAYING:
 			// TODO PLAYER MOVEMENT MUST NOT DEPEND ON PROCESSOR SPEED THIS IS SHIIIIIIIIT
 			game.update();
 
 			// Clear screen from previous drawings
 			window.clear();
-		      
-	        
-			
 			// Draw the player and the scene
-		game.draw(window);
-		/*for(Player_ptr &player : PLayers::getVectorPlayer()){
-			playersLives.push_back(player->getLives());
-			cout<<playersLives.front();
-		}*/
-		gameI.update(time.getTimeNow());
-		if(multi){
-			//gameI.update(time.getTimeNow(),playersLives.front(),playersLives.back());
-		 	gameI.drawMulti(window);
-		}
-		else{
-			
-			gameI.draw(window);
-		}
-	
-		}
+			game.draw(window);
+			/*for(Player_ptr &player : PLayers::getVectorPlayer()){
+				playersLives.push_back(player->getLives());
+				cout<<playersLives.front();
+			}*/
+			gameI.update(GameTime::getTimeNow());
+			if (game.gameOptions.multiplayerGame) {
+				//gameI.update(time.getTimeNow(),playersLives.front(),playersLives.back());
+				gameI.drawMulti(window);
+			}
+			else {
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num9)) { GameMusic::volumeUp(); std::cout << GameMusic::getVolume() << std::endl; }
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num0)) { GameMusic::volumeDown(); std::cout << GameMusic::getVolume() << std::endl;}
+				gameI.draw(window);
+			}
+		
+		}
 
 		// Update window
 		window.display();
-
-
 	}
 }
