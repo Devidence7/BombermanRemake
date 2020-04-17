@@ -15,26 +15,55 @@ class PauseMenu {
 		AUDIO,
 		GRAPHICS,
 		CONTROLS,
+
+		MASTER_VOLUME_SLIDER,
+		MUSIC_SLIDER,
+		SOUND_SLIDER,
+
+		SAVE_AND_QUIT,
+		SAVE,
 		QUIT
 	};
 
+	sf::Texture texture;
+	sf::Sprite background;
+
+	GameGUI::Slider* masterVolumenSlider;
+		GameGUI::Slider* musicSlider;
+
 public:
 	PauseMenu(sf::RenderWindow& window){
+		texture.loadFromFile("../textures/interface/Background_orange_squares.png");
+		texture.setRepeated(true);
+
+		background.setTexture(texture);
+		background.setTextureRect({ 0, 0, (int)window.getSize().x, (int)window.getSize().y});
+
 		menu = new GameGUI::Menu(window);
-		menu->setPosition(sf::Vector2f(250, 250));
 
-		GameGUI::Theme::loadFont("../textures/mainMenu/BOMBERMAM.ttf");
-		GameGUI::Theme::loadTexture("../textures/interface/round.png");
-		GameGUI::Theme::textCharacterSize = 26;
-		GameGUI::Theme::click.textColor = sf::Color::Black;
-		GameGUI::Theme::click.textColorHover = sf::Color::Red;
-		GameGUI::Theme::click.textColorFocus = sf::Color::Red;
-		GameGUI::Theme::PADDING = 10.f;
+		GameGUI::HorizontalBoxLayout* hbox = menu->addHorizontalBoxLayout();
+		GameGUI::FormLayout* f = menu->addFormLayout();
+		GameGUI::HorizontalBoxLayout* hbox2 = menu->addHorizontalBoxLayout();
 
-		menu->addButton("Audio", ButtonActions::AUDIO);
-		menu->addButton("Graficos", ButtonActions::GRAPHICS);
-		menu->addButton("Controles", ButtonActions::CONTROLS);
-		menu->addButton("Atras", ButtonActions::QUIT);
+		hbox->addButton("Audio", ButtonActions::AUDIO);
+		hbox->addButton("Graficos", ButtonActions::GRAPHICS);
+		hbox->addButton("Controles", ButtonActions::CONTROLS);
+
+		masterVolumenSlider = new GameGUI::Slider();
+		masterVolumenSlider->setValue(GameMusic::masterVolume);
+		f->addRow("Master Volume", masterVolumenSlider, ButtonActions::MASTER_VOLUME_SLIDER);
+
+		musicSlider = new GameGUI::Slider();
+		musicSlider->setValue(GameMusic::getVolume());
+		f->addRow("Music", musicSlider, ButtonActions::MUSIC_SLIDER);
+		f->addRow("Sound", new GameGUI::Slider(), ButtonActions::SOUND_SLIDER);
+
+		//hbox2->addButton("Aplicar y salir", ButtonActions::SAVE_AND_QUIT);
+		//hbox2->addButton("Aplicar", ButtonActions::SAVE);
+		hbox2->addButton("Atras", ButtonActions::QUIT);
+
+
+		menu->setPosition(sf::Vector2f((int)window.getSize().x/2 - (int)menu->getSize().x/2, (int)window.getSize().y / 2 - (int)menu->getSize().y / 2));
     }
 
 private:
@@ -66,6 +95,15 @@ private:
 					break;
 				case ButtonActions::CONTROLS:
 					break;
+				case ButtonActions::MASTER_VOLUME_SLIDER:
+					GameMusic::masterVolume = masterVolumenSlider->getValue();
+					GameMusic::updateVolumen();
+					break;
+				case ButtonActions::MUSIC_SLIDER:
+					GameMusic::setVolume(musicSlider->getValue());
+					break;
+				case ButtonActions::SOUND_SLIDER:
+					break;
 				case ButtonActions::QUIT:
 					gameState = GameInterface::GameState::MAIN_MENU;
 					break;
@@ -74,8 +112,8 @@ private:
 		}
 	}
 
-	void draw(sf::RenderWindow& window) {
-		window.clear(GameGUI::Theme::windowBgColor);  //window.draw(background);
+	void draw(sf::RenderWindow& window) {	
+		window.draw(background);
 		window.draw(*menu);
 	}
 

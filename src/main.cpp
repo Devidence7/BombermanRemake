@@ -43,7 +43,6 @@ int main(int argc, char* argv[]) {
 	PauseMenu pauseMenu(window);
 	GameInterface gameI = GameInterface();
 	GameMusic::playTitleMusic();
-	GameMusic::setVolume(2);
 
 	// Start game loop
 	while (window.isOpen()) {

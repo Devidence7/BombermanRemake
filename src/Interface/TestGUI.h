@@ -41,7 +41,7 @@ void testGUI() {
 		GameGUI::Theme::windowBgColor = GameGUI::Theme::hexToRgb("#dddbde");
 		GameGUI::Theme::PADDING = 2.f;
 
-		/*
+		
 		GameGUI::HorizontalBoxLayout* hbox = menu.addHorizontalBoxLayout();
 		GameGUI::FormLayout* form = hbox->addFormLayout();
 		GameGUI::VerticalBoxLayout* vbox = hbox->addVerticalBoxLayout();
@@ -127,20 +127,20 @@ void testGUI() {
 		hbox->add(vslider, Callbacks::VSLIDER);
 
 		GameGUI::CheckBox* terminateProgram = new GameGUI::CheckBox();
-		form->addRow("Terminate Program?", terminateProgram, Callbacks::TERMINATE);*/
+		form->addRow("Terminate Program?", terminateProgram, Callbacks::TERMINATE);
 
 		menu.addButton("Quit", Callbacks::QUIT);
-		/*
+		
 		sf::Text text(textbox->getText(), GameGUI::Theme::getFont());
 		text.setOrigin(text.getLocalBounds().width / 2, text.getLocalBounds().height / 2);
-		text.setPosition(window.getSize().x / 2, 400);*/
+		text.setPosition(window.getSize().x / 2, 400);
 
 		while (window.isOpen()) {
 			sf::Event event;
 			while (window.pollEvent(event)) {
 				int id = menu.onEvent(event);
 				switch (id) {
-					/*case Callbacks::TEXT:
+					case Callbacks::TEXT:
 						text.setString(textbox->getText());
 						text.setOrigin(text.getLocalBounds().width / 2, text.getLocalBounds().height / 2);
 						break;
@@ -178,11 +178,11 @@ void testGUI() {
 						text.setScale(scale, scale);
 						pbar1->setValue(sliderScale->getValue());
 						break;
-					}*/
-				case Callbacks::QUIT:
-					window.close();
-					break;
-					/*case Callbacks::VSLIDER:
+					}
+					case Callbacks::QUIT:
+						window.close();
+						break;
+					case Callbacks::VSLIDER:
 						pbar->setValue(vslider->getValue());
 						break;
 					case Callbacks::NEW_BUTTON:
@@ -192,11 +192,9 @@ void testGUI() {
 						GameGUI::Theme::loadTexture(changeTextureBox->getText());
 					case Callbacks::TERMINATE:
 						doTerminateProgram = !doTerminateProgram;
-					}
-
-					if (event.type == sf::Event::Closed)
-						window.close();*/
 				}
+				if (event.type == sf::Event::Closed)
+					window.close();
 			}
 
 			window.clear(GameGUI::Theme::windowBgColor);
