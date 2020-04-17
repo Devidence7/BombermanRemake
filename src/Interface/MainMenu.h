@@ -35,7 +35,7 @@ public:
 		menu->setPosition(sf::Vector2f(100, 500));
 
 		GameGUI::Theme::loadFont("../textures/mainMenu/BOMBERMAN.ttf");
-		GameGUI::Theme::loadTexture("../textures/interface/round.png");
+		GameGUI::Theme::loadTexture("../textures/interface/bomberman.png");
 		GameGUI::Theme::textCharacterSize = 26;
 		GameGUI::Theme::click.textColor = sf::Color::Black;
 		GameGUI::Theme::click.textColorHover = sf::Color::Red;
