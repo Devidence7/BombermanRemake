@@ -50,10 +50,12 @@ public:
 		hbox->addButton("Controles", ButtonActions::CONTROLS);
 
 		masterVolumenSlider = new GameGUI::Slider();
+		masterVolumenSlider->setQuantum(1);
 		masterVolumenSlider->setValue(GameMusic::masterVolume);
 		f->addRow("Master Volume", masterVolumenSlider, ButtonActions::MASTER_VOLUME_SLIDER);
 
 		musicSlider = new GameGUI::Slider();
+		musicSlider->setQuantum(1);
 		musicSlider->setValue(GameMusic::getVolume());
 		f->addRow("Music", musicSlider, ButtonActions::MUSIC_SLIDER);
 		f->addRow("Sound", new GameGUI::Slider(), ButtonActions::SOUND_SLIDER);
