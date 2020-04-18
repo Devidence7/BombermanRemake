@@ -97,9 +97,15 @@ public:
         lifeSprite[1].setPosition(lives[1].getPosition().x-30,lives[1].getPosition().y-7.5);
     
         for(int i=0;i<MAX_NUMBER_OF_PLAYERS;i++){
-            powerUps[i][0].setScale(0.1,0.1);
-            powerUps[i][0].setPosition(lives[i].getPosition().x+30,lives[i].getPosition().y-7.5);
+            powerUps[i][0].setScale(0.5,0.5);
+            powerUps[i][0].setPosition(lives[i].getPosition().x+100,lives[i].getPosition().y);
+            numOfPowerUps[i]=0;
         }
+        int i=0;
+       /* for(Player_ptr &player : PLayers::getVectorPlayer()){
+           player->PowerUpsSprite.front().setScale(0.1,0.1);
+            player->PowerUpsSprite.front().setPosition(lives[i].getPosition().x+30,lives[i].getPosition().y-7.5);
+        }*/
         
 
          
@@ -111,11 +117,22 @@ public:
 		w.draw(container);
         w.draw(lives[0]);
         w.draw(player[0]);
-        if(numOfPowerUps[0]>0){
+       
+       /* if(numOfPowerUps[0]>0){
             for(int i=0;i<=numOfPowerUps[0];i++){
                 w.draw(powerUps[0][i]);
             }
-        }
+        }*/
+        int i=0;
+         for(Player_ptr &player : PLayers::getVectorPlayer()){
+             if(player->activatedPowerUps.size()>0){
+                 for(int j=0;j<player->activatedPowerUps.size();j++){
+                      cout<<player->activatedPowerUps.size()<<endl;
+                       w.draw(powerUps[i][j]);
+                 }
+             }
+             i++;
+         }
         w.draw(time);
         
 	}
@@ -135,17 +152,20 @@ public:
         int i=0;
         for(Player_ptr &player : PLayers::getVectorPlayer()){
             lives[i].setString("Lives: "+to_string(player->getLives()));
-            i++;
+           
             int j=0;
             //EL iterador se pone al inicio de una lista que no existe si no hay power ups. Asegurse de que activatedPU no esta vacio.Contar powerUps activos
-            for(list<sf::Texture>::iterator ci = player->activatedPowerUps.begin(); ci !=player->activatedPowerUps.end(); ++ci){
-                powerUps[i][j].setTexture(*ci);
+            for(list<sf::IntRect>::iterator ci = player->activatedPowerUps.begin(); ci !=player->activatedPowerUps.end(); ++ci){
+              //  cout<<"I:"<<i<<" J:"<<j<<endl;
+                powerUps[i][j].setTextureRect(*ci);
                 if(j!=0){
-                    powerUps[i][j].setPosition(powerUps[i][j-1].getPosition().x+5,powerUps[i][j-1].getPosition().y);
+                    powerUps[i][j].setPosition(powerUps[i][j-1].getPosition().x+25,powerUps[i][j-1].getPosition().y);
                 }
                 j++;
             }
+            
             numOfPowerUps[i]=j;
+             i++;
         }
      //   lives1.setString("Lives: "+to_string(pe.getLives()));   
        // lives2.setString("Lives: "+to_string(pe2.getLives()));

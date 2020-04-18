@@ -41,6 +41,7 @@ public:
     
         menuOption[0].setFont(font);
         menuOption[0].setColor(sf::Color::Red);
+        // menuOption[3].setColor(sf::Color::Red);
         menuOption[0].setString("Un jugador");
         menuOption[0].setPosition(250,350);
       //menuOption[0].setPosition((window.getSize().x) /2.5,(window.getSize().y/2.75));
@@ -48,6 +49,7 @@ public:
 
         menuOption[1].setFont(font);
         menuOption[1].setColor(sf::Color::Black);
+        // menuOption[1].setColor(sf::Color::Black);
         menuOption[1].setString("Multijugador");
         menuOption[1].setPosition(250,450);
         //menuOption[1].setPosition((window.getSize().x) /2.5,(window.getSize().y/2.35));
@@ -56,6 +58,7 @@ public:
 
         menuOption[2].setFont(font);
         menuOption[2].setColor(sf::Color::Black);
+        // menuOption[2].setColor(sf::Color::Black);
         menuOption[2].setString("Opciones");
        // menuOption[2].setPosition((window.getSize().x) /2.5,(window.getSize().y/2.0));
        menuOption[2].setPosition(250,550);
@@ -63,6 +66,7 @@ public:
 
         menuOption[3].setFont(font);
         menuOption[3].setColor(sf::Color::Black);
+       // menuOption[3].setColor(sf::Color::Black);
         menuOption[3].setString("Salir");
        // menuOption[3].setPosition((window.getSize().x) /2.5,(window.getSize().y/1.75));
         menuOption[3].setPosition(250,650);
@@ -85,16 +89,16 @@ public:
         if(selectedItem<0){
             selectedItem=MAX_NUMBER_OF_ITEMS-1;
         }
-         menuOption[anteriorItem].setFillColor(sf::Color::Black);
-         menuOption[selectedItem].setFillColor(sf::Color::Red);
+         menuOption[anteriorItem].setColor(sf::Color::Black);
+         menuOption[selectedItem].setColor(sf::Color::Red);
 
     }
 
     void moveDown(){
         int anteriorItem=selectedItem;
         selectedItem=(selectedItem+1)%MAX_NUMBER_OF_ITEMS;
-        menuOption[selectedItem].setFillColor(sf::Color::Red);
-        menuOption[anteriorItem].setFillColor(sf::Color::Black);
+        menuOption[selectedItem].setColor(sf::Color::Red);
+        menuOption[anteriorItem].setColor(sf::Color::Black);
     }
     
     void draw(sf::RenderWindow& w) {
