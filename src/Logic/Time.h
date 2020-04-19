@@ -9,7 +9,7 @@ private:
 
 public:
 	// Set starting time and global GTime variable:
-	GameTime();
+	static void startGameTime();
 	
 	// Get current time in seconds:
 	static double getTimeNow();
