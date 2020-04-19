@@ -6,7 +6,7 @@ PATH := $(PATH):../bin/
 
 src=../src
 bin=../bin
-libsSFML=-lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
+libsSFML=-lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio 
 entityPath=../src/Entities
 logicPath=../src/Logic
 texturesPath=../src/Textures
