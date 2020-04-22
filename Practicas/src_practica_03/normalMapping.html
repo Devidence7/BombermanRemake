@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Normal mapping</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <style>
+            body {
+                font-family: Monospace;
+                background-color: #707080;
+                margin: 0px;
+                overflow: hidden;
+            }
+        </style>
+    </head>
+    <body>
+    <div id="container">
+        <div id="controlBar" style="text-align: center;">
+            <input type="file" id="meshInputFile" style="display: none;" onchange="loadFile(this.files[0])">
+            <input type="button" id="meshInputButton" value="Select OBJ File" onclick="document.getElementById('meshInputFile').click()">
+            <input type="file" id="texInputFile" style="display: none;" onchange="loadTexture(this.files[0], 'diffuseTexture')">
+            <input type="button" id="texInputButton" value="Select Texture File" onclick="document.getElementById('texInputFile').click()">
+            <input type="file" id="normalInputFile" style="display: none;" onchange="loadTexture(this.files[0], 'normalMap')">
+            <input type="button" id="normalInputButton" value="Select Normal Map File" onclick="document.getElementById('normalInputFile').click()">
+            <label><input type="checkbox" id="showAxesCheckbox" onchange="toggleAxes(this.checked)" checked="true">Show Axes</label>
+            <label><input type="checkbox" id="showWireframeCheckbox" onchange="toggleWireframe(this.checked)">Show Wireframe</label>
+            <label><input type="checkbox" id="showNormalsCheckbox" onchange="toggleNormals(this.checked)">Show Normals</label>
+            <label><input type="checkbox" id="fixLightsToCameraCheckbox" onchange="toggleFixLightsToCamera(this.checked)">Fix lights to camera</label>
+            <br>
+            Normal length:
+            <input type="range" id="normalLengthRange" min="0.02" max="0.5" step="0.02" value="0.3" oninput="setNormalLength(this.value)">
+            Exposure:
+            <input type="range" id="exposureRange" min="10.0" max="18.0" step="0.5" value="14.0" oninput="setUniformLog('exposure', this.value)">
+            Roughness:
+            <input type="range" id="roughnessRange" min="-16.0" max="0.0" step="0.5" value="-8.0" oninput="setUniformLog('roughness', this.value)">
+            Bumpiness:
+            <input type="range" id="bumpinessRange" min="-4.0" max="4.0" step="0.25" value="0.0" oninput="setUniformLog('bumpiness', this.value)">
+            <br>
+            Left click + drag to orbit. Right click + drag to pan. Scroll to zoom.
+        </div>
+    </div>
+
+        <script src="js/three.min.js"></script>
+        <script src="js/BufferGeometryUtils.js"></script>
+        <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/three.js/r84/three.min.js"></script> -->
+        <script src="js/Detector.js"></script>
+        <script src="js/OrbitControls.js"></script>
+        <script src="js/OBJLoader.js"></script>
+<!-----------------------------------------------------------------------------
+        VERTEX SHADER
+------------------------------------------------------------------------------>
+        <script id="vertexShader" type="x-shader/x-vertex">
+// = object.matrixWorld
+// uniform mat4 modelMatrix;
+
+// = camera.matrixWorldInverse * object.matrixWorld
+// uniform mat4 modelViewMatrix;
+
+// = camera.projectionMatrix
+// uniform mat4 projectionMatrix;
+
+// = camera.matrixWorldInverse
+// uniform mat4 viewMatrix;
+
+// = inverse transpose of modelViewMatrix
+// uniform mat3 normalMatrix;
+
+// = camera position in world space
+// uniform vec3 cameraPosition;
+
+// RenderMesh Input
+// attribute vec3 position;
+// attribute vec3 normal;
+// attribute vec2 uv;
+
+attribute vec3 tangent;
+attribute vec3 tangent2;
+
+// Declarar aqui varying necesarias para la resolucion
+
+
+void main() {
+	
+	// Calculos para dar valor a las varying aqui
+
+    // El vertex shader debe proporcionar gl_Position (en espacio homogeneo o de pantalla)
+    // Transformar posiciones a espacio homogeneo
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+     
+}
+        </script>
+<!-----------------------------------------------------------------------------
+        FRAGMENT SHADER
+------------------------------------------------------------------------------>
+        <script id="fragmentShader" type="x-shader/x-fragment">
+			
+// Intensidad (color) y posicion de las luces. 
+// NUM_LIGHTS es una constante que contiene el numero de luces.				
+uniform vec3 lightColors[ NUM_LIGHTS ];
+uniform vec3 lightPositions[ NUM_LIGHTS ]; // in view coordinates
+
+// Exposicion; no tendreis que hacer nada con ella
+// Su valor es controlado por un slider
+uniform float exposure;
+
+// Roughness o rugosidad: tal y como se define aqui, roughness = 1.0 / m
+// Su valor es controlado por un slider
+uniform float roughness;
+
+// Bumpiness (mas informacion sobre ella en el guion)
+// Su valor es controlado por un slider
+uniform float bumpiness;
+
+// Samplers utilizados para acceder a las texturas (difusa y normal map)
+// (ambas se cargan con el boton correspondiente del interfaz)
+uniform sampler2D diffuseTexture;
+uniform sampler2D normalMap;
+
+// Declarar aqui varying necesarias para la resolucion
+
+
+vec3 to_sRGB(vec3 c) { return pow(c, vec3(1.0/2.2)); }
+vec3 from_sRGB(vec3 c) { return pow(c, vec3(2.2)); }
+
+void main() {
+	
+	vec3 finalColor = vec3(0.0, 0.0, 0.0);
+	
+	// Calculos necesarios para obtener la normal de la textura en espacio de la camara aqui
+	
+	// Calculos necesarios para la iluminacion aqui
+    
+    // finalColor debe acabar conteniendo la intensidad/color resultante en el fragment
+    
+    // Solo se sombrea si esta "de cara", si no se le da un color fijo
+    if (gl_FrontFacing) {
+        gl_FragColor = vec4(to_sRGB(finalColor * exposure), 1.0); 
+    } else {
+        gl_FragColor = vec4(170.0/255.0, 160.0/255.0, 0.0, 1.0); 
+    }
+	    
+}
+        </script>
+<!-----------------------------------------------------------------------------
+        END SHADERS
+------------------------------------------------------------------------------>
+        <script src="js/A4Common.js"></script>
+        <script>
+            commonInit();
+            init();
+            animate();
+            
+            function init() {
+                defaultTextureTarget = 'diffuseTexture';
+                meshMaterial.uniforms.diffuseTexture = { type: 't', value: null };
+                meshMaterial.uniforms.normalMap = { type: 't', value: null };
+            
+                addLight(new THREE.Vector3(50, 50, 100), new THREE.Vector3(0.8, 0.8, 0.8));
+                addLight(new THREE.Vector3(-50, -50, -50), new THREE.Vector3(0.5, 0.5, 0.6));
+                
+                document.getElementById('roughnessRange').oninput();
+                document.getElementById('bumpinessRange').oninput();
+            }
+        </script>
+    </body>
+</html>
