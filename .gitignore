@@ -432,3 +432,5 @@ MigrationBackup/
 openal32.dll
 Practicas/VID_practica02_Grupo03/.idea/*
 Practicas/VID_practica02_Grupo03/VID_practica02_Grupo03.zip
+*.xml
+*.iml

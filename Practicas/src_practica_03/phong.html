@@ -46,6 +46,7 @@
 <!-----------------------------------------------------------------------------
         VERTEX SHADER
 ------------------------------------------------------------------------------>
+
         <script id="vertexShader" type="x-shader/x-vertex">
 // = object.matrixWorld
 // uniform mat4 modelMatrix;
@@ -78,6 +79,11 @@ varying vec4 vPosition; // posicion del vertice en espacio de la camara
 void main() {
 
 	// Calculos para dar valor a las varying aqui
+    vUv = uv;
+    vec3 temp = position - cameraPosition;
+    vPosition = vec4(temp[0],temp[1],temp[2], 1.0);
+    vec4 temp2 = projectionMatrix * vec4(normal[0], normal[1], normal[2], 0);
+    vNormal = vec3(temp2[0],temp2[1],temp2[2]);
 
     // El vertex shader debe proporcionar gl_Position (en espacio homogeneo o de pantalla)
     // Transformar posiciones a espacio homogeneo
@@ -116,11 +122,16 @@ vec3 from_sRGB(vec3 c) { return pow(c, vec3(2.2)); }
 
 void main() {
 
-    vec3 finalColor = vec3(0.0, 0.0, 0.0);
+    vec3 finalColor = vec3(0.000001, 0.000001, 0.000001);
     
     // Calculos necesarios para la iluminacion aqui
+    vec3 distance = vec3(vPosition) - lightPositions[0];
+
+    vec3 I = finalColor * (1. / dot(distance, distance));
+
     
     // finalColor debe acabar conteniendo la intensidad/color resultante en el fragment
+
     
     // Solo se sombrea si esta "de cara", si no se le da un color fijo
     if (gl_FrontFacing) {
