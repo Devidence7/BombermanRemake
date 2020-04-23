@@ -80,14 +80,11 @@ void main() {
 
 	// Calculos para dar valor a las varying aqui
     vUv = uv;
-    // vPosition = vec4(position, 1.);
-    vNormal = normalize(normal);
 
+    // Convert from world coordinates to camera coordinates
     vPosition = modelViewMatrix * vec4(position, 1.0);
-
+    // Convert and normalize because normals are unitarian vectors.
     vNormal = normalize(vec3(modelViewMatrix * vec4(normal, 0)));
-    //vNormal = normal;
-    //vNormal = vec3(modelViewMatrix * vec4(normal, 0.0));
 
     // El vertex shader debe proporcionar gl_Position (en espacio homogeneo o de pantalla)
     // Transformar posiciones a espacio homogeneo
@@ -125,29 +122,40 @@ vec3 to_sRGB(vec3 c) { return pow(c, vec3(1.0/2.2)); }
 vec3 from_sRGB(vec3 c) { return pow(c, vec3(2.2)); }
 
 void main() {
-
     // Calculos necesarios para la iluminacion aqui
     vec3 finalColor = vec3(0, 0, 0);
 
+    // Get texture color
     vec3 cdiff = texture2D(diffuseTexture, vUv).rgb;
+    // Set specular to 1 (max color)
     vec3 cspec = vec3(1, 1, 1);
 
-    vec3 pos = vec3(vPosition[0], vPosition[1], vPosition[2]);
-    vec3 v = normalize(-pos);
-    float m = (1.0/roughness);
+    // Get vertex position
+    vec3 pos = vec3(vPosition);
 
+    // From point to camera we do the inverse:
+    vec3 v = normalize(-pos);
+
+    // roughness = 1/m
+    float m = (1.0 / roughness);
+
+    // Have a min light value (for areas where there is not direct illumination).
     float ambientLightFactor = 0.1;
 
+    // For each light
     for(int i = 0; i < NUM_LIGHTS; i++){
-        vec3 temp = (lightPositions[i] - pos);
-        float r = dot(temp, temp);
-        vec3 l = normalize(temp);
+        // Vector from point to light
+        vec3 pos2Light = (lightPositions[i] - pos);
+        // Distance squared:
+        float r = dot(pos2Light, pos2Light);
+        // Vector normalized
+        vec3 l = normalize(pos2Light);
+        // Bisector of v and l
         vec3 h = normalize(v + l);
 
-        float cofRouht = pow(max(0.0, dot(vNormal, h)), m);
-        vec3 cofLight = lightColors[0] * max(ambientLightFactor, dot(vNormal, l));
-
-        finalColor += (1. / r) * (cdiff + (cspec * cofRouht)) * cofLight;
+        // Phong. Light can be added:
+        finalColor += (1. / r) * (cdiff + (cspec * pow(max(0.0, dot(vNormal, h)), m))) *
+                lightColors[0] * max(ambientLightFactor, dot(vNormal, l));
     }
 
     // finalColor debe acabar conteniendo la intensidad/color resultante en el fragment

@@ -66,11 +66,17 @@
 // attribute vec2 uv;
 
 // Declarar aqui varying necesarias para la resolucion
+varying vec3 vNormal;
+varying vec4 vPosition;
 
 
 void main() {
     
 	// Calculos para dar valor a las varying aqui
+    // Convert from world coordinates to camera coordinates
+    vPosition = modelViewMatrix * vec4(position, 1.0);
+    // Convert and normalize because normals are unitarian vectors.
+    vNormal = normalize(vec3(modelViewMatrix * vec4(normal, 0)));
 
     // El vertex shader debe proporcionar gl_Position (en espacio homogeneo o de pantalla)
     // Transformar posiciones a espacio homogeneo
@@ -91,17 +97,18 @@ uniform float exposure;
 uniform samplerCube environmentMap; 
 
 // Declarar aqui varying necesarias para la resolucion
-
+varying vec3 vNormal;
+varying vec4 vPosition;
 
 void main() {
-    
     // Calculos necesarios para la reflexion y el acceso al mapa de entorno aqui
-    
     // colorRef debe acabar conteniendo la intensidad/color resultante en el fragment (el valor obtenido del mapa de entorno)
-    
+
+    vec3 pos = vec3(vPosition);
+    vec4 colorRef = textureCube(environmentMap, reflect(pos, vNormal));
+
     // gl_FragColor
-    gl_FragColor = vec4(1.0); // placeholder - luego sera: gl_FragColor = colorRef; 
-    
+    gl_FragColor = colorRef;
 }
         </script>
 <!-----------------------------------------------------------------------------
