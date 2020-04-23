@@ -83,11 +83,10 @@ void main() {
     // vPosition = vec4(position, 1.);
     vNormal = normalize(normal);
 
+    // Convert from world coordinates to camera coordinates
     vPosition = modelViewMatrix * vec4(position, 1.0);
-
+    // Convert and normalize because normals are unitarian vectors.
     vNormal = normalize(vec3(modelViewMatrix * vec4(normal, 0)));
-    //vNormal = normal;
-    //vNormal = vec3(modelViewMatrix * vec4(normal, 0.0));
 
     // El vertex shader debe proporcionar gl_Position (en espacio homogeneo o de pantalla)
     // Transformar posiciones a espacio homogeneo
@@ -129,11 +128,16 @@ void main() {
     // Calculos necesarios para la iluminacion aqui
     vec3 finalColor = vec3(0, 0, 0);
 
+    // Get texture color
     vec3 cdiff = texture2D(diffuseTexture, vUv).rgb;
+    // Set specular to 1 (max color)
     vec3 cspec = vec3(1, 1, 1);
 
-    vec3 pos = vec3(vPosition[0], vPosition[1], vPosition[2]);
+    // Get vertex position
+    vec3 pos = vec3(vPosition);
+
     vec3 v = normalize(-pos);
+    // roughness = 1/m
     float m = (1.0/roughness);
 
     float ambientLightFactor = 0.1;
