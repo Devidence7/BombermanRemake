@@ -77,11 +77,23 @@ attribute vec3 tangent;
 attribute vec3 tangent2;
 
 // Declarar aqui varying necesarias para la resolucion
-
+varying vec2 vUv;
+varying vec4 vNormal;
+varying vec4 vPosition; // posicion del vertice en espacio de la camara
+varying vec4 vTangent; // tangente
+varying vec4 vTangent2; // bitangente
 
 void main() {
 	
 	// Calculos para dar valor a las varying aqui
+	vUv = uv;
+    // Convert from world coordinates to camera coordinates
+    vPosition = modelViewMatrix * vec4(position, 1.0);
+    // Convert and normalize because normals are unitarian vectors.
+    vNormal = vec4(normalize(vec3(modelViewMatrix * vec4(normal, 0.0))), 0.0);
+
+    vTangent = modelViewMatrix * vec4(tangent, 1.0);
+    vTangent2 = modelViewMatrix * vec4(tangent2, 1.0);
 
     // El vertex shader debe proporcionar gl_Position (en espacio homogeneo o de pantalla)
     // Transformar posiciones a espacio homogeneo
@@ -117,19 +129,64 @@ uniform sampler2D diffuseTexture;
 uniform sampler2D normalMap;
 
 // Declarar aqui varying necesarias para la resolucion
-
+varying vec2 vUv;
+varying vec4 vNormal;
+varying vec4 vPosition; // posicion del vertice en espacio de la camara
+varying vec4 vTangent; // tangente
+varying vec4 vTangent2; // bitangente
 
 vec3 to_sRGB(vec3 c) { return pow(c, vec3(1.0/2.2)); }
 vec3 from_sRGB(vec3 c) { return pow(c, vec3(2.2)); }
 
 void main() {
-	
 	vec3 finalColor = vec3(0.0, 0.0, 0.0);
 	
 	// Calculos necesarios para obtener la normal de la textura en espacio de la camara aqui
-	
+	// Get normal values from the texture:
+    vec3 normal = texture2D(normalMap, vUv).rgb;
+    // Change from DirectX format:
+    normal = vec3((normal[0] - 0.5), -(normal[1] - 0.5), normal[2] - 0.5);
+    // Multiply by bumpiness
+    normal = normalize(vec3(normal[0] * bumpiness, normal[1] * bumpiness, normal[2]));
+
+    //Create a change of basis matrix with points information
+    mat4 changeOfBasis = mat4(vTangent, vTangent2, vNormal, vPosition);
+    normal = vec3(changeOfBasis * vec4(normal, 0));
+
 	// Calculos necesarios para la iluminacion aqui
-    
+    // Get texture color
+    vec3 cdiff = texture2D(diffuseTexture, vUv).rgb;
+    // Set specular to 1 (max color)
+    vec3 cspec = vec3(1, 1, 1);
+
+    // Get vertex position
+    vec3 pos = vec3(vPosition);
+
+    // From point to camera we do the inverse:
+    vec3 v = normalize(-pos);
+
+    // roughness = 1/m
+    float m = (1.0 / roughness);
+
+    // Have a min light value (for areas where there is not direct illumination).
+    float ambientLightFactor = 0.1;
+
+    // For each light
+    for(int i = 0; i < NUM_LIGHTS; i++){
+        // Vector from point to light
+        vec3 pos2Light = (lightPositions[i] - pos);
+        // Distance squared:
+        float r = dot(pos2Light, pos2Light);
+        // Vector normalized
+        vec3 l = normalize(pos2Light);
+        // Bisector of v and l
+        vec3 h = normalize(v + l);
+
+        // Phong. Light can be added:
+        finalColor += (1. / r) * (cdiff + (cspec * pow(max(0.0, dot(normal, h)), m))) *
+                lightColors[0] * max(ambientLightFactor, dot(normal, l));
+    }
+
     // finalColor debe acabar conteniendo la intensidad/color resultante en el fragment
     
     // Solo se sombrea si esta "de cara", si no se le da un color fijo

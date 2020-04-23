@@ -80,8 +80,6 @@ void main() {
 
 	// Calculos para dar valor a las varying aqui
     vUv = uv;
-    // vPosition = vec4(position, 1.);
-    vNormal = normalize(normal);
 
     // Convert from world coordinates to camera coordinates
     vPosition = modelViewMatrix * vec4(position, 1.0);
