@@ -27,23 +27,47 @@ class PauseMenu {
 
 	sf::Texture texture;
 	sf::Sprite background;
+	sf::RectangleShape menuBackground;
+	sf::RectangleShape menuBackgroundShadow;
+	sf::RectangleShape menuBackgroundShadow1;
+	sf::RectangleShape menuBackgroundShadow2;
 
 	GameGUI::Slider* masterVolumenSlider;
-		GameGUI::Slider* musicSlider;
+	GameGUI::Slider* musicSlider;
 
-public:
-	PauseMenu(sf::RenderWindow& window){
-		texture.loadFromFile("../textures/interface/Background_orange_squares.png");
-		texture.setRepeated(true);
+private:
+	void createBackgroundMenu(sf::RenderWindow& window){
+		GameGUI::HorizontalBoxLayout* hbox2 = menu->addHorizontalBoxLayout();
 
-		background.setTexture(texture);
-		background.setTextureRect({ 0, 0, (int)window.getSize().x, (int)window.getSize().y});
+		//hbox2->addButton("Aplicar y salir", ButtonActions::SAVE_AND_QUIT);
+		//hbox2->addButton("Aplicar", ButtonActions::SAVE);
+		hbox2->addButton("Atras", ButtonActions::QUIT);
 
+		menu->setPosition(sf::Vector2f((int)window.getSize().x / 2 - (int)menu->getSize().x / 2, (int)window.getSize().y / 2 - (int)menu->getSize().y / 2));
+
+		float menuBackgroundPadding = 50;
+		menuBackground.setSize(sf::Vector2f(menu->getSize().x + 2 * menuBackgroundPadding, menu->getSize().y + 2 * menuBackgroundPadding));
+		menuBackground.setPosition(menu->getPosition().x - menuBackgroundPadding, menu->getPosition().y - menuBackgroundPadding);
+		menuBackground.setFillColor(sf::Color(255, 255, 153, 200));
+
+		menuBackgroundShadow.setSize(sf::Vector2f(menu->getSize().x + 2 * menuBackgroundPadding - 4, menu->getSize().y + 2 * menuBackgroundPadding - 4));
+		menuBackgroundShadow.setPosition(menu->getPosition().x - menuBackgroundPadding + 12, menu->getPosition().y - menuBackgroundPadding + 12);
+		menuBackgroundShadow.setFillColor(sf::Color(15, 35, 35, 60));
+
+		menuBackgroundShadow1.setSize(sf::Vector2f(menu->getSize().x + 2 * menuBackgroundPadding - 2, menu->getSize().y + 2 * menuBackgroundPadding - 2));
+		menuBackgroundShadow1.setPosition(menu->getPosition().x - menuBackgroundPadding + 11, menu->getPosition().y - menuBackgroundPadding + 11);
+		menuBackgroundShadow1.setFillColor(sf::Color(15, 35, 35, 20));
+
+		menuBackgroundShadow2.setSize(sf::Vector2f(menu->getSize().x + 2 * menuBackgroundPadding, menu->getSize().y + 2 * menuBackgroundPadding));
+		menuBackgroundShadow2.setPosition(menu->getPosition().x - menuBackgroundPadding + 10, menu->getPosition().y - menuBackgroundPadding + 10);
+		menuBackgroundShadow2.setFillColor(sf::Color(15, 35, 35, 20));
+	}
+
+	void createAudioMenu(sf::RenderWindow& window) {
 		menu = new GameGUI::Menu(window);
 
 		GameGUI::HorizontalBoxLayout* hbox = menu->addHorizontalBoxLayout();
 		GameGUI::FormLayout* f = menu->addFormLayout();
-		GameGUI::HorizontalBoxLayout* hbox2 = menu->addHorizontalBoxLayout();
 
 		hbox->addButton("Audio", ButtonActions::AUDIO);
 		hbox->addButton("Graficos", ButtonActions::GRAPHICS);
@@ -52,23 +76,54 @@ public:
 		masterVolumenSlider = new GameGUI::Slider();
 		masterVolumenSlider->setQuantum(1);
 		masterVolumenSlider->setValue(GameMusic::masterVolume);
-		f->addRow("Master Volume", masterVolumenSlider, ButtonActions::MASTER_VOLUME_SLIDER);
+		f->addRow("Master Volume " + to_string((int)GameMusic::masterVolume) + " % ", masterVolumenSlider, ButtonActions::MASTER_VOLUME_SLIDER);
 
 		musicSlider = new GameGUI::Slider();
 		musicSlider->setQuantum(1);
 		musicSlider->setValue(GameMusic::getVolume());
-		f->addRow("Music", musicSlider, ButtonActions::MUSIC_SLIDER);
+		f->addRow("Music " + to_string(GameMusic::getVolume()) + " % ", musicSlider, ButtonActions::MUSIC_SLIDER);
 		f->addRow("Sound", new GameGUI::Slider(), ButtonActions::SOUND_SLIDER);
 
-		//hbox2->addButton("Aplicar y salir", ButtonActions::SAVE_AND_QUIT);
-		//hbox2->addButton("Aplicar", ButtonActions::SAVE);
-		hbox2->addButton("Atras", ButtonActions::QUIT);
+		createBackgroundMenu(window);
+	}
 
+	void createGraphicsMenu(sf::RenderWindow& window) {
+		menu = new GameGUI::Menu(window);
 
-		menu->setPosition(sf::Vector2f((int)window.getSize().x/2 - (int)menu->getSize().x/2, (int)window.getSize().y / 2 - (int)menu->getSize().y / 2));
-    }
+		GameGUI::HorizontalBoxLayout* hbox = menu->addHorizontalBoxLayout();
+		GameGUI::FormLayout* f = menu->addFormLayout();
+
+		hbox->addButton("Audio", ButtonActions::AUDIO);
+		hbox->addButton("Graficos", ButtonActions::GRAPHICS);
+		hbox->addButton("Controles", ButtonActions::CONTROLS);
+
+		masterVolumenSlider = new GameGUI::Slider();
+		masterVolumenSlider->setQuantum(1);
+		masterVolumenSlider->setValue(GameMusic::masterVolume);
+		f->addRow("Resolution", masterVolumenSlider, ButtonActions::MASTER_VOLUME_SLIDER);
+
+		musicSlider = new GameGUI::Slider();
+		musicSlider->setQuantum(1);
+		musicSlider->setValue(GameMusic::getVolume());
+		f->addRow("Max FPS", musicSlider, ButtonActions::MUSIC_SLIDER);
+
+		createBackgroundMenu(window);
+	}
+
+public:
+	PauseMenu(sf::RenderWindow& window) {
+		texture.loadFromFile("../textures/interface/Background_orange_squares.png");
+		texture.setRepeated(true);
+
+		background.setTexture(texture);
+		background.setTextureRect({ 0, 0, (int)window.getSize().x, (int)window.getSize().y });
+
+		createAudioMenu(window);
+	}
 
 private:
+
+
 	void userActions(sf::RenderWindow& window, GameInterface::GameState& gameState, Game game) {
 		sf::Event event;
 		while (window.pollEvent(event)) {
@@ -92,8 +147,12 @@ private:
 				int id = menu->onEvent(event);
 				switch (id) {
 				case ButtonActions::AUDIO:
+					delete(menu);
+					createAudioMenu(window);
 					break;
 				case ButtonActions::GRAPHICS:
+					delete(menu);
+					createGraphicsMenu(window);
 					break;
 				case ButtonActions::CONTROLS:
 					break;
@@ -116,6 +175,12 @@ private:
 
 	void draw(sf::RenderWindow& window) {	
 		window.draw(background);
+		
+		window.draw(menuBackgroundShadow2);
+		window.draw(menuBackgroundShadow1);
+		window.draw(menuBackgroundShadow);
+		window.draw(menuBackground);
+
 		window.draw(*menu);
 	}
 
