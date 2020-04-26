@@ -35,6 +35,8 @@ public:
 	};
 	GameOptions gameOptions;
 
+	int FPS = 60;
+
 	Game() {
 		PLayers::insertPlayers();
 		insertarEnemigos();

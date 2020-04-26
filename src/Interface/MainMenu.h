@@ -9,7 +9,7 @@
 #include "InterfacePaths.h"
 #include "GameInterface.h"
 #include "../GameEngine.hpp"
-#include "PauseMenu.h"
+#include "OptionsMenu.h"
 
 class MainMenu {
 	sf::Sprite background;
@@ -101,8 +101,8 @@ private:
 					game.startNewGame(window);
 					break;
 				case ButtonActions::OPCIONS:
-					gameState = GameInterface::GameState::LITTLE_MENU;
-					
+					OptionsMenu::lastGameStateOptionsMenu = GameInterface::GameState::MAIN_MENU;
+					gameState = GameInterface::GameState::OPTIONS_MENU;
 					break;
 				case ButtonActions::QUIT:
 					window.close();

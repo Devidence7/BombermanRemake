@@ -4,19 +4,24 @@
 #include "GUI/GameGUI.hpp"
 #include "../Music/GameMusic.h"
 #include "../GameEngine.hpp"
-#include "OptionsMenu.h"
 
-
-class PauseMenu {
+class OptionsMenu {
 	GameGUI::Menu* menu;
-	GameInterface::GameState lastGameState;
-	bool EsqPressed = false;
 
+public:
+	static GameInterface::GameState lastGameStateOptionsMenu;
+private:
 	enum ButtonActions {
-		RESUME,
+		AUDIO,
+		GRAPHICS,
+		CONTROLS,
+
+		MASTER_VOLUME_SLIDER,
+		MUSIC_SLIDER,
+		SOUND_SLIDER,
+
+		SAVE_AND_QUIT,
 		SAVE,
-		OPTIONS,
-		GO_MAIN_MENU,
 		QUIT
 	};
 
@@ -30,7 +35,14 @@ class PauseMenu {
 	GameGUI::Slider* masterVolumenSlider;
 	GameGUI::Slider* musicSlider;
 
+private:
 	void createBackgroundMenu(sf::RenderWindow& window) {
+		GameGUI::HorizontalBoxLayout* hbox2 = menu->addHorizontalBoxLayout();
+
+		//hbox2->addButton("Aplicar y salir", ButtonActions::SAVE_AND_QUIT);
+		//hbox2->addButton("Aplicar", ButtonActions::SAVE);
+		hbox2->addButton("Atras", ButtonActions::QUIT);
+
 		menu->setPosition(sf::Vector2f((int)window.getSize().x / 2 - (int)menu->getSize().x / 2, (int)window.getSize().y / 2 - (int)menu->getSize().y / 2));
 
 		float menuBackgroundPadding = 50;
@@ -51,24 +63,64 @@ class PauseMenu {
 		menuBackgroundShadow2.setFillColor(sf::Color(15, 35, 35, 20));
 	}
 
-public:
-	PauseMenu(sf::RenderWindow& window) {
+	void createAudioMenu(sf::RenderWindow& window) {
 		menu = new GameGUI::Menu(window);
 
+		GameGUI::HorizontalBoxLayout* hbox = menu->addHorizontalBoxLayout();
+		GameGUI::FormLayout* f = menu->addFormLayout();
+
+		hbox->addButton("Audio", ButtonActions::AUDIO);
+		hbox->addButton("Graficos", ButtonActions::GRAPHICS);
+		hbox->addButton("Controles", ButtonActions::CONTROLS);
+
+		masterVolumenSlider = new GameGUI::Slider();
+		masterVolumenSlider->setQuantum(1);
+		masterVolumenSlider->setValue(GameMusic::masterVolume);
+		f->addRow("Master Volume " + std::to_string((int)GameMusic::masterVolume) + " % ", masterVolumenSlider, ButtonActions::MASTER_VOLUME_SLIDER);
+
+		musicSlider = new GameGUI::Slider();
+		musicSlider->setQuantum(1);
+		musicSlider->setValue(GameMusic::getVolume());
+		f->addRow("Music " + std::to_string(GameMusic::getVolume()) + " % ", musicSlider, ButtonActions::MUSIC_SLIDER);
+		f->addRow("Sound", new GameGUI::Slider(), ButtonActions::SOUND_SLIDER);
+
+		createBackgroundMenu(window);
+	}
+
+	void createGraphicsMenu(sf::RenderWindow& window) {
+		menu = new GameGUI::Menu(window);
+
+		GameGUI::HorizontalBoxLayout* hbox = menu->addHorizontalBoxLayout();
+		GameGUI::FormLayout* f = menu->addFormLayout();
+
+		hbox->addButton("Audio", ButtonActions::AUDIO);
+		hbox->addButton("Graficos", ButtonActions::GRAPHICS);
+		hbox->addButton("Controles", ButtonActions::CONTROLS);
+
+		masterVolumenSlider = new GameGUI::Slider();
+		masterVolumenSlider->setQuantum(1);
+		masterVolumenSlider->setValue(GameMusic::masterVolume);
+		f->addRow("Resolution", masterVolumenSlider, ButtonActions::MASTER_VOLUME_SLIDER);
+
+		musicSlider = new GameGUI::Slider();
+		musicSlider->setQuantum(1);
+		musicSlider->setValue(GameMusic::getVolume());
+		f->addRow("Max FPS", musicSlider, ButtonActions::MUSIC_SLIDER);
+
+		createBackgroundMenu(window);
+	}
+
+public:
+	OptionsMenu(sf::RenderWindow& window) {
 		texture.loadFromFile("../textures/interface/Background_orange_squares.png");
 		texture.setRepeated(true);
-		background.setColor(sf::Color(255, 255, 0, 5));
+
 		background.setTexture(texture);
+		background.setColor(sf::Color(255, 255, 0, 5));
 		background.setScale(sf::Vector2f(2, 2));
 		background.setTextureRect({ 0, 0, (int)window.getSize().x, (int)window.getSize().y });
 
-		menu->addButton("                Reanudar                ", ButtonActions::RESUME);
-		menu->addButton("                 Guardar                 ", ButtonActions::SAVE);
-		menu->addButton("                 Opciones                 ", ButtonActions::OPTIONS);
-		menu->addButton("        Ir al menu principal       ", ButtonActions::GO_MAIN_MENU);
-		menu->addButton("                    Salir                    ", ButtonActions::QUIT);
-
-		createBackgroundMenu(window);
+		createAudioMenu(window);
 	}
 
 private:
@@ -96,25 +148,27 @@ private:
 			default:
 				int id = menu->onEvent(event);
 				switch (id) {
-				case ButtonActions::RESUME:
-					gameState = lastGameState;
+				case ButtonActions::AUDIO:
+					delete(menu);
+					createAudioMenu(window);
 					break;
-
-				case ButtonActions::SAVE:
-					
+				case ButtonActions::GRAPHICS:
+					delete(menu);
+					createGraphicsMenu(window);
 					break;
-				
-				case ButtonActions::OPTIONS:
-					OptionsMenu::lastGameStateOptionsMenu = GameInterface::GameState::PAUSE_MENU;
-					gameState = GameInterface::GameState::OPTIONS_MENU;
+				case ButtonActions::CONTROLS:
 					break;
-				
-				case ButtonActions::GO_MAIN_MENU:
-					gameState = GameInterface::GameState::MAIN_MENU;
+				case ButtonActions::MASTER_VOLUME_SLIDER:
+					GameMusic::masterVolume = masterVolumenSlider->getValue();
+					GameMusic::updateVolumen();
 					break;
-				
+				case ButtonActions::MUSIC_SLIDER:
+					GameMusic::setVolume(musicSlider->getValue());
+					break;
+				case ButtonActions::SOUND_SLIDER:
+					break;
 				case ButtonActions::QUIT:
-					window.close();
+					gameState = lastGameStateOptionsMenu;
 					break;
 				}
 			}
@@ -137,24 +191,6 @@ public:
 		userActions(window, gameState, game);
 		draw(window);
 	}
-
-	void checkUserPauseActions(GameInterface::GameState &gameState) {
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-			if (!EsqPressed) {
-				EsqPressed = true;
-				if (gameState == GameInterface::GameState::PAUSE_MENU) {
-					gameState = lastGameState;
-				}
-				else {
-					lastGameState = gameState;
-					gameState = GameInterface::GameState::PAUSE_MENU;
-				}
-			}
-		}
-		else {
-			EsqPressed = false;
-		}
-	}
-
 };
 
+GameInterface::GameState OptionsMenu::lastGameStateOptionsMenu;
