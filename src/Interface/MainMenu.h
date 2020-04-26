@@ -28,22 +28,13 @@ class MainMenu {
 		QUIT
 	};
 
-public:
-	MainMenu(sf::RenderWindow& window) {
+	void createMainMenu(sf::RenderWindow& window) {
 		texture.loadFromFile(MAIN_MENU_BACKGROUND_PATH);
 		background.setTexture(texture);
 
 		background.setScale((float)window.getSize().x / texture.getSize().x, (float)window.getSize().x / texture.getSize().x);
 
 		menu = new GameGUI::Menu(window);
-
-		GameGUI::Theme::loadFont("../textures/mainMenu/BOMBERMAN.ttf");
-		GameGUI::Theme::loadTexture("../textures/interface/bomberman.png");
-		GameGUI::Theme::textCharacterSize = 26;
-		GameGUI::Theme::click.textColor = sf::Color::Black;
-		GameGUI::Theme::click.textColorHover = sf::Color::Red;
-		GameGUI::Theme::click.textColorFocus = sf::Color::Red;
-		GameGUI::Theme::PADDING = 10.f;
 
 		menu->addButton("           Modo historia            ", ButtonActions::SINGLEPLAYER);
 		menu->addButton("           Modo batalla            ", ButtonActions::MULTIPLAYER);
@@ -66,6 +57,19 @@ public:
 		menuBackgroundShadow2.setFillColor(sf::Color(255, 255, 255, 20));
 	}
 
+public:
+	MainMenu(sf::RenderWindow& window) {
+		GameGUI::Theme::loadFont("../textures/mainMenu/BOMBERMAN.ttf");
+		GameGUI::Theme::loadTexture("../textures/interface/bomberman.png");
+		GameGUI::Theme::textCharacterSize = 26;
+		GameGUI::Theme::click.textColor = sf::Color::Black;
+		GameGUI::Theme::click.textColorHover = sf::Color::Red;
+		GameGUI::Theme::click.textColorFocus = sf::Color::Red;
+		GameGUI::Theme::PADDING = 10.f;
+
+		createMainMenu(window);
+	}
+
 
 private:
 	void userActions(sf::RenderWindow& window, GameInterface::GameState& gameState, Game game) {
@@ -84,6 +88,14 @@ private:
 			case sf::Event::GainedFocus:
 				// Resume
 				break;
+				// catch the resize events
+			case sf::Event::Resized: {
+					// update the view to the new size of the window
+					sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+					window.setView(sf::View(visibleArea));
+					createMainMenu(window);
+					break;
+				}
 				//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				//													BUTTON PRESSED
 				//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
