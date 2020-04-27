@@ -11,6 +11,9 @@
 #include "../GameEngine.hpp"
 #include "PauseMenu.h"
 
+
+using namespace GameGUI;
+
 class MainMenu {
 	sf::Sprite background;
 	sf::Texture texture;

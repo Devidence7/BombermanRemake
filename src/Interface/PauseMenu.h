@@ -7,6 +7,7 @@
 #include "GUI/GameGUI.hpp"
 #define MAX_NUMBER_OF_ITEMS 3
 using namespace std;
+using namespace GameGUI;
 
 class PauseMenu {	
 	GameGUI::Menu* menu;

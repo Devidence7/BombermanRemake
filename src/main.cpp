@@ -11,6 +11,8 @@
 
 #include "Interface/GUI/GameGUI.hpp"
 #include "Interface/GUI/Theme.hpp"
+using namespace GameGUI;
+
 
 //#include "Map/Map.hpp"
 
@@ -40,7 +42,7 @@ int main(int argc, char* argv[]) {
 
 	Game game = Game();
 	MainMenu gameMainMenu(window);
-	PauseMenu pauseMenu(window);
+	//PauseMenu pauseMenu(window);
 	GameInterface gameI = GameInterface();
 	GameMusic::playTitleMusic();
 
@@ -52,7 +54,7 @@ int main(int argc, char* argv[]) {
 			break;
 
 		case GameInterface::GameState::LITTLE_MENU:
-			pauseMenu.menuActions(window, gameState, game);
+			//pauseMenu.menuActions(window, gameState, game);
 			break;
 
 		case GameInterface::GameState::PLAYING:
