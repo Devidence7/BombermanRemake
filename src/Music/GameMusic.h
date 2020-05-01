@@ -31,14 +31,14 @@ public:
 	}
 
 	static void playTitleMusic() {
-		if (!currentTrack.openFromFile("../music/Title.flac"))
+		if (!currentTrack.openFromFile("../music/Music/Title.flac"))
 			throw ExceptionLoadImage("No se ha podido cargar el track: ../music/Title.flac");
 		currentTrack.play();
 		updateVolumen();
 	}
 	
 	static void playWorld1Music() {
-		if (!currentTrack.openFromFile("../music/World 1.flac"))
+		if (!currentTrack.openFromFile("../music/Music/World 1.flac"))
 			throw ExceptionLoadImage("No se ha podido cargar el track: ../music/World 1.flac");
 		currentTrack.play();
 		updateVolumen();
