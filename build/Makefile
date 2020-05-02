@@ -122,7 +122,7 @@ $(bin)/WallTexture.o: $(texturesPath)/WallTexture.cpp $(texturesPath)/WallTextur
 
 
 ## Lib GUI
-$(bin)/libGui.a: $(bin)/Button.o $(bin)/CheckBox.o $(GUIPath)/ComboBox.inl $(GUIPath)/ComboBox.hpp $(bin)/GameGUI.o $(bin)/Image.o $(bin)/InputBox.o $(bin)/Label.o $(bin)/MultilineInputBox.o $(GUIPath)/OptionsBox.inl $(GUIPath)/OptionsBox.hpp $(bin)/ProgressBar.o $(bin)/ProgressBar.o $(bin)/Slider.o $(bin)/SpriteButton.o $(bin)/Theme.o $(bin)/Widget.o
+$(bin)/libGui.a: $(bin)/libLayout.a $(bin)/libUtilsInterfaze.a $(bin)/Button.o $(bin)/CheckBox.o $(GUIPath)/ComboBox.inl $(GUIPath)/ComboBox.hpp $(bin)/GameGUI.o $(bin)/Image.o $(bin)/InputBox.o $(bin)/Label.o $(bin)/MultilineInputBox.o $(GUIPath)/OptionsBox.inl $(GUIPath)/OptionsBox.hpp $(bin)/ProgressBar.o $(bin)/ProgressBar.o $(bin)/Slider.o $(bin)/SpriteButton.o $(bin)/Theme.o $(bin)/Widget.o
 	ar rc $(bin)/libGui.a  $(bin)/libLayout.a $(bin)/libUtilsInterfaze.a $(bin)/Button.o $(bin)/CheckBox.o $(GUIPath)/ComboBox.inl $(bin)/GameGUI.o $(bin)/Image.o $(bin)/InputBox.o $(bin)/Label.o $(bin)/MultilineInputBox.o $(GUIPath)/OptionsBox.inl  $(bin)/ProgressBar.o $(bin)/ProgressBar.o $(bin)/Slider.o $(bin)/SpriteButton.o $(bin)/Theme.o $(bin)/Widget.o
 	ranlib $(bin)/libGui.a
 
