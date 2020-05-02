@@ -9,7 +9,7 @@
 #include "InterfacePaths.h"
 #include "GameInterface.h"
 #include "../GameEngine.hpp"
-#include "PauseMenu.h"
+#include "OptionsMenu.h"
 
 
 using namespace GameGUI;
@@ -17,6 +17,10 @@ using namespace GameGUI;
 class MainMenu {
 	sf::Sprite background;
 	sf::Texture texture;
+
+	sf::RectangleShape menuBackground;
+	sf::RectangleShape menuBackgroundShadow;
+	sf::RectangleShape menuBackgroundShadow2;
 
 	GameGUI::Menu* menu;
 
@@ -27,16 +31,37 @@ class MainMenu {
 		QUIT
 	};
 
-public:
-	MainMenu(sf::RenderWindow& window) {
+	void createMainMenu(sf::RenderWindow& window) {
 		texture.loadFromFile(MAIN_MENU_BACKGROUND_PATH);
 		background.setTexture(texture);
 
 		background.setScale((float)window.getSize().x / texture.getSize().x, (float)window.getSize().x / texture.getSize().x);
 
 		menu = new GameGUI::Menu(window);
-		menu->setPosition(sf::Vector2f(100, 500));
 
+		menu->addButton("           Modo historia            ", ButtonActions::SINGLEPLAYER);
+		menu->addButton("           Modo batalla            ", ButtonActions::MULTIPLAYER);
+		menu->addButton("               Opciones                 ", ButtonActions::OPCIONS);
+		menu->addButton("                  Salir                    ", ButtonActions::QUIT);
+
+		menu->setPosition(sf::Vector2f(window.getSize().x / 8 * 1.2, window.getSize().y - menu->getSize().y - window.getSize().x / 8));
+
+		float menuBackgroundPadding = window.getSize().x / 32;
+		menuBackground.setSize(sf::Vector2f(menu->getSize().x + 2 * menuBackgroundPadding, menu->getSize().y + 2 * menuBackgroundPadding));
+		menuBackground.setPosition(menu->getPosition().x - menuBackgroundPadding, menu->getPosition().y - menuBackgroundPadding);
+		menuBackground.setFillColor(sf::Color(255, 255, 255, 40));
+
+		menuBackgroundShadow.setSize(sf::Vector2f(menu->getSize().x + 2 * menuBackgroundPadding + 8, menu->getSize().y + 2 * menuBackgroundPadding + 8));
+		menuBackgroundShadow.setPosition(menu->getPosition().x - menuBackgroundPadding - 4, menu->getPosition().y - menuBackgroundPadding - 4);
+		menuBackgroundShadow.setFillColor(sf::Color(255, 255, 255, 20));
+
+		menuBackgroundShadow2.setSize(sf::Vector2f(menu->getSize().x + 2 * menuBackgroundPadding + 16, menu->getSize().y + 2 * menuBackgroundPadding + 16));
+		menuBackgroundShadow2.setPosition(menu->getPosition().x - menuBackgroundPadding - 8, menu->getPosition().y - menuBackgroundPadding - 8);
+		menuBackgroundShadow2.setFillColor(sf::Color(255, 255, 255, 20));
+	}
+
+public:
+	MainMenu(sf::RenderWindow& window) {
 		GameGUI::Theme::loadFont("../textures/mainMenu/BOMBERMAN.ttf");
 		GameGUI::Theme::loadTexture("../textures/interface/bomberman.png");
 		GameGUI::Theme::textCharacterSize = 26;
@@ -45,10 +70,7 @@ public:
 		GameGUI::Theme::click.textColorFocus = sf::Color::Red;
 		GameGUI::Theme::PADDING = 10.f;
 
-		menu->addButton("Un Jugador", ButtonActions::SINGLEPLAYER);
-		menu->addButton("Multijugador", ButtonActions::MULTIPLAYER);
-		menu->addButton("Opciones", ButtonActions::OPCIONS);
-		menu->addButton("Salir", ButtonActions::QUIT);
+		createMainMenu(window);
 	}
 
 
@@ -69,6 +91,14 @@ private:
 			case sf::Event::GainedFocus:
 				// Resume
 				break;
+				// catch the resize events
+			case sf::Event::Resized: {
+					// update the view to the new size of the window
+					sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+					window.setView(sf::View(visibleArea));
+					createMainMenu(window);
+					break;
+				}
 				//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				//													BUTTON PRESSED
 				//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -86,8 +116,8 @@ private:
 					game.startNewGame(window);
 					break;
 				case ButtonActions::OPCIONS:
-					gameState = GameInterface::GameState::LITTLE_MENU;
-					
+					OptionsMenu::lastGameStateOptionsMenu = GameInterface::GameState::MAIN_MENU;
+					gameState = GameInterface::GameState::OPTIONS_MENU;
 					break;
 				case ButtonActions::QUIT:
 					window.close();
@@ -101,6 +131,9 @@ private:
 public:
 	void draw(sf::RenderWindow& window) {
 		window.draw(background);
+		window.draw(menuBackgroundShadow2);
+		window.draw(menuBackgroundShadow);
+		window.draw(menuBackground);
 		window.draw(*menu);
 	}
 

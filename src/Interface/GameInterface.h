@@ -31,7 +31,8 @@ public:
     enum GameState {
         MAIN_MENU,
         PLAYING,
-        LITTLE_MENU
+        OPTIONS_MENU,
+        PAUSE_MENU
     };
 
 	GameInterface(){
