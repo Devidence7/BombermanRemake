@@ -7,7 +7,6 @@
 #include "Logic/Time.h"
 #include "Logic/Random.h"
 #include "Interface/MainMenu.h"
-#include "Music/GameMusic.h"
 
 #include "Interface/GUI/GameGUI.hpp"
 #include "Interface/GUI/Theme.hpp"
