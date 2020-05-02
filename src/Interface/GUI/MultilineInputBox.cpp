@@ -228,11 +228,11 @@ void MultilineInputBox::onKeyPressed(sf::Keyboard::Key key)
 	/*case sf::Keyboard::Key::V:
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl))
 		{
-		/*	std::string clipboard = sf::Clipboard::getString();
+			std::string clipboard = sf::Clipboard::getString();
 			std::string string = m_text.getString();
 			string.insert(m_cursor_pos, clipboard);
 			m_text.setString(string);
-			setCursorPosition(m_cursor_pos + clipboard.length());*/
+			setCursorPosition(m_cursor_pos + clipboard.length());
 		}
 		break;*/
 

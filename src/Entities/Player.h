@@ -7,6 +7,7 @@
 #include "../Logic/Time.h"
 #include <memory>
 #include "Entity.h"
+#include <list>
 #include "Bomb.h"
 
 class PlayerEntity : public Entity
@@ -18,8 +19,7 @@ public:
 	int numOfBombs = 1;
 	int powerOfBombs = 1;
 	//list <sf::Texture>activatedPowerUps;
-	//list <sf::IntRect>activatedPowerUps;
-	list <sf::IntRect>activatedPowerUps;
+	//list<sf::IntRect> activatedPowerUps;
 	//list <sf::Sprite>PowerUpsSprite;
 
 	unsigned int bombsTimeLimit = 30;

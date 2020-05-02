@@ -25,7 +25,7 @@ bomberman: $(src)/main.cpp $(bin)/libEntities.a $(bin)/libGui.a $(bin)/libTextur
 	$(CC) -o bomberman  $(src)/main.cpp $(src)/Include/EntitiesInclude.cpp $(src)/Utils/A_Star.cpp  $(MusicPath)/GameMusic.cpp $(MusicPath)/GameSounds.cpp  \
 		$(bin)/Random.o $(bin)/Time.o  \
 		$(bin)/Arrow.o $(bin)/Box.o $(bin)/Cross.o $(UtilsInzPath)/ItemBox.hpp \
-		$(bin)/FormLayout.o $(bin)/HorizontalBoxLayout.o  $(bin)/Layout.o $(bin)/Menu.o $(bin)/VerticalBoxLayout.o \
+		$(bin)/FormLayout.o $(bin)/HorizontalBoxLayout.o $(bin)/Layout.o $(bin)/Menu.o $(bin)/VerticalBoxLayout.o \
 		$(libs) \
 		$(std) $(libsSFML) $(O) 
 
@@ -122,12 +122,7 @@ $(bin)/WallTexture.o: $(texturesPath)/WallTexture.cpp $(texturesPath)/WallTextur
 
 
 ## Lib GUI
-#$(bin)/libGui.a: $(bin)/Button.o $(bin)/CheckBox.o $(GUIPath)/ComboBox.inl $(GUIPath)/ComboBox.hpp $(bin)/GameGUI.o $(bin)/Image.o $(bin)/InputBox.o $(bin)/Label.o $(bin)/MultilineInputBox.o $(GUIPath)/OptionsBox.inl $(GUIPath)/OptionsBox.hpp $(bin)/ProgressBar.o $(bin)/ProgressBar.o $(bin)/Slider.o $(bin)/SpriteButton.o $(bin)/Theme.o $(bin)/Widget.o
-#	ar rc $(bin)/libGui.a  $(bin)/libLayout.a $(bin)/libUtilsInterfaze.a $(bin)/Button.o $(bin)/CheckBox.o $(GUIPath)/ComboBox.inl $(bin)/GameGUI.o $(bin)/Image.o $(bin)/InputBox.o $(bin)/Label.o $(bin)/MultilineInputBox.o $(GUIPath)/OptionsBox.inl  $(bin)/ProgressBar.o $(bin)/ProgressBar.o $(bin)/Slider.o $(bin)/SpriteButton.o $(bin)/Theme.o $(bin)/Widget.o
-#	ranlib $(bin)/libGui.a
-
-
-	$(bin)/libGui.a: $(bin)/Button.o $(bin)/CheckBox.o $(GUIPath)/ComboBox.inl $(GUIPath)/ComboBox.hpp $(bin)/GameGUI.o $(bin)/Image.o $(bin)/InputBox.o $(bin)/Label.o $(bin)/MultilineInputBox.o $(GUIPath)/OptionsBox.inl $(GUIPath)/OptionsBox.hpp $(bin)/ProgressBar.o $(bin)/ProgressBar.o $(bin)/Slider.o $(bin)/SpriteButton.o $(bin)/Theme.o $(bin)/Widget.o
+../bin/libGui.a: $(bin)/Button.o $(bin)/CheckBox.o $(GUIPath)/ComboBox.inl $(GUIPath)/ComboBox.hpp $(bin)/GameGUI.o $(bin)/Image.o $(bin)/InputBox.o $(bin)/Label.o $(bin)/MultilineInputBox.o $(GUIPath)/OptionsBox.inl $(GUIPath)/OptionsBox.hpp $(bin)/ProgressBar.o $(bin)/ProgressBar.o $(bin)/Slider.o $(bin)/SpriteButton.o $(bin)/Theme.o $(bin)/Widget.o
 	ar rc $(bin)/libGui.a  $(bin)/libLayout.a $(bin)/libUtilsInterfaze.a $(bin)/Button.o $(bin)/CheckBox.o $(GUIPath)/ComboBox.inl $(bin)/GameGUI.o $(bin)/Image.o $(bin)/InputBox.o $(bin)/Label.o $(bin)/MultilineInputBox.o $(GUIPath)/OptionsBox.inl  $(bin)/ProgressBar.o $(bin)/ProgressBar.o $(bin)/Slider.o $(bin)/SpriteButton.o $(bin)/Theme.o $(bin)/Widget.o
 	ranlib $(bin)/libGui.a
 
@@ -138,8 +133,8 @@ $(bin)/Button.o: $(GUIPath)/Button.cpp $(GUIPath)/Button.hpp
 $(bin)/CheckBox.o: $(GUIPath)/CheckBox.cpp $(GUIPath)/CheckBox.hpp
 	$(CC) -o $(bin)/CheckBox.o -c $(GUIPath)/CheckBox.cpp  $(std) $(O)
 
-$(bin)/ComboBox.o: $(GUIPath)/ComboBox.inl $(GUIPath)/ComboBox.hpp
-	$(CC) -o $(bin)/ComboBox.o -c $(GUIPath)/ComboBox.inl  $(std) $(O)
+#$(bin)/ComboBox.o: $(GUIPath)/ComboBox.inl $(GUIPath)/ComboBox.hpp
+#	$(CC) -o $(bin)/ComboBox.o -c $(GUIPath)/ComboBox.inl  $(std) $(O)
 
 $(bin)/GameGUI.o: $(GUIPath)/GameGUI.cpp $(GUIPath)/GameGUI.hpp
 	$(CC) -o $(bin)/GameGUI.o -c $(GUIPath)/GameGUI.cpp  $(std) $(O)
@@ -156,8 +151,8 @@ $(bin)/Label.o: $(GUIPath)/Label.cpp $(GUIPath)/Label.hpp
 $(bin)/MultilineInputBox.o: $(GUIPath)/MultilineInputBox.cpp $(GUIPath)/MultilineInputBox.hpp
 	$(CC) -o $(bin)/MultilineInputBox.o -c $(GUIPath)/MultilineInputBox.cpp  $(std) $(O)  $(libsSFML)
 
-$(bin)/OptionsBox.o: $(GUIPath)/OptionsBox.cpp $(GUIPath)/OptionsBox.hpp
-	$(CC) -o $(bin)/OptionsBox.o -c $(GUIPath)/OptionsBox.cpp  $(std) $(O)
+#$(bin)/OptionsBox.o: $(GUIPath)/OptionsBox.cpp $(GUIPath)/OptionsBox.hpp
+#	$(CC) -o $(bin)/OptionsBox.o -c $(GUIPath)/OptionsBox.cpp  $(std) $(O)
 	
 $(bin)/ProgressBar.o: $(GUIPath)/ProgressBar.cpp $(GUIPath)/ProgressBar.hpp
 	$(CC) -o $(bin)/ProgressBar.o -c $(GUIPath)/ProgressBar.cpp  $(std) $(O)
@@ -215,4 +210,3 @@ $(bin)/Cross.o: $(UtilsInzPath)/Cross.cpp $(UtilsInzPath)/Cross.hpp
 
 $(bin)/ItemBox.o: 
 	$(CC) -o $(bin)/ItemBox.o -c $(UtilsInzPath)/ItemBox.inl  $(std) $(O)
-

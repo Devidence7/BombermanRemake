@@ -113,7 +113,7 @@ void MoreSpeedPowerUp::setPlayerStatus(PlayerEntity &pe)
 void MoreSpeedPowerUp::addPowerUp2Player(PlayerEntity &pe){
 	powerUpType = moreFire;
 	sf::IntRect pu=getTextureRect();
-	pe.activatedPowerUps.push_back(pu);
+//	pe.activatedPowerUps.push_back(pu);
 	//pe.activatedPowerUps.push_back(setTextureRect(powerUpTexture->getFrame(powerUpType, 0)));
 }
 
@@ -137,7 +137,7 @@ void LessSpeedPowerUp::setPlayerStatus(PlayerEntity& pe) {
 void LessSpeedPowerUp::addPowerUp2Player(PlayerEntity &pe){
 	powerUpType = moreFire;
 	sf::IntRect pu=getTextureRect();
-	pe.activatedPowerUps.push_back(pu);
+//S	pe.activatedPowerUps.push_back(pu);
 	//pe.activatedPowerUps.push_back(setTextureRect(powerUpTexture->getFrame(powerUpType, 0)));
 }
 
@@ -160,7 +160,7 @@ void MoreBombsPowerUp::setPlayerStatus(PlayerEntity &pe)
 void MoreBombsPowerUp::addPowerUp2Player(PlayerEntity &pe){
 	powerUpType = moreFire;
 	sf::IntRect pu=getTextureRect();
-	pe.activatedPowerUps.push_back(pu);
+//	pe.activatedPowerUps.push_back(pu);
 	//pe.activatedPowerUps.push_back(setTextureRect(powerUpTexture->getFrame(powerUpType, 0)));
 }
 
@@ -181,7 +181,7 @@ void MoreTimePowerUp::setPlayerStatus(PlayerEntity& pe) {
 void MoreTimePowerUp::addPowerUp2Player(PlayerEntity &pe){
 	powerUpType = moreFire;
 	sf::IntRect pu=getTextureRect();
-	pe.activatedPowerUps.push_back(pu);
+//	pe.activatedPowerUps.push_back(pu);
 	//pe.activatedPowerUps.push_back(setTextureRect(powerUpTexture->getFrame(powerUpType, 0)));
 }
 
@@ -202,7 +202,7 @@ void GrabBombsPowerUp::setPlayerStatus(PlayerEntity& pe) {
 void GrabBombsPowerUp::addPowerUp2Player(PlayerEntity &pe){
 	powerUpType = moreFire;
 	sf::IntRect pu=getTextureRect();
-	pe.activatedPowerUps.push_back(pu);
+//	pe.activatedPowerUps.push_back(pu);
 	//pe.activatedPowerUps.push_back(setTextureRect(powerUpTexture->getFrame(powerUpType, 0)));
 }
 
@@ -223,7 +223,7 @@ void KickBombsPowerUp::setPlayerStatus(PlayerEntity& pe) {
 void KickBombsPowerUp::addPowerUp2Player(PlayerEntity &pe){
 	powerUpType = moreFire;
 	sf::IntRect pu=getTextureRect();
-	pe.activatedPowerUps.push_back(pu);
+//	pe.activatedPowerUps.push_back(pu);
 	//pe.activatedPowerUps.push_back(setTextureRect(powerUpTexture->getFrame(powerUpType, 0)));
 }
 
@@ -245,6 +245,6 @@ void ExtraLifePowerUp::setPlayerStatus(PlayerEntity& pe) {
 void ExtraLifePowerUp::addPowerUp2Player(PlayerEntity &pe){
 	powerUpType = moreFire;
 	sf::IntRect pu=getTextureRect();
-	pe.activatedPowerUps.push_back(pu);
+//	pe.activatedPowerUps.push_back(pu);
 	//pe.activatedPowerUps.push_back(setTextureRect(powerUpTexture->getFrame(powerUpType, 0)));
 }
