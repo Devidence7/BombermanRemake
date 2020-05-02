@@ -13,6 +13,9 @@ public:
 	// Gameplay Variables:
 	int bombPower;
 
+	bool onMove = false;
+	bool onFlight = false;
+
 	// Texture Variables:
 	BombTexture* bombTexture;
 	double spriteCounter;
@@ -31,6 +34,10 @@ public:
 	void setExpiredEntity() override;
 	void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) override;
 	void update();
+
+	void throwBomb(){
+		onFlight = true;
+	}
 };
 
 

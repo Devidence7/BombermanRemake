@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <memory>
+#include <list>
 
 #include "../GameMaths/GeometryMaths.hpp"
 #include "../Include/global.hpp"
@@ -25,6 +26,15 @@ protected:
 	bool collisioner = true; //default: cant through
 	bool onCollision = false; //if just have collision
 
+	bool canThroughWall = false; //puede atravesar paredes
+	bool canThroughBomb = false; //puede atravesar bombas
+
+	bool canKickBom = false;
+	bool canGrabBomb = false;
+
+	std::list<std::shared_ptr<Entity>> BombsAsociated;
+	std::shared_ptr<Entity> BombTaked = nullptr;
+
 public:
 	Entity();
 	virtual sf::Vector2f getCenterPosition();
@@ -47,6 +57,43 @@ public:
 	bool getIsFireDestroyable();
 
 	bool getFireCanGoThroght();
+
+	bool CanKickBom(){
+		return this->canKickBom;
+	}
+
+	void setCanKickBom(bool _canKickBom){
+		canKickBom = _canKickBom;
+	}
+
+	bool CanThroughWall(){
+		return this->canThroughWall;
+	}
+
+	void setCanThroughWall(bool _canThroughWall){
+		this->canThroughWall = _canThroughWall;
+	}
+
+	bool CanGrabBomb(){
+		return canGrabBomb;
+	}
+
+	void setCanGrabBomb(bool _canGrabBomb){
+		canGrabBomb = _canGrabBomb;
+	}
+
+	bool CanThroughBomb()	{
+		return this->canThroughBomb;
+	}
+
+	virtual void setJumpingBomb(){
+		//TODO: ???
+		return;
+	}
+
+	void setCanThroughBomb(bool _canThroughBomb){
+		this->canThroughBomb = _canThroughBomb;
+	}
 
 	virtual sf::FloatRect getGlobalBounds() const;
 	// PRE: this esta en colision con eCollisioning

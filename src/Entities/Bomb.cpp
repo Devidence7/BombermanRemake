@@ -27,10 +27,16 @@ void Bomb::setExpiredEntity()
 
 void Bomb::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT)
 {
-	if (std::dynamic_pointer_cast<PlayerEntity>(eCollisioning) != nullptr)
-	{
-		//check jump or kick
+	if (this->onFlight){
+		return;
+	}
+	Player_ptr p;
+	 if(!eCollisioning->CanThrowBomb()){
 		Entity::onCollission(eCollisioning, colT);
+	}
+	else  if ( (p = std::dynamic_pointer_cast<PlayerEntity>(eCollisioning)) != nullptr)
+	{
+		p->setJumpingBomb();
 	}
 	else if (std::dynamic_pointer_cast<EnemyEntity>(eCollisioning) != nullptr)
 	{
@@ -42,6 +48,9 @@ void Bomb::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType col
 		Entity::onCollission(eCollisioning, colT);
 	}
 }
+
+
+
 void Bomb::update()
 {
 	// If it is time to explote:

@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "GUI/GameGUI.hpp"
 #include "GUI/Theme.hpp"
-#include "Music/GameMusic.h"
+#include "../Music/GameMusic.h"
 
 #include "InterfacePaths.h"
 #include "GameInterface.h"
