@@ -35,6 +35,7 @@ public:
 
 	static void setMasterVolume(int volume) {
 		masterVolume = volume;
+		updateVolumen();
 	}
 
 

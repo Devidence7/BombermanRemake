@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML/Audio.hpp>
-#include "GameSounds.h"
+#include "GameMusic.h"
 #include "../Exceptions/ExceptionsGame.hpp"
 
 class GameSounds {
@@ -32,7 +32,7 @@ class GameSounds {
 		unsigned int currentIndice = getCurrentIndice();
 
 		sound[currentIndice].setBuffer(soundBuffer);
-		sound[currentIndice].setVolume(soundVolume / 12.5 * 50 / 100);
+		sound[currentIndice].setVolume(soundVolume / 12.5 * GameMusic::getMasterVolume() / 100);
 		sound[currentIndice].play();
 	}
 
