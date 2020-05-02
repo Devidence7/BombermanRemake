@@ -33,7 +33,7 @@ void Bomb::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType col
 		return;
 	}
 	Player_ptr p;
-	 if(!eCollisioning->CanThrowBomb()){
+	 if(!eCollisioning->CanThroughBomb()){
 		Entity::onCollission(eCollisioning, colT);
 	}
 	else  if ( (p = std::dynamic_pointer_cast<PlayerEntity>(eCollisioning)) != nullptr)

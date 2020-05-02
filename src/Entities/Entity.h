@@ -77,23 +77,24 @@ public:
 	bool CanGrabBomb(){
 		return canGrabBomb;
 	}
+	void setCanThroughBomb(bool _ctb = true){
+		canThroughBomb = _ctb;
+	}
+
+	bool CanThroughBomb(){
+		return canThroughBomb;
+	}
 
 	void setCanGrabBomb(bool _canGrabBomb){
 		canGrabBomb = _canGrabBomb;
 	}
 
-	bool CanThroughBomb()	{
-		return this->canThroughBomb;
-	}
 
 	virtual void setJumpingBomb(){
 		//TODO: ???
 		return;
 	}
 
-	void setCanThroughBomb(bool _canThroughBomb){
-		this->canThroughBomb = _canThroughBomb;
-	}
 
 	virtual sf::FloatRect getGlobalBounds() const;
 	// PRE: this esta en colision con eCollisioning
