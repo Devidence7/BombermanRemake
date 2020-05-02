@@ -4,19 +4,20 @@
 #include <vector>
 
 #include "../Entities/Entity.h"
+typedef std::shared_ptr<Entity> Entity_ptr;
 #include "../Entities/Bomb.h"
+typedef std::shared_ptr<Bomb> Bomb_ptr;
 #include "../Entities/BrickWall.h"
+typedef std::shared_ptr<Fire> Fire_ptr;
 #include "../Entities/Enemy.h"
+typedef std::shared_ptr<EnemyEntity> Enemy_ptr;
 #include "../Entities/Pillar.hpp"
+typedef std::shared_ptr<Pillar> Pillar_ptr;
 #include "../Entities/Player.h"
+typedef std::shared_ptr<PlayerEntity> Player_ptr;
 #include "../Entities/PowerUp.h"
 
-typedef std::shared_ptr<Entity> Entity_ptr;
-typedef std::shared_ptr<Fire> Fire_ptr;
-typedef std::shared_ptr<Pillar> Pillar_ptr;
 typedef std::shared_ptr<BrickWall> BrickWall_ptr;
-typedef std::shared_ptr<EnemyEntity> Enemy_ptr;
-typedef std::shared_ptr<PlayerEntity> Player_ptr;
 
 class PLayers
 {

@@ -125,6 +125,16 @@ void PlayerEntity::onCollission(std::shared_ptr<Entity> eCollisioning, Collision
 	 * 
 	 */
 
+bool PlayerEntity::playerActions(){
+	bool playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
+
+	if (playerBOMB && numOfBombs > 0)
+	{
+		return true;
+	}
+}
+
+
 /*
 	 * Update player position.
 	 */
@@ -163,6 +173,11 @@ bool PlayerEntity::updatePlayer()
 		//lives--;
 	}
 
+	if (velocity.x != 0 && velocity.y != 0){
+		velocity.x /= 2.0;
+		velocity.y /= 2.0;
+	}
+
 	// Call animate function to change current sprite if needed.
 	animate(velocity);
 
@@ -177,4 +192,10 @@ bool PlayerEntity::updatePlayer()
 		return true;
 	}
 	return false;
+}
+
+
+void PlayerEntity::setJumpingBomb() {
+	//Actializar frames
+	return;
 }

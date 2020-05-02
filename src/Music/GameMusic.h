@@ -1,15 +1,13 @@
 #pragma once
 #include <SFML/Audio.hpp>
+#include "../Exceptions/ExceptionsGame.hpp"
 
 class GameMusic {
 	static sf::Music currentTrack;
-public:
-	static float masterVolume;
 	static float musicVolume;
+	static float masterVolume;
 
-
-private:
-	static void insertMusicTrack(string musicLocation) {
+	static void insertMusicTrack(std::string musicLocation) {
 		if (!currentTrack.openFromFile(musicLocation))
 			throw ExceptionLoadImage("No se ha podido cargar el track: " + musicLocation);
 		currentTrack.play();
@@ -21,10 +19,25 @@ public:
 		currentTrack.setVolume(musicVolume / 12.5 * masterVolume / 100);
 	}
 
+
+	static int getVolume() {
+		return musicVolume;
+	}
+
 	static void setVolume(int volume) {
 		musicVolume = volume;
 		updateVolumen();
 	}
+
+	static int getMasterVolume() {
+		return masterVolume;
+	}
+
+	static void setMasterVolume(int volume) {
+		masterVolume = volume;
+		updateVolumen();
+	}
+
 
 	static void volumeUp() {
 		musicVolume = musicVolume + 1;
@@ -36,9 +49,6 @@ public:
 		updateVolumen();
 	}
 
-	static int getVolume() {
-		return musicVolume;
-	}
 
 	static void playTitleMusic() {
 		insertMusicTrack("../music/Music/Title.flac");
@@ -56,7 +66,3 @@ public:
 		insertMusicTrack("../music/Music/World 3.flac");
 	}
 };
-
-sf::Music GameMusic::currentTrack;
-float GameMusic::masterVolume = 50;
-float GameMusic::musicVolume = 50;

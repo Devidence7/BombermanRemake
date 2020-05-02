@@ -38,7 +38,7 @@ void PowerUp::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType 
 
 void PowerUp::setPlayerStatus(PlayerEntity &pe)
 {
-	throw NoImplementedException("Intentando asignar clase ");
+	throw NoImplementedException("Intentando asignar clase abstracta (Power Up)");
 }
 
 void PowerUp::addPowerUp2Player(PlayerEntity &pe){
@@ -196,7 +196,7 @@ GrabBombsPowerUp::GrabBombsPowerUp(sf::Vector2f pos) : PowerUp() {
 }
 
 void GrabBombsPowerUp::setPlayerStatus(PlayerEntity& pe) {
-	
+	pe.setCanGrabBomb(true);
 }
 
 void GrabBombsPowerUp::addPowerUp2Player(PlayerEntity &pe){
@@ -217,7 +217,7 @@ KickBombsPowerUp::KickBombsPowerUp(sf::Vector2f pos) : PowerUp() {
 }
 
 void KickBombsPowerUp::setPlayerStatus(PlayerEntity& pe) {
-	
+	pe.setCanKickBom(true);
 }
 
 void KickBombsPowerUp::addPowerUp2Player(PlayerEntity &pe){
@@ -239,7 +239,7 @@ ExtraLifePowerUp::ExtraLifePowerUp(sf::Vector2f pos) : PowerUp() {
 }
 
 void ExtraLifePowerUp::setPlayerStatus(PlayerEntity& pe) {
-	
+	pe.addLife(1);
 }
 
 void ExtraLifePowerUp::addPowerUp2Player(PlayerEntity &pe){

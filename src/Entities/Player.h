@@ -1,13 +1,13 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <list>
 #include "../Textures/PlayerTexture.hpp"
 #include "../Textures/TextureStorage.h"
 #include "../Logic/Time.h"
 #include <memory>
 #include "Entity.h"
-#include <list>
-using namespace std;
+#include "Bomb.h"
 
 class PlayerEntity : public Entity
 {
@@ -50,6 +50,10 @@ public:
 
 	int getLives();
 
+	inline void addLife(int numLives){
+		this->lives += numLives;
+	}
+
 	/*
 	Animate Entity by changing the actual sprite.
 	*/
@@ -59,11 +63,14 @@ public:
 
 	Entity& playerUpdateColor();
 
+	void setJumpingBomb() ;
+
+
 	void update() override;
 	void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) override;
 
 
-
+	bool playerActions();
 	/*
 	 * Update player position.
 	 */

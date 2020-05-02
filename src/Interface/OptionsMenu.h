@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "GUI/Theme.hpp"
 #include "GUI/GameGUI.hpp"
-#include "../Music/GameMusic.h"
+#include "../Music/GameSounds.h"
 #include "../GameEngine.hpp"
 
 class OptionsMenu {
@@ -34,6 +34,7 @@ private:
 
 	GameGUI::Slider* masterVolumenSlider;
 	GameGUI::Slider* musicSlider;
+	GameGUI::Slider* soundSlider;
 
 private:
 	void createBackgroundMenu(sf::RenderWindow& window) {
@@ -74,15 +75,19 @@ private:
 		hbox->addButton("Controles", ButtonActions::CONTROLS);
 
 		masterVolumenSlider = new GameGUI::Slider();
-		masterVolumenSlider->setQuantum(1);
-		masterVolumenSlider->setValue(GameMusic::masterVolume);
-		f->addRow("Master Volume " + std::to_string((int)GameMusic::masterVolume) + " % ", masterVolumenSlider, ButtonActions::MASTER_VOLUME_SLIDER);
+		masterVolumenSlider->setQuantum(2);
+		masterVolumenSlider->setValue(GameMusic::getMasterVolume());
+		f->addRow("Master Volume " + std::to_string((int)GameMusic::getMasterVolume()), masterVolumenSlider, ButtonActions::MASTER_VOLUME_SLIDER);
 
 		musicSlider = new GameGUI::Slider();
-		musicSlider->setQuantum(1);
+		musicSlider->setQuantum(2);
 		musicSlider->setValue(GameMusic::getVolume());
-		f->addRow("Music " + std::to_string(GameMusic::getVolume()) + " % ", musicSlider, ButtonActions::MUSIC_SLIDER);
-		f->addRow("Sound", new GameGUI::Slider(), ButtonActions::SOUND_SLIDER);
+		f->addRow("Music " + std::to_string(GameMusic::getVolume()), musicSlider, ButtonActions::MUSIC_SLIDER);
+
+		soundSlider = new GameGUI::Slider();
+		soundSlider->setQuantum(2);
+		soundSlider->setValue(GameSounds::getVolume());
+		f->addRow("Sound " + std::to_string(GameMusic::getVolume()), soundSlider, ButtonActions::SOUND_SLIDER);
 
 		createBackgroundMenu(window);
 	}
@@ -99,7 +104,7 @@ private:
 
 		masterVolumenSlider = new GameGUI::Slider();
 		masterVolumenSlider->setQuantum(1);
-		masterVolumenSlider->setValue(GameMusic::masterVolume);
+		masterVolumenSlider->setValue(GameMusic::getMasterVolume());
 		f->addRow("Resolution", masterVolumenSlider, ButtonActions::MASTER_VOLUME_SLIDER);
 
 		musicSlider = new GameGUI::Slider();
@@ -159,13 +164,13 @@ private:
 				case ButtonActions::CONTROLS:
 					break;
 				case ButtonActions::MASTER_VOLUME_SLIDER:
-					GameMusic::masterVolume = masterVolumenSlider->getValue();
-					GameMusic::updateVolumen();
+					GameMusic::setMasterVolume(masterVolumenSlider->getValue());
 					break;
 				case ButtonActions::MUSIC_SLIDER:
 					GameMusic::setVolume(musicSlider->getValue());
 					break;
 				case ButtonActions::SOUND_SLIDER:
+					GameSounds::setVolume(soundSlider->getValue());
 					break;
 				case ButtonActions::QUIT:
 					gameState = lastGameStateOptionsMenu;
