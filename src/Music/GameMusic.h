@@ -1,14 +1,27 @@
 #pragma once
 #include <SFML/Audio.hpp>
+#include "../Exceptions/ExceptionsGame.hpp"
 
 class GameMusic {
 	static sf::Music currentTrack;
-public:
-	static float masterVolume;
 	static float musicVolume;
+	static float masterVolume;
 
+	static void insertMusicTrack(std::string musicLocation) {
+		if (!currentTrack.openFromFile(musicLocation))
+			throw ExceptionLoadImage("No se ha podido cargar el track: " + musicLocation);
+		currentTrack.play();
+		updateVolumen();
+	}
+
+public:
 	static void updateVolumen() {
 		currentTrack.setVolume(musicVolume / 12.5 * masterVolume / 100);
+	}
+
+
+	static int getVolume() {
+		return musicVolume;
 	}
 
 	static void setVolume(int volume) {
@@ -16,9 +29,15 @@ public:
 		updateVolumen();
 	}
 
-	static int getVolume() {
-		return musicVolume;
+	static int getMasterVolume() {
+		return masterVolume;
 	}
+
+	static void setMasterVolume(int volume) {
+		masterVolume = volume;
+		updateVolumen();
+	}
+
 
 	static void volumeUp() {
 		musicVolume = musicVolume + 1;
@@ -30,21 +49,20 @@ public:
 		updateVolumen();
 	}
 
+
 	static void playTitleMusic() {
-		if (!currentTrack.openFromFile("../music/Title.flac"))
-			throw ExceptionLoadImage("No se ha podido cargar el track: ../music/Title.flac");
-		currentTrack.play();
-		updateVolumen();
+		insertMusicTrack("../music/Music/Title.flac");
 	}
 	
 	static void playWorld1Music() {
-		if (!currentTrack.openFromFile("../music/World 1.flac"))
-			throw ExceptionLoadImage("No se ha podido cargar el track: ../music/World 1.flac");
-		currentTrack.play();
-		updateVolumen();
+		insertMusicTrack("../music/Music/World 1.flac");
+	}
+
+	static void playWorld2Music() {
+		insertMusicTrack("../music/Music/World 2.flac");
+	}
+
+	static void playWorld3Music() {
+		insertMusicTrack("../music/Music/World 3.flac");
 	}
 };
-
-sf::Music GameMusic::currentTrack;
-float GameMusic::masterVolume = 50;
-float GameMusic::musicVolume = 50;

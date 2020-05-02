@@ -1,4 +1,5 @@
 #include "../Include/EntitiesInclude.hpp"
+#include "../Music/GameSounds.h"
 
 Bomb::Bomb(std::shared_ptr<PlayerEntity> p) : Entity()
 {
@@ -21,6 +22,7 @@ Bomb::Bomb(std::shared_ptr<PlayerEntity> p) : Entity()
 
 void Bomb::setExpiredEntity()
 {
+	GameSounds::playBombSound();
 	expiredEntity = true;
 	player->numOfBombs += 1;
 }
