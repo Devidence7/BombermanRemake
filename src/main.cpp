@@ -88,6 +88,24 @@ int main(int argc, char* argv[]) {
 				gameI.draw(window);
 			}
 
+			sf::Event event;
+			while (window.pollEvent(event)) {
+				// Process events
+				switch (event.type) {
+					// window closed
+				case sf::Event::Closed:
+					// Close window -> exit
+					window.close();
+					break;
+				case sf::Event::LostFocus:
+					// Pause
+					break;
+				case sf::Event::GainedFocus:
+					// Resume
+					break;
+				}
+			}
+
 			pauseMenu.checkUserPauseActions(gameState);
 		}
 
