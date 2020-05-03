@@ -145,7 +145,8 @@ void testGUI() {
 						text.setOrigin(text.getLocalBounds().width / 2, text.getLocalBounds().height / 2);
 						break;
 					case Callbacks::COLOR:
-						text.setFillColor(opt->getSelectedValue());
+						//text.setFillColor(opt->getSelectedValue());
+						text.setColor(opt->getSelectedValue());
 						break;
 					case Callbacks::ROTATION:
 						text.setRotation(sliderRotation->getValue() * 360 / 100.f);

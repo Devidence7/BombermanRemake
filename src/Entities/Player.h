@@ -18,8 +18,8 @@ public:
 	double speedBoost = 1;
 	int numOfBombs = 1;
 	int powerOfBombs = 1;
-	//list <sf::Texture>activatedPowerUps;
-	//list<sf::IntRect> activatedPowerUps;
+	sf::Sprite playerHead;
+	sf::Sprite playerHead2;
 	list <sf::Sprite*>activatedPowerUps;
 
 	unsigned int bombsTimeLimit = 30;

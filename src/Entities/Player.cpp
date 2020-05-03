@@ -17,14 +17,22 @@ PlayerEntity::PlayerEntity() : Entity()
 	setTextureRect(playerTexture->getDefaultIntRect());
 	// Set sprite Sheet texture
 	setTexture(playerTexture->getTexture());
-
 	// Texture Controller
 	playerColor = &TextureStorage::getPlayerColor();
 	// Set starting sprite
 	playerColorEntity.setTextureRect(playerColor->getDefaultIntRect());
 	// Set sprite Sheet texture
 	playerColorEntity.setTexture(playerColor->getTexture());
-	playerColorEntity.setColor(sf::Color(Random::getIntNumberBetween(0,255), Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255),225));
+	sf::Color tempColor = sf::Color(Random::getIntNumberBetween(0,255), Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255),225);
+	playerColorEntity.setColor(tempColor);
+
+	playerHead.setTexture(playerColor->getTexture());
+	playerHead.setColor(tempColor);
+	playerHead.setTextureRect(sf::IntRect(sf::Vector2i(10,5),sf::Vector2i(36,36)));
+
+	playerHead2.setTexture(playerTexture->getTexture());
+	playerHead2.setTextureRect(sf::IntRect(sf::Vector2i(10,5),sf::Vector2i(36,36)));
+
 
 	// TODO: Remove this
 	move(100, 100);
