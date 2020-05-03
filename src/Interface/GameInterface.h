@@ -52,7 +52,7 @@ public:
              lifeSprite[i].setPosition(container.getPosition().x+(50*(i+1)),(container.getPosition().y+7.5));
 
              lives[i].setFont(font);
-             lives[i].setColor(sf::Color::White);
+             lives[i].setFillColor(sf::Color::White);
              lives[i].setString("X"+to_string(numLives[0]));
              lives[i].setPosition(lifeSprite[i].getPosition().x+25,(lifeSprite[i].getPosition().y+7.5));
              lives[i].setScale(0.5,0.5);
@@ -70,7 +70,7 @@ public:
              lifeSprite[1].setPosition(container.getPosition().x+(container.getSize().x/2)+200,(container.getPosition().y+7.5));*/
         
         time.setFont(font);
-        time.setColor(sf::Color::White);
+        time.setFillColor(sf::Color::White);
         time.setString(to_string(timeLeft/60)+":"+to_string(timeLeft%60));
         time.setPosition(container.getPosition().x+(container.getSize().x/2)-100,(container.getPosition().y+7.5));
         time.setScale(0.5,0.5);

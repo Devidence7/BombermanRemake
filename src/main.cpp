@@ -39,6 +39,8 @@ int main(int argc, char* argv[]) {
 
 	// Start game loop
 	while (gameDisplayController.windowOpen()) {
+		GameTime::updateCurrentTime();
+
 		switch (gameDisplayController.gameState) {
 		case GameInterfaceController::GameState::MAIN_MENU:
 			gameMainMenu.menuActions(gameDisplayController, game);
