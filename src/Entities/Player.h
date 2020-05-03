@@ -1,14 +1,14 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include <list>
 #include "../Textures/PlayerTexture.hpp"
 #include "../Textures/TextureStorage.h"
 #include "../Logic/Time.h"
 #include <memory>
 #include "Entity.h"
-#include <list>
 #include "Bomb.h"
+
+using namespace std;
 
 class PlayerEntity : public Entity
 {
@@ -20,7 +20,7 @@ public:
 	int powerOfBombs = 1;
 	//list <sf::Texture>activatedPowerUps;
 	//list<sf::IntRect> activatedPowerUps;
-	//list <sf::Sprite>PowerUpsSprite;
+	list <sf::Sprite*>activatedPowerUps;
 
 	unsigned int bombsTimeLimit = 30;
 

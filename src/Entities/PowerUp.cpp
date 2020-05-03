@@ -42,7 +42,10 @@ void PowerUp::setPlayerStatus(PlayerEntity &pe)
 }
 
 void PowerUp::addPowerUp2Player(PlayerEntity &pe){
-	throw NoImplementedException("Intentando asignar clase ");
+	sf::Sprite *temp=new Sprite();
+	temp->setTexture(TextureStorage::getPowerUpTexture().getTexture());
+	setTextureRect(powerUpTexture->getFrame(powerUpType, 0));
+	pe.activatedPowerUps.push_back(temp);
 }
 
 MoreFirePowerUp::MoreFirePowerUp(sf::Vector2f pos) : PowerUp()
@@ -65,7 +68,7 @@ void MoreFirePowerUp::addPowerUp2Player(PlayerEntity &pe){
 	powerUpType = moreFire;
 	//sf::IntRect pu=getTextureRect();
 	//pe.activatedPowerUps.push_back(pu);
-	//pe.activatedPowerUps.push_back(setTextureRect(powerUpTexture->getFrame(powerUpType, 0)));
+	//pe.activatedPowerUps.push_back(TextureRect(powerUpTexture->getFrame(powerUpType, 0)));
 }
 
 LessFirePowerUp::LessFirePowerUp(sf::Vector2f pos) : PowerUp()
