@@ -6,92 +6,95 @@
 #include "GameEngine.hpp"
 #include "Logic/Time.h"
 #include "Logic/Random.h"
-#include "Interface/MainMenu.h"
 
 #include "Interface/GUI/GameGUI.hpp"
 #include "Interface/GUI/Theme.hpp"
+
+#include "Interface/GameInterfaceController.h"
+#include "Interface/MainMenu.h"
 #include "Interface/OptionsMenu.h"
 #include "Interface/PauseMenu.h"
 
-//#include "Map/Map.hpp"
-
-int windowsHeight = 600;
-int windowsWidth = 800;
-bool primero = true;
-bool multi = false;
-int numPlayers;
-list<int> playersLives;
-
-GameInterface::GameState gameState;
 
 int main(int argc, char* argv[]) {
-
-	// Create the main window
-	//unsigned int desktopWidth = sf::VideoMode::getDesktopMode().width;
-	//unsigned int desktopHeight = sf::VideoMode::getDesktopMode().height;
-	sf::RenderWindow window(sf::VideoMode(27 * 48, 17 * 48), "Bombermenaman"); // , sf::Style::Titlebar | sf::Style::Close | sf::Style::Fullscreen
-
 	// Start counting the time:
 	GameTime::startGameTime();
 
 	// Start Random Generator
 	Random::initilizeRandomGen();
 
+	// Create new game
 	Game game = Game();
 
-	// Set the maximun Framerate Limit.
-	window.setFramerateLimit(game.FPS);
+	// Create a Multiple interface controller
+	auto gameDisplayController = GameInterfaceController();
 
-	MainMenu gameMainMenu(window);
-	OptionsMenu optionsMenu(window);
-	PauseMenu pauseMenu(window);
-	GameInterface gameI = GameInterface();
+	// Play Title music
 	GameMusic::playTitleMusic();
 
+	MainMenu gameMainMenu(*gameDisplayController.getWindow());
+	OptionsMenu optionsMenu(*gameDisplayController.getWindow());
+	PauseMenu pauseMenu(*gameDisplayController.getWindow());
+	GameInterface gameInterface;
+
 	// Start game loop
-	while (window.isOpen()) {
-		// Update time:
-		GameTime::updateCurrentTime();
-
-		switch (gameState) {
-		case GameInterface::GameState::MAIN_MENU:
-			gameMainMenu.menuActions(window, gameState, game);
+	while (gameDisplayController.windowOpen()) {
+		switch (gameDisplayController.gameState) {
+		case GameInterfaceController::GameState::MAIN_MENU:
+			gameMainMenu.menuActions(gameDisplayController, game);
 			break;
 
-		case GameInterface::GameState::OPTIONS_MENU:
-			optionsMenu.menuActions(window, gameState, game);
+		case GameInterfaceController::GameState::OPTIONS_MENU:
+			optionsMenu.menuActions(gameDisplayController, game);
 			break;
 
-		case GameInterface::GameState::PAUSE_MENU:
-			pauseMenu.menuActions(window, gameState, game);
-			pauseMenu.checkUserPauseActions(gameState);
+		case GameInterfaceController::GameState::PAUSE_MENU:
+			pauseMenu.menuActions(gameDisplayController, game);
+			pauseMenu.checkUserPauseActions(gameDisplayController);
 			break;
 
-		case GameInterface::GameState::PLAYING:
-			// TODO PLAYER MOVEMENT MUST NOT DEPEND ON PROCESSOR SPEED THIS IS SHIIIIIIIIT
+		case GameInterfaceController::GameState::PLAYING:
 			game.update();
 
 			// Clear screen from previous drawings
-			window.clear();
+			gameDisplayController.getWindow()->clear();
 			// Draw the player and the scene
-			game.draw(window);
+			game.draw(*gameDisplayController.getWindow());
 			/*for(Player_ptr &player : PLayers::getVectorPlayer()){
 				playersLives.push_back(player->getLives());
 				cout<<playersLives.front();
 			}*/
-			gameI.update(GameTime::getTimeNow());
+			gameInterface.update(GameTime::getTimeNow());
 			if (game.gameOptions.multiplayerGame) {
 				//gameI.update(time.getTimeNow(),playersLives.front(),playersLives.back());
-				gameI.drawMulti(window);
+				gameInterface.drawMulti(*gameDisplayController.getWindow());
 			}
 			else {
-				gameI.draw(window);
+				gameInterface.draw(*gameDisplayController.getWindow());
 			}
 
-			pauseMenu.checkUserPauseActions(gameState);
+			sf::Event event;
+			while (gameDisplayController.getWindow()->pollEvent(event)) {
+				// Process events
+				switch (event.type) {
+					// window closed
+				case sf::Event::Closed:
+					// Close window -> exit
+					gameDisplayController.getWindow()->close();
+					break;
+				case sf::Event::LostFocus:
+					// Pause
+					break;
+				case sf::Event::GainedFocus:
+					// Resume
+					break;
+				}
+			}
+
+			pauseMenu.checkUserPauseActions(gameDisplayController);
 		}
 
-		// Update window
-		window.display();
+		// Update display window window
+		gameDisplayController.getWindow()->display();
 	}
 }

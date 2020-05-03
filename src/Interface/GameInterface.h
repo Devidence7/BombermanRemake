@@ -27,13 +27,6 @@ class GameInterface {
 	int dimX = 25;
 
 public:
-    enum GameState {
-        MAIN_MENU,
-        PLAYING,
-        OPTIONS_MENU,
-        PAUSE_MENU
-    };
-
 	GameInterface(){
       /* this->container.setSize(
             sf::Vector2f(
