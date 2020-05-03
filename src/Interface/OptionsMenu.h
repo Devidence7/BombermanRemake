@@ -4,12 +4,14 @@
 #include "GUI/GameGUI.hpp"
 #include "../Music/GameSounds.h"
 #include "../GameEngine.hpp"
+#include "GameInterfaceController.h"
+
 
 class OptionsMenu {
 	GameGUI::Menu* menu;
 
 public:
-	static GameInterface::GameState lastGameStateOptionsMenu;
+	static GameInterfaceController::GameState lastGameStateOptionsMenu;
 private:
 	enum ButtonActions {
 		AUDIO,
@@ -19,6 +21,10 @@ private:
 		MASTER_VOLUME_SLIDER,
 		MUSIC_SLIDER,
 		SOUND_SLIDER,
+
+		RESOLUTION,
+		FULLSCREEN,
+		FPS,
 
 		SAVE_AND_QUIT,
 		SAVE,
@@ -32,17 +38,22 @@ private:
 	sf::RectangleShape menuBackgroundShadow1;
 	sf::RectangleShape menuBackgroundShadow2;
 
-	GameGUI::Slider* masterVolumenSlider;
-	GameGUI::Slider* musicSlider;
-	GameGUI::Slider* soundSlider;
+	GameGUI::Slider* masterVolumenSlider; GameGUI::Label* masterVText;
+	GameGUI::Slider* musicSlider; GameGUI::Label* musicText;
+	GameGUI::Slider* soundSlider; GameGUI::Label* soundText;
+
+	GameGUI::OptionsBox<sf::Vector2i>* opt;
+	GameGUI::Slider* fpsSlider; GameGUI::Label* fpsText;
 
 private:
-	void createBackgroundMenu(sf::RenderWindow& window) {
-		GameGUI::HorizontalBoxLayout* hbox2 = menu->addHorizontalBoxLayout();
+	void createBackgroundMenu(sf::RenderWindow& window, bool addButton = true) {
+		if (addButton) {
+			GameGUI::HorizontalBoxLayout* hbox2 = menu->addHorizontalBoxLayout();
 
-		//hbox2->addButton("Aplicar y salir", ButtonActions::SAVE_AND_QUIT);
-		//hbox2->addButton("Aplicar", ButtonActions::SAVE);
-		hbox2->addButton("Atras", ButtonActions::QUIT);
+			//hbox2->addButton("Aplicar y salir", ButtonActions::SAVE_AND_QUIT);
+			//hbox2->addButton("Aplicar", ButtonActions::SAVE);
+			hbox2->addButton("Atras", ButtonActions::QUIT);
+		}
 
 		menu->setPosition(sf::Vector2f((int)window.getSize().x / 2 - (int)menu->getSize().x / 2, (int)window.getSize().y / 2 - (int)menu->getSize().y / 2));
 
@@ -68,26 +79,42 @@ private:
 		menu = new GameGUI::Menu(window);
 
 		GameGUI::HorizontalBoxLayout* hbox = menu->addHorizontalBoxLayout();
-		GameGUI::FormLayout* f = menu->addFormLayout();
+		// GameGUI::VerticalBoxLayout* vbox = menu->addVerticalBoxLayout();
+
+		GameGUI::HorizontalBoxLayout* masterLine = new GameGUI::HorizontalBoxLayout();
+		GameGUI::HorizontalBoxLayout* musicLine = new GameGUI::HorizontalBoxLayout();
+		GameGUI::HorizontalBoxLayout* soundLine = new GameGUI::HorizontalBoxLayout();
 
 		hbox->addButton("Audio", ButtonActions::AUDIO);
 		hbox->addButton("Graficos", ButtonActions::GRAPHICS);
 		hbox->addButton("Controles", ButtonActions::CONTROLS);
+		
+		GameGUI::FormLayout *f = menu->addFormLayout();
 
 		masterVolumenSlider = new GameGUI::Slider();
 		masterVolumenSlider->setQuantum(2);
 		masterVolumenSlider->setValue(GameMusic::getMasterVolume());
-		f->addRow("Master Volume " + std::to_string((int)GameMusic::getMasterVolume()), masterVolumenSlider, ButtonActions::MASTER_VOLUME_SLIDER);
+
+		masterLine->add(masterVolumenSlider, ButtonActions::MASTER_VOLUME_SLIDER);
+		masterVText = masterLine->addLabel(to_string(GameMusic::getMasterVolume()));
+
+		f->addRow("Volumen Maestro", masterLine);
 
 		musicSlider = new GameGUI::Slider();
 		musicSlider->setQuantum(2);
 		musicSlider->setValue(GameMusic::getVolume());
-		f->addRow("Music " + std::to_string(GameMusic::getVolume()), musicSlider, ButtonActions::MUSIC_SLIDER);
+
+		musicLine->add(musicSlider, ButtonActions::MUSIC_SLIDER);
+		musicText = musicLine->addLabel(to_string(GameMusic::getVolume()));
+		f->addRow("Musica", musicLine);
 
 		soundSlider = new GameGUI::Slider();
 		soundSlider->setQuantum(2);
 		soundSlider->setValue(GameSounds::getVolume());
-		f->addRow("Sound " + std::to_string(GameMusic::getVolume()), soundSlider, ButtonActions::SOUND_SLIDER);
+
+		soundLine->add(soundSlider, ButtonActions::SOUND_SLIDER);
+		soundText = soundLine->addLabel(to_string(GameSounds::getVolume()));
+		f->addRow("Sonido", soundLine);
 
 		createBackgroundMenu(window);
 	}
@@ -103,14 +130,29 @@ private:
 		hbox->addButton("Controles", ButtonActions::CONTROLS);
 
 		masterVolumenSlider = new GameGUI::Slider();
-		masterVolumenSlider->setQuantum(1);
+		masterVolumenSlider->setQuantum(4);
 		masterVolumenSlider->setValue(GameMusic::getMasterVolume());
-		f->addRow("Resolution", masterVolumenSlider, ButtonActions::MASTER_VOLUME_SLIDER);
+		//f->addRow("Resolucion      ", masterVolumenSlider, ButtonActions::MASTER_VOLUME_SLIDER);
 
-		musicSlider = new GameGUI::Slider();
-		musicSlider->setQuantum(1);
-		musicSlider->setValue(GameMusic::getVolume());
-		f->addRow("Max FPS", musicSlider, ButtonActions::MUSIC_SLIDER);
+		opt = new GameGUI::OptionsBox<sf::Vector2i>();
+		opt->addItem("1024 x 768", sf::Vector2i(1024, 768));
+		opt->addItem("1280 x 1024", sf::Vector2i(1280, 1024));
+		opt->addItem("1280 x 800", sf::Vector2i(1280, 800));
+		opt->addItem("1366 x 768", sf::Vector2i(1366, 768));
+		opt->addItem("1920 x 1080", sf::Vector2i(1920, 1080));
+		f->addRow("Resolucion", opt, ButtonActions::RESOLUTION);
+
+		GameGUI::CheckBox* terminateProgram = new GameGUI::CheckBox();
+		f->addRow("Pantalla Completa    ", terminateProgram, ButtonActions::FULLSCREEN);
+
+		fpsSlider = new GameGUI::Slider();
+		fpsSlider->setQuantum(2);
+		fpsSlider->setValue(GameSounds::getVolume());
+		
+		GameGUI::HorizontalBoxLayout* fpsLine = new GameGUI::HorizontalBoxLayout();
+		fpsLine->add(fpsSlider, ButtonActions::FPS);
+		fpsText = fpsLine->addLabel(to_string(GameSounds::getVolume()));
+		f->addRow("FPS", fpsLine);
 
 		createBackgroundMenu(window);
 	}
@@ -131,15 +173,15 @@ public:
 private:
 
 
-	void userActions(sf::RenderWindow& window, GameInterface::GameState& gameState, Game game) {
+	void userActions(sf::RenderWindow* &window, GameInterfaceController& gameDisplay, Game game) {
 		sf::Event event;
-		while (window.pollEvent(event)) {
+		while (window->pollEvent(event)) {
 			// Process events
 			switch (event.type) {
 				// window closed
 			case sf::Event::Closed:
 				// Close window -> exit
-				window.close();
+				window->close();
 				break;
 			case sf::Event::LostFocus:
 				// Pause
@@ -147,6 +189,13 @@ private:
 			case sf::Event::GainedFocus:
 				// Resume
 				break;
+			case sf::Event::Resized: {
+				// update the view to the new size of the window
+				sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+				window->setView(sf::View(visibleArea));
+				createBackgroundMenu(*window, false);
+				break;
+			}
 				//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				//													BUTTON PRESSED
 				//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -155,25 +204,54 @@ private:
 				switch (id) {
 				case ButtonActions::AUDIO:
 					delete(menu);
-					createAudioMenu(window);
+					createAudioMenu(*window);
 					break;
 				case ButtonActions::GRAPHICS:
 					delete(menu);
-					createGraphicsMenu(window);
+					createGraphicsMenu(*window);
 					break;
 				case ButtonActions::CONTROLS:
 					break;
 				case ButtonActions::MASTER_VOLUME_SLIDER:
 					GameMusic::setMasterVolume(masterVolumenSlider->getValue());
+					masterVText->setText(to_string(masterVolumenSlider->getValue()));
 					break;
 				case ButtonActions::MUSIC_SLIDER:
 					GameMusic::setVolume(musicSlider->getValue());
+					musicText->setText(to_string(musicSlider->getValue()));
 					break;
 				case ButtonActions::SOUND_SLIDER:
 					GameSounds::setVolume(soundSlider->getValue());
+					soundText->setText(to_string(soundSlider->getValue()));
 					break;
+				case ButtonActions::RESOLUTION: {
+					/*sf::FloatRect visibleArea(0, 0, opt->getSelectedValue().x, opt->getSelectedValue().y);
+					window.setView(sf::View(visibleArea));*/
+					cout << opt->getSelectedValue().x << " x " << opt->getSelectedValue().y << endl;
+					window->setSize(sf::Vector2u(opt->getSelectedValue().x, opt->getSelectedValue().y));
+					// createGraphicsMenu(window);
+					break;
+				}
+				case ButtonActions::FULLSCREEN:
+					window->close();
+					window = new RenderWindow(sf::VideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height), "Bombermenaman", sf::Style::Fullscreen);
+					break;
+				case ButtonActions::FPS: {
+					int fpss = fpsSlider->getValue() * 5 / 4 + 5;
+					if (fpss == 130) {
+						fpsText->setText("MAX");
+						//GameInterfaceController::FPSs = 0;
+						fpss = 0;
+					}
+					else {
+						fpsText->setText(to_string(fpss));
+					}
+					window->setFramerateLimit(fpss);
+
+					break;
+				}
 				case ButtonActions::QUIT:
-					gameState = lastGameStateOptionsMenu;
+					gameDisplay.setGameState(lastGameStateOptionsMenu);
 					break;
 				}
 			}
@@ -192,10 +270,11 @@ private:
 	}
 
 public:
-	void menuActions(sf::RenderWindow& window, GameInterface::GameState& gameState, Game game) {
-		userActions(window, gameState, game);
-		draw(window);
+	void menuActions(GameInterfaceController& gameDisplay, Game game) {
+		userActions(gameDisplay.getWindow(), gameDisplay, game);
+		draw(*gameDisplay.getWindow());
 	}
 };
 
-GameInterface::GameState OptionsMenu::lastGameStateOptionsMenu;
+
+GameInterfaceController::GameState OptionsMenu::lastGameStateOptionsMenu;
