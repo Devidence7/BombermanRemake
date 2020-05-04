@@ -35,7 +35,7 @@ GameEngine.o: $(src)/GameEngine.cpp $(src)/GameEngine.hpp
 
 
 $(bin)/Level.o: $(LevelPath)/Level.cpp $(LevelPath)/Level.hpp
-	$(CC) -c $(LevelPath)/Level.cpp -o $(build)/Level.o $(std)
+	$(CC) -c $(LevelPath)/Level.cpp -o $(bin)/Level.o $(std)
 	
 clear: 
 	rm bomberman || true
@@ -44,7 +44,7 @@ clear:
 	rm *.o || true
 
 ##################################
-#	Compile Utils 			#
+#	Compile Utils 				#
 #################################
 
 $(bin)/Random.o: $(logicPath)/Random.cpp $(logicPath)/Random.h
