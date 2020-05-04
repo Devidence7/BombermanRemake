@@ -86,12 +86,12 @@ private:
 		switch (id) {
 		case ButtonActions::SINGLEPLAYER:
 			gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
-			game.gameOptions.multiplayerGame = false;
+			game.gameOptions.numPlayers = 1;
 			game.startNewGame(*window);
 			break;
 		case ButtonActions::MULTIPLAYER:
 			gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
-			game.gameOptions.multiplayerGame = true;
+			game.gameOptions.numPlayers = 2;
 			game.startNewGame(*window);
 			break;
 		case ButtonActions::OPCIONS:
