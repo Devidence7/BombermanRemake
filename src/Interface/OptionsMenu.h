@@ -43,6 +43,7 @@ private:
 	GameGUI::Slider* soundSlider; GameGUI::Label* soundText;
 
 	GameGUI::OptionsBox<sf::Vector2i>* opt;
+	GameGUI::CheckBox* fullScreenCheckBox;
 	GameGUI::Slider* fpsSlider; GameGUI::Label* fpsText;
 
 private:
@@ -142,16 +143,16 @@ private:
 		opt->addItem("1920 x 1080", sf::Vector2i(1920, 1080));
 		f->addRow("Resolucion", opt, ButtonActions::RESOLUTION);
 
-		GameGUI::CheckBox* terminateProgram = new GameGUI::CheckBox();
-		f->addRow("Pantalla Completa    ", terminateProgram, ButtonActions::FULLSCREEN);
+		fullScreenCheckBox = new GameGUI::CheckBox();
+		f->addRow("Pantalla Completa    ", fullScreenCheckBox, ButtonActions::FULLSCREEN);
 
 		fpsSlider = new GameGUI::Slider();
 		fpsSlider->setQuantum(2);
-		fpsSlider->setValue(GameSounds::getVolume());
+		fpsSlider->setValue(130);
 		
 		GameGUI::HorizontalBoxLayout* fpsLine = new GameGUI::HorizontalBoxLayout();
 		fpsLine->add(fpsSlider, ButtonActions::FPS);
-		fpsText = fpsLine->addLabel(to_string(GameSounds::getVolume()));
+		fpsText = fpsLine->addLabel("MAX");
 		f->addRow("FPS", fpsLine);
 
 		createBackgroundMenu(window);
@@ -207,7 +208,14 @@ private:
 		}
 		case ButtonActions::FULLSCREEN:
 			window->close();
-			window = new RenderWindow(sf::VideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height), "Bombermenaman", sf::Style::Fullscreen);
+			if (fullScreenCheckBox->isChecked()) {
+				window = new RenderWindow(sf::VideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height), "Bombermenaman", sf::Style::Fullscreen);
+			}
+			else {
+				window = new RenderWindow(sf::VideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height), "Bombermenaman");
+			}
+			
+			gameDisplay.notifyChangeDisplay();
 			break;
 		case ButtonActions::FPS: {
 			int fpss = fpsSlider->getValue() * 5 / 4 + 5;
