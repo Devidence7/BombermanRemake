@@ -16,14 +16,15 @@ GUIPath=$(interfazPath)/GUI
 LayoutPath=$(GUIPath)/Layouts
 UtilsInzPath=$(GUIPath)/Utils
 MusicPath=$(src)/Music
+LevelPath=$(src)/Map
 
 
 libs=-L$(bin) -lEntities -lTextures -lGui
 libEntities=-L$(bin) -lEntities 
 
-bomberman: $(src)/main.cpp $(bin)/libEntities.a $(bin)/libGui.a $(bin)/libTextures.a $(bin)/Random.o $(bin)/Time.o  $(src)/Include/EntitiesInclude.cpp $(src)/Utils/A_Star.cpp
+bomberman: $(src)/main.cpp $(bin)/Level.o $(bin)/libEntities.a $(bin)/libGui.a $(bin)/libTextures.a $(bin)/Random.o $(bin)/Time.o  $(src)/Include/EntitiesInclude.cpp $(src)/Utils/A_Star.cpp 
 	$(CC) -o bomberman  $(src)/main.cpp $(src)/Include/EntitiesInclude.cpp $(src)/Utils/A_Star.cpp  $(MusicPath)/GameMusic.cpp $(MusicPath)/GameSounds.cpp  \
-		$(bin)/Random.o $(bin)/Time.o  \
+		$(build)/Level.o $(bin)/Random.o $(bin)/Time.o  \
 		$(bin)/Arrow.o $(bin)/Box.o $(bin)/Cross.o $(UtilsInzPath)/ItemBox.hpp \
 		$(bin)/FormLayout.o $(bin)/HorizontalBoxLayout.o $(bin)/Layout.o $(bin)/Menu.o $(bin)/VerticalBoxLayout.o \
 		$(libs) \
@@ -33,6 +34,9 @@ GameEngine.o: $(src)/GameEngine.cpp $(src)/GameEngine.hpp
 	$(CC) -c $(src)/GameEngine.cpp -o $(build)/GameEngine.o $(std)
 
 
+$(bin)/Level.o: $(LevelPath)/Level.cpp $(LevelPath)/Level.hpp
+	$(CC) -c $(LevelPath)/Level.cpp -o $(build)/Level.o $(std)
+	
 clear: 
 	rm bomberman || true
 	rm $(bin)/*.o  || true

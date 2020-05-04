@@ -9,6 +9,8 @@
 #include "Interface/GameInterface.h"
 #include "Music/GameMusic.h"
 
+Level *level;
+
 using namespace sf;
 
 /**
@@ -25,10 +27,9 @@ private:
 	int dimX = 25;
 	// Initialize textures
 	TextureStorage textureStorage;
-	Level* level;
-	std::vector<Enemy_ptr> enemies;
+	//Level* level;
+	
 	//MainMenu mainMenu;
-	//std::vector<Enemy_ptr> enemies;
 public:
 	struct GameOptions {
 		bool multiplayerGame = false;
@@ -39,8 +40,8 @@ public:
 
 	Game() {
 		PLayers::insertPlayers();
-		insertarEnemigos();
-		level = new Level(enemies, dimX, dimY);
+		Enemies::insertarEnemigos(dimX, dimY);
+		level = new Level(dimX, dimY);
 		//mainMenu(w);
 	}
 	void start(sf::RenderWindow& w) {
@@ -90,7 +91,7 @@ public:
 	}
 
 	void drawEnemies(sf::RenderWindow& w) {
-		for (Enemy_ptr& e : this->enemies) {
+		for (Enemy_ptr& e : Enemies::getVectorEnemies()) {
 			w.draw(*e);
 #ifdef HITBOX_DEBUG_MODE
 			e->drawEntityHitbox(w);
@@ -102,52 +103,24 @@ public:
 
 	bool colissionWithEnemies(Entity_ptr eCol) {
 		bool intersec = false;
-		for (Enemy_ptr& e : this->enemies) {
+		for (Enemy_ptr& e : Enemies::getVectorEnemies()) {
 			intersec = intersec || (e->CanHurtPlayer() && e->collision(*eCol));
 		}
 		return intersec;
 	}
 
-	void insertarEnemigos() {
-		Enemy_ptr e1 = std::make_shared<EnemyEntity>(Balloon());
-		Enemy_ptr e2 = std::make_shared<EnemyEntity>(Ice());
-		Enemy_ptr e3 = std::make_shared<EnemyEntity>(Barrel());
-		Enemy_ptr e4 = std::make_shared<EnemyEntity>(Coin());
-		Enemy_ptr e5 = std::make_shared<EnemyEntity>(Blob());
-		Enemy_ptr e6 = std::make_shared<EnemyEntity>(Ghost());
-		Enemy_ptr e7 = std::make_shared<EnemyEntity>(Hypo());
-		enemies.push_back(e1);
-		enemies.push_back(e2);
-		enemies.push_back(e3);
-		enemies.push_back(e4);
-		enemies.push_back(e5);
-		enemies.push_back(e6);
-		enemies.push_back(e7);
-
-		for (Enemy_ptr e : enemies) {
-			int x, y;
-			do {
-				x = Random::getIntNumberBetween(0, dimX / 2);
-
-			} while (x < 3);
-			do {
-				y = Random::getIntNumberBetween(0, dimY / 2);
-			} while (y < 3);
-			e->setPosition(sf::Vector2f((x * 2 + 1) * SIZE_PILLAR - 3, (y * 2 + 1) * SIZE_PILLAR - 3));
-			e->startMovement();
-		}
-	}
+	
 
 	void updateEnemies() {
-		auto it = enemies.begin();
+		auto it = Enemies::getVectorEnemies().begin();
 		int counter = 0;
-		while (it != enemies.end()) {
+		while (it != Enemies::getVectorEnemies().end()) {
 			// Update the enemies.
 			(*it)->update();
 			level->checkAndFixCollisions((*it));
 			if ((*it)->getExpiredEntity()) {
 				it->reset();
-				it = enemies.erase(it);
+				it = Enemies::getVectorEnemies().erase(it);
 			}
 			else {
 				++it;

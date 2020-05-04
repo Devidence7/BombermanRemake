@@ -163,7 +163,13 @@ inline sf::Vector2f Entity::moveCircleOverCorner(std::shared_ptr<Entity> eCircle
 	{ //Esquina
 		referencia = intersec_x > intersec_y ? intersec_x : intersec_y;
 	}
-	intersec = ((distanciaCentros - referencia) + r_Circle) - distanciaCentros;
+	const int SEPARACION_EXTRA = 3;
+	intersec = (((distanciaCentros - referencia) + r_Circle) - distanciaCentros) + SEPARACION_EXTRA;
+/* 
+	float moduledir = moduleVector(dir_centros);
+	sf::Vector2f normalizeV = dir_centros/moduledir;
+	dir_centros = dir_centros * (moduledir + 1); */
+	
 
 	return (-dir_centros) * intersec;
 }

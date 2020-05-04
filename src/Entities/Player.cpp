@@ -1,5 +1,5 @@
 #include "../Include/EntitiesInclude.hpp"
-
+//#include "../Map/Level.hpp"
 PlayerEntity::PlayerEntity() : Entity()
 {
 	isFireDestroyable = true;
@@ -174,8 +174,9 @@ bool PlayerEntity::updatePlayer()
 	}
 
 	if (velocity.x != 0 && velocity.y != 0){
-		velocity.x /= 2.0;
-		velocity.y /= 2.0;
+		float module = sqrt((velocity.x*velocity.x) + (velocity.y * velocity.y));
+		velocity.x = (velocity.x/module) /* * sqrt(2)  */* baseSpeed;
+		velocity.y = (velocity.y/module) /* * sqrt(2)  */* baseSpeed;
 	}
 
 	// Call animate function to change current sprite if needed.
