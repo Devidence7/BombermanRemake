@@ -10,6 +10,10 @@
 #include "GameInterface.h"
 #include "../GameEngine.hpp"
 #include "OptionsMenu.h"
+#include "GameInterfaceController.h"
+
+
+using namespace GameGUI;
 
 class MainMenu {
 	sf::Sprite background;
@@ -72,7 +76,7 @@ public:
 
 
 private:
-	void userActions(sf::RenderWindow& window, GameInterface::GameState& gameState, Game game) {
+	void userActions(sf::RenderWindow& window, GameInterfaceController& gameDisplay, Game game) {
 		sf::Event event;
 		while (window.pollEvent(event)) {
 			// Process events
@@ -103,18 +107,18 @@ private:
 				int id = menu->onEvent(event);
 				switch (id) {
 				case ButtonActions::SINGLEPLAYER:
-					gameState = GameInterface::GameState::PLAYING;
+					gameDisplay.setGameState(GameInterfaceController::GameState::PLAYING);
 					game.gameOptions.multiplayerGame = false;
 					game.startNewGame(window);
 					break;
 				case ButtonActions::MULTIPLAYER:
-					gameState = GameInterface::GameState::PLAYING;
+					gameDisplay.setGameState(GameInterfaceController::GameState::PLAYING);
 					game.gameOptions.multiplayerGame = true;
 					game.startNewGame(window);
 					break;
 				case ButtonActions::OPCIONS:
-					OptionsMenu::lastGameStateOptionsMenu = GameInterface::GameState::MAIN_MENU;
-					gameState = GameInterface::GameState::OPTIONS_MENU;
+					OptionsMenu::lastGameStateOptionsMenu = GameInterfaceController::GameState::MAIN_MENU;
+					gameDisplay.setGameState(GameInterfaceController::GameState::OPTIONS_MENU);
 					break;
 				case ButtonActions::QUIT:
 					window.close();
@@ -134,8 +138,8 @@ public:
 		window.draw(*menu);
 	}
 
-	void menuActions(sf::RenderWindow& window, GameInterface::GameState& gameState, Game game) {
-		userActions(window, gameState, game);
-		draw(window);
+	void menuActions(GameInterfaceController &gameDisplay, Game game) {
+		userActions(*gameDisplay.getWindow(), gameDisplay, game);
+		draw(*gameDisplay.getWindow());
 	}
 };

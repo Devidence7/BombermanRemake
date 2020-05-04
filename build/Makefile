@@ -212,6 +212,5 @@ $(bin)/Box.o: $(UtilsInzPath)/Box.cpp $(UtilsInzPath)/Box.hpp
 $(bin)/Cross.o: $(UtilsInzPath)/Cross.cpp $(UtilsInzPath)/Cross.hpp
 	$(CC) -o $(bin)/Cross.o -c $(UtilsInzPath)/Cross.cpp  $(std) $(O)
 
-#$(bin)/ItemBox.o: 
-#	$(CC) -o $(bin)/ItemBox.o -c $(UtilsInzPath)/ItemBox.inl  $(std) $(O)
-
+$(bin)/ItemBox.o: 
+	$(CC) -o $(bin)/ItemBox.o -c $(UtilsInzPath)/ItemBox.inl  $(std) $(O)

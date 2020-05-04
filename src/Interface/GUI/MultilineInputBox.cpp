@@ -1,10 +1,12 @@
 #include "MultilineInputBox.hpp"
+//#include <SFML/Window/Clipboard.hpp>
+#include <SFML/Graphics.hpp>
 
 #include "Theme.hpp"
 
-#ifdef _WIN32
+//#ifdef _WIN32
 	#include <SFML/OpenGL.hpp>
-#endif
+//#endif
 
 // TODO: this should be removed. we don't need to be outputting any information.
 #include <iostream>
@@ -21,6 +23,7 @@ MultilineInputBox::MultilineInputBox(float width, unsigned int lines) : m_box(Bo
 	m_text.setFont(Theme::getFont());
 	m_text.setPosition(offset, offset);
 	m_text.setFillColor(Theme::input.textColor);
+	//m_text.setFillColor(Theme::input.textColor);
 	m_text.setCharacterSize(Theme::textCharacterSize);
 
 	// Build cursor
@@ -222,16 +225,16 @@ void MultilineInputBox::onKeyPressed(sf::Keyboard::Key key)
 		setCursorPosition(m_text.getString().getSize());
 		break;
 
-	case sf::Keyboard::Key::V:
+	/*case sf::Keyboard::Key::V:
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl))
 		{
-		/*	std::string clipboard = sf::Clipboard::getString();
+			std::string clipboard = sf::Clipboard::getString();
 			std::string string = m_text.getString();
 			string.insert(m_cursor_pos, clipboard);
 			m_text.setString(string);
-			setCursorPosition(m_cursor_pos + clipboard.length());*/
+			setCursorPosition(m_cursor_pos + clipboard.length());
 		}
-		break;
+		break;*/
 
 	default:
 		break;

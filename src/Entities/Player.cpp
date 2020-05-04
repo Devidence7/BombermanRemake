@@ -85,7 +85,10 @@ void PlayerEntity::animate(sf::Vector2f velocity)
 	{
 		if (currentFrame == 6 && GameTime::getTimeNow() - animLastTic > frameSpeed)
 		{
-		    lives--;
+			if(lives>0){
+		    	lives--;
+			}
+			//Else mostrar fin de partida
 			expiredEntity = false;
 			setPosition(100, 100);
 		}

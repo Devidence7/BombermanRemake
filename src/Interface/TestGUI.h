@@ -29,8 +29,8 @@ void testGUI() {
 		GameGUI::Menu menu(window);
 		menu.setPosition(sf::Vector2f(10, 10));
 
-		GameGUI::Theme::loadFont("../resources/interface/tahoma.ttf");
-		GameGUI::Theme::loadTexture("../resources/interface/square.png");
+		GameGUI::Theme::loadFont("../textures/mainMenu/BOMBERMAN.ttf");
+		GameGUI::Theme::loadTexture("../textures/interface/bomberman.png");
 		GameGUI::Theme::textCharacterSize = 11;
 		GameGUI::Theme::click.textColor = GameGUI::Theme::hexToRgb("#191B18");
 		GameGUI::Theme::click.textColorHover = GameGUI::Theme::hexToRgb("#191B18");

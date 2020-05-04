@@ -158,7 +158,8 @@ void ComboBox<T>::redrawDropDown()
 			t.setFont(Theme::getFont());
 			t.setCharacterSize(Theme::textCharacterSize);
 			t.setString(m_items[i].label);
-			t.setFillColor(GameGUI::Theme::click.textColor);
+			//t.setFillColor(GameGUI::Theme::click.textColor);
+			t.setColor(GameGUI::Theme::click.textColor);
 			t.setPosition(sf::Vector2f(10, (stepSize * i) + 3));
 
 			m_dropDownBox.draw(t);
@@ -200,6 +201,7 @@ inline bool ComboBox<T>::containsPoint(const sf::Vector2f& point) const
 	{
 		return true;
 
+		//t.setFillColor(sf::Color::Red);
 		t.setFillColor(sf::Color::Red);
 	}
 

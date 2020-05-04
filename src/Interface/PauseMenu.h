@@ -5,11 +5,12 @@
 #include "../Music/GameMusic.h"
 #include "../GameEngine.hpp"
 #include "OptionsMenu.h"
+#include "GameInterfaceController.h"
 
 
 class PauseMenu {
 	GameGUI::Menu* menu;
-	GameInterface::GameState lastGameState;
+	GameInterfaceController::GameState lastGameState;
 	bool EsqPressed = false;
 
 	enum ButtonActions {
@@ -72,9 +73,7 @@ public:
 	}
 
 private:
-
-
-	void userActions(sf::RenderWindow& window, GameInterface::GameState& gameState, Game game) {
+	void userActions(sf::RenderWindow& window, GameInterfaceController& gameDisplay, Game game) {
 		sf::Event event;
 		while (window.pollEvent(event)) {
 			// Process events
@@ -97,7 +96,7 @@ private:
 				int id = menu->onEvent(event);
 				switch (id) {
 				case ButtonActions::RESUME:
-					gameState = lastGameState;
+					gameDisplay.setGameState(lastGameState);
 					break;
 
 				case ButtonActions::SAVE:
@@ -105,12 +104,12 @@ private:
 					break;
 				
 				case ButtonActions::OPTIONS:
-					OptionsMenu::lastGameStateOptionsMenu = GameInterface::GameState::PAUSE_MENU;
-					gameState = GameInterface::GameState::OPTIONS_MENU;
+					OptionsMenu::lastGameStateOptionsMenu = GameInterfaceController::GameState::PAUSE_MENU;
+					gameDisplay.setGameState(GameInterfaceController::GameState::OPTIONS_MENU);
 					break;
 				
 				case ButtonActions::GO_MAIN_MENU:
-					gameState = GameInterface::GameState::MAIN_MENU;
+					gameDisplay.setGameState(GameInterfaceController::GameState::MAIN_MENU);
 					break;
 				
 				case ButtonActions::QUIT:
@@ -133,21 +132,21 @@ private:
 	}
 
 public:
-	void menuActions(sf::RenderWindow& window, GameInterface::GameState& gameState, Game game) {
-		userActions(window, gameState, game);
-		draw(window);
+	void menuActions(GameInterfaceController& gameDisplay, Game game) {
+		userActions(*gameDisplay.getWindow(), gameDisplay, game);
+		draw(*gameDisplay.getWindow());
 	}
 
-	void checkUserPauseActions(GameInterface::GameState &gameState) {
+	void checkUserPauseActions(GameInterfaceController& gameDisplay) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 			if (!EsqPressed) {
 				EsqPressed = true;
-				if (gameState == GameInterface::GameState::PAUSE_MENU) {
-					gameState = lastGameState;
+				if (gameDisplay.getGameState() == GameInterfaceController::GameState::PAUSE_MENU) {
+					gameDisplay.setGameState(lastGameState);
 				}
 				else {
-					lastGameState = gameState;
-					gameState = GameInterface::GameState::PAUSE_MENU;
+					lastGameState = gameDisplay.getGameState();
+					gameDisplay.setGameState(GameInterfaceController::GameState::PAUSE_MENU);
 				}
 			}
 		}
