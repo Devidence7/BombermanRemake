@@ -107,13 +107,17 @@ private:
 				int id = menu->onEvent(event);
 				switch (id) {
 				case ButtonActions::SINGLEPLAYER:
+			     	game.gameOptions.numPlayers = 1;
 					gameDisplay.setGameState(GameInterfaceController::GameState::PLAYING);
-					game.gameOptions.multiplayerGame = false;
+					
 					game.startNewGame(window);
 					break;
 				case ButtonActions::MULTIPLAYER:
+					
+					game.gameOptions.numPlayers = 2;
+				
 					gameDisplay.setGameState(GameInterfaceController::GameState::PLAYING);
-					game.gameOptions.multiplayerGame = true;
+				
 					game.startNewGame(window);
 					break;
 				case ButtonActions::OPCIONS:

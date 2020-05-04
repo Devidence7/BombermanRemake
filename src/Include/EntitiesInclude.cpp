@@ -8,8 +8,10 @@ void PLayers::addPlayer()
     players.push_back(std::make_shared<PlayerEntity>(PlayerEntity()));
 }
 void PLayers::insertPlayers(int numPlayers)
-{
-    addPlayer();
+{   //cout<<numPlayers<<endl;
+    for (int i=0;i<numPlayers;i++){
+        addPlayer();
+    }
 }
 std::vector<Player_ptr> &PLayers::getVectorPlayer()
 {

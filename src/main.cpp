@@ -39,6 +39,8 @@ int main(int argc, char* argv[]) {
 
 	// Start game loop
 	while (gameDisplayController.windowOpen()) {
+		GameTime::updateCurrentTime();
+
 		switch (gameDisplayController.gameState) {
 		case GameInterfaceController::GameState::MAIN_MENU:
 			gameMainMenu.menuActions(gameDisplayController, game);
@@ -54,6 +56,7 @@ int main(int argc, char* argv[]) {
 			break;
 
 		case GameInterfaceController::GameState::PLAYING:
+		
 			game.update();
 
 			// Clear screen from previous drawings
@@ -65,13 +68,13 @@ int main(int argc, char* argv[]) {
 				cout<<playersLives.front();
 			}*/
 			gameInterface.update(GameTime::getTimeNow());
-			if (game.gameOptions.multiplayerGame) {
+			/*if (game.gameOptions.multiplayerGame) {
 				//gameI.update(time.getTimeNow(),playersLives.front(),playersLives.back());
 				gameInterface.drawMulti(*gameDisplayController.getWindow());
-			}
-			else {
+			}*/
+			//else {
 				gameInterface.draw(*gameDisplayController.getWindow());
-			}
+			//}
 
 			sf::Event event;
 			while (gameDisplayController.getWindow()->pollEvent(event)) {

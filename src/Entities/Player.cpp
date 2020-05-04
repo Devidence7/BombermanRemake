@@ -149,15 +149,39 @@ bool PlayerEntity::playerActions(){
 /*
 	 * Update player position.
 	 */
-bool PlayerEntity::updatePlayer()
+bool PlayerEntity::updatePlayer(int ply)
 {
+	bool playerRight;
+	bool playerLeft;
+	bool playerUp;
+	bool playerDown;
+	bool playerBOMB;
 	// Player movement
-	bool playerRight = (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D));
+
+	/*bool playerRight = (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D));
 	bool playerLeft = (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::A));
 	bool playerUp = (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::W));
 	bool playerDown = (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S));
 
-	bool playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
+	bool playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);*/
+	if(ply==1){
+	 	playerRight = (sf::Keyboard::isKeyPressed(sf::Keyboard::Right));
+		playerLeft = (sf::Keyboard::isKeyPressed(sf::Keyboard::Left));
+		playerUp = (sf::Keyboard::isKeyPressed(sf::Keyboard::Up));
+		playerDown = (sf::Keyboard::isKeyPressed(sf::Keyboard::Down));
+
+		 playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
+	}
+	else{
+		playerRight = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
+		playerLeft = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
+		playerUp = sf::Keyboard::isKeyPressed(sf::Keyboard::W);
+		playerDown = sf::Keyboard::isKeyPressed(sf::Keyboard::S);
+
+		 playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::P);
+	}
+
+
 
 	velocity.x = 0;
 	velocity.y = 0;

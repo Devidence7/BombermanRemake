@@ -74,5 +74,6 @@ public:
 	/*
 	 * Update player position.
 	 */
-	bool updatePlayer();
+	bool updatePlayer(int ply);
+	
 };

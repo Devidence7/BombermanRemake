@@ -30,11 +30,13 @@ const sf::String& Label::getText() const
 void Label::setColor(const sf::Color& color)
 {
 	//m_text.setFillColor(color);
-	 m_text.getColor();
+	// m_text.getFillColor();
+	m_text.getColor();
 }
 
 const sf::Color& Label::getColor() const
 {
+	//return m_text.getFillColor();
 	//return m_text.getFillColor();
 	return m_text.getColor();
 }

@@ -31,14 +31,14 @@ private:
 	//std::vector<Enemy_ptr> enemies;
 public:
 	struct GameOptions {
-		bool multiplayerGame = false;
+		//bool multiplayerGame = false;
+		int numPlayers;
 	};
 	GameOptions gameOptions;
 
-	int FPS = 60;
-
 	Game() {
-		PLayers::insertPlayers();
+	//	cout<<gameOptions.numPlayers<<endl;
+		//PLayers::insertPlayers(gameOptions.numPlayers);
 		insertarEnemigos();
 		level = new Level(enemies, dimX, dimY);
 		//mainMenu(w);
@@ -48,8 +48,11 @@ public:
 	}
 
 	void startNewGame(sf::RenderWindow& window){
+		PLayers::insertPlayers(gameOptions.numPlayers);
 		unsigned int pixelsX = window.getSize().x;
 		unsigned int pixelsY = window.getSize().y;
+		
+	//	PLayers::insertPlayers(gameOptions.numPlayers);
 		sf::View view(sf::FloatRect(0.f, 0.f, pixelsX, pixelsY));
 		view.move(sf::Vector2f(0, -48));
 		window.setView(view);
@@ -58,17 +61,19 @@ public:
 	}
 
 	void updatePlayers() {
+		int ply=1;
 		for (Player_ptr& player : PLayers::getVectorPlayer()) {
-			if (player->updatePlayer()) {
-				// If there is nothing in that cell:
-				Entity_ptr b = std::make_shared<Bomb>(Bomb(player));
-				b->setPosition(level->getMapCellCorner(player->getCenterPosition()));
-				level->addNewItem(b);
-			}
+				if (player->updatePlayer(ply)) {
+					// If there is nothing in that cell:
+					Entity_ptr b = std::make_shared<Bomb>(Bomb(player));
+					b->setPosition(level->getMapCellCorner(player->getCenterPosition()));
+					level->addNewItem(b);
+				}
 			level->checkAndFixCollisions(player);
 			if (colissionWithEnemies(player)) {
 				player->setExpiredEntity();
 			}
+			ply++;
 		}
 	}
 
