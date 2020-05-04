@@ -1,9 +1,9 @@
 #pragma once
 #include <functional>
 #include <SFML/Graphics.hpp>
-#include "Utils/PropertiesReader.h"
 #include "../Music/GameSounds.h"
 #include <fstream>
+#include "../Utils/PropertiesReader.h"
 
 class GameDisplayController {
 	sf::RenderWindow* window;
