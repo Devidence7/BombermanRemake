@@ -3,7 +3,6 @@
 #include <SFML/Graphics.hpp>
 #include "Utils/PropertiesReader.h"
 #include "../Music/GameSounds.h"
-#include <filesystem>
 #include <fstream>
 
 class GameDisplayController {
@@ -116,8 +115,11 @@ public:
 		string filename = "properties.txt";
 		fstream appendFileToWorkWith;
 
+		appendFileToWorkWith.open(filename, std::fstream::in);
+
 		// If file does not exist, Create new file
-		if (!std::filesystem::exists(filename)) {
+		if (!appendFileToWorkWith.is_open()) {
+			appendFileToWorkWith.close();
 			appendFileToWorkWith.open(filename, std::fstream::in | std::fstream::out | fstream::trunc);
 			appendFileToWorkWith << "volume.master = 50\n";
 			appendFileToWorkWith << "volume.music = 50\n";
@@ -129,6 +131,9 @@ public:
 
 			appendFileToWorkWith.close();
 
+		}
+		else {
+			appendFileToWorkWith.close();
 		}
 
 		appendFileToWorkWith.open(filename, std::fstream::in | std::fstream::out);
