@@ -196,31 +196,31 @@ bool PlayerEntity::updatePlayer(int ply)
 
 	if (playerDown)
 	{
-		velocity.y = baseSpeed * speedBoost;
+		velocity.y = baseSpeed * speedBoost * moveTime * 60;
 		lastMovement = LookingAt::down;
 	}
 	if (playerUp)
 	{
-		velocity.y = -baseSpeed * speedBoost;
+		velocity.y = -baseSpeed * speedBoost * moveTime * 60;
 		lastMovement = LookingAt::up;
 	}
 	if (playerLeft)
 	{
-		velocity.x = -baseSpeed * speedBoost;
+		velocity.x = -baseSpeed * speedBoost * moveTime * 60;
 		lastMovement = LookingAt::left;
 	}
 	if (playerRight)
 	{
-		velocity.x = baseSpeed * speedBoost;
+		velocity.x = baseSpeed * speedBoost * moveTime * 60;
 		lastMovement = LookingAt::right;
 		//lives--;
 	}
 
-	if (velocity.x != 0 && velocity.y != 0){
-		float module = sqrt((velocity.x*velocity.x) + (velocity.y * velocity.y));
-		velocity.x = (velocity.x/module) /* * sqrt(2)  */* baseSpeed;
-		velocity.y = (velocity.y/module) /* * sqrt(2)  */* baseSpeed;
-	}
+	//if (velocity.x != 0 && velocity.y != 0){
+	//	float module = sqrt((velocity.x*velocity.x) + (velocity.y * velocity.y));
+	//	velocity.x = (velocity.x / module) /* * sqrt(2)  */;//* baseSpeed;
+	//	velocity.y = (velocity.y / module) /* * sqrt(2)  */;//* baseSpeed;
+	//}
 
 	// Call animate function to change current sprite if needed.
 	animate(velocity);
