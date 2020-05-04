@@ -101,7 +101,7 @@ void Fire::update()
 	else if (GameTime::getTimeNow() - spriteLastFrameTime > spriteSpeed)
 	{
 		spriteLastFrameTime = GameTime::getTimeNow();
-		actualFrame = (actualFrame + 1) % spriteFrames;
-		setTextureRect(fireTexture->getFrame(actualFrame, explosionType));
+		currentFrame = (currentFrame + 1) % spriteFrames;
+		setTextureRect(fireTexture->getFrame(currentFrame, explosionType));
 	}
 }

@@ -7,6 +7,9 @@ class GameTime {
 private:
 	static std::chrono::time_point<std::chrono::system_clock> start;
 	static double lastTimeRecorded;
+	
+	static std::chrono::time_point<std::chrono::system_clock> startPause;
+	static double timeInPause;
 
 public:
 	// Set starting time and global GTime variable:
@@ -17,5 +20,9 @@ public:
 	
 	// Get current time in seconds:
 	static double getTimeNow();
+
+	static void stopGameTime();
+
+	static void resumeGameTime();
 };
 

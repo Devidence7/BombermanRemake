@@ -78,6 +78,7 @@ private:
 		switch (id) {
 		case ButtonActions::RESUME:
 			gameDisplay.setGameState(lastGameState);
+			GameTime::resumeGameTime();
 			break;
 
 		case ButtonActions::SAVE:
@@ -130,6 +131,7 @@ public:
 				}
 				else {
 					lastGameState = gameDisplay.getGameState();
+					GameTime::stopGameTime();
 					gameDisplay.setGameState(GameDisplayController::GameState::PAUSE_MENU);
 				}
 			}

@@ -8,6 +8,8 @@ EnemyEntity::EnemyEntity() : Entity()
 	onCollision = false;
 	collisioner = false;
 
+	spriteLastFrameTime = GameTime::getTimeNow();
+
 	// Texture Controller
 	enemyTexture = &TextureStorage::getEnemyTexture();
 	// Set starting sprite
@@ -126,8 +128,10 @@ void EnemyEntity::updateVelocity()
 
 void EnemyEntity::setExpiredEntity()
 {
+	spriteStartTime = GameTime::getTimeNow();
+	spriteLastFrameTime = GameTime::getTimeNow();
 	dyingEntity = true;
-	velocity = sf::Vector2f(0, 0);
+	//velocity = sf::Vector2f(0, 0);
 }
 
 void EnemyEntity::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT)
@@ -140,31 +144,27 @@ void EnemyEntity::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionT
 
 void EnemyEntity::update()
 {
-
 	// If the enemy has died:
 	if (!dyingEntity)
 	{
 		updateVelocity();
 		// If there is speed we must update animation sprite every X time
-		if (GameTime::getTimeNow() - animLastTic > frameSpeed)
+		if (GameTime::getTimeNow() - spriteLastFrameTime > spriteSpeed)
 		{
+			currentFrame = (currentFrame + 1) % spriteFrames;
 			setTextureRect(enemyTexture->getWalkingSprite(lookingDir, currentFrame, enemyType));
-			currentFrame = (currentFrame + 1) % walkFrames;
-			animLastTic = GameTime::getTimeNow();
+			spriteLastFrameTime = GameTime::getTimeNow();
 		}
 	}
 	else
 	{
-		if (currentFrame == deathFrames - 1 && GameTime::getTimeNow() - animLastTic > frameSpeed)
-		{
+		if (GameTime::getTimeNow() - spriteStartTime > expiredTime) {
 			expiredEntity = true;
 		}
-
-		else if (GameTime::getTimeNow() - animLastTic > frameSpeed)
-		{
+		else if (GameTime::getTimeNow() - spriteLastFrameTime > spriteSpeed) {
+			spriteLastFrameTime = GameTime::getTimeNow();
+			currentFrame = (currentFrame + 1) % deadSpriteFrames;
 			setTextureRect(enemyTexture->getDeathSprite(currentFrame, enemyType));
-			currentFrame = (currentFrame + 1) % deathFrames;
-			animLastTic = GameTime::getTimeNow();
 		}
 	}
 }

@@ -12,7 +12,7 @@ public:
 	double spriteLastFrameTime;
 
 	double spriteSpeed = 0.1;
-	int actualFrame = 1;
+	int currentFrame = 1;
 	int spriteFrames = 7;
 
 	double expiredTime = 0.6;

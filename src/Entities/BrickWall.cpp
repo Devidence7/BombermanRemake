@@ -25,8 +25,8 @@ void BrickWall::update()
 		}
 		else if (GameTime::getTimeNow() - spriteLastFrameTime > spriteSpeed) {
 			spriteLastFrameTime = GameTime::getTimeNow();
-			actualFrame = (actualFrame + 1) % spriteFrames;
-			setTextureRect(wallTexture->getRectWall(actualFrame));
+			currentFrame = (currentFrame + 1) % spriteFrames;
+			setTextureRect(wallTexture->getRectWall(currentFrame));
 		}	
 	}
 }

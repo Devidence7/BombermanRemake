@@ -51,6 +51,7 @@ public:
 		view.move(sf::Vector2f(0, -48));
 		window.setView(view);
 
+		GameTime::startGameTime();
 		GameMusic::playWorld1Music();
 	}
 

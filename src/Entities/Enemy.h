@@ -12,13 +12,17 @@ class EnemyEntity : public Entity {
 private:
 	EnemyTexture* enemyTexture;
 	LookingAtBi lookingDir = bRight;
-	double	animLastTic = 0;			// Actual tick
-	int currentFrame = 0;				// Frame we are now
 
-	const int walkFrames = 4;			// Number of walking sprites
-	const int deathFrames = 5;
+	double spriteStartTime;
+	double spriteLastFrameTime;
 
-	const double frameSpeed = 0.15;		// Number of ticks between walking sprites
+	double spriteSpeed = 0.2;			// Time between walking frames
+	int currentFrame = 0;				// Current frame number
+	int spriteFrames = 4;				// Number of walking frames
+
+	double expiredspriteSpeed = 0.4;	// Time between dead frames
+	double expiredTime = 1;				// Time for delete entity
+	int deadSpriteFrames = 3;
 
 	bool dyingEntity = false;			// Starts entity dying animation
 
