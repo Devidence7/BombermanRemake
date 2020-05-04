@@ -36,6 +36,8 @@ public:
 	const int deathFrames = 7;			// Number of death sprites
 	const double frameSpeed = 0.15;		// Time between frames
 
+	double lastMovementTime = 0;
+
 	PlayerTexture* playerTexture;
 	PlayerColor* playerColor;
 	LookingAt lastMovement; // Save last looked direction
