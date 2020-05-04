@@ -120,7 +120,7 @@ private:
 		createBackgroundMenu(window);
 	}
 
-	void createGraphicsMenu(sf::RenderWindow& window) {
+	void createGraphicsMenu(sf::RenderWindow& window, GameDisplayController &gameDisplay) {
 		menu = new GameGUI::Menu(window);
 
 		GameGUI::HorizontalBoxLayout* hbox = menu->addHorizontalBoxLayout();
@@ -143,7 +143,7 @@ private:
 		opt->addItem("1920 x 1080", sf::Vector2i(1920, 1080));
 		f->addRow("Resolucion", opt, ButtonActions::RESOLUTION);
 
-		fullScreenCheckBox = new GameGUI::CheckBox();
+		fullScreenCheckBox = new GameGUI::CheckBox(gameDisplay.fullScreen);
 		f->addRow("Pantalla Completa    ", fullScreenCheckBox, ButtonActions::FULLSCREEN);
 
 		fpsSlider = new GameGUI::Slider();
@@ -181,7 +181,7 @@ private:
 			break;
 		case ButtonActions::GRAPHICS:
 			delete(menu);
-			createGraphicsMenu(*window);
+			createGraphicsMenu(*window, gameDisplay);
 			break;
 		case ButtonActions::CONTROLS:
 			break;
@@ -200,6 +200,8 @@ private:
 		case ButtonActions::RESOLUTION: {
 			/*sf::FloatRect visibleArea(0, 0, opt->getSelectedValue().x, opt->getSelectedValue().y);
 			window.setView(sf::View(visibleArea));*/
+			gameDisplay.windowWidth = opt->getSelectedValue().x;
+			gameDisplay.windowHeight = opt->getSelectedValue().y;
 			cout << opt->getSelectedValue().x << " x " << opt->getSelectedValue().y << endl;
 			window->setSize(sf::Vector2u(opt->getSelectedValue().x, opt->getSelectedValue().y));
 			gameDisplay.notifyChangeDisplay();
@@ -209,10 +211,12 @@ private:
 		case ButtonActions::FULLSCREEN:
 			window->close();
 			if (fullScreenCheckBox->isChecked()) {
+				gameDisplay.fullScreen = true;
 				window = new RenderWindow(sf::VideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height), "Bombermenaman", sf::Style::Fullscreen);
 			}
 			else {
-				window = new RenderWindow(sf::VideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height), "Bombermenaman");
+				gameDisplay.fullScreen = false;
+				window = new RenderWindow(sf::VideoMode(gameDisplay.windowWidth, gameDisplay.windowHeight), "Bombermenaman");
 			}
 			
 			gameDisplay.notifyChangeDisplay();
@@ -223,16 +227,19 @@ private:
 				fpsText->setText("MAX");
 				//GameInterfaceController::FPSs = 0;
 				fpss = 0;
+				
 			}
 			else {
 				fpsText->setText(to_string(fpss));
 			}
 			window->setFramerateLimit(fpss);
+			gameDisplay.FPSs = fpss;
 
 			break;
 		}
 		case ButtonActions::QUIT:
 			gameDisplay.setGameState(lastGameStateOptionsMenu);
+			gameDisplay.saveProperties();
 			break;
 		}
 
