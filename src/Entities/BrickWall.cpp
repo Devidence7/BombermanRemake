@@ -5,11 +5,6 @@ BrickWall::BrickWall(int &xloc, int &yloc) : Entity()
 {
 	isFireDestroyable = true;
 
-	spriteCounter = 0;
-	spriteSpeed = 3;
-	actualFrame = 0;
-	explosionCounter = 0;
-
 	// Set coordinates:
 	setPosition(xloc * SIZE_PILLAR, yloc * SIZE_PILLAR);
 
@@ -24,24 +19,18 @@ BrickWall::BrickWall(int &xloc, int &yloc) : Entity()
 void BrickWall::update()
 {
 	if (isDestroyed)
-	{
-		spriteCounter++;
-		spriteCounter %= spriteSpeed;
-		if (spriteCounter == 0)
-		{
-			if (actualFrame == 7)
-			{
-				expiredEntity = true;
-			}
-			else
-			{
-				actualFrame = (actualFrame + 1) % 8;
-				setTextureRect(wallTexture->getRectWall(actualFrame));
-			}
+	{ 
+		if (GameTime::getTimeNow() - spriteStartTime > expiredTime) {
+			expiredEntity = true;
 		}
+		else if (GameTime::getTimeNow() - spriteLastFrameTime > spriteSpeed) {
+			spriteLastFrameTime = GameTime::getTimeNow();
+			currentFrame = (currentFrame + 1) % spriteFrames;
+			setTextureRect(wallTexture->getRectWall(currentFrame));
+		}	
 	}
 }
-
+ 
 
 bool BrickWall::isColliderWith(std::shared_ptr<Entity> eCollisioning) {
 	return eCollisioning->CanThroughWall();
@@ -62,5 +51,7 @@ void BrickWall::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionTyp
 
 void BrickWall::setExpiredEntity()
 {
+	spriteStartTime = GameTime::getTimeNow();
+	spriteLastFrameTime = GameTime::getTimeNow();
 	isDestroyed = true;
 }

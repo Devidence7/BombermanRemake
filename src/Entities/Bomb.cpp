@@ -76,11 +76,8 @@ void Bomb::update()
 
 Fire::Fire(int type ) : Entity()
 {
-	spriteCounter = 0;
-	spriteSpeed = 5;
-	actualFrame = 0;
-	spriteFrames = 5;
-	explosionCounter = 0;
+	spriteStartTime = GameTime::getTimeNow();
+	spriteLastFrameTime = GameTime::getTimeNow();
 	explosionType = type;
 
 	// Texture Controller:
@@ -98,17 +95,14 @@ void Fire::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType col
 
 void Fire::update()
 {
-	explosionCounter++;
-	if (explosionCounter >= 25)
+	if (GameTime::getTimeNow() - spriteStartTime > expiredTime)
 	{
-		expiredEntity = true;
+		setExpiredEntity();
 	}
-
-	spriteCounter++;
-	spriteCounter %= spriteSpeed;
-	if (spriteCounter == 0)
+	else if (GameTime::getTimeNow() - spriteLastFrameTime > spriteSpeed)
 	{
-		actualFrame = (actualFrame + 1) % spriteFrames;
-		setTextureRect(fireTexture->getFrame(actualFrame, explosionType));
+		spriteLastFrameTime = GameTime::getTimeNow();
+		currentFrame = (currentFrame + 1) % spriteFrames;
+		setTextureRect(fireTexture->getFrame(currentFrame, explosionType));
 	}
 }

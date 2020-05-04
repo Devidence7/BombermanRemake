@@ -7,10 +7,16 @@
 class BrickWall : public Entity {
 public:
 	WallTexture* wallTexture;
-	int spriteCounter;
-	int spriteSpeed;
-	int actualFrame;
-	int explosionCounter;
+
+	double spriteStartTime;
+	double spriteLastFrameTime;
+
+	double spriteSpeed = 0.1;
+	int currentFrame = 1;
+	int spriteFrames = 7;
+
+	double expiredTime = 0.6;
+
 	bool isDestroyed = false;
 	
 	BrickWall(int &xloc, int &yloc);
