@@ -5,6 +5,8 @@
 #include "../Textures/TextureStorage.h"
 #include "../Logic/Time.h"
 #include <memory>
+#include "../Logic/Time.h"
+
 #include "Entity.h"
 #include "Bomb.h"
 
@@ -16,11 +18,14 @@ public:
 	// Gameplay variables:
 	int lives;
 	double speedBoost = 1;
-	int numOfBombs = 1;
+	int numOfBombs = 5;
 	int powerOfBombs = 1;
 	//list <sf::Texture>activatedPowerUps;
 	//list<sf::IntRect> activatedPowerUps;
 	list <sf::Sprite*>activatedPowerUps;
+	bool isBombKeyPresed = false;
+
+	std::shared_ptr<PlayerEntity> me;
 
 	unsigned int bombsTimeLimit = 30;
 

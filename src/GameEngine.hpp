@@ -27,8 +27,6 @@ private:
 	int dimX = 25;
 	// Initialize textures
 	TextureStorage textureStorage;
-	//Level* level;
-	
 	//MainMenu mainMenu;
 public:
 	struct GameOptions {
@@ -58,12 +56,8 @@ public:
 
 	void updatePlayers() {
 		for (Player_ptr& player : PLayers::getVectorPlayer()) {
-			if (player->updatePlayer()) {
-				// If there is nothing in that cell:
-				Entity_ptr b = std::make_shared<Bomb>(Bomb(player));
-				b->setPosition(level->getMapCellCorner(player->getCenterPosition()));
-				level->addNewItem(b);
-			}
+			player->updatePlayer();
+			player->playerActions();
 			level->checkAndFixCollisions(player);
 			if (colissionWithEnemies(player)) {
 				player->setExpiredEntity();

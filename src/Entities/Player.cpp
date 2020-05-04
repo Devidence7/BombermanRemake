@@ -1,5 +1,6 @@
 #include "../Include/EntitiesInclude.hpp"
-//#include "../Map/Level.hpp"
+#include "../Map/Level.hpp"
+
 PlayerEntity::PlayerEntity() : Entity()
 {
 	isFireDestroyable = true;
@@ -129,11 +130,16 @@ void PlayerEntity::onCollission(std::shared_ptr<Entity> eCollisioning, Collision
 	 */
 
 bool PlayerEntity::playerActions(){
-	bool playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
 
-	if (playerBOMB && numOfBombs > 0)
-	{
-		return true;
+	double t = GameTime::getTimeNow();
+	bool playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
+	if (!playerBOMB){
+		isBombKeyPresed = false;
+	}else if(numOfBombs > 0 && !isBombKeyPresed){
+		if(Level::addBomb(this->me)){
+			numOfBombs--;
+		}
+		isBombKeyPresed = true;
 	}
 }
 

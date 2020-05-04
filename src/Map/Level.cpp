@@ -343,7 +343,7 @@ void Level::checkAndFixCollisions(Entity_ptr eCollisioning)
 			/******CASOS*************
 				 * | x | p |
 				 * | x |   |
-				************************/
+			************************/
 			e_horizontal->onCollission(eCollisioning, CollisionType::HORIZONTAL);
 		}
 		else if (e_diagonal && e_vertical)
@@ -351,7 +351,7 @@ void Level::checkAndFixCollisions(Entity_ptr eCollisioning)
 			/******CASOS*************
 				 * |   | p |
 				 * | x | x |
-				************************/
+			************************/
 			e_vertical->onCollission(eCollisioning, CollisionType::VERTICAL);
 		}
 		else
@@ -360,10 +360,10 @@ void Level::checkAndFixCollisions(Entity_ptr eCollisioning)
 			Entity_ptr col;
 			if (e_horizontal)
 			{
-				/******CASOS*************
+			/******CASOS*************
 				 * | x | p |
 				 * |   |   |
-				************************/
+			************************/
 				col = e_horizontal;
 			}
 			if (e_vertical)
@@ -376,10 +376,10 @@ void Level::checkAndFixCollisions(Entity_ptr eCollisioning)
 			}
 			if (e_diagonal)
 			{
-				/******CASOS*************
+			/******CASOS*************
 				 * |   | p |
 				 * | x |   |
-				************************/
+			************************/
 				col = e_diagonal;
 			}
 			if (!col)
@@ -472,4 +472,15 @@ void Level::addWall(int x, int y)
 	Entity_ptr e = std::make_shared<BrickWall>(BrickWall(x, y));
 	addEntityToMap(e, x, y);
 	addEntityToMiniMap(e, x, y);
+}
+
+bool Level::addBomb(Player_ptr p){
+	sf::Vector2f currentPos = Level::getMapCellCorner(p->getCenterPosition());
+	if(Level::getCellMiniMapObject(getMapCoordinates(currentPos)) == nullptr){
+		Entity_ptr b = std::make_shared<Bomb>(Bomb(p));
+		b->setPosition(currentPos);
+		Level::addNewItem(b);
+		return true;
+	}
+	return false;
 }

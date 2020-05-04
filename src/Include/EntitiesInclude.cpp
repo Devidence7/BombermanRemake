@@ -5,7 +5,9 @@ std::vector<std::vector<Entity_ptr>> EntityMap::entityMap;
 
 void PLayers::addPlayer()
 {
-    players.push_back(std::make_shared<PlayerEntity>(PlayerEntity()));
+    Player_ptr p = std::make_shared<PlayerEntity>(PlayerEntity());
+    p->me = p;
+    players.push_back(p);
 }
 void PLayers::insertPlayers(int numPlayers)
 {

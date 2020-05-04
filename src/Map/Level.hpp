@@ -56,4 +56,5 @@ public:
 	static void addEntity(Entity_ptr e);
 	static void addPillar(int x, int y);
 	static void addWall(int x, int y);
+	static bool addBomb(Player_ptr p);
 };

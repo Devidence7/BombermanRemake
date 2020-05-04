@@ -39,7 +39,7 @@ public:
 	Entity();
 	virtual sf::Vector2f getCenterPosition();
 
-	virtual bool isCollisioner();
+	virtual bool isColliderWith(std::shared_ptr<Entity> eCollisioning);
 
 	bool CanHurtPlayer();
 
