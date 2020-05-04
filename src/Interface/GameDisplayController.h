@@ -18,7 +18,11 @@ public:
     };
 
     GameState gameState;
-    bool screenChanged;
+    
+	bool mainMenuReprocessDisplay = false;
+	bool playingReprocessDisplay = false;
+	bool optionsMenuReprocessDisplay = false;
+	bool pauseMenuReprocessDisplay = false;
 
 	GameDisplayController() {
 		// Get display properties from properties file
@@ -49,6 +53,13 @@ public:
 		gameState = newGameState;
 	}
 
+	void notifyChangeDisplay() {
+		mainMenuReprocessDisplay = true;
+		playingReprocessDisplay = true;
+		optionsMenuReprocessDisplay = true;
+		pauseMenuReprocessDisplay = true;
+	}
+
     void manageGameInterface(std::function<void(sf::Event&)> buttonActions) {
 		sf::Event event;
 		while (window->pollEvent(event)) {
@@ -69,14 +80,16 @@ public:
 				// update the view to the new size of the window
 				sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
 				window->setView(sf::View(visibleArea));
-				//createBackgroundMenu(*window, false);
+				notifyChangeDisplay();
 				break;
 			}
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			//													BUTTON PRESSED
+			//									   IF MENU BUTTON PRESSED OR OTHE CUSTOM
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			default:
-				buttonActions(event);
+				if (buttonActions) {
+					buttonActions(event);
+				}
 				break;
 			}
 		}

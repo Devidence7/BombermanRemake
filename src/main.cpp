@@ -75,23 +75,7 @@ int main(int argc, char* argv[]) {
 				gameInterface.draw(*gameDisplayController.getWindow());
 			}
 
-			sf::Event event;
-			while (gameDisplayController.getWindow()->pollEvent(event)) {
-				// Process events
-				switch (event.type) {
-					// window closed
-				case sf::Event::Closed:
-					// Close window -> exit
-					gameDisplayController.getWindow()->close();
-					break;
-				case sf::Event::LostFocus:
-					// Pause
-					break;
-				case sf::Event::GainedFocus:
-					// Resume
-					break;
-				}
-			}
+			gameDisplayController.manageGameInterface(nullptr);
 
 			pauseMenu.checkUserPauseActions(gameDisplayController);
 		}

@@ -73,50 +73,29 @@ public:
 	}
 
 private:
-	void userActions(sf::RenderWindow& window, GameDisplayController& gameDisplay, Game game) {
-		sf::Event event;
-		while (window.pollEvent(event)) {
-			// Process events
-			switch (event.type) {
-				// window closed
-			case sf::Event::Closed:
-				// Close window -> exit
-				window.close();
-				break;
-			case sf::Event::LostFocus:
-				// Pause
-				break;
-			case sf::Event::GainedFocus:
-				// Resume
-				break;
-				//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				//													BUTTON PRESSED
-				//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			default:
-				int id = menu->onEvent(event);
-				switch (id) {
-				case ButtonActions::RESUME:
-					gameDisplay.setGameState(lastGameState);
-					break;
+	void userActions(sf::Event& event, sf::RenderWindow*& window, GameDisplayController& gameDisplay, Game& game) {
+		int id = menu->onEvent(event);
+		switch (id) {
+		case ButtonActions::RESUME:
+			gameDisplay.setGameState(lastGameState);
+			break;
 
-				case ButtonActions::SAVE:
+		case ButtonActions::SAVE:
 					
-					break;
+			break;
 				
-				case ButtonActions::OPTIONS:
-					OptionsMenu::lastGameStateOptionsMenu = GameDisplayController::GameState::PAUSE_MENU;
-					gameDisplay.setGameState(GameDisplayController::GameState::OPTIONS_MENU);
-					break;
+		case ButtonActions::OPTIONS:
+			OptionsMenu::lastGameStateOptionsMenu = GameDisplayController::GameState::PAUSE_MENU;
+			gameDisplay.setGameState(GameDisplayController::GameState::OPTIONS_MENU);
+			break;
 				
-				case ButtonActions::GO_MAIN_MENU:
-					gameDisplay.setGameState(GameDisplayController::GameState::MAIN_MENU);
-					break;
+		case ButtonActions::GO_MAIN_MENU:
+			gameDisplay.setGameState(GameDisplayController::GameState::MAIN_MENU);
+			break;
 				
-				case ButtonActions::QUIT:
-					window.close();
-					break;
-				}
-			}
+		case ButtonActions::QUIT:
+			window->close();
+			break;
 		}
 	}
 
@@ -133,7 +112,12 @@ private:
 
 public:
 	void menuActions(GameDisplayController& gameDisplay, Game game) {
-		userActions(*gameDisplay.getWindow(), gameDisplay, game);
+		// Manage window events and pass a callback to manage this menu buttons
+		gameDisplay.manageGameInterface(std::bind(&PauseMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
+		if (gameDisplay.pauseMenuReprocessDisplay) {
+			gameDisplay.pauseMenuReprocessDisplay = false;
+			createBackgroundMenu(*gameDisplay.getWindow());
+		}
 		draw(*gameDisplay.getWindow());
 	}
 
