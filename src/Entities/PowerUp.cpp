@@ -45,7 +45,7 @@ void PowerUp::addPowerUp2Player(PlayerEntity &pe){
 	sf::Sprite *temp=new Sprite();
 	temp->setTexture(TextureStorage::getPowerUpTexture().getTexture());
 	setTextureRect(powerUpTexture->getFrame(powerUpType, 0));
-	pe.activatedPowerUps.push_back(temp);
+	//pe.activatedPowerUps.push_back(temp);
 }
 
 MoreFirePowerUp::MoreFirePowerUp(sf::Vector2f pos) : PowerUp()

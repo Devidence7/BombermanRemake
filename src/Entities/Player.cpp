@@ -94,12 +94,23 @@ void PlayerEntity::animate(sf::Vector2f velocity)
 	{
 		if (currentFrame == 6 && GameTime::getTimeNow() - animLastTic > frameSpeed)
 		{
+				lives--;
 			if(lives>0){
-		    	lives--;
-			}
-			//Else mostrar fin de partida
-			expiredEntity = false;
+		    
+				expiredEntity = false;
 			setPosition(100, 100);
+			}
+			else{
+				//expiredEntity = true;
+				setExpiredEntity();
+			}
+			/*else{
+				gameDisplay.setGameState(GameDisplayController::GameState::GAME_OVER);
+			}*/
+			//Else mostrar fin de partida
+			/*else{}
+				expiredEntity = false;
+			setPosition(100, 100);*/
 		}
 
 		if (GameTime::getTimeNow() - animLastTic > frameSpeed)
@@ -137,10 +148,17 @@ void PlayerEntity::onCollission(std::shared_ptr<Entity> eCollisioning, Collision
 	 * 
 	 */
 
-bool PlayerEntity::playerActions(){
+bool PlayerEntity::playerActions(int player){
 
 	double t = GameTime::getTimeNow();
-	bool playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
+	bool playerBOMB;
+	if(player==1){
+		playerBOMB=sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
+	}
+	else{
+		playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::P);
+	}
+	
 	if (!playerBOMB){
 		isBombKeyPresed = false;
 	}else if(numOfBombs > 0 && !isBombKeyPresed){
@@ -191,6 +209,12 @@ bool PlayerEntity::updatePlayer(int ply)
 
 
 
+	double moveTime = 0;
+	if (lastMovementTime) {
+		moveTime = GameTime::getTimeNow() - lastMovementTime;
+	}
+	lastMovementTime = GameTime::getTimeNow();
+
 	velocity.x = 0;
 	velocity.y = 0;
 
@@ -216,11 +240,7 @@ bool PlayerEntity::updatePlayer(int ply)
 		//lives--;
 	}
 
-	//if (velocity.x != 0 && velocity.y != 0){
-	//	float module = sqrt((velocity.x*velocity.x) + (velocity.y * velocity.y));
-	//	velocity.x = (velocity.x / module) /* * sqrt(2)  */;//* baseSpeed;
-	//	velocity.y = (velocity.y / module) /* * sqrt(2)  */;//* baseSpeed;
-	//}
+	
 
 	// Call animate function to change current sprite if needed.
 	animate(velocity);

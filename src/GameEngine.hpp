@@ -8,6 +8,7 @@
 #include "Textures/TextureStorage.h"
 #include "Interface/GameInterface.h"
 #include "Music/GameMusic.h"
+#include "Interface/GameDisplayController.h"
 
 Level *level;
 
@@ -31,13 +32,13 @@ private:
 public:
 	struct GameOptions {
 		//bool multiplayerGame = false;
-		int numPlayers;
+		int numPlayers=2;
 	};
 	GameOptions gameOptions;
 
 	Game() {
 	//	cout<<gameOptions.numPlayers<<endl;
-		//PLayers::insertPlayers(gameOptions.numPlayers);
+		PLayers::insertPlayers(gameOptions.numPlayers);
 		
 	//	PLayers::insertPlayers();
 		Enemies::insertarEnemigos(dimX, dimY);
@@ -49,7 +50,7 @@ public:
 	}
 
 	void startNewGame(sf::RenderWindow& window){
-		PLayers::insertPlayers(gameOptions.numPlayers);
+	//	PLayers::insertPlayers(gameOptions.numPlayers);
 		unsigned int pixelsX = window.getSize().x;
 		unsigned int pixelsY = window.getSize().y;
 		
@@ -61,7 +62,18 @@ public:
 		GameMusic::playWorld1Music();
 	}
 
-	void updatePlayers() {
+	void restartGame(sf::RenderWindow& window){
+			for (Player_ptr& player : PLayers::getVectorPlayer()) {
+		
+				player->lives=3;
+			}
+			Enemies::insertarEnemigos(dimX, dimY);
+		level = new Level(dimX, dimY);
+		startNewGame(window);
+
+	}
+
+	void updatePlayers( GameDisplayController& gameDisplay) {
 		int ply=1;
 		for (Player_ptr& player : PLayers::getVectorPlayer()) {
 				if (player->updatePlayer(ply)) {
@@ -73,9 +85,9 @@ public:
 
 
 
-				
-			player->updatePlayer();
-			player->playerActions();
+
+			//player->updatePlayer();
+			player->playerActions(ply);
 
 
 
@@ -83,15 +95,23 @@ public:
 			level->checkAndFixCollisions(player);
 			if (colissionWithEnemies(player)) {
 				player->setExpiredEntity();
-			}
+			}	
 			ply++;
+		
 		}
 	}
 
-	void update() {
+	void update(GameDisplayController &gameDisplay) {
 		level->update();
-		updatePlayers();
+		updatePlayers(gameDisplay);
 		updateEnemies();
+		int totalLives=0;
+		for (Player_ptr& player : PLayers::getVectorPlayer()) {
+			totalLives+=player->getLives();
+		}
+		if(totalLives==0){
+			gameDisplay.setGameState(GameDisplayController::GameState::GAME_OVER);
+		}
 	}
 
 	void drawPlayers(sf::RenderWindow& w) {

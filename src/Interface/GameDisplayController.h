@@ -18,7 +18,9 @@ public:
         MAIN_MENU,
         PLAYING,
         OPTIONS_MENU,
-        PAUSE_MENU
+        PAUSE_MENU,
+		GAME_OVER,
+		RESTART
     };
 
     GameState gameState;
@@ -29,6 +31,7 @@ public:
 	bool playingReprocessDisplay = false;
 	bool optionsMenuReprocessDisplay = false;
 	bool pauseMenuReprocessDisplay = false;
+	bool gameOverReprocessDisplay = false;
 
 	GameDisplayController() {
 		// Get display properties from properties file

@@ -63,6 +63,7 @@ void Bomb::update()
 	if (GameTime::getTimeNow() - explosionCounter > explosionTime)
 	{
 		setExpiredEntity();
+		
 	}
 
 	if (GameTime::getTimeNow() - spriteCounter > spriteSpeed)

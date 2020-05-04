@@ -7,6 +7,7 @@
 #include <memory>
 #include "../Logic/Time.h"
 
+
 #include "Entity.h"
 #include "Bomb.h"
 
@@ -22,7 +23,6 @@ public:
 	int powerOfBombs = 1;
 	sf::Sprite playerHead;
 	sf::Sprite playerHead2;
-	list <sf::Sprite*>activatedPowerUps;
 	bool isBombKeyPresed = false;
 
 	std::shared_ptr<PlayerEntity> me;
@@ -77,7 +77,7 @@ public:
 	void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) override;
 
 
-	bool playerActions();
+	bool playerActions(int player);
 	/*
 	 * Update player position.
 	 */
