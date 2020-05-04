@@ -141,6 +141,8 @@ bool PlayerEntity::playerActions(){
 		}
 		isBombKeyPresed = true;
 	}
+
+	return isBombKeyPresed;
 }
 
 
