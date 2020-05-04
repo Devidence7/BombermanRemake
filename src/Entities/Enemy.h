@@ -44,7 +44,7 @@ public:
 	void updateVelocity();
 
 	void setExpiredEntity() override;
-	
+
 	void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) override;
 
 	void update() override;

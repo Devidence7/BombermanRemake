@@ -15,7 +15,7 @@ sf::Vector2f Entity::getCenterPosition()
 	return sf::Vector2f(p.left + p.width / 2, p.top + p.height / 2);
 }
 
-bool Entity::isCollisioner()
+bool Entity::isColliderWith(std::shared_ptr<Entity> eCollisioning)
 {
 	return this->collisioner;
 }
@@ -39,6 +39,7 @@ void Entity::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType c
 		position.y += this->moveOnY(eCollisioning);
 		break;
 	case CORNER:
+		eCollisioning->setCollision();
 		position += this->moveCircleOverCorner(eCollisioning);
 		break;
 
@@ -163,7 +164,13 @@ inline sf::Vector2f Entity::moveCircleOverCorner(std::shared_ptr<Entity> eCircle
 	{ //Esquina
 		referencia = intersec_x > intersec_y ? intersec_x : intersec_y;
 	}
-	intersec = ((distanciaCentros - referencia) + r_Circle) - distanciaCentros;
+	const int SEPARACION_EXTRA = 3;
+	intersec = (((distanciaCentros - referencia) + r_Circle) - distanciaCentros) + SEPARACION_EXTRA;
+/* 
+	float moduledir = moduleVector(dir_centros);
+	sf::Vector2f normalizeV = dir_centros/moduledir;
+	dir_centros = dir_centros * (moduledir + 1); */
+	
 
 	return (-dir_centros) * intersec;
 }

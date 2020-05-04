@@ -30,6 +30,14 @@ public:
     static std::vector<Player_ptr> &getVectorPlayer();
 };
 
+class Enemies{
+    static std::vector<Enemy_ptr> enemies;
+
+public:
+    static void insertarEnemigos(int dimX, int dimY);
+    static std::vector<Enemy_ptr> &getVectorEnemies();
+};
+
 class EntityMap
 {
     EntityMap(){};

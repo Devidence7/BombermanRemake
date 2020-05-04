@@ -5,6 +5,8 @@
 #include "../Textures/TextureStorage.h"
 #include "../Logic/Time.h"
 #include <memory>
+#include "../Logic/Time.h"
+
 #include "Entity.h"
 #include "Bomb.h"
 
@@ -21,6 +23,9 @@ public:
 	sf::Sprite playerHead;
 	sf::Sprite playerHead2;
 	list <sf::Sprite*>activatedPowerUps;
+	bool isBombKeyPresed = false;
+
+	std::shared_ptr<PlayerEntity> me;
 
 	unsigned int bombsTimeLimit = 30;
 

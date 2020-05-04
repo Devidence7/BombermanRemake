@@ -32,6 +32,7 @@ public:
 	Bomb(std::shared_ptr<PlayerEntity> p);
 
 	void setExpiredEntity() override;
+	bool isColliderWith(std::shared_ptr<Entity> eCollisioning) override;	
 	void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) override;
 	void update();
 

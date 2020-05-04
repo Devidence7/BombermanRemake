@@ -1,4 +1,5 @@
 #include "../Include/EntitiesInclude.hpp"
+#include "../Map/Level.hpp"
 
 PlayerEntity::PlayerEntity() : Entity()
 {
@@ -137,12 +138,19 @@ void PlayerEntity::onCollission(std::shared_ptr<Entity> eCollisioning, Collision
 	 */
 
 bool PlayerEntity::playerActions(){
-	bool playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
 
-	if (playerBOMB && numOfBombs > 0)
-	{
-		return true;
+	double t = GameTime::getTimeNow();
+	bool playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
+	if (!playerBOMB){
+		isBombKeyPresed = false;
+	}else if(numOfBombs > 0 && !isBombKeyPresed){
+		if(Level::addBomb(this->me)){
+			numOfBombs--;
+		}
+		isBombKeyPresed = true;
 	}
+
+	return isBombKeyPresed;
 }
 
 
@@ -209,8 +217,9 @@ bool PlayerEntity::updatePlayer(int ply)
 	}
 
 	if (velocity.x != 0 && velocity.y != 0){
-		velocity.x /= 2.0;
-		velocity.y /= 2.0;
+		float module = sqrt((velocity.x*velocity.x) + (velocity.y * velocity.y));
+		velocity.x = (velocity.x/module) /* * sqrt(2)  */* baseSpeed;
+		velocity.y = (velocity.y/module) /* * sqrt(2)  */* baseSpeed;
 	}
 
 	// Call animate function to change current sprite if needed.
@@ -222,10 +231,6 @@ bool PlayerEntity::updatePlayer(int ply)
 		move(velocity.x, velocity.y);
 	}
 
-	if (playerBOMB && numOfBombs > 0)
-	{
-		return true;
-	}
 	return false;
 }
 

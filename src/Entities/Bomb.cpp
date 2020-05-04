@@ -4,10 +4,9 @@
 Bomb::Bomb(std::shared_ptr<PlayerEntity> p) : Entity()
 {
 	player = p;
-	p->numOfBombs -= 1;
 	this->bombPower = p->getPowerOfBombs();
 	isFireDestroyable = true;
-	fireCanGoThroght = true;
+	fireCanGoThroght = false;
 
 	explosionCounter = GameTime::getTimeNow();
 	spriteCounter = GameTime::getTimeNow();
@@ -26,6 +25,11 @@ void Bomb::setExpiredEntity()
 	expiredEntity = true;
 	player->numOfBombs += 1;
 }
+
+bool Bomb::isColliderWith(Entity_ptr eCollisioning){
+	return !eCollisioning->CanThroughBomb();
+}	
+
 
 void Bomb::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT)
 {
