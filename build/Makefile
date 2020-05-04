@@ -24,7 +24,7 @@ libEntities=-L$(bin) -lEntities
 
 bomberman: $(src)/main.cpp $(bin)/Level.o $(bin)/libEntities.a $(bin)/libGui.a $(bin)/libTextures.a $(bin)/Random.o $(bin)/Time.o  $(src)/Include/EntitiesInclude.cpp $(src)/Utils/A_Star.cpp 
 	$(CC) -o bomberman  $(src)/main.cpp $(src)/Include/EntitiesInclude.cpp $(src)/Utils/A_Star.cpp  $(MusicPath)/GameMusic.cpp $(MusicPath)/GameSounds.cpp  \
-		$(build)/Level.o $(bin)/Random.o $(bin)/Time.o  \
+		$(bin)/Level.o $(bin)/Random.o $(bin)/Time.o  \
 		$(bin)/Arrow.o $(bin)/Box.o $(bin)/Cross.o $(UtilsInzPath)/ItemBox.hpp \
 		$(bin)/FormLayout.o $(bin)/HorizontalBoxLayout.o $(bin)/Layout.o $(bin)/Menu.o $(bin)/VerticalBoxLayout.o \
 		$(libs) \
