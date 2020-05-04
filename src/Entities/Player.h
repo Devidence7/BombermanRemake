@@ -18,7 +18,7 @@ public:
 	// Gameplay variables:
 	int lives;
 	double speedBoost = 1;
-	int numOfBombs = 5;
+	int numOfBombs = 1;
 	int powerOfBombs = 1;
 	//list <sf::Texture>activatedPowerUps;
 	//list<sf::IntRect> activatedPowerUps;
