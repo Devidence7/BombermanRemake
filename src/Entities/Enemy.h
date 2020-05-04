@@ -22,6 +22,8 @@ private:
 
 	bool dyingEntity = false;			// Starts entity dying animation
 
+	double lastMovementTime = 0;
+
 	ANode currentMovement;
 
 	sf::Color colorPath;

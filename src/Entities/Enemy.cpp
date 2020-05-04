@@ -109,8 +109,16 @@ void EnemyEntity::updateVelocity()
 			generateRandomPath();
 		}
 	}
-	velocity.x = baseSpeed * currentMovement.getAction().x;
-	velocity.y = baseSpeed * currentMovement.getAction().y;
+
+	double moveTime = 0;
+	if (lastMovementTime) {
+		moveTime = GameTime::getTimeNow() - lastMovementTime;
+		moveTime *= 60;
+	}
+	lastMovementTime = GameTime::getTimeNow();
+
+	velocity.x = baseSpeed * currentMovement.getAction().x * moveTime;
+	velocity.y = baseSpeed * currentMovement.getAction().y * moveTime;
 	//std::cout << "Vel: " << velocity.x << " " << velocity.y << std::endl;
 
 	move(velocity.x, velocity.y);
