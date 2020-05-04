@@ -75,7 +75,7 @@ int main(int argc, char* argv[]) {
 				gameInterface.draw(*gameDisplayController.getWindow());
 			}
 
-			gameDisplayController.manageGameInterface(nullptr);
+			gameDisplayController.manageGameInterface(gameDisplayController);
 
 			pauseMenu.checkUserPauseActions(gameDisplayController);
 		}

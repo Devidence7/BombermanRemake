@@ -72,7 +72,7 @@ public:
 		pauseMenuReprocessDisplay = true;
 	}
 
-    void manageGameInterface(std::function<void(sf::Event&)> buttonActions) {
+    void manageGameInterface(GameDisplayController &gameDisplay, std::function<void(sf::Event&)> buttonActions = nullptr) {
 		sf::Event event;
 		while (window->pollEvent(event)) {
 			// Process events
@@ -92,6 +92,10 @@ public:
 				// update the view to the new size of the window
 				sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
 				window->setView(sf::View(visibleArea));
+				window->setSize(sf::Vector2u(event.size.width, event.size.height));
+				gameDisplay.windowWidth = event.size.width;
+				gameDisplay.windowHeight = event.size.height;
+				gameDisplay.saveProperties();
 				notifyChangeDisplay();
 				break;
 			}

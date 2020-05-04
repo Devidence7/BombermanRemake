@@ -259,7 +259,7 @@ private:
 public:
 	void menuActions(GameDisplayController& gameDisplay, Game& game) {
 		// Manage window events and pass a callback to manage this menu buttons
-		gameDisplay.manageGameInterface(std::bind(&OptionsMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
+		gameDisplay.manageGameInterface(gameDisplay, std::bind(&OptionsMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
 		if (gameDisplay.optionsMenuReprocessDisplay) {
 			gameDisplay.optionsMenuReprocessDisplay = false;
 			createBackgroundMenu(*gameDisplay.getWindow(), false);
