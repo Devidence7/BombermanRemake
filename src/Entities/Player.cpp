@@ -157,8 +157,6 @@ bool PlayerEntity::updatePlayer()
 	bool playerUp = (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::W));
 	bool playerDown = (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S));
 
-	bool playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
-
 	velocity.x = 0;
 	velocity.y = 0;
 
@@ -199,10 +197,6 @@ bool PlayerEntity::updatePlayer()
 		move(velocity.x, velocity.y);
 	}
 
-	if (playerBOMB && numOfBombs > 0)
-	{
-		return true;
-	}
 	return false;
 }
 
