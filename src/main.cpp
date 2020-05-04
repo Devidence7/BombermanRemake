@@ -10,7 +10,7 @@
 #include "Interface/GUI/GameGUI.hpp"
 #include "Interface/GUI/Theme.hpp"
 
-#include "Interface/GameInterfaceController.h"
+#include "Interface/GameDisplayController.h"
 #include "Interface/MainMenu.h"
 #include "Interface/OptionsMenu.h"
 #include "Interface/PauseMenu.h"
@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
 	Game game = Game();
 
 	// Create a Multiple interface controller
-	auto gameDisplayController = GameInterfaceController();
+	auto gameDisplayController = GameDisplayController();
 
 	// Play Title music
 	GameMusic::playTitleMusic();
@@ -42,20 +42,20 @@ int main(int argc, char* argv[]) {
 		GameTime::updateCurrentTime();
 
 		switch (gameDisplayController.gameState) {
-		case GameInterfaceController::GameState::MAIN_MENU:
+		case GameDisplayController::GameState::MAIN_MENU:
 			gameMainMenu.menuActions(gameDisplayController, game);
 			break;
 
-		case GameInterfaceController::GameState::OPTIONS_MENU:
+		case GameDisplayController::GameState::OPTIONS_MENU:
 			optionsMenu.menuActions(gameDisplayController, game);
 			break;
 
-		case GameInterfaceController::GameState::PAUSE_MENU:
+		case GameDisplayController::GameState::PAUSE_MENU:
 			pauseMenu.menuActions(gameDisplayController, game);
 			pauseMenu.checkUserPauseActions(gameDisplayController);
 			break;
 
-		case GameInterfaceController::GameState::PLAYING:
+		case GameDisplayController::GameState::PLAYING:
 			game.update();
 
 			// Clear screen from previous drawings

@@ -4,14 +4,14 @@
 #include "GUI/GameGUI.hpp"
 #include "../Music/GameSounds.h"
 #include "../GameEngine.hpp"
-#include "GameInterfaceController.h"
+#include "GameDisplayController.h"
 
 
 class OptionsMenu {
 	GameGUI::Menu* menu;
 
 public:
-	static GameInterfaceController::GameState lastGameStateOptionsMenu;
+	static GameDisplayController::GameState lastGameStateOptionsMenu;
 private:
 	enum ButtonActions {
 		AUDIO,
@@ -171,91 +171,62 @@ public:
 	}
 
 private:
-
-
-	void userActions(sf::RenderWindow* &window, GameInterfaceController& gameDisplay, Game game) {
-		sf::Event event;
-		while (window->pollEvent(event)) {
-			// Process events
-			switch (event.type) {
-				// window closed
-			case sf::Event::Closed:
-				// Close window -> exit
-				window->close();
-				break;
-			case sf::Event::LostFocus:
-				// Pause
-				break;
-			case sf::Event::GainedFocus:
-				// Resume
-				break;
-			case sf::Event::Resized: {
-				// update the view to the new size of the window
-				sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
-				window->setView(sf::View(visibleArea));
-				createBackgroundMenu(*window, false);
-				break;
-			}
-				//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				//													BUTTON PRESSED
-				//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			default:
-				int id = menu->onEvent(event);
-				switch (id) {
-				case ButtonActions::AUDIO:
-					delete(menu);
-					createAudioMenu(*window);
-					break;
-				case ButtonActions::GRAPHICS:
-					delete(menu);
-					createGraphicsMenu(*window);
-					break;
-				case ButtonActions::CONTROLS:
-					break;
-				case ButtonActions::MASTER_VOLUME_SLIDER:
-					GameMusic::setMasterVolume(masterVolumenSlider->getValue());
-					masterVText->setText(to_string(masterVolumenSlider->getValue()));
-					break;
-				case ButtonActions::MUSIC_SLIDER:
-					GameMusic::setVolume(musicSlider->getValue());
-					musicText->setText(to_string(musicSlider->getValue()));
-					break;
-				case ButtonActions::SOUND_SLIDER:
-					GameSounds::setVolume(soundSlider->getValue());
-					soundText->setText(to_string(soundSlider->getValue()));
-					break;
-				case ButtonActions::RESOLUTION: {
-					/*sf::FloatRect visibleArea(0, 0, opt->getSelectedValue().x, opt->getSelectedValue().y);
-					window.setView(sf::View(visibleArea));*/
-					cout << opt->getSelectedValue().x << " x " << opt->getSelectedValue().y << endl;
-					window->setSize(sf::Vector2u(opt->getSelectedValue().x, opt->getSelectedValue().y));
-					// createGraphicsMenu(window);
-					break;
-				}
-				case ButtonActions::FULLSCREEN:
-					window->close();
-					window = new RenderWindow(sf::VideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height), "Bombermenaman", sf::Style::Fullscreen);
-					break;
-				case ButtonActions::FPS: {
-					int fpss = fpsSlider->getValue() * 5 / 4 + 5;
-					if (fpss == 130) {
-						fpsText->setText("MAX");
-						//GameInterfaceController::FPSs = 0;
-						fpss = 0;
-					}
-					else {
-						fpsText->setText(to_string(fpss));
-					}
-					window->setFramerateLimit(fpss);
-
-					break;
-				}
-				case ButtonActions::QUIT:
-					gameDisplay.setGameState(lastGameStateOptionsMenu);
-					break;
-				}
-			}
+	void userActions(sf::Event& event, sf::RenderWindow* &window, GameDisplayController& gameDisplay, Game& game) {
+		int id = menu->onEvent(event);
+		switch (id) {
+		case ButtonActions::AUDIO:
+			delete(menu);
+			createAudioMenu(*window);
+			break;
+		case ButtonActions::GRAPHICS:
+			delete(menu);
+			createGraphicsMenu(*window);
+			break;
+		case ButtonActions::CONTROLS:
+			break;
+		case ButtonActions::MASTER_VOLUME_SLIDER:
+			GameMusic::setMasterVolume(masterVolumenSlider->getValue());
+			masterVText->setText(to_string(masterVolumenSlider->getValue()));
+			break;
+		case ButtonActions::MUSIC_SLIDER:
+			GameMusic::setVolume(musicSlider->getValue());
+			musicText->setText(to_string(musicSlider->getValue()));
+			break;
+		case ButtonActions::SOUND_SLIDER:
+			GameSounds::setVolume(soundSlider->getValue());
+			soundText->setText(to_string(soundSlider->getValue()));
+			break;
+		case ButtonActions::RESOLUTION: {
+			/*sf::FloatRect visibleArea(0, 0, opt->getSelectedValue().x, opt->getSelectedValue().y);
+			window.setView(sf::View(visibleArea));*/
+			cout << opt->getSelectedValue().x << " x " << opt->getSelectedValue().y << endl;
+			window->setSize(sf::Vector2u(opt->getSelectedValue().x, opt->getSelectedValue().y));
+			// createGraphicsMenu(window);
+			break;
 		}
+		case ButtonActions::FULLSCREEN:
+			window->close();
+			window = new RenderWindow(sf::VideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height), "Bombermenaman", sf::Style::Fullscreen);
+			break;
+		case ButtonActions::FPS: {
+			int fpss = fpsSlider->getValue() * 5 / 4 + 5;
+			if (fpss == 130) {
+				fpsText->setText("MAX");
+				//GameInterfaceController::FPSs = 0;
+				fpss = 0;
+			}
+			else {
+				fpsText->setText(to_string(fpss));
+			}
+			window->setFramerateLimit(fpss);
+
+			break;
+		}
+		case ButtonActions::QUIT:
+			gameDisplay.setGameState(lastGameStateOptionsMenu);
+			break;
+		}
+
 	}
 
 	void draw(sf::RenderWindow& window) {
@@ -270,11 +241,12 @@ private:
 	}
 
 public:
-	void menuActions(GameInterfaceController& gameDisplay, Game game) {
-		userActions(gameDisplay.getWindow(), gameDisplay, game);
+	void menuActions(GameDisplayController& gameDisplay, Game& game) {
+		auto callback = std::bind(&OptionsMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game));
+		gameDisplay.manageGameInterface(callback);
 		draw(*gameDisplay.getWindow());
 	}
 };
 
 
-GameInterfaceController::GameState OptionsMenu::lastGameStateOptionsMenu;
+GameDisplayController::GameState OptionsMenu::lastGameStateOptionsMenu;

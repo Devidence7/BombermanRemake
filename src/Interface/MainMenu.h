@@ -10,7 +10,7 @@
 #include "GameInterface.h"
 #include "../GameEngine.hpp"
 #include "OptionsMenu.h"
-#include "GameInterfaceController.h"
+#include "GameDisplayController.h"
 
 
 using namespace GameGUI;
@@ -76,55 +76,30 @@ public:
 
 
 private:
-	void userActions(sf::RenderWindow& window, GameInterfaceController& gameDisplay, Game game) {
-		sf::Event event;
-		while (window.pollEvent(event)) {
-			// Process events
-			switch (event.type) {
-				// window closed
-			case sf::Event::Closed:
-				// Close window -> exit
-				window.close();
-				break;
-			case sf::Event::LostFocus:
-				// Pause
-				break;
-			case sf::Event::GainedFocus:
-				// Resume
-				break;
-				// catch the resize events
-			case sf::Event::Resized: {
-					// update the view to the new size of the window
-					sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
-					window.setView(sf::View(visibleArea));
-					createMainMenu(window);
-					break;
-				}
-				//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				//													BUTTON PRESSED
-				//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			default:
-				int id = menu->onEvent(event);
-				switch (id) {
-				case ButtonActions::SINGLEPLAYER:
-					gameDisplay.setGameState(GameInterfaceController::GameState::PLAYING);
-					game.gameOptions.multiplayerGame = false;
-					game.startNewGame(window);
-					break;
-				case ButtonActions::MULTIPLAYER:
-					gameDisplay.setGameState(GameInterfaceController::GameState::PLAYING);
-					game.gameOptions.multiplayerGame = true;
-					game.startNewGame(window);
-					break;
-				case ButtonActions::OPCIONS:
-					OptionsMenu::lastGameStateOptionsMenu = GameInterfaceController::GameState::MAIN_MENU;
-					gameDisplay.setGameState(GameInterfaceController::GameState::OPTIONS_MENU);
-					break;
-				case ButtonActions::QUIT:
-					window.close();
-					break;
-				}
-			}
+	void userActions(sf::Event& event, sf::RenderWindow* &window, GameDisplayController& gameDisplay, Game& game) {
+
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		//													BUTTON PRESSED
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		int id = menu->onEvent(event);
+		switch (id) {
+		case ButtonActions::SINGLEPLAYER:
+			gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
+			game.gameOptions.multiplayerGame = false;
+			game.startNewGame(*window);
+			break;
+		case ButtonActions::MULTIPLAYER:
+			gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
+			game.gameOptions.multiplayerGame = true;
+			game.startNewGame(*window);
+			break;
+		case ButtonActions::OPCIONS:
+			OptionsMenu::lastGameStateOptionsMenu = GameDisplayController::GameState::MAIN_MENU;
+			gameDisplay.setGameState(GameDisplayController::GameState::OPTIONS_MENU);
+			break;
+		case ButtonActions::QUIT:
+			window->close();
+			break;
 		}
 	}
 
@@ -138,8 +113,9 @@ public:
 		window.draw(*menu);
 	}
 
-	void menuActions(GameInterfaceController &gameDisplay, Game game) {
-		userActions(*gameDisplay.getWindow(), gameDisplay, game);
+	void menuActions(GameDisplayController &gameDisplay, Game& game) {
+		auto callback = std::bind(&MainMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game));
+		gameDisplay.manageGameInterface(callback);
 		draw(*gameDisplay.getWindow());
 	}
 };
