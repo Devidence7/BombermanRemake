@@ -127,6 +127,7 @@ public:
 			if (!EsqPressed) {
 				EsqPressed = true;
 				if (gameDisplay.getGameState() == GameDisplayController::GameState::PAUSE_MENU) {
+					GameTime::resumeGameTime();
 					gameDisplay.setGameState(lastGameState);
 				}
 				else {
