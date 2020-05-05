@@ -16,6 +16,8 @@ public:
 	bool onMove = false;
 	bool onFlight = false;
 
+	bool rePutBomb = false;
+
 	// Texture Variables:
 	BombTexture* bombTexture;
 	double spriteCounter;
@@ -35,10 +37,11 @@ public:
 	bool isColliderWith(std::shared_ptr<Entity> eCollisioning) override;	
 	void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) override;
 	void update();
-
-	void throwBomb(){
-		onFlight = true;
+	void setOnFlight(sf::Vector2f dir, bool onf = true){
+		onFlight = onf;
+		this->velocity = sf::Vector2f(dir.x * this->baseSpeed, dir.y * this->baseSpeed);
 	}
+
 };
 
 

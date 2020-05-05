@@ -3,6 +3,7 @@
 
 PlayerEntity::PlayerEntity() : Entity()
 {
+	canGrabBomb = true;//DEJAR A FALSE
 	isFireDestroyable = true;
 	fireCanGoThroght = true;
 	collisioner = false;
@@ -11,7 +12,6 @@ PlayerEntity::PlayerEntity() : Entity()
 	baseSpeed = 2.5;
 	lastMovement = LookingAt::down;
 	lives=3;
-
 	// Texture Controller
 	playerTexture = &TextureStorage::getPlayerTexture();
 	// Set starting sprite
@@ -151,10 +151,11 @@ void PlayerEntity::onCollission(std::shared_ptr<Entity> eCollisioning, Collision
 bool PlayerEntity::playerActions(int player){
 
 	double t = GameTime::getTimeNow();
-	bool playerBOMB;
-	bool actionButton = sf::Keyboard::isKeyPressed(sf::Keyboard::E);
+	bool playerBOMB = false;
+	bool actionButton = false;
 	if(player==1){
 		playerBOMB=sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
+		actionButton = sf::Keyboard::isKeyPressed(sf::Keyboard::E);
 	}
 	else{
 		playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::P);
@@ -175,6 +176,8 @@ bool PlayerEntity::playerActions(int player){
 		isActionKeyPresed = true;
 		if(BombTaked != nullptr){
 			//lanzar
+			Level::ThrowBomb(me, std::dynamic_pointer_cast<Bomb>(BombTaked));
+			BombTaked.reset();
 		}else if(canGrabBomb){
 			Level::canTakeBomb(me);
 		}
@@ -261,6 +264,9 @@ bool PlayerEntity::updatePlayer(int ply)
 	if (!expiredEntity)
 	{
 		move(velocity.x, velocity.y);
+		if(BombTaked != nullptr){//Si tiene bomba, actualizar a la posicion del jugador (centrado segun cuadricula)
+			BombTaked->setPosition(Level::getMapCellCorner(this->getCenterPosition()));
+		}
 	}
 
 	return false;

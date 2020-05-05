@@ -7,6 +7,7 @@
 #define SIZE_PILLAR_2 SIZE_PILLAR/2
 
 #define SHOOTING_DISTANCE 5
+
 enum LookingAt
 {
 	down = 0,
@@ -77,6 +78,17 @@ inline sf::Vector2i getMapCoordinates(float x, float y)
 inline  sf::Vector2i getMapCoordinates(sf::Vector2f pos)
 {
 	return getMapCoordinates(pos.x, pos.y);
+}
+
+
+inline sf::Vector2f MapCoordinates2GlobalCoorCorner(const int x, const int y)
+{
+	return sf::Vector2f((float)x * SIZE_PILLAR, (float)y * SIZE_PILLAR);
+}
+
+inline sf::Vector2f MapCoordinates2GlobalCoorCorner(sf::Vector2i pos)
+{
+	return MapCoordinates2GlobalCoorCorner(pos.x, pos.y);
 }
 
 

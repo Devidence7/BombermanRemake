@@ -16,6 +16,7 @@ typedef std::shared_ptr<Pillar> Pillar_ptr;
 #include "../Entities/Player.h"
 typedef std::shared_ptr<PlayerEntity> Player_ptr;
 #include "../Entities/PowerUp.h"
+typedef std::shared_ptr<PlayerEntity> PowerUp_ptr;
 
 typedef std::shared_ptr<BrickWall> BrickWall_ptr;
 

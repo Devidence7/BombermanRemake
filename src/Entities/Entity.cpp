@@ -1,6 +1,6 @@
 //#include "Entity.h"
 #include "../Include/EntitiesInclude.hpp"
-
+#include "../Map/Level.hpp"
 
 Entity::Entity() : Sprite() {}
 
@@ -72,6 +72,7 @@ bool Entity::getExpiredEntity()
 void Entity::setExpiredEntity()
 {
 	expiredEntity = true;
+	BombTaked.reset();
 }
 
 bool Entity::getIsFireDestroyable()
@@ -82,6 +83,10 @@ bool Entity::getIsFireDestroyable()
 bool Entity::getFireCanGoThroght()
 {
 	return fireCanGoThroght;
+}
+
+void Entity::setObjetive(sf::Vector2f pos){
+	positionObjetive = Level::getMapCellCorner(pos);
 }
 
 // PRE: this esta en colision con eCollisioning

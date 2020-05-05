@@ -1,7 +1,7 @@
 #include "Level.hpp"
 
 std::vector<Entity_ptr> Level::entities;
-
+std::vector<Bomb_ptr> Level::onFlightBombs;
 std::vector<std::vector<Entity_ptr>> Level::miniMap;
 sf::RectangleShape Level::flooro;
 
@@ -142,6 +142,33 @@ void Level::update()
 		}
 		else
 		{
+			std::shared_ptr<Bomb> b;
+			if ((b = std::dynamic_pointer_cast<Bomb>(*it)) != nullptr)
+			{
+				if (b->rePutBomb)
+				{
+					sf::Vector2i positionMap = getMapCoordinates(b->getPosition());
+					Entity_ptr e;
+					if((e = getCellMiniMapObject(positionMap)) == nullptr || std::dynamic_pointer_cast<PowerUp>(e) != nullptr){
+						b->rePutBomb = false;
+						addEntityToMiniMap((*it), getMapCoordinates(b->getCenterPosition()));
+					}else{
+						b->onFlight = true;
+						sf::Vector2f v = normalize(b->getVelocity());
+						sf::Vector2i vi = sf::Vector2i(v.x, v.y);
+						sf::Vector2i newPos = positionMap + vi;
+						std::cout << "NP " << newPos.x << " " << newPos.y << " SzX " << miniMap[0].size() << endl;
+						if(newPos.x < 1 || newPos.y < 1 || (miniMap.size() - 2) < newPos.y || (miniMap[0].size() - 2) < newPos.x){ //Si se sale del mapa, rebotar
+							vi = -vi;
+							v =  -v;
+							b->setVelocity(v);
+							std::cout << "Fuera de rango\n";
+						}
+						
+						b->setObjetive( MapCoordinates2GlobalCoorCorner(positionMap + vi));
+					}
+				}
+			}
 			++it;
 			counter++;
 		}
@@ -169,6 +196,23 @@ void Level::draw(sf::RenderWindow &w)
 				e->drawEntityHitbox(w);
 #endif
 			}
+		}
+	}
+
+	auto it = onFlightBombs.begin();
+	// This is made this way because we need to erase element from a vector while we are iterating
+	while (it != onFlightBombs.end())
+	{
+		if (!(*it)->onFlight)
+		{
+			// Remove the bomb from the list onFlightBombs if it at floor.
+			it->reset();
+			it = onFlightBombs.erase(it);
+		}
+		else
+		{
+			w.draw(*(*it));
+			++it;
 		}
 	}
 }
@@ -360,7 +404,7 @@ void Level::checkAndFixCollisions(Entity_ptr eCollisioning)
 			Entity_ptr col;
 			if (e_horizontal)
 			{
-			/******CASOS*************
+				/******CASOS*************
 				 * | x | p |
 				 * |   |   |
 			************************/
@@ -376,7 +420,7 @@ void Level::checkAndFixCollisions(Entity_ptr eCollisioning)
 			}
 			if (e_diagonal)
 			{
-			/******CASOS*************
+				/******CASOS*************
 				 * |   | p |
 				 * | x |   |
 			************************/
@@ -445,11 +489,11 @@ void Level::addEntityToMiniMap(Entity_ptr e, int x, int y)
 	getCellMiniMapObject(x, y) = e;
 }
 
-void Level::addEntityToMiniMap(Entity_ptr &e, sf::Vector2i pos)
+void Level::addEntityToMiniMap(Entity_ptr e, sf::Vector2i pos)
 {
 	addEntityToMiniMap(e, pos.x, pos.y);
 }
-void Level::addNewItem(Entity_ptr &e)
+void Level::addNewItem(Entity_ptr e)
 {
 	addEntity(e);
 	addEntityToMiniMap(e, getMapCoordinates(e->getCenterPosition()));
@@ -474,9 +518,11 @@ void Level::addWall(int x, int y)
 	addEntityToMiniMap(e, x, y);
 }
 
-bool Level::addBomb(Player_ptr p){
+bool Level::addBomb(Player_ptr p)
+{
 	sf::Vector2f currentPos = Level::getMapCellCorner(p->getCenterPosition());
-	if(Level::getCellMiniMapObject(getMapCoordinates(currentPos)) == nullptr){
+	if (Level::getCellMiniMapObject(getMapCoordinates(currentPos)) == nullptr)
+	{
 		Entity_ptr b = std::make_shared<Bomb>(Bomb(p));
 		b->setPosition(currentPos);
 		Level::addNewItem(b);
@@ -485,36 +531,104 @@ bool Level::addBomb(Player_ptr p){
 	return false;
 }
 
-bool Level::canTakeBomb(Player_ptr p){
-	sf::Vector2f takingZone;
-	switch (p->lastMovement)
-	{
-	case LookingAt::down:
-		takingZone.y = SIZE_PILLAR_2;
-		break;
-	case LookingAt::up:
-		takingZone.y = -SIZE_PILLAR_2;
-		break;
-	case LookingAt::left:
-		takingZone.x = -SIZE_PILLAR_2;
-		break;
-	case LookingAt::right:
-		takingZone.x = SIZE_PILLAR_2;
-		break;
-	
-	default:
-		break;
-	}
-	sf::Vector2f PlayerPos = p->getCenterPosition();
-
-	sf::Vector2i tankinCell = getMapCoordinates(PlayerPos + takingZone);
-	
+bool Level::canTakeBomb(Player_ptr p)
+{
 	Bomb_ptr bomb;
-	if(getCellMiniMapObject(tankinCell) != nullptr && (bomb = std::dynamic_pointer_cast<Bomb>(getCellMiniMapObject(tankinCell))) != nullptr){
+	sf::Vector2f PlayerPos = p->getCenterPosition();
+	sf::Vector2f takingZone;
+	sf::Vector2i tankinCell = getMapCoordinates(PlayerPos);
+	if (getCellMiniMapObject(tankinCell) != nullptr && (bomb = std::dynamic_pointer_cast<Bomb>(getCellMiniMapObject(tankinCell))) != nullptr)
+	{
+		//Mirar si hay una bomba a sus pies
+		p->takeBomb(bomb);
+		getCellMiniMapObject(tankinCell).reset();
+		return true;
+	}
+	else
+	{
+		switch (p->lastMovement)
+		{
+		case LookingAt::down:
+			takingZone.y = SIZE_PILLAR_2;
+			break;
+		case LookingAt::up:
+			takingZone.y = -SIZE_PILLAR_2;
+			break;
+		case LookingAt::left:
+			takingZone.x = -SIZE_PILLAR_2;
+			break;
+		case LookingAt::right:
+			takingZone.x = SIZE_PILLAR_2;
+			break;
+
+		default:
+			break;
+		}
+
+		tankinCell = getMapCoordinates(PlayerPos + takingZone);
+	}
+
+	if (getCellMiniMapObject(tankinCell) != nullptr && (bomb = std::dynamic_pointer_cast<Bomb>(getCellMiniMapObject(tankinCell))) != nullptr)
+	{
 		p->takeBomb(bomb);
 		getCellMiniMapObject(tankinCell).reset();
 		return true;
 	}
 	return false;
+}
 
+void Level::ThrowBomb(Player_ptr p, Bomb_ptr b)
+{
+	sf::Vector2i dirThrow;
+	switch (p->lastMovement)
+	{
+	case LookingAt::down:
+		dirThrow.y = SHOOTING_DISTANCE;
+		break;
+	case LookingAt::up:
+		dirThrow.y = -SHOOTING_DISTANCE;
+		break;
+	case LookingAt::left:
+		dirThrow.x = -SHOOTING_DISTANCE;
+		break;
+	case LookingAt::right:
+		dirThrow.x = SHOOTING_DISTANCE;
+		break;
+	}
+
+	sf::Vector2i cordsP = getMapCoordinates(p->getCenterPosition());
+	sf::Vector2i fallPosition = cordsP + dirThrow;
+	//Verificar si no sale por los lados
+	if (fallPosition.x < 1)
+	{ //No puede caer en la columna del borde
+		fallPosition.x = 1;
+	}
+	else if (fallPosition.x > miniMap[0].size() - 1)
+	{
+		fallPosition.x = miniMap[0].size() - 2;
+	}
+
+	//verificar que no sale en vertical
+	if (fallPosition.y < 1)
+	{ //No puede caer en la columna del borde
+		fallPosition.y = 1;
+	}
+	else if (fallPosition.y > miniMap.size() - 1)
+	{
+		fallPosition.y = miniMap.size() - 2;
+	}
+
+
+	if (fallPosition.x == cordsP.x && fallPosition.y == cordsP.y)
+	{
+		addEntityToMiniMap(b, fallPosition); //No puede desplazarse -> se cologa en el suelo
+	}
+	else
+	{
+		onFlightBombs.push_back(b);
+		b->setObjetive(MapCoordinates2GlobalCoorCorner(fallPosition));
+		b->setOnFlight(normalize(dirThrow));
+	}
+
+	//TODO: Asociar puntuacion a jugador que lanza
 }

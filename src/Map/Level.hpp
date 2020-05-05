@@ -22,6 +22,7 @@ class Level
 {
 	// Entities to update vector:
 	static std::vector<Entity_ptr> entities;
+	static std::vector<Bomb_ptr > onFlightBombs;
 	static std::vector<std::vector<Entity_ptr>> miniMap;
 	static sf::RectangleShape flooro;
 
@@ -51,11 +52,12 @@ public:
 	static void addEntityToMap(Entity_ptr e, int x, int y);
 	static void addEntityToMap(Entity_ptr e, sf::Vector2i pos);
 	static void addEntityToMiniMap(Entity_ptr e, int x, int y);
-	static void addEntityToMiniMap(Entity_ptr &e, sf::Vector2i pos);
-	static void addNewItem(Entity_ptr &e);
+	static void addEntityToMiniMap(Entity_ptr e, sf::Vector2i pos);
+	static void addNewItem(Entity_ptr e);
 	static void addEntity(Entity_ptr e);
 	static void addPillar(int x, int y);
 	static void addWall(int x, int y);
 	static bool addBomb(Player_ptr p);
 	static bool canTakeBomb(Player_ptr p);
+	static void ThrowBomb(Player_ptr p, Bomb_ptr b);
 };

@@ -1,9 +1,11 @@
 #include "../Include/EntitiesInclude.hpp"
 #include "../Music/GameSounds.h"
+#include "../Map/Level.hpp"
 
 Bomb::Bomb(std::shared_ptr<PlayerEntity> p) : Entity()
 {
 	player = p;
+	baseSpeed = 25; //TODO: HACER BIEN
 	this->bombPower = p->getPowerOfBombs();
 	isFireDestroyable = true;
 	fireCanGoThroght = false;
@@ -60,7 +62,7 @@ void Bomb::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType col
 void Bomb::update()
 {
 	// If it is time to explote:
-	if (GameTime::getTimeNow() - explosionCounter > explosionTime)
+	if (GameTime::getTimeNow() - explosionCounter > explosionTime && !onFlight)
 	{
 		setExpiredEntity();
 		
@@ -71,6 +73,17 @@ void Bomb::update()
 		actualFrame = (actualFrame + 1) % spriteFrames;
 		setTextureRect(bombTexture->getFrame(actualFrame));
 		spriteCounter = GameTime::getTimeNow();
+		if(onFlight){
+			sf::Vector2f ff = this->getCenterPosition();
+			//std::cout <<(ff - positionObjetive).x << " " << (ff - positionObjetive).y << "\n";
+			std::cout << "distancia: " << moduleVector(positionObjetive - this->getPosition()) << "\n";
+			move(velocity);
+			if (moduleVector(positionObjetive - this->getPosition()) < baseSpeed) {
+				this->setPosition(positionObjetive);
+				rePutBomb = true;
+				onFlight = false;
+			}
+		}
 	}
 }
 

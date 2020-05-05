@@ -45,6 +45,14 @@ public:
 
 	bool CanHurtPlayer();
 
+	sf::Vector2f getVelocity(){
+		return velocity;
+	}
+	void setVelocity(sf::Vector2f &vel){
+		velocity.x = vel.x * baseSpeed;
+		velocity.y = vel.y * baseSpeed;
+	}
+
 	virtual void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT );
 	void setCollision();
 
@@ -96,6 +104,8 @@ public:
 		//TODO: ???
 		return;
 	}
+
+	void setObjetive(sf::Vector2f pos);
 
 
 	virtual sf::FloatRect getGlobalBounds() const;
