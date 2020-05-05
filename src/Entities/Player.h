@@ -5,9 +5,6 @@
 #include "../Textures/TextureStorage.h"
 #include "../Logic/Time.h"
 #include <memory>
-#include "../Logic/Time.h"
-
-
 #include "Entity.h"
 #include "Bomb.h"
 
@@ -43,14 +40,23 @@ public:
 
 	PlayerTexture* playerTexture;
 	PlayerColor* playerColor;
-	LookingAt lastMovement; // Save last looked direction
-
+	LookingAt lastMovement;				// Save last looked direction
 	Entity playerColorEntity;
-	
+
+	struct PlayerControls {
+		sf::Keyboard::Key goUp;
+		sf::Keyboard::Key goDown;
+		sf::Keyboard::Key goRight;
+		sf::Keyboard::Key goLeft;
+		sf::Keyboard::Key UseBomb;
+		sf::Keyboard::Key MakeAction;
+	};
+	PlayerControls &playerControls;
+
 	/*
 	Constructor of Entity
 	*/
-	PlayerEntity();
+	PlayerEntity(PlayerControls& playerControls);
 
 	int getPowerOfBombs();
 
@@ -91,10 +97,12 @@ public:
 
 	void realizeActions();
 
-	bool playerActions(int player);
+	bool playerActions();
 	/*
 	 * Update player position.
 	 */
-	bool updatePlayer(int ply);
+	bool updatePlayer();
+
+	void setJumpingBomb();
 	
 };

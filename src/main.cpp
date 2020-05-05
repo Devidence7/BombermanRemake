@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
 
 		case GameDisplayController::GameState::PAUSE_MENU:
 			pauseMenu.menuActions(gameDisplayController, game);
-			userKeyPressManager.checkUserPauseActions(gameDisplayController);
+			pauseMenu.checkUserPauseActions(gameDisplayController);
 			break;
 
 		case GameDisplayController::GameState::GAME_OVER:
@@ -91,10 +91,9 @@ int main(int argc, char* argv[]) {
 			gameInterface.draw(*gameDisplayController.getWindow());
 			//}
 
-			//gameDisplayController.manageGameInterface(gameDisplayController);
-
-			userKeyPressManager.checkUserPauseActions(gameDisplayController);
-			userKeyPressManager.checkUserKeysPress(gameDisplayController, game);
+			gameDisplayController.manageGameInterface(gameDisplayController);
+			pauseMenu.checkUserPauseActions(gameDisplayController);
+			// userKeyPressManager.checkUserKeysPress(gameDisplayController, game);
 
 
 			//gameOverMenu.checkUserGameOverActions(gameDisplayController);

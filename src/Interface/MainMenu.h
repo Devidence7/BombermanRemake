@@ -87,12 +87,12 @@ private:
 		case ButtonActions::SINGLEPLAYER:
 			gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
 			game.gameOptions.numPlayers = 1;
-			game.startNewGame(*window);
+			game.startNewGame(*window, gameDisplay);
 			break;
 		case ButtonActions::MULTIPLAYER:
 			gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
 			game.gameOptions.numPlayers = 2;
-			game.startNewGame(*window);
+			game.startNewGame(*window, gameDisplay);
 			break;
 		case ButtonActions::OPCIONS:
 			OptionsMenu::lastGameStateOptionsMenu = GameDisplayController::GameState::MAIN_MENU;

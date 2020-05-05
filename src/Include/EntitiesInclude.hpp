@@ -26,8 +26,7 @@ class PLayers
     PLayers(){};
 
 public:
-    static void addPlayer();
-    static void insertPlayers(int numPlayers = 1);
+    static void addPlayer(PlayerEntity::PlayerControls &playerControls);
     static std::vector<Player_ptr> &getVectorPlayer();
 };
 

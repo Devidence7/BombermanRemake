@@ -585,6 +585,10 @@ bool Level::canTakeBomb(Player_ptr p)
 	return false;
 }
 
+bool Level::canKickBomb(Player_ptr p) {
+	return false;
+}
+
 
 void Level::ThrowBomb(Player_ptr p, Bomb_ptr b)
 {
