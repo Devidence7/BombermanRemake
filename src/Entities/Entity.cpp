@@ -42,7 +42,6 @@ void Entity::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType c
 		//Sin colision ya que puede seguir moviendose
 		position += this->moveCircleOverCorner(eCollisioning);
 		break;
-
 	default:
 		break;
 	}
