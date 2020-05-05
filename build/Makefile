@@ -1,5 +1,5 @@
 build=.
-CC=g++-8
+CC=g++
 O=-O3
 PATH := $(PATH):../bin/
 libsSFML=-lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio 
@@ -23,7 +23,7 @@ LevelPath=$(src)/Map
 libs=-L$(bin) -lEntities -lTextures -lGui
 libEntities=-L$(bin) -lEntities 
 
-bomberman: $(src)/main.cpp $(bin)/Level.o $(src)/GameEngine.hpp $(bin)/libEntities.a $(bin)/libGui.a $(bin)/libTextures.a $(bin)/Random.o $(bin)/Time.o  $(src)/Include/EntitiesInclude.cpp $(src)/Utils/A_Star.cpp 
+bomberman: $(src)/main.cpp $(src)/Include/global.hpp $(bin)/Level.o $(src)/GameEngine.hpp $(bin)/libEntities.a $(bin)/libGui.a $(bin)/libTextures.a $(bin)/Random.o $(bin)/Time.o  $(src)/Include/EntitiesInclude.cpp $(src)/Utils/A_Star.cpp 
 	$(CC) -o bomberman  $(src)/main.cpp $(src)/Include/EntitiesInclude.cpp $(src)/Utils/A_Star.cpp  $(MusicPath)/GameMusic.cpp $(MusicPath)/GameSounds.cpp  \
 		$(bin)/Level.o $(bin)/Random.o $(bin)/Time.o  \
 		$(bin)/Arrow.o $(bin)/Box.o $(bin)/Cross.o $(UtilsInzPath)/ItemBox.hpp \
