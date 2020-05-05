@@ -157,12 +157,12 @@ void Level::update()
 						sf::Vector2f v = normalize(b->getVelocity());
 						sf::Vector2i vi = sf::Vector2i(v.x, v.y);
 						sf::Vector2i newPos = positionMap + vi;
-						std::cout << "NP " << newPos.x << " " << newPos.y << " SzX " << miniMap[0].size() << endl;
+						//std::cout << "NP " << newPos.x << " " << newPos.y << " SzX " << miniMap[0].size() << endl;
 						if(newPos.x < 1 || newPos.y < 1 || (miniMap.size() - 2) < newPos.y || (miniMap[0].size() - 2) < newPos.x){ //Si se sale del mapa, rebotar
 							vi = -vi;
 							v =  -v;
 							b->setVelocity(v);
-							std::cout << "Fuera de rango\n";
+							//std::cout << "Fuera de rango\n";
 						}
 						
 						b->setObjetive( MapCoordinates2GlobalCoorCorner(positionMap + vi));
@@ -459,6 +459,7 @@ Entity_ptr &Level::getCellObject(int x, int y)
 
 Entity_ptr &Level::getCellMiniMapObject(int x, int y)
 {
+
 	if (miniMap[y][x].get() != nullptr && miniMap[y][x].get()->getExpiredEntity())
 	{
 		miniMap[y][x].reset();

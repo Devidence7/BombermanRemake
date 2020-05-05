@@ -15,6 +15,7 @@
 #include "Interface/OptionsMenu.h"
 #include "Interface/PauseMenu.h"
 #include "Interface/GameOver.h"
+#include "Interface/UserKeyPress.h"
 
 
 int main(int argc, char* argv[]) {
@@ -38,6 +39,7 @@ int main(int argc, char* argv[]) {
 	PauseMenu pauseMenu(*gameDisplayController.getWindow());
 	GameOver gameOverMenu(*gameDisplayController.getWindow());
 	GameInterface gameInterface;
+	UserKeyPress userKeyPressManager;
 
 	// Start game loop
 	while (gameDisplayController.windowOpen()) {
@@ -54,7 +56,7 @@ int main(int argc, char* argv[]) {
 
 		case GameDisplayController::GameState::PAUSE_MENU:
 			pauseMenu.menuActions(gameDisplayController, game);
-			pauseMenu.checkUserPauseActions(gameDisplayController);
+			userKeyPressManager.checkUserPauseActions(gameDisplayController);
 			break;
 
 		case GameDisplayController::GameState::GAME_OVER:
@@ -83,12 +85,14 @@ int main(int argc, char* argv[]) {
 				gameInterface.drawMulti(*gameDisplayController.getWindow());
 			}*/
 			//else {
-				gameInterface.draw(*gameDisplayController.getWindow());
+			gameInterface.draw(*gameDisplayController.getWindow());
 			//}
 
-			gameDisplayController.manageGameInterface(gameDisplayController);
+			//gameDisplayController.manageGameInterface(gameDisplayController);
 
-			pauseMenu.checkUserPauseActions(gameDisplayController);
+			userKeyPressManager.checkUserPauseActions(gameDisplayController);
+			userKeyPressManager.checkUserKeysPress(gameDisplayController, game);
+
 
 			//gameOverMenu.checkUserGameOverActions(gameDisplayController);
 		}

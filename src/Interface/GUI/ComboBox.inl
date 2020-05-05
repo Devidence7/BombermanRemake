@@ -255,7 +255,7 @@ void ComboBox<T>::onMouseMoved(float x, float y)
 			{
 				selectItem(i);
 				redrawDropDown();
-				std::cout << "in drop down option: " << std::string(m_items[i].label) << std::endl;
+				//std::cout << "in drop down option: " << std::string(m_items[i].label) << std::endl;
 			}
 		}
 	}
