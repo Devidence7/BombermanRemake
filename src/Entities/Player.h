@@ -26,6 +26,7 @@ public:
 	bool isBombKeyPresed = false;
 	bool isActionKeyPresed = false;
 
+
 	std::shared_ptr<PlayerEntity> me;
 
 	unsigned int bombsTimeLimit = 30;
