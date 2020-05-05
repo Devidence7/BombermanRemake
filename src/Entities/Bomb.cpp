@@ -76,7 +76,7 @@ void Bomb::update()
 		if(onFlight){
 			sf::Vector2f ff = this->getCenterPosition();
 			//std::cout <<(ff - positionObjetive).x << " " << (ff - positionObjetive).y << "\n";
-			std::cout << "distancia: " << moduleVector(positionObjetive - this->getPosition()) << "\n";
+			//std::cout << "distancia: " << moduleVector(positionObjetive - this->getPosition()) << "\n";
 			move(velocity);
 			if (moduleVector(positionObjetive - this->getPosition()) < baseSpeed) {
 				this->setPosition(positionObjetive);

@@ -89,7 +89,7 @@ public:
         int i=0;
         for(Player_ptr &player : PLayers::getVectorPlayer()){
             lives[i].setString("X"+to_string(player->getLives()));
-            cout<<player->getLives()<<endl;
+            //cout<<player->getLives()<<endl;
                PLayers::getVectorPlayer()[i]->playerHead2.setPosition(container.getPosition().x+(100*(i+1)),(container.getPosition().y+7.5));
               PLayers::getVectorPlayer()[i]->playerHead.setPosition(container.getPosition().x+(100*(i+1)),(container.getPosition().y+7.5));
               lives[i].setPosition(PLayers::getVectorPlayer()[i]->playerHead2.getPosition().x+35,(PLayers::getVectorPlayer()[i]->playerHead2.getPosition().y+7.5));
