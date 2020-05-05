@@ -8,6 +8,7 @@
 #include "Textures/TextureStorage.h"
 #include "Interface/GameInterface.h"
 #include "Music/GameMusic.h"
+#include "Interface/GameDisplayController.h"
 
 Level *level;
 
@@ -30,12 +31,16 @@ private:
 	//MainMenu mainMenu;
 public:
 	struct GameOptions {
-		bool multiplayerGame = false;
+		//bool multiplayerGame = false;
+		int numPlayers=2;
 	};
 	GameOptions gameOptions;
 
 	Game() {
-		PLayers::insertPlayers();
+	//	cout<<gameOptions.numPlayers<<endl;
+		PLayers::insertPlayers(gameOptions.numPlayers);
+		
+	//	PLayers::insertPlayers();
 		Enemies::insertarEnemigos(dimX, dimY);
 		level = new Level(dimX, dimY);
 		//mainMenu(w);
@@ -45,30 +50,69 @@ public:
 	}
 
 	void startNewGame(sf::RenderWindow& window){
+	//	PLayers::insertPlayers(gameOptions.numPlayers);
 		unsigned int pixelsX = window.getSize().x;
 		unsigned int pixelsY = window.getSize().y;
+		
+	//	PLayers::insertPlayers(gameOptions.numPlayers);
 		sf::View view(sf::FloatRect(0.f, 0.f, pixelsX, pixelsY));
 		view.move(sf::Vector2f(0, -48));
 		window.setView(view);
 
+		GameTime::startGameTime();
 		GameMusic::playWorld1Music();
 	}
 
-	void updatePlayers() {
+	void restartGame(sf::RenderWindow& window){
+			for (Player_ptr& player : PLayers::getVectorPlayer()) {
+		
+				player->lives=3;
+			}
+			Enemies::insertarEnemigos(dimX, dimY);
+		level = new Level(dimX, dimY);
+		startNewGame(window);
+
+	}
+
+	void updatePlayers( GameDisplayController& gameDisplay) {
+		int ply=1;
 		for (Player_ptr& player : PLayers::getVectorPlayer()) {
-			player->updatePlayer();
-			player->playerActions();
+				if (player->updatePlayer(ply)) {
+					// If there is nothing in that cell:
+					Entity_ptr b = std::make_shared<Bomb>(Bomb(player));
+					b->setPosition(level->getMapCellCorner(player->getCenterPosition()));
+					level->addNewItem(b);
+				}
+
+
+
+
+			//player->updatePlayer();
+			player->playerActions(ply);
+
+
+
+
 			level->checkAndFixCollisions(player);
 			if (colissionWithEnemies(player)) {
 				player->setExpiredEntity();
-			}
+			}	
+			ply++;
+		
 		}
 	}
 
-	void update() {
+	void update(GameDisplayController &gameDisplay) {
 		level->update();
-		updatePlayers();
+		updatePlayers(gameDisplay);
 		updateEnemies();
+		int totalLives=0;
+		for (Player_ptr& player : PLayers::getVectorPlayer()) {
+			totalLives+=player->getLives();
+		}
+		if(totalLives==0){
+			gameDisplay.setGameState(GameDisplayController::GameState::GAME_OVER);
+		}
 	}
 
 	void drawPlayers(sf::RenderWindow& w) {

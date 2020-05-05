@@ -10,8 +10,8 @@ ProgressBar::ProgressBar(float width) : m_box(Box::Type::Progress), m_value(0.f)
 {
 	m_box.setSize(width, Theme::getBoxHeight());
 	m_text.setFont(Theme::getFont());
+	//m_text.setColor(Theme::input.textColor);
 	m_text.setFillColor(Theme::input.textColor);
-	//m_text.setFillColor(Theme::input.textColor);
 	m_text.setCharacterSize(Theme::textCharacterSize);
 
 	// Build bar

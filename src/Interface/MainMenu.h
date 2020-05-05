@@ -35,8 +35,9 @@ class MainMenu {
 	void createMainMenu(sf::RenderWindow& window) {
 		texture.loadFromFile(MAIN_MENU_BACKGROUND_PATH);
 		background.setTexture(texture);
-
-		background.setScale((float)window.getSize().x / texture.getSize().x, (float)window.getSize().x / texture.getSize().x);
+	
+		float resizeVal = std::fmax((float)window.getSize().x / texture.getSize().x, (float)window.getSize().y / texture.getSize().y);
+		background.setScale(resizeVal, resizeVal);
 
 		menu = new GameGUI::Menu(window);
 
@@ -85,12 +86,12 @@ private:
 		switch (id) {
 		case ButtonActions::SINGLEPLAYER:
 			gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
-			game.gameOptions.multiplayerGame = false;
+			game.gameOptions.numPlayers = 1;
 			game.startNewGame(*window);
 			break;
 		case ButtonActions::MULTIPLAYER:
 			gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
-			game.gameOptions.multiplayerGame = true;
+			game.gameOptions.numPlayers = 2;
 			game.startNewGame(*window);
 			break;
 		case ButtonActions::OPCIONS:
@@ -115,7 +116,7 @@ public:
 
 	void menuActions(GameDisplayController &gameDisplay, Game& game) {
 		// Manage window events and pass a callback to manage this menu buttons
-		gameDisplay.manageGameInterface(std::bind(&MainMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
+		gameDisplay.manageGameInterface(gameDisplay, std::bind(&MainMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
 		if (gameDisplay.mainMenuReprocessDisplay) {
 			gameDisplay.mainMenuReprocessDisplay = false;
 			createMainMenu(*gameDisplay.getWindow());

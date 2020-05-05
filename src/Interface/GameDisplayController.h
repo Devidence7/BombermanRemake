@@ -1,10 +1,9 @@
 #pragma once
 #include <functional>
 #include <SFML/Graphics.hpp>
-#include "Utils/PropertiesReader.h"
 #include "../Music/GameSounds.h"
-#include <filesystem>
 #include <fstream>
+#include "../Utils/PropertiesReader.h"
 
 class GameDisplayController {
 	sf::RenderWindow* window;
@@ -19,7 +18,9 @@ public:
         MAIN_MENU,
         PLAYING,
         OPTIONS_MENU,
-        PAUSE_MENU
+        PAUSE_MENU,
+		GAME_OVER,
+		RESTART
     };
 
     GameState gameState;
@@ -30,6 +31,7 @@ public:
 	bool playingReprocessDisplay = false;
 	bool optionsMenuReprocessDisplay = false;
 	bool pauseMenuReprocessDisplay = false;
+	bool gameOverReprocessDisplay = false;
 
 	GameDisplayController() {
 		// Get display properties from properties file
@@ -72,7 +74,7 @@ public:
 		pauseMenuReprocessDisplay = true;
 	}
 
-    void manageGameInterface(std::function<void(sf::Event&)> buttonActions) {
+    void manageGameInterface(GameDisplayController &gameDisplay, std::function<void(sf::Event&)> buttonActions = nullptr) {
 		sf::Event event;
 		while (window->pollEvent(event)) {
 			// Process events
@@ -92,6 +94,10 @@ public:
 				// update the view to the new size of the window
 				sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
 				window->setView(sf::View(visibleArea));
+				window->setSize(sf::Vector2u(event.size.width, event.size.height));
+				gameDisplay.windowWidth = event.size.width;
+				gameDisplay.windowHeight = event.size.height;
+				gameDisplay.saveProperties();
 				notifyChangeDisplay();
 				break;
 			}
@@ -112,8 +118,11 @@ public:
 		string filename = "properties.txt";
 		fstream appendFileToWorkWith;
 
+		appendFileToWorkWith.open(filename, std::fstream::in);
+
 		// If file does not exist, Create new file
-		if (!std::filesystem::exists(filename)) {
+		if (!appendFileToWorkWith.is_open()) {
+			appendFileToWorkWith.close();
 			appendFileToWorkWith.open(filename, std::fstream::in | std::fstream::out | fstream::trunc);
 			appendFileToWorkWith << "volume.master = 50\n";
 			appendFileToWorkWith << "volume.music = 50\n";
@@ -125,6 +134,9 @@ public:
 
 			appendFileToWorkWith.close();
 
+		}
+		else {
+			appendFileToWorkWith.close();
 		}
 
 		appendFileToWorkWith.open(filename, std::fstream::in | std::fstream::out);

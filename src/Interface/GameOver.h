@@ -8,20 +8,20 @@
 #include "GameDisplayController.h"
 
 
-class PauseMenu {
+class GameOver {
 	GameGUI::Menu* menu;
 	GameDisplayController::GameState lastGameState;
 	bool EsqPressed = false;
+    sf::Font font;
 
 	enum ButtonActions {
-		RESUME,
-		SAVE,
-		OPTIONS,
+		RETRY,
 		GO_MAIN_MENU,
 		QUIT
 	};
 
 	sf::Texture texture;
+    sf::Text game_over;
 	sf::Sprite background;
 	sf::RectangleShape menuBackground;
 	sf::RectangleShape menuBackgroundShadow;
@@ -33,8 +33,12 @@ class PauseMenu {
 
 	void createBackgroundMenu(sf::RenderWindow& window) {
 		menu->setPosition(sf::Vector2f((int)window.getSize().x / 2 - (int)menu->getSize().x / 2, (int)window.getSize().y / 2 - (int)menu->getSize().y / 2));
-
-		float menuBackgroundPadding = 50;
+        if(!font.loadFromFile("../textures/mainMenu/OpenSans-Bold.ttf")){
+            //cosas
+        }
+        
+        
+        float menuBackgroundPadding = 50;
 		menuBackground.setSize(sf::Vector2f(menu->getSize().x + 2 * menuBackgroundPadding, menu->getSize().y + 2 * menuBackgroundPadding));
 		menuBackground.setPosition(menu->getPosition().x - menuBackgroundPadding, menu->getPosition().y - menuBackgroundPadding);
 		menuBackground.setFillColor(sf::Color(255, 255, 153, 200));
@@ -53,8 +57,9 @@ class PauseMenu {
 	}
 
 public:
-	PauseMenu(sf::RenderWindow& window) {
+	GameOver(sf::RenderWindow& window) {
 		menu = new GameGUI::Menu(window);
+    
 
 		texture.loadFromFile("../textures/interface/Background_orange_squares.png");
 		texture.setRepeated(true);
@@ -63,31 +68,27 @@ public:
 		background.setScale(sf::Vector2f(2, 2));
 		background.setTextureRect({ 0, 0, (int)window.getSize().x, (int)window.getSize().y });
 
-		menu->addButton("                Reanudar                ", ButtonActions::RESUME);
-		menu->addButton("                 Guardar                 ", ButtonActions::SAVE);
-		menu->addButton("                 Opciones                 ", ButtonActions::OPTIONS);
+       
+		menu->addButton("                Reintentar               ", ButtonActions::RETRY);
 		menu->addButton("        Ir al menu principal       ", ButtonActions::GO_MAIN_MENU);
 		menu->addButton("                    Salir                    ", ButtonActions::QUIT);
 
 		createBackgroundMenu(window);
+
+         game_over.setFont(font);
+        game_over.setString("       GAME OVER");
+        game_over.setPosition(sf::Vector2f((int)window.getSize().x / 2 - (int)menu->getSize().x / 2, ((int)window.getSize().y / 2 - (int)menu->getSize().y / 2)-150));
+             game_over.setFillColor(sf::Color::White);
+       // game_over.setColor(sf::Color::Black);
+        game_over.setScale(2,2);
 	}
 
 private:
 	void userActions(sf::Event& event, sf::RenderWindow*& window, GameDisplayController& gameDisplay, Game& game) {
 		int id = menu->onEvent(event);
 		switch (id) {
-		case ButtonActions::RESUME:
-			gameDisplay.setGameState(lastGameState);
-			GameTime::resumeGameTime();
-			break;
-
-		case ButtonActions::SAVE:
-					
-			break;
-				
-		case ButtonActions::OPTIONS:
-			OptionsMenu::lastGameStateOptionsMenu = GameDisplayController::GameState::PAUSE_MENU;
-			gameDisplay.setGameState(GameDisplayController::GameState::OPTIONS_MENU);
+		case ButtonActions::RETRY:
+			gameDisplay.setGameState(GameDisplayController::GameState::RESTART);
 			break;
 				
 		case ButtonActions::GO_MAIN_MENU:
@@ -102,7 +103,7 @@ private:
 
 	void draw(sf::RenderWindow& window) {
 		window.draw(background);
-
+        window.draw(game_over);
 		window.draw(menuBackgroundShadow2);
 		window.draw(menuBackgroundShadow1);
 		window.draw(menuBackgroundShadow);
@@ -114,26 +115,24 @@ private:
 public:
 	void menuActions(GameDisplayController& gameDisplay, Game game) {
 		// Manage window events and pass a callback to manage this menu buttons
-		gameDisplay.manageGameInterface(gameDisplay, std::bind(&PauseMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
-		if (gameDisplay.pauseMenuReprocessDisplay) {
-			gameDisplay.pauseMenuReprocessDisplay = false;
+		gameDisplay.manageGameInterface(gameDisplay, std::bind(&GameOver::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
+		if (gameDisplay.gameOverReprocessDisplay) {
+			gameDisplay.gameOverReprocessDisplay = false;
 			createBackgroundMenu(*gameDisplay.getWindow());
 		}
 		draw(*gameDisplay.getWindow());
 	}
 
-	void checkUserPauseActions(GameDisplayController& gameDisplay) {
+	void checkUserGameOverActions(GameDisplayController& gameDisplay) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 			if (!EsqPressed) {
 				EsqPressed = true;
-				if (gameDisplay.getGameState() == GameDisplayController::GameState::PAUSE_MENU) {
-					GameTime::resumeGameTime();
+				if (gameDisplay.getGameState() == GameDisplayController::GameState::GAME_OVER) {
 					gameDisplay.setGameState(lastGameState);
 				}
 				else {
 					lastGameState = gameDisplay.getGameState();
-					GameTime::stopGameTime();
-					gameDisplay.setGameState(GameDisplayController::GameState::PAUSE_MENU);
+					gameDisplay.setGameState(GameDisplayController::GameState::GAME_OVER);
 				}
 			}
 		}

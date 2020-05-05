@@ -27,17 +27,17 @@ void ItemBox<T>::applyState(State state)
 	switch (state)
 	{
 		case State::Default:
-			//m_item.setFillColor(m_type == Box::Type::PushButton ? Theme::click.textColor : Theme::input.textColor);
 			m_item.setFillColor(m_type == Box::Type::PushButton ? Theme::click.textColor : Theme::input.textColor);
+			//m_item.setColor(m_type == Box::Type::PushButton ? Theme::click.textColor : Theme::input.textColor);
 			break;
 		case State::Hovered:
-			//m_item.setFillColor(m_type == Box::Type::PushButton ? Theme::click.textColorHover : Theme::input.textColorHover);
 			m_item.setFillColor(m_type == Box::Type::PushButton ? Theme::click.textColorHover : Theme::input.textColorHover);
+			//m_item.setColor(m_type == Box::Type::PushButton ? Theme::click.textColorHover : Theme::input.textColorHover);
 			break;
 		case State::Pressed:
 		case State::Focused:
-			//m_item.setFillColor(m_type == Box::Type::PushButton ? Theme::click.textColorFocus : Theme::input.textColorFocus);
 			m_item.setFillColor(m_type == Box::Type::PushButton ? Theme::click.textColorFocus : Theme::input.textColorFocus);
+			//m_item.setColor(m_type == Box::Type::PushButton ? Theme::click.textColorFocus : Theme::input.textColorFocus);
 			break;
 
 	}

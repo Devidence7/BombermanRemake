@@ -148,11 +148,18 @@ private:
 
 		fpsSlider = new GameGUI::Slider();
 		fpsSlider->setQuantum(2);
-		fpsSlider->setValue(130);
+		fpsSlider->setValue(gameDisplay.FPSs);
 		
 		GameGUI::HorizontalBoxLayout* fpsLine = new GameGUI::HorizontalBoxLayout();
 		fpsLine->add(fpsSlider, ButtonActions::FPS);
-		fpsText = fpsLine->addLabel("MAX");
+		if (gameDisplay.FPSs) {
+			fpsText = fpsLine->addLabel(to_string(gameDisplay.FPSs));
+		}
+		else {
+			fpsText = fpsLine->addLabel("MAX");
+			fpsSlider->setValue(100);
+		}
+		
 		f->addRow("FPS", fpsLine);
 
 		createBackgroundMenu(window);
@@ -259,7 +266,7 @@ private:
 public:
 	void menuActions(GameDisplayController& gameDisplay, Game& game) {
 		// Manage window events and pass a callback to manage this menu buttons
-		gameDisplay.manageGameInterface(std::bind(&OptionsMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
+		gameDisplay.manageGameInterface(gameDisplay, std::bind(&OptionsMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
 		if (gameDisplay.optionsMenuReprocessDisplay) {
 			gameDisplay.optionsMenuReprocessDisplay = false;
 			createBackgroundMenu(*gameDisplay.getWindow(), false);

@@ -46,12 +46,14 @@ class Fire : public Entity {
 public:
 	FireTexture* fireTexture;
 
-	int spriteCounter;
-	int spriteSpeed;
-	int actualFrame;
-	int spriteFrames;
+	double spriteStartTime;
+	double spriteLastFrameTime;
 
-	int explosionCounter;
+	double spriteSpeed = 0.1;
+	int currentFrame = 0;
+	int spriteFrames = 5;
+
+	double expiredTime = 0.5;
 	int explosionType;
 
 	Fire(int type = 0);

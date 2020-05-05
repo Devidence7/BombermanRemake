@@ -1,7 +1,7 @@
-fps = 60
+fps = 0
 fullscreen = 1
-resolution.x = 1280
-resolution.y = 1024
+resolution.x = 1920
+resolution.y = 1001
 volume.master = 20
-volume.music = 50
-volume.sound = 50
+volume.music = 8
+volume.sound = 8

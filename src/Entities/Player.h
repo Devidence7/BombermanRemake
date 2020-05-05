@@ -7,6 +7,7 @@
 #include <memory>
 #include "../Logic/Time.h"
 
+
 #include "Entity.h"
 #include "Bomb.h"
 
@@ -20,9 +21,8 @@ public:
 	double speedBoost = 1;
 	int numOfBombs = 1;
 	int powerOfBombs = 1;
-	//list <sf::Texture>activatedPowerUps;
-	//list<sf::IntRect> activatedPowerUps;
-	list <sf::Sprite*>activatedPowerUps;
+	sf::Sprite playerHead;
+	sf::Sprite playerHead2;
 	bool isBombKeyPresed = false;
 	bool isActionKeyPresed = false;
 
@@ -36,6 +36,8 @@ public:
 	const int walkFrames = 4;			// Number of walking sprites
 	const int deathFrames = 7;			// Number of death sprites
 	const double frameSpeed = 0.15;		// Time between frames
+
+	double lastMovementTime = 0;
 
 	PlayerTexture* playerTexture;
 	PlayerColor* playerColor;
@@ -84,9 +86,10 @@ public:
 		BombTaked.reset();
 	}
 
-	bool playerActions();
+	bool playerActions(int player);
 	/*
 	 * Update player position.
 	 */
-	bool updatePlayer();
+	bool updatePlayer(int ply);
+	
 };

@@ -14,6 +14,7 @@
 #include "Interface/MainMenu.h"
 #include "Interface/OptionsMenu.h"
 #include "Interface/PauseMenu.h"
+#include "Interface/GameOver.h"
 
 
 int main(int argc, char* argv[]) {
@@ -35,6 +36,7 @@ int main(int argc, char* argv[]) {
 	MainMenu gameMainMenu(*gameDisplayController.getWindow());
 	OptionsMenu optionsMenu(*gameDisplayController.getWindow());
 	PauseMenu pauseMenu(*gameDisplayController.getWindow());
+	GameOver gameOverMenu(*gameDisplayController.getWindow());
 	GameInterface gameInterface;
 
 	// Start game loop
@@ -55,8 +57,17 @@ int main(int argc, char* argv[]) {
 			pauseMenu.checkUserPauseActions(gameDisplayController);
 			break;
 
+		case GameDisplayController::GameState::GAME_OVER:
+			gameOverMenu.menuActions(gameDisplayController, game);
+			//gameOverMenu.checkUserPauseActions(gameDisplayController);
+			break;
+
+		case GameDisplayController::GameState::RESTART:
+			game.restartGame(*gameDisplayController.getWindow());
+			gameDisplayController.setGameState(GameDisplayController::GameState::PLAYING);
+
 		case GameDisplayController::GameState::PLAYING:
-			game.update();
+			game.update(gameDisplayController);
 
 			// Clear screen from previous drawings
 			gameDisplayController.getWindow()->clear();
@@ -67,17 +78,19 @@ int main(int argc, char* argv[]) {
 				cout<<playersLives.front();
 			}*/
 			gameInterface.update(GameTime::getTimeNow());
-			if (game.gameOptions.multiplayerGame) {
+			/*if (game.gameOptions.multiplayerGame) {
 				//gameI.update(time.getTimeNow(),playersLives.front(),playersLives.back());
 				gameInterface.drawMulti(*gameDisplayController.getWindow());
-			}
-			else {
+			}*/
+			//else {
 				gameInterface.draw(*gameDisplayController.getWindow());
-			}
+			//}
 
-			gameDisplayController.manageGameInterface(nullptr);
+			gameDisplayController.manageGameInterface(gameDisplayController);
 
 			pauseMenu.checkUserPauseActions(gameDisplayController);
+
+			//gameOverMenu.checkUserGameOverActions(gameDisplayController);
 		}
 
 		// Update display window window

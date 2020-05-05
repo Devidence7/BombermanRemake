@@ -18,14 +18,22 @@ PlayerEntity::PlayerEntity() : Entity()
 	setTextureRect(playerTexture->getDefaultIntRect());
 	// Set sprite Sheet texture
 	setTexture(playerTexture->getTexture());
-
 	// Texture Controller
 	playerColor = &TextureStorage::getPlayerColor();
 	// Set starting sprite
 	playerColorEntity.setTextureRect(playerColor->getDefaultIntRect());
 	// Set sprite Sheet texture
 	playerColorEntity.setTexture(playerColor->getTexture());
-	playerColorEntity.setColor(sf::Color(Random::getIntNumberBetween(0,255), Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255),225));
+	sf::Color tempColor = sf::Color(Random::getIntNumberBetween(0,255), Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255),225);
+	playerColorEntity.setColor(tempColor);
+
+	playerHead.setTexture(playerColor->getTexture());
+	playerHead.setColor(tempColor);
+	playerHead.setTextureRect(sf::IntRect(sf::Vector2i(10,5),sf::Vector2i(36,36)));
+
+	playerHead2.setTexture(playerTexture->getTexture());
+	playerHead2.setTextureRect(sf::IntRect(sf::Vector2i(10,5),sf::Vector2i(36,36)));
+
 
 	// TODO: Remove this
 	move(100, 100);
@@ -86,12 +94,23 @@ void PlayerEntity::animate(sf::Vector2f velocity)
 	{
 		if (currentFrame == 6 && GameTime::getTimeNow() - animLastTic > frameSpeed)
 		{
+				lives--;
 			if(lives>0){
-		    	lives--;
-			}
-			//Else mostrar fin de partida
-			expiredEntity = false;
+		    
+				expiredEntity = false;
 			setPosition(100, 100);
+			}
+			else{
+				//expiredEntity = true;
+				setExpiredEntity();
+			}
+			/*else{
+				gameDisplay.setGameState(GameDisplayController::GameState::GAME_OVER);
+			}*/
+			//Else mostrar fin de partida
+			/*else{}
+				expiredEntity = false;
+			setPosition(100, 100);*/
 		}
 
 		if (GameTime::getTimeNow() - animLastTic > frameSpeed)
@@ -126,13 +145,21 @@ void PlayerEntity::onCollission(std::shared_ptr<Entity> eCollisioning, Collision
 }
 
 /**
- *  Realiza la accion del jugador si puede
-*/
-bool PlayerEntity::playerActions(){
+	 * 
+	 */
+
+bool PlayerEntity::playerActions(int player){
 
 	double t = GameTime::getTimeNow();
-	bool playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
+	bool playerBOMB;
 	bool actionButton = sf::Keyboard::isKeyPressed(sf::Keyboard::E);
+	if(player==1){
+		playerBOMB=sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
+	}
+	else{
+		playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::P);
+	}
+	
 	if (!playerBOMB){
 		isBombKeyPresed = false;
 	}else if(numOfBombs > 0 && !isBombKeyPresed){
@@ -160,44 +187,72 @@ bool PlayerEntity::playerActions(){
 /*
 	 * Update player position.
 	 */
-bool PlayerEntity::updatePlayer()
+bool PlayerEntity::updatePlayer(int ply)
 {
+	bool playerRight;
+	bool playerLeft;
+	bool playerUp;
+	bool playerDown;
+	bool playerBOMB;
 	// Player movement
-	bool playerRight = (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D));
+
+	/*bool playerRight = (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D));
 	bool playerLeft = (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::A));
 	bool playerUp = (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::W));
 	bool playerDown = (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S));
+
+	bool playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);*/
+	if(ply==1){
+	 	playerRight = (sf::Keyboard::isKeyPressed(sf::Keyboard::Right));
+		playerLeft = (sf::Keyboard::isKeyPressed(sf::Keyboard::Left));
+		playerUp = (sf::Keyboard::isKeyPressed(sf::Keyboard::Up));
+		playerDown = (sf::Keyboard::isKeyPressed(sf::Keyboard::Down));
+
+		 playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
+	}
+	else{
+		playerRight = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
+		playerLeft = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
+		playerUp = sf::Keyboard::isKeyPressed(sf::Keyboard::W);
+		playerDown = sf::Keyboard::isKeyPressed(sf::Keyboard::S);
+
+		 playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::P);
+	}
+
+
+
+	double moveTime = 0;
+	if (lastMovementTime) {
+		moveTime = GameTime::getTimeNow() - lastMovementTime;
+	}
+	lastMovementTime = GameTime::getTimeNow();
 
 	velocity.x = 0;
 	velocity.y = 0;
 
 	if (playerDown)
 	{
-		velocity.y = baseSpeed * speedBoost;
+		velocity.y = baseSpeed * speedBoost * moveTime * 60;
 		lastMovement = LookingAt::down;
 	}
 	if (playerUp)
 	{
-		velocity.y = -baseSpeed * speedBoost;
+		velocity.y = -baseSpeed * speedBoost * moveTime * 60;
 		lastMovement = LookingAt::up;
 	}
 	if (playerLeft)
 	{
-		velocity.x = -baseSpeed * speedBoost;
+		velocity.x = -baseSpeed * speedBoost * moveTime * 60;
 		lastMovement = LookingAt::left;
 	}
 	if (playerRight)
 	{
-		velocity.x = baseSpeed * speedBoost;
+		velocity.x = baseSpeed * speedBoost * moveTime * 60;
 		lastMovement = LookingAt::right;
 		//lives--;
 	}
 
-	if (velocity.x != 0 && velocity.y != 0){
-		float module = sqrt((velocity.x*velocity.x) + (velocity.y * velocity.y));
-		velocity.x = (velocity.x/module) /* * sqrt(2)  */* baseSpeed;
-		velocity.y = (velocity.y/module) /* * sqrt(2)  */* baseSpeed;
-	}
+	
 
 	// Call animate function to change current sprite if needed.
 	animate(velocity);
