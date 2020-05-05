@@ -3,6 +3,8 @@
 
 PlayerEntity::PlayerEntity() : Entity()
 {
+
+	actionAvaible = ActionsAvalible::KICK_BOM;//TODO: Eliminar esta linea
 	isFireDestroyable = true;
 	fireCanGoThroght = true;
 	collisioner = false;

@@ -145,9 +145,10 @@ void Level::update()
 			std::shared_ptr<Bomb> b;
 			if ((b = std::dynamic_pointer_cast<Bomb>(*it)) != nullptr)
 			{
+				sf::Vector2f positionBomb = b->getPosition();
+				sf::Vector2i positionMap = getMapCoordinates(positionBomb);
 				if (b->rePutBomb)
 				{
-					sf::Vector2i positionMap = getMapCoordinates(b->getPosition());
 					Entity_ptr e;
 					if((e = getCellMiniMapObject(positionMap)) == nullptr || std::dynamic_pointer_cast<PowerUp>(e) != nullptr){
 						b->rePutBomb = false;
@@ -167,6 +168,19 @@ void Level::update()
 						
 						b->setObjetive( MapCoordinates2GlobalCoorCorner(positionMap + vi));
 					}
+				}else if(b->onMove){
+					//Quitar bomba del mapa
+					getCellMiniMapObject(positionMap).reset();
+					checkAndFixCollisions((*it));
+					sf::FloatRect gbc = b->getGlobalBoundsCollisioner();
+					sf::Vector2f v = normalize(b->getVelocity());
+					sf::Vector2i vi = sf::Vector2i(v.x, v.y);
+					sf::Vector2i newPos = positionMap + vi;
+					getCellMiniMapObject(positionMap) = (*it);
+					if(getCellMiniMapObject(newPos) != nullptr){
+						
+					}
+
 				}
 			}
 			++it;
@@ -645,7 +659,24 @@ bool Level::canKickBomb(Player_ptr p){
 	sf::Vector2i tankinCell;
 	if(areBombNear(p, tankinCell)){
 		Bomb_ptr bomb = std::dynamic_pointer_cast<Bomb>(getCellMiniMapObject(tankinCell));
+			sf::Vector2f dirThrow;
+			switch (p->lastMovement)
+			{
+			case LookingAt::down:
+				dirThrow.y = 1;
+				break;
+			case LookingAt::up:
+				dirThrow.y = -1;
+				break;
+			case LookingAt::left:
+				dirThrow.x = -1;
+				break;
+			case LookingAt::right:
+				dirThrow.x = 1;
+				break;
+			}
 
+		bomb->setOnMove(dirThrow);
 		return true;
 	}
 	return false;

@@ -57,7 +57,11 @@ public:
 
 	sf::FloatRect getGlobalBounds() const override;
 
+	
+
 	void drawMovements(sf::RenderWindow &w);
+
+
 
 };
 
