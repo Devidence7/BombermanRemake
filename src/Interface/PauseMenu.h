@@ -11,6 +11,8 @@
 class PauseMenu {
 	GameGUI::Menu* menu;
 
+	bool EsqPressed = false;
+
 	enum ButtonActions {
 		RESUME,
 		SAVE,
@@ -118,6 +120,27 @@ public:
 			createBackgroundMenu(*gameDisplay.getWindow());
 		}
 		draw(*gameDisplay.getWindow());
+	}
+
+	void checkUserPauseActions(GameDisplayController& gameDisplay) {
+		if (gameDisplay.getGameState() == GameDisplayController::GameState::PLAYING || gameDisplay.getGameState() == GameDisplayController::GameState::PAUSE_MENU) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+				if (!EsqPressed) {
+					EsqPressed = true;
+					if (gameDisplay.getGameState() == GameDisplayController::GameState::PAUSE_MENU) {
+						GameTime::resumeGameTime();
+						gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
+					}
+					else {
+						GameTime::stopGameTime();
+						gameDisplay.setGameState(GameDisplayController::GameState::PAUSE_MENU);
+					}
+				}
+			}
+			else {
+				EsqPressed = false;
+			}
+		}
 	}
 };
 

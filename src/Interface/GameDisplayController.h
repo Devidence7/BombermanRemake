@@ -4,6 +4,7 @@
 #include "../Music/GameSounds.h"
 #include <fstream>
 #include "../Utils/PropertiesReader.h"
+#include "UserKeyPress.h"
 
 class GameDisplayController {
 	sf::RenderWindow* window;
@@ -24,6 +25,7 @@ public:
     };
 
     GameState gameState;
+	UserKeyPress* userKeyPress;
 
 	PropReader::data gameProperties;
     
@@ -36,6 +38,7 @@ public:
 	GameDisplayController() {
 		// Get display properties from properties file
 		getProperties();
+		userKeyPress = new UserKeyPress();
 
 		// Start in MAIN_MENU
 		gameState = GameState::MAIN_MENU;
@@ -72,6 +75,7 @@ public:
 		playingReprocessDisplay = true;
 		optionsMenuReprocessDisplay = true;
 		pauseMenuReprocessDisplay = true;
+		gameOverReprocessDisplay=true;
 	}
 
     void manageGameInterface(GameDisplayController &gameDisplay, std::function<void(sf::Event&)> menuButtonActions = nullptr) {

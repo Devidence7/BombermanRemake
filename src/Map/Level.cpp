@@ -652,9 +652,59 @@ void Level::ThrowBomb(Player_ptr p, Bomb_ptr b)
 		b->setObjetive(MapCoordinates2GlobalCoorCorner(fallPosition));
 		b->setOnFlight(normalize(dirThrow));
 	}
-
-	//TODO: Asociar puntuacion a jugador que lanza
 }
+
+void Level::reiniciar(int dimX, int dimY)
+{
+	miniMap.clear();
+	miniMap = std::vector<std::vector<Entity_ptr>>(dimY + 2, std::vector<Entity_ptr>(dimX + 2, nullptr));
+	for (int x = 0; x < dimX + 2; x++)
+	{
+		addPillar(x, 0);
+		addPillar(x, dimY + 1);
+	}
+
+	for (int y = 0; y < dimY + 2; y++)
+	{
+		addPillar(0, y);
+		addPillar(dimX + 1, y);
+	}
+
+	//create Pillars
+	for (int x = 1; x < dimX + 1; x++)
+	{
+		for (int y = 1; y < dimY + 1; y++)
+		{
+			if (x % 2 == 1 || y % 2 == 1)
+			{
+				// Create random Bricks:
+				if ((y > 3 || x > 3 || (y != 3 && x == 2) || (x == 3 && y <= 3)) && !Random::getIntNumberBetween(0, 3))
+				{
+					bool intersec = false;
+					for (Enemy_ptr e : Enemies::getVectorEnemies())
+					{
+						sf::Vector2i p = getMapCoordinates(e->getCenterPosition());
+						if (p.x == x && p.y == y)
+						{
+							intersec = true;
+							break;
+						}
+					}
+					if (!intersec)
+					{
+						addWall(x, y);
+					}
+				}
+			}
+			else
+			{
+				addPillar(x, y);
+			}
+		}
+	}
+	
+}
+
 bool Level::canKickBomb(Player_ptr p){
 	sf::Vector2i tankinCell;
 	if(areBombNear(p, tankinCell)){
@@ -681,4 +731,4 @@ bool Level::canKickBomb(Player_ptr p){
 	}
 	return false;
 }
-
+//TODO: Asociar puntuacion a jugador que lanza

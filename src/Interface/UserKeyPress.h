@@ -1,108 +1,141 @@
 #pragma once
-#include "GameDisplayController.h"
-#include "../Logic/Time.h"
 
 /*
 Key binding tutorial from SFML https://github.com/SFML/SFML/wiki/Tutorial:-Manage-dynamic-key-binding
  */
 class UserKeyPress{
-
-	enum InputType {
-		KeyboardInput,
-		MouseInput,
-		JoystickInput
-	};
-
-	struct MyKeys {
-		InputType myInputType;
-		sf::Event::EventType myEventType;
-		sf::Keyboard::Key myKeyCode;
-		sf::Mouse::Button myMouseButton;
-	};
-
-	std::map<std::string, MyKeys> Keys;
-	
-
+	std::map<std::string, sf::Keyboard::Key> Keys;
 	bool EsqPressed = false;
+
+	PlayerEntity::PlayerControls player1;
+	PlayerEntity::PlayerControls player2;
+
+	// Get human redeable kay name
+	std::string getKeyName(const int key) {
+		if (key < 0 || key > 100) {
+			cout << "Unknow new key: " + to_string(key) << endl;
+			return "UNKOWN";
+		}
+
+		const static std::string keyNames[] = {
+
+			"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q",
+			"R", "S", "T", "U", "V", "W", "X", "Y", "Z",
+
+			"0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+
+			"Esc",
+			"Ctrl Izq.", "May. Izq.", "Alt Izq.", "Sistema Izq.",
+			"Ctrl Der.", "May. Der.", "Alt Der.", "Sistema Der.",
+
+			"Menu", "Abre cor.", "Cierra cor.", "Punto y coma", "Coma", "Punto",
+			"Comillas", "Barra", "Barra inv.", "Tilde", "Igual", "Guion",
+
+			"Barra espaciadora", "Enter", "Backspace", "Tab", "Page Up", "Page Down",
+			"Fin", "Inicio", "Insertar", "Suprimir",
+			"Agregar", "Restar", "Multiplicar", "Dividir",
+
+			"Flecha Izq.", "Flecha Der.", "Flecha Arriba", "Flecha Abajo",
+			"0 Numpad", "1 Numpad", "2 Numpad", "3 Numpad", "4 Numpad",
+			"5 Numpad", "6 Numpad", "7 Numpad", "8 Numpad", "9 Numpad",
+
+			"F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10",
+			"F11", "F12", "F13", "F14", "F15", "Pausa"
+		};
+		
+		return keyNames[key];
+	}
+
+
 public:
 	UserKeyPress() {
-		MyKeys key;
+		// TODO Get keys from file
+		player1.goUp = sf::Keyboard::W;
+		player1.goDown = sf::Keyboard::S;
+		player1.goRight = sf::Keyboard::D;
+		player1.goLeft = sf::Keyboard::A;
+		player1.UseBomb = sf::Keyboard::Space;
+		player1.MakeAction = sf::Keyboard::E;
 
-		// Let's bind the left mouse button to the "Shoot" action
-		key.myInputType = MouseInput;
-		key.myEventType = sf::Event::MouseButtonPressed;
-		key.myMouseButton = sf::Mouse::Left;
-		Keys["Shoot"] = key;
-
-		// Let's bind the Return key to the "Jump" action
-		key.myInputType = KeyboardInput;
-		key.myEventType = sf::Event::KeyPressed;
-		key.myKeyCode = sf::Keyboard::Return;
-		Keys["Jump"] = key;
-
-		// Let's bind the Left Control key to the "Use" action
-		key.myInputType = KeyboardInput;
-		key.myEventType = sf::Event::KeyPressed;
-		key.myKeyCode = sf::Keyboard::LControl;
-		Keys["Use"] = key;
+		player2.goUp = sf::Keyboard::Up;
+		player2.goDown = sf::Keyboard::Down;
+		player2.goLeft = sf::Keyboard::Left;
+		player2.goRight = sf::Keyboard::Right;
+		player2.UseBomb = sf::Keyboard::RControl;
+		player2.MakeAction = sf::Keyboard::RShift;
 	}
 
-private:
-	bool TestEvent(MyKeys k, sf::Event e) {
-		// Mouse event
-		if (k.myInputType == MouseInput &&
-			k.myEventType == e.type &&
-			k.myMouseButton == e.mouseButton.button) {
-			return (true);
+	PlayerEntity::PlayerControls &getPlayerControls(int playerNum) {
+		switch (playerNum) {
+		case 1:
+			return player1;
+		case 2: 
+			return player2;
 		}
-		// Keyboard event
-		if (k.myInputType == KeyboardInput &&
-			k.myEventType == e.type &&
-			k.myKeyCode == e.key.code) {
-
-			
-			return (true);
-		}
-		return (false);
+		cerr << "getPlayerControls number out of bounds (must be 1 or 2)" << endl;
+		return player1;
 	}
 
-	void userActions(sf::Event& event, sf::RenderWindow*& window, GameDisplayController& gameDisplay, Game& game) {
-		if (TestEvent(Keys["Shoot"], event)) {
-			// You can use a function
-			std::cout << "Shoot !" << std::endl;
-		}
-		if (TestEvent(Keys["Jump"], event)) {
-			std::cout << "Jump !" << std::endl;
-		}
-		if (TestEvent(Keys["Use"], event)) {
-			// or only code
-			std::cout << "Use !" << std::endl;
-		}
-	}
+	//bool TestEvent(sf::Keyboard::Key k, sf::Event e) {
+	//	// Keyboard event
+	//	if (k == e.key.code) {
+	//		return (true);
+	//	}
+	//	return (false);
+	//}
 
-public:
-	void checkUserPauseActions(GameDisplayController& gameDisplay) {
-		if (gameDisplay.getGameState() == GameDisplayController::GameState::PLAYING || gameDisplay.getGameState() == GameDisplayController::GameState::PAUSE_MENU) {
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-				if (!EsqPressed) {
-					EsqPressed = true;
-					if (gameDisplay.getGameState() == GameDisplayController::GameState::PAUSE_MENU) {
-						GameTime::resumeGameTime();
-						gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
-					}
-					else {
-						GameTime::stopGameTime();
-						gameDisplay.setGameState(GameDisplayController::GameState::PAUSE_MENU);
-					}
-				}
-			}
-			else {
-				EsqPressed = false;
-			}
-		}
-	}
+//	void userActions(sf::Event& event, sf::RenderWindow*& window, GameDisplayController& gameDisplay, Game& game) {
+//		// Ignore key events
+//
+//		/*if (event.type == sf::Event::KeyPressed) {
+//			cout << getKeyName(event.key.code) << " - " << event.key.code << endl;
+//
+//			if (TestEvent(Keys["P1 UP"], event)) {
+//				std::cout << "P1 UP" << std::endl;
+//			}
+//			else if (TestEvent(Keys["P1 DOWN"], event)) {
+//				std::cout << "P1 DOWN" << std::endl;
+//			}
+//			else if (TestEvent(Keys["P1 LEFT"], event)) {
+//				std::cout << "P1 LEFT" << std::endl;
+//			}
+//			else if (TestEvent(Keys["P1 RIGHT"], event)) {
+//				std::cout << "P1 RIGHT" << std::endl;
+//			}
+//			else if (TestEvent(Keys["P1 BOMB"], event)) {
+//				std::cout << "P1 BOMB" << std::endl;
+//			}
+//			else if (TestEvent(Keys["P1 ACTION"], event)) {
+//				std::cout << "P1 ACTION" << std::endl;
+//			}
+//
+//			else if (TestEvent(Keys["P2 UP"], event)) {
+//				std::cout << "P2 UP" << std::endl;
+//			}
+//			else if (TestEvent(Keys["P2 DOWN"], event)) {
+//				std::cout << "P2 DOWN" << std::endl;
+//			}
+//			else if (TestEvent(Keys["P2 LEFT"], event)) {
+//				std::cout << "P2 LEFT" << std::endl;
+//			}
+//			else if (TestEvent(Keys["P2 RIGHT"], event)) {
+//				std::cout << "P2 RIGHT" << std::endl;
+//			}
+//			else if (TestEvent(Keys["P2 BOMB"], event)) {
+//				std::cout << "P2 BOMB" << std::endl;
+//			}
+//			else if (TestEvent(Keys["P2 ACTION"], event)) {
+//				std::cout << "P2 ACTION" << std::endl;
+//			}
+//		}*/
+//	}
+//
+//
+//
+//public:
 
-	void checkUserKeysPress(GameDisplayController& gameDisplay, Game& game){
+
+	/*void checkUserKeysPress(GameDisplayController& gameDisplay, Game& game){
 		gameDisplay.manageGameInterface(gameDisplay, std::bind(&UserKeyPress::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
-	}
+	}*/
 };

@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
 
 		case GameDisplayController::GameState::PAUSE_MENU:
 			pauseMenu.menuActions(gameDisplayController, game);
-			userKeyPressManager.checkUserPauseActions(gameDisplayController);
+			pauseMenu.checkUserPauseActions(gameDisplayController);
 			break;
 
 		case GameDisplayController::GameState::GAME_OVER:
@@ -66,7 +66,10 @@ int main(int argc, char* argv[]) {
 
 		case GameDisplayController::GameState::RESTART:
 			game.restartGame(*gameDisplayController.getWindow());
+			/*cout<<"holi5"<<endl;
 			gameDisplayController.setGameState(GameDisplayController::GameState::PLAYING);
+			cout<<"holi6"<<endl;*/
+			break;
 
 		case GameDisplayController::GameState::PLAYING:
 			game.update(gameDisplayController);
@@ -88,10 +91,9 @@ int main(int argc, char* argv[]) {
 			gameInterface.draw(*gameDisplayController.getWindow());
 			//}
 
-			//gameDisplayController.manageGameInterface(gameDisplayController);
-
-			userKeyPressManager.checkUserPauseActions(gameDisplayController);
-			userKeyPressManager.checkUserKeysPress(gameDisplayController, game);
+			gameDisplayController.manageGameInterface(gameDisplayController);
+			pauseMenu.checkUserPauseActions(gameDisplayController);
+			// userKeyPressManager.checkUserKeysPress(gameDisplayController, game);
 
 
 			//gameOverMenu.checkUserGameOverActions(gameDisplayController);
