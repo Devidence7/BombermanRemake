@@ -24,6 +24,7 @@ public:
 	//list<sf::IntRect> activatedPowerUps;
 	list <sf::Sprite*>activatedPowerUps;
 	bool isBombKeyPresed = false;
+	bool isActionKeyPresed = false;
 
 	std::shared_ptr<PlayerEntity> me;
 
@@ -74,6 +75,14 @@ public:
 	void update() override;
 	void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) override;
 
+
+	inline void takeBomb(std::shared_ptr<Entity> b){
+		BombTaked = b;
+	}
+
+	inline void delBombTaked(){
+		BombTaked.reset();
+	}
 
 	bool playerActions();
 	/*

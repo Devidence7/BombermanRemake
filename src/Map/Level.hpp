@@ -57,4 +57,5 @@ public:
 	static void addPillar(int x, int y);
 	static void addWall(int x, int y);
 	static bool addBomb(Player_ptr p);
+	static bool canTakeBomb(Player_ptr p);
 };

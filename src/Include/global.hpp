@@ -4,7 +4,9 @@
 #define sizeTextureY 48
 
 #define SIZE_PILLAR 48
+#define SIZE_PILLAR_2 SIZE_PILLAR/2
 
+#define SHOOTING_DISTANCE 5
 enum LookingAt
 {
 	down = 0,

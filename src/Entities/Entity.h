@@ -35,6 +35,8 @@ protected:
 	std::list<std::shared_ptr<Entity>> BombsAsociated;
 	std::shared_ptr<Entity> BombTaked = nullptr;
 
+	sf::Vector2f positionObjetive;
+
 public:
 	Entity();
 	virtual sf::Vector2f getCenterPosition();

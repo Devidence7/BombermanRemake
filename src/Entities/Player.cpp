@@ -126,13 +126,13 @@ void PlayerEntity::onCollission(std::shared_ptr<Entity> eCollisioning, Collision
 }
 
 /**
-	 * 
-	 */
-
+ *  Realiza la accion del jugador si puede
+*/
 bool PlayerEntity::playerActions(){
 
 	double t = GameTime::getTimeNow();
 	bool playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
+	bool actionButton = sf::Keyboard::isKeyPressed(sf::Keyboard::E);
 	if (!playerBOMB){
 		isBombKeyPresed = false;
 	}else if(numOfBombs > 0 && !isBombKeyPresed){
@@ -140,6 +140,17 @@ bool PlayerEntity::playerActions(){
 			numOfBombs--;
 		}
 		isBombKeyPresed = true;
+	}
+	
+	if(!actionButton){
+		this->isActionKeyPresed = false;
+	}else if(!isActionKeyPresed){ //Si el boton accion y no se acaba de pulsar
+		isActionKeyPresed = true;
+		if(BombTaked != nullptr){
+			//lanzar
+		}else if(canGrabBomb){
+			Level::canTakeBomb(me);
+		}
 	}
 
 	return isBombKeyPresed;

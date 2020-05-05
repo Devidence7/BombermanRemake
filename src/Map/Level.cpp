@@ -484,3 +484,37 @@ bool Level::addBomb(Player_ptr p){
 	}
 	return false;
 }
+
+bool Level::canTakeBomb(Player_ptr p){
+	sf::Vector2f takingZone;
+	switch (p->lastMovement)
+	{
+	case LookingAt::down:
+		takingZone.y = SIZE_PILLAR_2;
+		break;
+	case LookingAt::up:
+		takingZone.y = -SIZE_PILLAR_2;
+		break;
+	case LookingAt::left:
+		takingZone.x = -SIZE_PILLAR_2;
+		break;
+	case LookingAt::right:
+		takingZone.x = SIZE_PILLAR_2;
+		break;
+	
+	default:
+		break;
+	}
+	sf::Vector2f PlayerPos = p->getCenterPosition();
+
+	sf::Vector2i tankinCell = getMapCoordinates(PlayerPos + takingZone);
+	
+	Bomb_ptr bomb;
+	if(getCellMiniMapObject(tankinCell) != nullptr && (bomb = std::dynamic_pointer_cast<Bomb>(getCellMiniMapObject(tankinCell))) != nullptr){
+		p->takeBomb(bomb);
+		getCellMiniMapObject(tankinCell).reset();
+		return true;
+	}
+	return false;
+
+}
