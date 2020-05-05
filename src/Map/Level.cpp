@@ -532,22 +532,18 @@ bool Level::addBomb(Player_ptr p)
 	return false;
 }
 
-bool Level::canTakeBomb(Player_ptr p)
-{
-	Bomb_ptr bomb;
+bool Level::areBombNear(Player_ptr p, sf::Vector2i &bombPosMap){
+
 	sf::Vector2f PlayerPos = p->getCenterPosition();
-	sf::Vector2f takingZone;
-	sf::Vector2i tankinCell = getMapCoordinates(PlayerPos);
-	if (getCellMiniMapObject(tankinCell) != nullptr && (bomb = std::dynamic_pointer_cast<Bomb>(getCellMiniMapObject(tankinCell))) != nullptr)
+	bombPosMap = getMapCoordinates(PlayerPos);
+	//Mirar si hay una bomba a sus pies
+	if (getCellMiniMapObject(bombPosMap) != nullptr && std::dynamic_pointer_cast<Bomb>(getCellMiniMapObject(bombPosMap)) != nullptr)
 	{
-		//Mirar si hay una bomba a sus pies
-		p->takeBomb(bomb);
-		getCellMiniMapObject(tankinCell).reset();
 		return true;
 	}
-	else
-	{
-		switch (p->lastMovement)
+
+	sf::Vector2f takingZone;
+	switch (p->lastMovement)
 		{
 		case LookingAt::down:
 			takingZone.y = SIZE_PILLAR_2;
@@ -566,17 +562,29 @@ bool Level::canTakeBomb(Player_ptr p)
 			break;
 		}
 
-		tankinCell = getMapCoordinates(PlayerPos + takingZone);
-	}
+		bombPosMap = getMapCoordinates(PlayerPos + takingZone);
 
-	if (getCellMiniMapObject(tankinCell) != nullptr && (bomb = std::dynamic_pointer_cast<Bomb>(getCellMiniMapObject(tankinCell))) != nullptr)
+	if (getCellMiniMapObject(bombPosMap) != nullptr && std::dynamic_pointer_cast<Bomb>(getCellMiniMapObject(bombPosMap)) != nullptr)
 	{
+		return true;
+	}
+	return false;
+
+
+}
+
+bool Level::canTakeBomb(Player_ptr p)
+{
+	sf::Vector2i tankinCell;
+	if(areBombNear(p, tankinCell)){
+		Entity_ptr bomb = getCellMiniMapObject(tankinCell);
 		p->takeBomb(bomb);
 		getCellMiniMapObject(tankinCell).reset();
 		return true;
 	}
 	return false;
 }
+
 
 void Level::ThrowBomb(Player_ptr p, Bomb_ptr b)
 {

@@ -199,7 +199,7 @@ GrabBombsPowerUp::GrabBombsPowerUp(sf::Vector2f pos) : PowerUp() {
 }
 
 void GrabBombsPowerUp::setPlayerStatus(PlayerEntity& pe) {
-	pe.setCanGrabBomb(true);
+	pe.setAction(ActionsAvalible::GRAB_BOMB);
 }
 
 void GrabBombsPowerUp::addPowerUp2Player(PlayerEntity &pe){
@@ -220,7 +220,7 @@ KickBombsPowerUp::KickBombsPowerUp(sf::Vector2f pos) : PowerUp() {
 }
 
 void KickBombsPowerUp::setPlayerStatus(PlayerEntity& pe) {
-	pe.setCanKickBom(true);
+	pe.setAction(ActionsAvalible::KICK_BOM);
 }
 
 void KickBombsPowerUp::addPowerUp2Player(PlayerEntity &pe){

@@ -3,7 +3,6 @@
 
 PlayerEntity::PlayerEntity() : Entity()
 {
-	canGrabBomb = true;//DEJAR A FALSE
 	isFireDestroyable = true;
 	fireCanGoThroght = true;
 	collisioner = false;
@@ -11,7 +10,7 @@ PlayerEntity::PlayerEntity() : Entity()
 	animLastTic = GameTime::getTimeNow();
 	baseSpeed = 2.5;
 	lastMovement = LookingAt::down;
-	lives=3;
+	lives = 3;
 	// Texture Controller
 	playerTexture = &TextureStorage::getPlayerTexture();
 	// Set starting sprite
@@ -24,16 +23,15 @@ PlayerEntity::PlayerEntity() : Entity()
 	playerColorEntity.setTextureRect(playerColor->getDefaultIntRect());
 	// Set sprite Sheet texture
 	playerColorEntity.setTexture(playerColor->getTexture());
-	sf::Color tempColor = sf::Color(Random::getIntNumberBetween(0,255), Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255),225);
+	sf::Color tempColor = sf::Color(Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255), 225);
 	playerColorEntity.setColor(tempColor);
 
 	playerHead.setTexture(playerColor->getTexture());
 	playerHead.setColor(tempColor);
-	playerHead.setTextureRect(sf::IntRect(sf::Vector2i(10,5),sf::Vector2i(36,36)));
+	playerHead.setTextureRect(sf::IntRect(sf::Vector2i(10, 5), sf::Vector2i(36, 36)));
 
 	playerHead2.setTexture(playerTexture->getTexture());
-	playerHead2.setTextureRect(sf::IntRect(sf::Vector2i(10,5),sf::Vector2i(36,36)));
-
+	playerHead2.setTextureRect(sf::IntRect(sf::Vector2i(10, 5), sf::Vector2i(36, 36)));
 
 	// TODO: Remove this
 	move(100, 100);
@@ -57,12 +55,13 @@ void PlayerEntity::setExpiredEntity()
 	}
 }
 
-inline Entity& PlayerEntity::getPlayerColorEntity() {
+inline Entity &PlayerEntity::getPlayerColorEntity()
+{
 	return playerColorEntity;
 }
 
-
-int PlayerEntity::getLives(){
+int PlayerEntity::getLives()
+{
 	return lives;
 }
 
@@ -74,7 +73,7 @@ void PlayerEntity::animate(sf::Vector2f velocity)
 	// If the player has died:
 	if (!expiredEntity)
 	{
-	
+
 		if (velocity.x == 0 && velocity.y == 0)
 		{
 			// If there is not speed set idle sprite
@@ -123,7 +122,7 @@ void PlayerEntity::animate(sf::Vector2f velocity)
 		}
 
 		if (GameTime::getTimeNow() - animLastTic > frameSpeed)
-		{	
+		{
 			setTextureRect(playerTexture->getDeathSprite(currentFrame));
 			playerColorEntity.setTextureRect(playerTexture->getDeathSprite(currentFrame));
 			currentFrame = (currentFrame + 1) % deathFrames;
@@ -138,7 +137,8 @@ sf::FloatRect PlayerEntity::getGlobalBounds() const
 	return sf::FloatRect(dim.left + 15, dim.top + 45, 27, 27);
 }
 
-Entity& PlayerEntity::playerUpdateColor() {
+Entity &PlayerEntity::playerUpdateColor()
+{
 	playerColorEntity.setPosition(getPosition());
 	return playerColorEntity;
 }
@@ -153,48 +153,76 @@ void PlayerEntity::onCollission(std::shared_ptr<Entity> eCollisioning, Collision
 	return;
 }
 
+void PlayerEntity::realizeActions()
+{
+	if (BombTaked != nullptr)
+	{
+		//lanzar
+		Level::ThrowBomb(me, std::dynamic_pointer_cast<Bomb>(BombTaked));
+		BombTaked.reset();
+	}
+	else
+	{
+		switch (this->actionAvaible)
+		{
+		case ActionsAvalible::GRAB_BOMB:
+			Level::canTakeBomb(me);
+			break;
+		case ActionsAvalible::KICK_BOM:
+			Level::canKickBomb(me);
+			break;
+
+		default:
+			break;
+		}
+	}
+}
+
 /**
 	 * 
 	 */
 
-bool PlayerEntity::playerActions(int player){
+bool PlayerEntity::playerActions(int player)
+{
 
 	double t = GameTime::getTimeNow();
 	bool playerBOMB = false;
 	bool actionButton = false;
-	if(player==1){
-		playerBOMB=sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
+	if (player == 1)
+	{
+		playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
 		actionButton = sf::Keyboard::isKeyPressed(sf::Keyboard::E);
 	}
-	else{
+	else
+	{
 		playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::P);
 	}
-	
-	if (!playerBOMB){
+
+	if (!playerBOMB)
+	{
 		isBombKeyPresed = false;
-	}else if(numOfBombs > 0 && !isBombKeyPresed){
-		if(Level::addBomb(this->me)){
+	}
+	else if (numOfBombs > 0 && !isBombKeyPresed)
+	{
+		if (Level::addBomb(this->me))
+		{
 			numOfBombs--;
 		}
 		isBombKeyPresed = true;
 	}
-	
-	if(!actionButton){
+
+	if (!actionButton)
+	{
 		this->isActionKeyPresed = false;
-	}else if(!isActionKeyPresed){ //Si el boton accion y no se acaba de pulsar
+	}
+	else if (!isActionKeyPresed)
+	{ //Si el boton accion y no se acaba de pulsar
 		isActionKeyPresed = true;
-		if(BombTaked != nullptr){
-			//lanzar
-			Level::ThrowBomb(me, std::dynamic_pointer_cast<Bomb>(BombTaked));
-			BombTaked.reset();
-		}else if(canGrabBomb){
-			Level::canTakeBomb(me);
-		}
+		realizeActions();
 	}
 
 	return isBombKeyPresed;
 }
-
 
 /*
 	 * Update player position.
@@ -214,27 +242,28 @@ bool PlayerEntity::updatePlayer(int ply)
 	bool playerDown = (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S));
 
 	bool playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);*/
-	if(ply==1){
-	 	playerRight = (sf::Keyboard::isKeyPressed(sf::Keyboard::Right));
+	if (ply == 1)
+	{
+		playerRight = (sf::Keyboard::isKeyPressed(sf::Keyboard::Right));
 		playerLeft = (sf::Keyboard::isKeyPressed(sf::Keyboard::Left));
 		playerUp = (sf::Keyboard::isKeyPressed(sf::Keyboard::Up));
 		playerDown = (sf::Keyboard::isKeyPressed(sf::Keyboard::Down));
 
-		 playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
+		playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
 	}
-	else{
+	else
+	{
 		playerRight = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
 		playerLeft = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
 		playerUp = sf::Keyboard::isKeyPressed(sf::Keyboard::W);
 		playerDown = sf::Keyboard::isKeyPressed(sf::Keyboard::S);
 
-		 playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::P);
+		playerBOMB = sf::Keyboard::isKeyPressed(sf::Keyboard::P);
 	}
 
-
-
 	double moveTime = 0;
-	if (lastMovementTime) {
+	if (lastMovementTime)
+	{
 		moveTime = GameTime::getTimeNow() - lastMovementTime;
 	}
 	lastMovementTime = GameTime::getTimeNow();
@@ -264,8 +293,6 @@ bool PlayerEntity::updatePlayer(int ply)
 		//lives--;
 	}
 
-	
-
 	// Call animate function to change current sprite if needed.
 	animate(velocity);
 
@@ -273,16 +300,11 @@ bool PlayerEntity::updatePlayer(int ply)
 	if (!expiredEntity)
 	{
 		move(velocity.x, velocity.y);
-		if(BombTaked != nullptr){//Si tiene bomba, actualizar a la posicion del jugador (centrado segun cuadricula)
+		if (BombTaked != nullptr)
+		{ //Si tiene bomba, actualizar a la posicion del jugador (centrado segun cuadricula)
 			BombTaked->setPosition(Level::getMapCellCorner(this->getCenterPosition()));
 		}
 	}
 
 	return false;
-}
-
-
-void PlayerEntity::setJumpingBomb() {
-	//Actializar frames
-	return;
 }

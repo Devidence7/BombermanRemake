@@ -73,8 +73,9 @@ public:
 
 	Entity& playerUpdateColor();
 
-	void setJumpingBomb() ;
-
+	void setCanThroughBomb(bool _ctb) override{
+		return; //No se puede asignar la posibilidad de atravesar bombas sin action
+	}
 
 	void update() override;
 	void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) override;
@@ -87,6 +88,8 @@ public:
 	inline void delBombTaked(){
 		BombTaked.reset();
 	}
+
+	void realizeActions();
 
 	bool playerActions(int player);
 	/*

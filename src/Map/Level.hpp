@@ -58,7 +58,10 @@ public:
 	static void addPillar(int x, int y);
 	static void addWall(int x, int y);
 	static bool addBomb(Player_ptr p);
+
+	static bool areBombNear(Player_ptr p, sf::Vector2i &bombPosMap);
 	static bool canTakeBomb(Player_ptr p);
+	static bool canKickBomb(Player_ptr p);
 	static void ThrowBomb(Player_ptr p, Bomb_ptr b);
 	static void reiniciar(int dimX, int dimY);
 };

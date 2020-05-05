@@ -26,11 +26,11 @@ protected:
 	bool collisioner = true; //default: cant through
 	bool onCollision = false; //if just have collision
 
+	
 	bool canThroughWall = false; //puede atravesar paredes
 	bool canThroughBomb = false; //puede atravesar bombas
 
-	bool canKickBom = false;
-	bool canGrabBomb = false;
+	ActionsAvalible actionAvaible = ActionsAvalible::NONE_ACTION;
 
 	std::list<std::shared_ptr<Entity>> BombsAsociated;
 	std::shared_ptr<Entity> BombTaked = nullptr;
@@ -68,37 +68,34 @@ public:
 
 	bool getFireCanGoThroght();
 
-	bool CanKickBom(){
-		return this->canKickBom;
-	}
-
-	void setCanKickBom(bool _canKickBom){
-		canKickBom = _canKickBom;
-	}
-
 	bool CanThroughWall(){
 		return this->canThroughWall;
+	}
+
+	virtual void setCanThroughBomb(bool _ctb = true){
+		canThroughBomb = _ctb;
 	}
 
 	void setCanThroughWall(bool _canThroughWall){
 		this->canThroughWall = _canThroughWall;
 	}
 
+	void setAction(ActionsAvalible _action){
+		actionAvaible =_action;
+	}
+
+	bool CanKickBom(){
+		return ActionsAvalible::KICK_BOM == actionAvaible;
+	}
+
 	bool CanGrabBomb(){
-		return canGrabBomb;
+		return this->actionAvaible == ActionsAvalible::GRAB_BOMB ;
 	}
-	void setCanThroughBomb(bool _ctb = true){
-		canThroughBomb = _ctb;
-	}
+	
 
 	bool CanThroughBomb(){
-		return canThroughBomb;
+		return canThroughBomb || actionAvaible == ActionsAvalible::THROUGH_BOMB;
 	}
-
-	void setCanGrabBomb(bool _canGrabBomb){
-		canGrabBomb = _canGrabBomb;
-	}
-
 
 	virtual void setJumpingBomb(){
 		//TODO: ???

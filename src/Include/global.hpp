@@ -29,6 +29,15 @@ enum PlayerEvent
 	STOPED
 };
 
+enum ActionsAvalible
+{
+	NONE_ACTION = 0,
+	GRAB_BOMB = 1,
+	THROUGH_BOMB = 2,
+	REMOTE_BOMB = 3,
+	KICK_BOM = 4
+};
+
 enum EnemyType
 {
 	balloon = 0,
