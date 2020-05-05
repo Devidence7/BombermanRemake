@@ -88,7 +88,9 @@ private:
 		int id = menu->onEvent(event);
 		switch (id) {
 		case ButtonActions::RETRY:
-			gameDisplay.setGameState(GameDisplayController::GameState::RESTART);
+			gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
+			game.restartGame(*window);
+			
 			break;
 				
 		case ButtonActions::GO_MAIN_MENU:

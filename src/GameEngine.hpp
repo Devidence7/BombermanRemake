@@ -64,13 +64,30 @@ public:
 	}
 
 	void restartGame(sf::RenderWindow& window){
+		//GameTime::startGameTime();
 			for (Player_ptr& player : PLayers::getVectorPlayer()) {
 		
+				//player.reset();
+				//cout<<"holi"<<endl;
 				player->lives=3;
+		
 			}
-			Enemies::insertarEnemigos(dimX, dimY);
-		level = new Level(dimX, dimY);
-		startNewGame(window);
+			
+			//	Enemies::insertarEnemigos(dimX, dimY);
+			//GameTime::startGameTime();
+		    GameMusic::playWorld1Music();
+
+			
+		
+		
+		
+			//Enemies::insertarEnemigos(dimX, dimY);
+			level->reiniciar(dimX,dimY);
+		
+		//level = new Level(dimX, dimY);
+	
+		
+		//startNewGame(window);
 
 	}
 
@@ -110,7 +127,9 @@ public:
 		for (Player_ptr& player : PLayers::getVectorPlayer()) {
 			totalLives+=player->getLives();
 		}
+		//cout<<totalLives<<endl;
 		if(totalLives==0){
+			
 			gameDisplay.setGameState(GameDisplayController::GameState::GAME_OVER);
 		}
 	}

@@ -48,9 +48,12 @@ void PlayerEntity::setExpiredEntity()
 {
 	if (!expiredEntity)
 	{
+	
 		expiredEntity = true;
+		if(!dead){
 		currentFrame = 0;
 		animLastTic = GameTime::getTimeNow();
+		}
 	}
 }
 
@@ -97,13 +100,19 @@ void PlayerEntity::animate(sf::Vector2f velocity)
 				lives--;
 			if(lives>0){
 		    
-				expiredEntity = false;
-			setPosition(100, 100);
+				
 			}
 			else{
+				lives=0;
+				//dead=true;
+			}
+			expiredEntity = false;
+			    setPosition(100, 100);
+
+		/*	else{
 				//expiredEntity = true;
 				setExpiredEntity();
-			}
+			}*/
 			/*else{
 				gameDisplay.setGameState(GameDisplayController::GameState::GAME_OVER);
 			}*/

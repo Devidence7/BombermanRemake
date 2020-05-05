@@ -66,7 +66,10 @@ int main(int argc, char* argv[]) {
 
 		case GameDisplayController::GameState::RESTART:
 			game.restartGame(*gameDisplayController.getWindow());
+			/*cout<<"holi5"<<endl;
 			gameDisplayController.setGameState(GameDisplayController::GameState::PLAYING);
+			cout<<"holi6"<<endl;*/
+			break;
 
 		case GameDisplayController::GameState::PLAYING:
 			game.update(gameDisplayController);

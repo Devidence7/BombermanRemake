@@ -72,6 +72,7 @@ public:
 		playingReprocessDisplay = true;
 		optionsMenuReprocessDisplay = true;
 		pauseMenuReprocessDisplay = true;
+		gameOverReprocessDisplay=true;
 	}
 
     void manageGameInterface(GameDisplayController &gameDisplay, std::function<void(sf::Event&)> menuButtonActions = nullptr) {

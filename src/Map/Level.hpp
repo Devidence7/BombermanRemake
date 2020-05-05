@@ -60,4 +60,5 @@ public:
 	static bool addBomb(Player_ptr p);
 	static bool canTakeBomb(Player_ptr p);
 	static void ThrowBomb(Player_ptr p, Bomb_ptr b);
+	static void reiniciar(int dimX, int dimY);
 };

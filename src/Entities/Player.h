@@ -21,6 +21,7 @@ public:
 	double speedBoost = 1;
 	int numOfBombs = 1;
 	int powerOfBombs = 1;
+	bool dead=false;
 	sf::Sprite playerHead;
 	sf::Sprite playerHead2;
 	bool isBombKeyPresed = false;
