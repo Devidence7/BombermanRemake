@@ -10,8 +10,6 @@
 
 class PauseMenu {
 	GameGUI::Menu* menu;
-	GameDisplayController::GameState lastGameState;
-	bool EsqPressed = false;
 
 	enum ButtonActions {
 		RESUME,
@@ -77,7 +75,7 @@ private:
 		int id = menu->onEvent(event);
 		switch (id) {
 		case ButtonActions::RESUME:
-			gameDisplay.setGameState(lastGameState);
+			gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
 			GameTime::resumeGameTime();
 			break;
 
@@ -121,26 +119,5 @@ public:
 		}
 		draw(*gameDisplay.getWindow());
 	}
-
-	void checkUserPauseActions(GameDisplayController& gameDisplay) {
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-			if (!EsqPressed) {
-				EsqPressed = true;
-				if (gameDisplay.getGameState() == GameDisplayController::GameState::PAUSE_MENU) {
-					GameTime::resumeGameTime();
-					gameDisplay.setGameState(lastGameState);
-				}
-				else {
-					lastGameState = gameDisplay.getGameState();
-					GameTime::stopGameTime();
-					gameDisplay.setGameState(GameDisplayController::GameState::PAUSE_MENU);
-				}
-			}
-		}
-		else {
-			EsqPressed = false;
-		}
-	}
-
 };
 

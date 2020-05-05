@@ -74,7 +74,7 @@ public:
 		pauseMenuReprocessDisplay = true;
 	}
 
-    void manageGameInterface(GameDisplayController &gameDisplay, std::function<void(sf::Event&)> buttonActions = nullptr) {
+    void manageGameInterface(GameDisplayController &gameDisplay, std::function<void(sf::Event&)> menuButtonActions = nullptr) {
 		sf::Event event;
 		while (window->pollEvent(event)) {
 			// Process events
@@ -105,8 +105,8 @@ public:
 			//									   IF MENU BUTTON PRESSED OR OTHE CUSTOM
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			default:
-				if (buttonActions) {
-					buttonActions(event);
+				if (menuButtonActions) {
+					menuButtonActions(event);
 				}
 				break;
 			}
@@ -148,7 +148,7 @@ public:
 			cout << iter->first << " = " << iter->second << endl;
 		}
 
-		cout << gameProperties.at("volume.master") << endl;
+		//cout << gameProperties.at("volume.master") << endl;
 		GameMusic::setMasterVolume(stoi(gameProperties.at("volume.master")));
 		GameMusic::setVolume(stoi(gameProperties.at("volume.music")));
 		GameSounds::setVolume(stoi(gameProperties.at("volume.sound")));

@@ -94,7 +94,7 @@ void MultilineInputBox::setCursorPosition(size_t index)
 
 		if (m_cursor.getPosition().y + m_cursor.getSize().y > getSize().y - padding)
 		{
-			std::cout << "shifting up" << std::endl;
+			//std::cout << "shifting up" << std::endl;
 			// Shift text up
 			float diff = m_cursor.getPosition().y - getSize().y + padding;
 			m_text.move(0, -diff);
@@ -102,7 +102,7 @@ void MultilineInputBox::setCursorPosition(size_t index)
 		}
 		else if (m_cursor.getPosition().y < padding)
 		{
-			std::cout << "shifting down" << std::endl;
+			//std::cout << "shifting down" << std::endl;
 			// Shift text down
 			float diff = padding - m_cursor.getPosition().y;
 			m_text.move(0, diff);

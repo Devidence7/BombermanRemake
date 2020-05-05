@@ -63,7 +63,7 @@ public:
 
 		texture.loadFromFile("../textures/interface/Background_orange_squares.png");
 		texture.setRepeated(true);
-		background.setColor(sf::Color(255, 255, 0, 5));
+		background.setColor(sf::Color(0, 0, 0, 5));
 		background.setTexture(texture);
 		background.setScale(sf::Vector2f(2, 2));
 		background.setTextureRect({ 0, 0, (int)window.getSize().x, (int)window.getSize().y });
@@ -122,24 +122,5 @@ public:
 		}
 		draw(*gameDisplay.getWindow());
 	}
-
-	void checkUserGameOverActions(GameDisplayController& gameDisplay) {
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-			if (!EsqPressed) {
-				EsqPressed = true;
-				if (gameDisplay.getGameState() == GameDisplayController::GameState::GAME_OVER) {
-					gameDisplay.setGameState(lastGameState);
-				}
-				else {
-					lastGameState = gameDisplay.getGameState();
-					gameDisplay.setGameState(GameDisplayController::GameState::GAME_OVER);
-				}
-			}
-		}
-		else {
-			EsqPressed = false;
-		}
-	}
-
 };
 
