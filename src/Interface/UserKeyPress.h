@@ -7,10 +7,11 @@ class UserKeyPress{
 	std::map<std::string, sf::Keyboard::Key> Keys;
 	bool EsqPressed = false;
 
+public:
+
 	PlayerEntity::PlayerControls player1;
 	PlayerEntity::PlayerControls player2;
 
-public:
 	/*
 	Get human redeable key name
 	*/
@@ -34,7 +35,7 @@ public:
 			"Menu", "Abre cor.", "Cierra cor.", "Punto y coma", "Coma", "Punto",
 			"Comillas", "Barra", "Barra inv.", "Tilde", "Igual", "Guion",
 
-			"Barra espaciadora", "Enter", "Backspace", "Tab", "Page Up", "Page Down",
+			"Espacio", "Enter", "Backspace", "Tab", "Page Up", "Page Down",
 			"Fin", "Inicio", "Insertar", "Suprimir",
 			"Agregar", "Restar", "Multiplicar", "Dividir",
 
