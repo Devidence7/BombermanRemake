@@ -16,6 +16,9 @@ class GameDisplayController {
 	sf::RenderWindow* window;
 
 public:
+	sf::View menuView;
+	sf::View camera;
+
 	unsigned int FPSs;
 	unsigned int windowWidth;
 	unsigned int windowHeight;
@@ -65,6 +68,10 @@ public:
 		}
 		
 		window->setFramerateLimit(FPSs);
+
+		// CAMERA
+		menuView = sf::View(sf::FloatRect(0.f, 0.f, window->getSize().x, window->getSize().y));
+		camera = sf::View (sf::FloatRect(0.f, 0.f, window->getSize().x, window->getSize().y));
 	}
 
 	/**
@@ -123,6 +130,10 @@ public:
 		gameOverReprocessDisplay=true;
 	}
 
+	void updateCamera() {
+		window->setView(camera);
+	}
+
 	/**
 	 * Core sfml event handler. It can be call with a callback if more events are need to be watch by different
 	 * interfaces
@@ -147,13 +158,19 @@ public:
 				break;
 			case sf::Event::Resized: {
 				// update the view to the new size of the window
-				sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
-				window->setView(sf::View(visibleArea));
+				
 				window->setSize(sf::Vector2u(event.size.width, event.size.height));
 				gameDisplay.windowWidth = event.size.width;
 				gameDisplay.windowHeight = event.size.height;
 				gameDisplay.saveProperties();
 				notifyChangeDisplay();
+				
+				camera.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
+
+				sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+				menuView = sf::View(visibleArea);
+				// sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+				// window->setView(sf::View(visibleArea));
 				break;
 			}
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////

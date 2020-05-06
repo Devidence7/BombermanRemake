@@ -27,7 +27,7 @@ public:
 	const int spriteFrames = 4;
 
 	double explosionCounter;
-	const double explosionTime = 1.35;
+	const double explosionTime = 3;
 
 	bool isRemoteBomb = false;
 	bool signalExplote = false;
