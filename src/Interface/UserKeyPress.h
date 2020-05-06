@@ -39,7 +39,7 @@ public:
 			"Fin", "Inicio", "Insertar", "Suprimir",
 			"Agregar", "Restar", "Multiplicar", "Dividir",
 
-			"Flecha Izq.", "Flecha Der.", "Flecha Arriba", "Flecha Abajo",
+			"Fle. Izq.", "Fle. Der.", "Fle. Arriba", "Fle. Abajo",
 			"0 Numpad", "1 Numpad", "2 Numpad", "3 Numpad", "4 Numpad",
 			"5 Numpad", "6 Numpad", "7 Numpad", "8 Numpad", "9 Numpad",
 

@@ -60,6 +60,7 @@ private:
 	int waitingForKeyPlayer = 1;
 	ButtonActions waitingForKeyKey;
 
+	GameGUI::Label* playerLabel;
 	GameGUI::Button* b_up;
 	GameGUI::Button* b_down;
 	GameGUI::Button* b_left;
@@ -101,7 +102,7 @@ private:
 			//hbox2->addButton("Aplicar y salir", ButtonActions::SAVE_AND_QUIT);
 			//hbox2->addButton("Aplicar", ButtonActions::SAVE);
 			hboxQuit->addButton("Atras", ButtonActions::QUIT);
-			
+
 		}
 
 		menu->setPosition(sf::Vector2f((int)window.getSize().x / 2 - (int)menu->getSize().x / 2, (int)window.getSize().y / 2 - (int)menu->getSize().y / 2));
@@ -152,6 +153,8 @@ private:
 
 		GameGUI::HorizontalBoxLayout* hbox3 = menu->addHorizontalBoxLayout();
 		auto f = menu->addFormLayout();
+		playerLabel = new GameGUI::Label("Player 1");
+		f->add(playerLabel);
 
 		b_up = new GameGUI::Button("W");
 		f->addRow("ARRIBA", b_up, ButtonActions::P1_UP);
@@ -170,7 +173,7 @@ private:
 
 		b_action = new GameGUI::Button("E");
 		f->addRow("Ejecutar Accion", b_action, ButtonActions::P1_ACTION);
-		
+
 
 		createBackgroundMenu(window);
 		/*centerElement(hbox);
@@ -336,34 +339,49 @@ private:
 
 			break;
 		}
+		case ButtonActions::PLAYER1_CONTROLS:
+			waitingForKeyPlayer = 1;
+			playerLabel->setText("Player 1");
+			b_up->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goUp));
+			b_down->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goDown));
+			b_left->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goLeft));
+			b_right->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goRight));
+			b_bomb->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.UseBomb));
+			b_action->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.MakeAction));
+			break;
+		case ButtonActions::PLAYER2_CONTROLS:
+			waitingForKeyPlayer = 2;
+			playerLabel->setText("Player 2");
+			b_up->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.goUp));
+			b_down->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.goDown));
+			b_left->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.goLeft));
+			b_right->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.goRight));
+			b_bomb->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.UseBomb));
+			b_action->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.MakeAction));
+			break;
+
 		case ButtonActions::P1_UP:
 			waitingForKey = true;
-			waitingForKeyPlayer = 1;
 			waitingForKeyKey = P1_UP;
 			break;
 		case ButtonActions::P1_DOWN:
 			waitingForKey = true;
-			waitingForKeyPlayer = 1;
 			waitingForKeyKey = P1_DOWN;
 			break;
 		case ButtonActions::P1_LEFT:
 			waitingForKey = true;
-			waitingForKeyPlayer = 1;
 			waitingForKeyKey = P1_LEFT;
 			break;
 		case ButtonActions::P1_RIGHT:
 			waitingForKey = true;
-			waitingForKeyPlayer = 1;
 			waitingForKeyKey = P1_RIGHT;
 			break;
 		case ButtonActions::P1_BOMB:
 			waitingForKey = true;
-			waitingForKeyPlayer = 1;
 			waitingForKeyKey = P1_BOMB;
 			break;
 		case ButtonActions::P1_ACTION:
 			waitingForKey = true;
-			waitingForKeyPlayer = 1;
 			waitingForKeyKey = P1_ACTION;
 			break;
 		case ButtonActions::QUIT:
@@ -379,30 +397,60 @@ private:
 				switch (waitingForKeyKey) {
 				case P1_UP:
 					b_up->setString(gameDisplay.userKeyPress->getKeyName(event.key.code));
-					gameDisplay.userKeyPress->player1.goUp = (sf::Keyboard::Key)event.key.code;
+					if (waitingForKeyPlayer == 1) {
+						gameDisplay.userKeyPress->player1.goUp = (sf::Keyboard::Key)event.key.code;
+					}
+					else {
+						gameDisplay.userKeyPress->player2.goUp = (sf::Keyboard::Key)event.key.code;
+					}
 					break;
 				case P1_DOWN:
 					b_down->setString(gameDisplay.userKeyPress->getKeyName(event.key.code));
-					gameDisplay.userKeyPress->player1.goDown = (sf::Keyboard::Key)event.key.code;
+					if (waitingForKeyPlayer == 1) {
+						gameDisplay.userKeyPress->player1.goDown = (sf::Keyboard::Key)event.key.code;
+					}
+					else {
+						gameDisplay.userKeyPress->player2.goDown = (sf::Keyboard::Key)event.key.code;
+					}
 					break;
 				case P1_LEFT:
 					b_left->setString(gameDisplay.userKeyPress->getKeyName(event.key.code));
-					gameDisplay.userKeyPress->player1.goLeft = (sf::Keyboard::Key)event.key.code;
+					if (waitingForKeyPlayer == 1) {
+						gameDisplay.userKeyPress->player1.goLeft = (sf::Keyboard::Key)event.key.code;
+					}
+					else {
+						gameDisplay.userKeyPress->player2.goLeft = (sf::Keyboard::Key)event.key.code;
+					}
 					break;
 				case P1_RIGHT:
 					b_right->setString(gameDisplay.userKeyPress->getKeyName(event.key.code));
-					gameDisplay.userKeyPress->player1.goRight = (sf::Keyboard::Key)event.key.code;
+					if (waitingForKeyPlayer == 1) {
+						gameDisplay.userKeyPress->player1.goRight = (sf::Keyboard::Key)event.key.code;
+					}
+					else {
+						gameDisplay.userKeyPress->player2.goRight = (sf::Keyboard::Key)event.key.code;
+					}
 					break;
 				case P1_BOMB:
 					b_bomb->setString(gameDisplay.userKeyPress->getKeyName(event.key.code));
-					gameDisplay.userKeyPress->player1.UseBomb = (sf::Keyboard::Key)event.key.code;
+					if (waitingForKeyPlayer == 1) {
+						gameDisplay.userKeyPress->player1.UseBomb = (sf::Keyboard::Key)event.key.code;
+					}
+					else {
+						gameDisplay.userKeyPress->player2.UseBomb = (sf::Keyboard::Key)event.key.code;
+					}
 					break;
 				case P1_ACTION:
 					b_action->setString(gameDisplay.userKeyPress->getKeyName(event.key.code));
-					gameDisplay.userKeyPress->player1.MakeAction = (sf::Keyboard::Key)event.key.code;
+					if (waitingForKeyPlayer == 1) {
+						gameDisplay.userKeyPress->player1.MakeAction = (sf::Keyboard::Key)event.key.code;
+					}
+					else {
+						gameDisplay.userKeyPress->player2.MakeAction = (sf::Keyboard::Key)event.key.code;
+					}
 					break;
 				}
-				
+
 				waitingForKey = false;
 			}
 		}
