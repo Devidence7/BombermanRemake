@@ -38,6 +38,9 @@ public:
 
 	double lastMovementTime = 0;
 
+	bool controlsInverted;
+	double lastControlInvertedTime = 0;
+
 	PlayerTexture* playerTexture;
 	PlayerColor* playerColor;
 	LookingAt lastMovement;				// Save last looked direction
@@ -104,5 +107,7 @@ public:
 	bool updatePlayer();
 
 	void setJumpingBomb();
+
+	void invertControls();
 	
 };
