@@ -258,8 +258,8 @@ public:
 		PlayerEntity::PlayerControls player2;
 		player2.goUp = (sf::Keyboard::Key)getIntProperty("player2.up");
 		player2.goDown = (sf::Keyboard::Key)getIntProperty("player2.down");
-		player2.goLeft = (sf::Keyboard::Key)getIntProperty("player2.right");
-		player2.goRight = (sf::Keyboard::Key)getIntProperty("player2.left");
+		player2.goLeft = (sf::Keyboard::Key)getIntProperty("player2.left");
+		player2.goRight = (sf::Keyboard::Key)getIntProperty("player2.right");
 		player2.UseBomb = (sf::Keyboard::Key)getIntProperty("player2.bomb");
 		player2.MakeAction = (sf::Keyboard::Key)getIntProperty("player2.action");
 
@@ -282,6 +282,21 @@ public:
 		gameProperties.at("fullscreen") = to_string((int)fullScreen);
 		gameProperties.at("resolution.x") = to_string(windowWidth);
 		gameProperties.at("resolution.y") = to_string(windowHeight);
+
+		gameProperties.at("player1.up") = to_string(userKeyPress->player1.goUp);
+		gameProperties.at("player1.down") = to_string(userKeyPress->player1.goDown);
+		gameProperties.at("player1.right") = to_string(userKeyPress->player1.goRight);
+		gameProperties.at("player1.left") = to_string(userKeyPress->player1.goLeft);
+		gameProperties.at("player1.bomb") = to_string(userKeyPress->player1.UseBomb);
+		gameProperties.at("player1.action") = to_string(userKeyPress->player1.MakeAction);
+
+		gameProperties.at("player2.up") = to_string(userKeyPress->player2.goUp);
+		gameProperties.at("player2.down") = to_string(userKeyPress->player2.goDown);
+		gameProperties.at("player2.right") = to_string(userKeyPress->player2.goRight);
+		gameProperties.at("player2.left") = to_string(userKeyPress->player2.goLeft);
+		gameProperties.at("player2.bomb") = to_string(userKeyPress->player2.UseBomb);
+		gameProperties.at("player2.action") = to_string(userKeyPress->player2.MakeAction);
+
 
 		fstream file;
 		file.open(PROPERTIES_FILENAME, std::fstream::in | std::fstream::out | fstream::trunc);

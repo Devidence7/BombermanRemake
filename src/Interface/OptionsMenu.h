@@ -130,7 +130,7 @@ private:
 	}
 
 
-	void createControlsMenu(sf::RenderWindow& window) {
+	void createControlsMenu(sf::RenderWindow& window, GameDisplayController &gameDisplay) {
 		menu = new GameGUI::Menu(window);
 		// GameGUI::VerticalBoxLayout* vbox = menu->addVerticalBoxLayout();
 
@@ -156,22 +156,22 @@ private:
 		playerLabel = new GameGUI::Label("Player 1");
 		f->add(playerLabel);
 
-		b_up = new GameGUI::Button("W");
+		b_up = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goUp));
 		f->addRow("ARRIBA", b_up, ButtonActions::P1_UP);
 
-		b_down = new GameGUI::Button("S");
+		b_down = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goDown));
 		f->addRow("ABAJO", b_down, ButtonActions::P1_DOWN);
 
-		b_left = new GameGUI::Button("A");
+		b_left = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goLeft));
 		f->addRow("IZQUIERDA", b_left, ButtonActions::P1_LEFT);
 
-		b_right = new GameGUI::Button("D");
+		b_right = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goRight));
 		f->addRow("DERECHA", b_right, ButtonActions::P1_RIGHT);
 
-		b_bomb = new GameGUI::Button("Espacio");
+		b_bomb = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.UseBomb));
 		f->addRow("Usar Bomba", b_bomb, ButtonActions::P1_BOMB);
 
-		b_action = new GameGUI::Button("E");
+		b_action = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.MakeAction));
 		f->addRow("Ejecutar Accion", b_action, ButtonActions::P1_ACTION);
 
 
@@ -285,7 +285,7 @@ private:
 			break;
 		case ButtonActions::CONTROLS:
 			delete(menu);
-			createControlsMenu(*window);
+			createControlsMenu(*window, gameDisplay);
 			break;
 		case ButtonActions::MASTER_VOLUME_SLIDER:
 			GameMusic::setMasterVolume(masterVolumenSlider->getValue());
