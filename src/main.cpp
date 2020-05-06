@@ -39,7 +39,6 @@ int main(int argc, char* argv[]) {
 	PauseMenu pauseMenu(*gameDisplayController.getWindow());
 	GameOver gameOverMenu(*gameDisplayController.getWindow());
 	GameInterface gameInterface;
-	UserKeyPress userKeyPressManager;
 
 	// Start game loop
 	while (gameDisplayController.windowOpen()) {

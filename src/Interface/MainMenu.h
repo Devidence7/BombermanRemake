@@ -2,15 +2,15 @@
 #include <iostream>
 
 #include <SFML/Graphics.hpp>
+
 #include "GUI/GameGUI.hpp"
-#include "GUI/Theme.hpp"
-#include "../Music/GameMusic.h"
 
 #include "InterfacePaths.h"
 #include "GameInterface.h"
-#include "../GameEngine.hpp"
 #include "OptionsMenu.h"
 #include "GameDisplayController.h"
+#include "../GameEngine.hpp"
+#include "../Music/GameMusic.h"
 
 
 using namespace GameGUI;
@@ -32,6 +32,16 @@ class MainMenu {
 		QUIT
 	};
 
+public:
+
+	MainMenu(sf::RenderWindow& window) {
+		createMainMenu(window);
+	}
+
+	/**
+	 * Creates the main menu user interface
+	 * @param window
+	 */
 	void createMainMenu(sf::RenderWindow& window) {
 		texture.loadFromFile(MAIN_MENU_BACKGROUND_PATH);
 		background.setTexture(texture);
@@ -62,23 +72,15 @@ class MainMenu {
 		menuBackgroundShadow2.setFillColor(sf::Color(255, 255, 255, 20));
 	}
 
-public:
-	MainMenu(sf::RenderWindow& window) {
-		GameGUI::Theme::loadFont("../textures/mainMenu/BOMBERMAN.ttf");
-		GameGUI::Theme::loadTexture("../textures/interface/bomberman.png");
-		GameGUI::Theme::textCharacterSize = 26;
-		GameGUI::Theme::click.textColor = sf::Color::Black;
-		GameGUI::Theme::click.textColorHover = sf::Color::Red;
-		GameGUI::Theme::click.textColorFocus = sf::Color::Red;
-		GameGUI::Theme::PADDING = 10.f;
-
-		createMainMenu(window);
-	}
-
-
 private:
+    /**
+     * Method callback for more event managing
+     * @param event
+     * @param window
+     * @param gameDisplay
+     * @param game
+     */
 	void userActions(sf::Event& event, sf::RenderWindow* &window, GameDisplayController& gameDisplay, Game& game) {
-
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//													BUTTON PRESSED
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -104,8 +106,10 @@ private:
 		}
 	}
 
-
-public:
+    /**
+     * Draw Main menu interface
+     * @param window
+     */
 	void draw(sf::RenderWindow& window) {
 		window.draw(background);
 		window.draw(menuBackgroundShadow2);
@@ -114,6 +118,13 @@ public:
 		window.draw(*menu);
 	}
 
+public:
+
+	/**
+	 * Main main menu manage method (call every iteration)
+	 * @param gameDisplay
+	 * @param game
+	 */
 	void menuActions(GameDisplayController &gameDisplay, Game& game) {
 		// Manage window events and pass a callback to manage this menu buttons
 		gameDisplay.manageGameInterface(gameDisplay, std::bind(&MainMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
