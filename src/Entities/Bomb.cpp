@@ -62,9 +62,10 @@ void Bomb::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType col
 void Bomb::update()
 {
 	// If it is time to explote:
-	if (GameTime::getTimeNow() - explosionCounter > explosionTime && !onFlight && !onMove)
+	if (GameTime::getTimeNow() - explosionCounter > explosionTime && !onFlight && canExplote)
 	{
 		setExpiredEntity();
+		setPosition(Level::getMapCellCorner(getCenterPosition()));//Asegurarse de que se centra antes de esplotar
 		
 	}
 
@@ -84,9 +85,9 @@ void Bomb::update()
 		{
 			if(onCollision){
 				onMove = false;
+				onCollision = false;
 			}else{
 				move(velocity);
-//				setPosition(getPosition() + velocity);
 			}
 		}
 		

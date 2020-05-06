@@ -67,7 +67,7 @@ public:
 
 	void restartGame(sf::RenderWindow& window){
 		//GameTime::startGameTime();
-			for (Player_ptr& player : PLayers::getVectorPlayer()) {
+			for (Player_ptr player : PLayers::getVectorPlayer()) {
 		
 				//player.reset();
 				//cout<<"holi"<<endl;
@@ -88,7 +88,7 @@ public:
 
 	void updatePlayers( GameDisplayController& gameDisplay) {
 		int ply=1;
-		for (Player_ptr& player : PLayers::getVectorPlayer()) {
+		for (Player_ptr player : PLayers::getVectorPlayer()) {
 				if (player->updatePlayer()) {
 					// If there is nothing in that cell:
 					Entity_ptr b = std::make_shared<Bomb>(Bomb(player));
@@ -112,7 +112,7 @@ public:
 		updatePlayers(gameDisplay);
 		updateEnemies();
 		int totalLives=0;
-		for (Player_ptr& player : PLayers::getVectorPlayer()) {
+		for (Player_ptr player : PLayers::getVectorPlayer()) {
 			totalLives+=player->getLives();
 		}
 		//cout<<totalLives<<endl;
@@ -124,7 +124,7 @@ public:
 
 	void drawPlayers(sf::RenderWindow& w) {
 
-		for (Player_ptr& player : PLayers::getVectorPlayer()) {
+		for (Player_ptr player : PLayers::getVectorPlayer()) {
 			w.draw(*player);
 			w.draw(player->playerUpdateColor());
 #ifdef HITBOX_DEBUG_MODE
@@ -134,7 +134,7 @@ public:
 	}
 
 	void drawEnemies(sf::RenderWindow& w) {
-		for (Enemy_ptr& e : Enemies::getVectorEnemies()) {
+		for (Enemy_ptr e : Enemies::getVectorEnemies()) {
 			w.draw(*e);
 #ifdef HITBOX_DEBUG_MODE
 			e->drawEntityHitbox(w);
@@ -146,7 +146,7 @@ public:
 
 	bool colissionWithEnemies(Entity_ptr eCol) {
 		bool intersec = false;
-		for (Enemy_ptr& e : Enemies::getVectorEnemies()) {
+		for (Enemy_ptr e : Enemies::getVectorEnemies()) {
 			intersec = intersec || (e->CanHurtPlayer() && e->collision(*eCol));
 		}
 		return intersec;

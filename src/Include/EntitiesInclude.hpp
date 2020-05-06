@@ -28,6 +28,7 @@ class PLayers
 public:
     static void addPlayer(PlayerEntity::PlayerControls &playerControls);
     static std::vector<Player_ptr> &getVectorPlayer();
+    static bool cehckSomeCollision(Entity_ptr e);
 };
 
 class Enemies{
@@ -36,6 +37,7 @@ class Enemies{
 public:
     static void insertarEnemigos(int dimX, int dimY);
     static std::vector<Enemy_ptr> &getVectorEnemies();
+    static bool cehckSomeCollision(Entity_ptr e);
 };
 
 class EntityMap
@@ -45,9 +47,9 @@ class EntityMap
 public:
     static std::vector<std::vector<Entity_ptr>> entityMap;
     static void addEntity(Entity_ptr e, sf::Vector2i pos);
-    static Entity_ptr getEntity(sf::Vector2i pos);
-    static Entity_ptr &getCellEntMapObject(int x, int y);
-    static Entity_ptr &getCellEntMapObject(sf::Vector2i pos);
+    static Entity_ptr & getEntity(sf::Vector2i pos);
+    static Entity_ptr & getCellEntMapObject(int x, int y);
+    static Entity_ptr & getCellEntMapObject(sf::Vector2i pos);
     static bool isValidCell(sf::Vector2i v);
 };
 

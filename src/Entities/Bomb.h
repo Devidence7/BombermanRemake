@@ -17,6 +17,7 @@ public:
 	bool onFlight = false;
 
 	bool rePutBomb = false;
+	bool canExplote = true;
 
 	// Texture Variables:
 	BombTexture* bombTexture;
@@ -48,10 +49,8 @@ public:
 
 	void setOnMove(sf::Vector2f dir, bool onm = true){
 		onMove = onm;
-		this->velocity = sf::Vector2f(dir.x * this->baseSpeed, dir.y * this->baseSpeed);
+		this->velocity = sf::Vector2f(dir.x * this->baseSpeed/2, dir.y * this->baseSpeed/2);
 	}
-
-
 };
 
 

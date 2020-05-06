@@ -111,6 +111,12 @@ inline  sf::Vector2f MapCoordinates2GlobalCoorCenter(const sf::Vector2i pos)
 	return MapCoordinates2GlobalCoorCenter(pos.x, pos.y);
 }
 
+inline bool checkIsOnCenterCell(const sf::Vector2f &currentPos, const sf::Vector2i &objetive){
+	sf::Vector2f objetiveGlobalCoord = MapCoordinates2GlobalCoorCenter(objetive);
+	//cruzar el objetivo
+	return abs(objetiveGlobalCoord.x - currentPos.x) < THRESHOLD_CENTER_CELL && abs(objetiveGlobalCoord.y - currentPos.y) < THRESHOLD_CENTER_CELL;
+}
+
 inline bool checkArrivePosition(const sf::Vector2f &currentPos, const sf::Vector2i &objetive, const sf::Vector2i &direction){
 	sf::Vector2f objetiveGlobalCoord = MapCoordinates2GlobalCoorCenter(objetive);
 	//cruzar el objetivo
