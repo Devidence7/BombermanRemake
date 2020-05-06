@@ -1,7 +1,6 @@
 #include "../Map/Level.hpp"
 
 PlayerEntity::PlayerEntity(PlayerControls& pControls) : Entity(), playerControls(pControls) {
-	actionAvaible = ActionsAvalible::KICK_BOM;//TODO: Eliminar esta linea
 	isFireDestroyable = true;
 	fireCanGoThroght = true;
 	collisioner = false;
