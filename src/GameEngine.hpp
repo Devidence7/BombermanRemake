@@ -29,28 +29,55 @@ private:
 	// Initialize textures
 	TextureStorage textureStorage;
 	//MainMenu mainMenu;
+enum dificultad{
+	EASY,
+	NORMAL,
+	HARD
+};
+
+
+
+
 public:
 	struct GameOptions {
 	
 		int numPlayers;
+		double difLevel;
+		
 	};
 	GameOptions gameOptions;
 
-	Game() {
-	//	cout<<gameOptions.numPlayers<<endl;
-	//	PLayers::insertPlayers(gameOptions.numPlayers);
-		
-	//	PLayers::insertPlayers();
-		Enemies::insertarEnemigos(dimX, dimY);
-		level = new Level(dimX, dimY);
-		//mainMenu(w);
+	double getDificultad(dificultad d){
+	switch(d){
+		case EASY:
+			return 1;
+			break;
+		case NORMAL:
+			return 1.5;
+			break;
+		case HARD:
+			return 1.75;
+		default:
+		break;
 	}
-	void start(sf::RenderWindow& w) {
-		//	mainMenu.draw(w);
+} 
+
+	void insertPlayers(UserKeyPress &userKeyPress, int numPlayers) {
+		for (int i = 0; i < numPlayers; i++) {
+			PLayers::addPlayer(userKeyPress.getPlayerControls(i+1));
+		}
 	}
 
-	void startNewGame(sf::RenderWindow& window){
-		PLayers::insertPlayers(gameOptions.numPlayers);
+	void startNewGame(sf::RenderWindow& window, GameDisplayController &gameDisplay){
+		//	cout<<gameOptions.numPlayers<<endl;
+		level = new Level(dimX, dimY);
+		insertPlayers(*gameDisplay.userKeyPress, gameOptions.numPlayers);
+
+		//	PLayers::insertPlayers();
+		Enemies::insertarEnemigos(dimX, dimY);
+		
+		//mainMenu(w);
+
 	//	PLayers::insertPlayers(gameOptions.numPlayers);
 		unsigned int pixelsX = window.getSize().x;
 		unsigned int pixelsY = window.getSize().y;
@@ -64,59 +91,44 @@ public:
 		GameMusic::playWorld1Music();
 	}
 
-	void restartGame(sf::RenderWindow& window){
-		//GameTime::startGameTime();
-			for (Player_ptr& player : PLayers::getVectorPlayer()) {
+	void restartGame(sf::RenderWindow& window,GameDisplayController &gameDisplay){
+		deleteMap();
+		startNewGame(window,gameDisplay);
 		
-				//player.reset();
-				//cout<<"holi"<<endl;
-				player->lives=3;
-		
-			}
-			
-			//	Enemies::insertarEnemigos(dimX, dimY);
-			//GameTime::startGameTime();
-		    GameMusic::playWorld1Music();
+	}
 
-			
-		
-		
-		
-			//Enemies::insertarEnemigos(dimX, dimY);
-			level->reiniciar(dimX,dimY);
-		
-		//level = new Level(dimX, dimY);
-	
-		
-		//startNewGame(window);
-
+	void deleteMap(){
+		delete level;
+		auto it = Enemies::getVectorEnemies().begin();
+		while (it != Enemies::getVectorEnemies().end()) {
+				it->reset();
+				it = Enemies::getVectorEnemies().erase(it);
+		}
+		auto it2 =  PLayers::getVectorPlayer().begin();
+		while (it2 !=  PLayers::getVectorPlayer().end()) {
+				it2->reset();
+				it2 = PLayers::getVectorPlayer().erase(it2);
+		}
 	}
 
 	void updatePlayers( GameDisplayController& gameDisplay) {
 		int ply=1;
 		for (Player_ptr& player : PLayers::getVectorPlayer()) {
-				if (player->updatePlayer(ply)) {
+				if (player->updatePlayer()) {
 					// If there is nothing in that cell:
 					Entity_ptr b = std::make_shared<Bomb>(Bomb(player));
 					b->setPosition(level->getMapCellCorner(player->getCenterPosition()));
 					level->addNewItem(b);
 				}
 
-
-
-
 			//player->updatePlayer();
-			player->playerActions(ply);
-
-
-
+			player->playerActions();
 
 			level->checkAndFixCollisions(player);
 			if (colissionWithEnemies(player)) {
 				player->setExpiredEntity();
 			}	
 			ply++;
-		
 		}
 	}
 
@@ -128,7 +140,7 @@ public:
 		for (Player_ptr& player : PLayers::getVectorPlayer()) {
 			totalLives+=player->getLives();
 		}
-		//cout<<totalLives<<endl;
+		
 		if(totalLives==0){
 			
 			gameDisplay.setGameState(GameDisplayController::GameState::GAME_OVER);
@@ -171,17 +183,22 @@ public:
 		auto it = Enemies::getVectorEnemies().begin();
 		int counter = 0;
 		while (it != Enemies::getVectorEnemies().end()) {
+			
 			// Update the enemies.
 			(*it)->update();
+
 			level->checkAndFixCollisions((*it));
+			
 			if ((*it)->getExpiredEntity()) {
 				it->reset();
 				it = Enemies::getVectorEnemies().erase(it);
 			}
+			
 			else {
 				++it;
 				counter++;
 			}
+			
 		}
 	}
 

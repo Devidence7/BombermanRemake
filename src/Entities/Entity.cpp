@@ -6,8 +6,14 @@ Entity::Entity() : Sprite() {}
 
 sf::FloatRect Entity::getGlobalBounds() const
 {
+	return getGlobalBoundsCollisioner();
+	//return this->sf::Sprite::getGlobalBounds();
+}
+
+sf::FloatRect Entity::getGlobalBoundsCollisioner() const{
 	return this->sf::Sprite::getGlobalBounds();
 }
+
 
 sf::Vector2f Entity::getCenterPosition()
 {
@@ -93,10 +99,14 @@ void Entity::setObjetive(sf::Vector2f pos){
 float Entity::moveOnX(const std::shared_ptr<Entity> eCollisioning)
 {
 
+	
 	sf::Vector2f position = eCollisioning->getCenterPosition();
 	sf::FloatRect body = eCollisioning->getGlobalBounds();
 	sf::Vector2f position2 = this->getCenterPosition();
-	sf::FloatRect body2 = this->getGlobalBounds();
+	sf::FloatRect body2 = this->getGlobalBoundsCollisioner();
+	if(!body2.intersects(body)){
+		return 0;
+	}
 	float x = calculate_penetration(body.width / 2, body2.width / 2, abs(position.x - position2.x)) + 1;
 	if (position.x < position2.x)
 	{
@@ -113,8 +123,10 @@ float Entity::moveOnY(const std::shared_ptr<Entity> eCollisioning)
 	sf::Vector2f position = eCollisioning->getCenterPosition();
 	sf::FloatRect body = eCollisioning->getGlobalBounds();
 	sf::Vector2f position2 = this->getCenterPosition();
-	sf::FloatRect body2 = this->getGlobalBounds();
-
+	sf::FloatRect body2 = this->getGlobalBoundsCollisioner();
+	if(!body2.intersects(body)){
+		return 0;
+	}
 	float y = calculate_penetration(body.height / 2, body2.height / 2, abs(position.y - position2.y)) + 1;
 	if (position.y < position2.y)
 	{
@@ -132,7 +144,7 @@ inline sf::Vector2f Entity::moveCircleOverCorner(std::shared_ptr<Entity> eCircle
 	float r_Circle = eCircle->getGlobalBounds().width / 2;
 
 	sf::Vector2f centerRect = this->getCenterPosition();
-	sf::FloatRect bodyRect = this->getGlobalBounds();
+	sf::FloatRect bodyRect = this->getGlobalBoundsCollisioner();
 
 	sf::Vector2f dir_centros = centerRect - CenterCircle;
 	float distanciaCentros = moduleVector(dir_centros);

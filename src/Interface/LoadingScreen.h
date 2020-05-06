@@ -9,7 +9,6 @@
 #include "InterfacePaths.h"
 #include "GameInterface.h"
 #include "../GameEngine.hpp"
-#include "OptionsMenu.h"
 #include "GameDisplayController.h"
 
 using namespace std;

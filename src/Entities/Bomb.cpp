@@ -62,7 +62,7 @@ void Bomb::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType col
 void Bomb::update()
 {
 	// If it is time to explote:
-	if (GameTime::getTimeNow() - explosionCounter > explosionTime && !onFlight)
+	if (GameTime::getTimeNow() - explosionCounter > explosionTime && !onFlight && !onMove)
 	{
 		setExpiredEntity();
 		
@@ -74,17 +74,27 @@ void Bomb::update()
 		setTextureRect(bombTexture->getFrame(actualFrame));
 		spriteCounter = GameTime::getTimeNow();
 		if(onFlight){
-			sf::Vector2f ff = this->getCenterPosition();
-			//std::cout <<(ff - positionObjetive).x << " " << (ff - positionObjetive).y << "\n";
-			//std::cout << "distancia: " << moduleVector(positionObjetive - this->getPosition()) << "\n";
 			move(velocity);
 			if (moduleVector(positionObjetive - this->getPosition()) < baseSpeed) {
 				this->setPosition(positionObjetive);
 				rePutBomb = true;
 				onFlight = false;
 			}
+		}else if(onMove)
+		{
+			if(onCollision){
+				onMove = false;
+			}else{
+				move(velocity);
+			}
 		}
+		
 	}
+}
+sf::FloatRect Bomb::getGlobalBounds() const
+{
+	sf::FloatRect dim = sf::Sprite::getGlobalBounds();
+	return sf::FloatRect(dim.left + 6, dim.top + 3, dim.width - 6, dim.height - 6);
 }
 
 Fire::Fire(int type ) : Entity()

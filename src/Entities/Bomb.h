@@ -31,8 +31,12 @@ public:
 	// Player which bomb is from:
 	std::shared_ptr<PlayerEntity> player;
 
-	Bomb(std::shared_ptr<PlayerEntity> p);
+	/***********
+	 * Methods
+	 **********/
 
+	Bomb(std::shared_ptr<PlayerEntity> p);
+	sf::FloatRect getGlobalBounds() const override;
 	void setExpiredEntity() override;
 	bool isColliderWith(std::shared_ptr<Entity> eCollisioning) override;	
 	void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) override;
@@ -41,6 +45,13 @@ public:
 		onFlight = onf;
 		this->velocity = sf::Vector2f(dir.x * this->baseSpeed, dir.y * this->baseSpeed);
 	}
+
+	void setOnMove(sf::Vector2f dir, bool onm = true){
+		onMove = onm;
+		this->velocity = sf::Vector2f(dir.x * this->baseSpeed, dir.y * this->baseSpeed);
+		std::cout << "v: " << velocity.x << " " << velocity.y << "\n";
+	}
+
 
 };
 

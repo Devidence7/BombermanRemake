@@ -106,6 +106,7 @@ public:
 
 
 	virtual sf::FloatRect getGlobalBounds() const;
+	virtual sf::FloatRect getGlobalBoundsCollisioner() const;
 	// PRE: this esta en colision con eCollisioning
 	//Devuelve cuanto penetra eCollisioning en this en el eje X; Y se considera centrado 
 	float moveOnX(const std::shared_ptr<Entity> eCollisioning);

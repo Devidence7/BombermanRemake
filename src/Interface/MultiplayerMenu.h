@@ -8,16 +8,16 @@
 #include "GameDisplayController.h"
 
 
-class PauseMenu {
+class MultiplayerMenu {
 	GameGUI::Menu* menu;
 
 	bool EsqPressed = false;
 
 	enum ButtonActions {
-		RESUME,
-		SAVE,
-		OPTIONS,
-		GO_MAIN_MENU,
+		TWOPLAYERS,
+		THREEPLAYERS,
+		FOURPLAYERS,
+        BACK,
 		QUIT
 	};
 
@@ -27,9 +27,6 @@ class PauseMenu {
 	sf::RectangleShape menuBackgroundShadow;
 	sf::RectangleShape menuBackgroundShadow1;
 	sf::RectangleShape menuBackgroundShadow2;
-
-	GameGUI::Slider* masterVolumenSlider;
-	GameGUI::Slider* musicSlider;
 
 	void createBackgroundMenu(sf::RenderWindow& window) {
 		menu->setPosition(sf::Vector2f((int)window.getSize().x / 2 - (int)menu->getSize().x / 2, (int)window.getSize().y / 2 - (int)menu->getSize().y / 2));
@@ -53,7 +50,7 @@ class PauseMenu {
 	}
 
 public:
-	PauseMenu(sf::RenderWindow& window) {
+	MultiplayerMenu(sf::RenderWindow& window) {
 		menu = new GameGUI::Menu(window);
 
 		texture.loadFromFile("../textures/interface/Background_orange_squares.png");
@@ -63,10 +60,10 @@ public:
 		background.setScale(sf::Vector2f(2, 2));
 		background.setTextureRect({ 0, 0, (int)window.getSize().x, (int)window.getSize().y });
 
-		menu->addButton("                Reanudar                ", ButtonActions::RESUME);
-		menu->addButton("                 Guardar                 ", ButtonActions::SAVE);
-		menu->addButton("                 Opciones                 ", ButtonActions::OPTIONS);
-		menu->addButton("        Ir al menu principal       ", ButtonActions::GO_MAIN_MENU);
+		menu->addButton("                2 jugadores               ", ButtonActions::TWOPLAYERS);
+		menu->addButton("                3 jugadores                 ", ButtonActions::THREEPLAYERS);
+		menu->addButton("                4 jugadores                 ", ButtonActions::FOURPLAYERS);
+		menu->addButton("            Ir al menu principal       ", ButtonActions::BACK);
 		menu->addButton("                    Salir                    ", ButtonActions::QUIT);
 
 		createBackgroundMenu(window);
@@ -76,22 +73,25 @@ private:
 	void userActions(sf::Event& event, sf::RenderWindow*& window, GameDisplayController& gameDisplay, Game& game) {
 		int id = menu->onEvent(event);
 		switch (id) {
-		case ButtonActions::RESUME:
-			gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
-			GameTime::resumeGameTime();
+		case ButtonActions::TWOPLAYERS:
+        game.gameOptions.numPlayers=2;
+
+			gameDisplay.setGameState(GameDisplayController::GameState::GAME_TYPE);
 			break;
 
-		case ButtonActions::SAVE:
+		case ButtonActions::THREEPLAYERS:
+        game.gameOptions.numPlayers=3;
+        	gameDisplay.setGameState(GameDisplayController::GameState::GAME_TYPE);
 					
 			break;
 				
-		case ButtonActions::OPTIONS:
-			OptionsMenu::lastGameStateOptionsMenu = GameDisplayController::GameState::PAUSE_MENU;
-			gameDisplay.setGameState(GameDisplayController::GameState::OPTIONS_MENU);
+		case ButtonActions::FOURPLAYERS:
+        game.gameOptions.numPlayers=4;
+			//OptionsMenu::lastGameStateOptionsMenu = GameDisplayController::GameState::MULTIPLAYER_MENU;
+			gameDisplay.setGameState(GameDisplayController::GameState::GAME_TYPE);
 			break;
 				
-		case ButtonActions::GO_MAIN_MENU:
-			game.deleteMap();
+		case ButtonActions::BACK:
 			gameDisplay.setGameState(GameDisplayController::GameState::MAIN_MENU);
 			break;
 				
@@ -113,9 +113,9 @@ private:
 	}
 
 public:
-	void menuActions(GameDisplayController& gameDisplay, Game game) {
+	void menuActions(GameDisplayController& gameDisplay, Game& game) {
 		// Manage window events and pass a callback to manage this menu buttons
-		gameDisplay.manageGameInterface(gameDisplay, std::bind(&PauseMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
+		gameDisplay.manageGameInterface(gameDisplay, std::bind(&MultiplayerMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
 		if (gameDisplay.pauseMenuReprocessDisplay) {
 			gameDisplay.pauseMenuReprocessDisplay = false;
 			createBackgroundMenu(*gameDisplay.getWindow());

@@ -1,108 +1,67 @@
 #pragma once
-#include "GameDisplayController.h"
-#include "../Logic/Time.h"
 
 /*
 Key binding tutorial from SFML https://github.com/SFML/SFML/wiki/Tutorial:-Manage-dynamic-key-binding
  */
 class UserKeyPress{
-
-	enum InputType {
-		KeyboardInput,
-		MouseInput,
-		JoystickInput
-	};
-
-	struct MyKeys {
-		InputType myInputType;
-		sf::Event::EventType myEventType;
-		sf::Keyboard::Key myKeyCode;
-		sf::Mouse::Button myMouseButton;
-	};
-
-	std::map<std::string, MyKeys> Keys;
-	
-
+	std::map<std::string, sf::Keyboard::Key> Keys;
 	bool EsqPressed = false;
-public:
-	UserKeyPress() {
-		MyKeys key;
 
-		// Let's bind the left mouse button to the "Shoot" action
-		key.myInputType = MouseInput;
-		key.myEventType = sf::Event::MouseButtonPressed;
-		key.myMouseButton = sf::Mouse::Left;
-		Keys["Shoot"] = key;
-
-		// Let's bind the Return key to the "Jump" action
-		key.myInputType = KeyboardInput;
-		key.myEventType = sf::Event::KeyPressed;
-		key.myKeyCode = sf::Keyboard::Return;
-		Keys["Jump"] = key;
-
-		// Let's bind the Left Control key to the "Use" action
-		key.myInputType = KeyboardInput;
-		key.myEventType = sf::Event::KeyPressed;
-		key.myKeyCode = sf::Keyboard::LControl;
-		Keys["Use"] = key;
-	}
-
-private:
-	bool TestEvent(MyKeys k, sf::Event e) {
-		// Mouse event
-		if (k.myInputType == MouseInput &&
-			k.myEventType == e.type &&
-			k.myMouseButton == e.mouseButton.button) {
-			return (true);
-		}
-		// Keyboard event
-		if (k.myInputType == KeyboardInput &&
-			k.myEventType == e.type &&
-			k.myKeyCode == e.key.code) {
-
-			
-			return (true);
-		}
-		return (false);
-	}
-
-	void userActions(sf::Event& event, sf::RenderWindow*& window, GameDisplayController& gameDisplay, Game& game) {
-		if (TestEvent(Keys["Shoot"], event)) {
-			// You can use a function
-			std::cout << "Shoot !" << std::endl;
-		}
-		if (TestEvent(Keys["Jump"], event)) {
-			std::cout << "Jump !" << std::endl;
-		}
-		if (TestEvent(Keys["Use"], event)) {
-			// or only code
-			std::cout << "Use !" << std::endl;
-		}
-	}
+	PlayerEntity::PlayerControls player1;
+	PlayerEntity::PlayerControls player2;
 
 public:
-	void checkUserPauseActions(GameDisplayController& gameDisplay) {
-		if (gameDisplay.getGameState() == GameDisplayController::GameState::PLAYING || gameDisplay.getGameState() == GameDisplayController::GameState::PAUSE_MENU) {
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-				if (!EsqPressed) {
-					EsqPressed = true;
-					if (gameDisplay.getGameState() == GameDisplayController::GameState::PAUSE_MENU) {
-						GameTime::resumeGameTime();
-						gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
-					}
-					else {
-						GameTime::stopGameTime();
-						gameDisplay.setGameState(GameDisplayController::GameState::PAUSE_MENU);
-					}
-				}
-			}
-			else {
-				EsqPressed = false;
-			}
+	/*
+	Get human redeable key name
+	*/
+	std::string getKeyName(const int key) {
+		if (key < 0 || key > 100) {
+			cout << "Unknow new key: " + to_string(key) << endl;
+			return "UNKOWN";
 		}
+
+		const static std::string keyNames[] = {
+
+			"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q",
+			"R", "S", "T", "U", "V", "W", "X", "Y", "Z",
+
+			"0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+
+			"Esc",
+			"Ctrl Izq.", "May. Izq.", "Alt Izq.", "Sistema Izq.",
+			"Ctrl Der.", "May. Der.", "Alt Der.", "Sistema Der.",
+
+			"Menu", "Abre cor.", "Cierra cor.", "Punto y coma", "Coma", "Punto",
+			"Comillas", "Barra", "Barra inv.", "Tilde", "Igual", "Guion",
+
+			"Barra espaciadora", "Enter", "Backspace", "Tab", "Page Up", "Page Down",
+			"Fin", "Inicio", "Insertar", "Suprimir",
+			"Agregar", "Restar", "Multiplicar", "Dividir",
+
+			"Flecha Izq.", "Flecha Der.", "Flecha Arriba", "Flecha Abajo",
+			"0 Numpad", "1 Numpad", "2 Numpad", "3 Numpad", "4 Numpad",
+			"5 Numpad", "6 Numpad", "7 Numpad", "8 Numpad", "9 Numpad",
+
+			"F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10",
+			"F11", "F12", "F13", "F14", "F15", "Pausa"
+		};
+		
+		return keyNames[key];
 	}
 
-	void checkUserKeysPress(GameDisplayController& gameDisplay, Game& game){
-		gameDisplay.manageGameInterface(gameDisplay, std::bind(&UserKeyPress::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
+	UserKeyPress(PlayerEntity::PlayerControls p1, PlayerEntity::PlayerControls p2) {
+		player1 = p1;
+		player2 = p2;
+	}
+
+	PlayerEntity::PlayerControls &getPlayerControls(int playerNum) {
+		switch (playerNum) {
+		case 1:
+			return player1;
+		case 2: 
+			return player2;
+		}
+		cerr << "getPlayerControls number out of bounds (must be 1 or 2)" << endl;
+		return player1;
 	}
 };

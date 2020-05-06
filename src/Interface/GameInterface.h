@@ -49,8 +49,11 @@ public:
             /* lifeSprite[i].setTexture(lifeTexture,false);
              lifeSprite[i].setScale(0.1,0.1);
              lifeSprite[i].setPosition(container.getPosition().x+(50*(i+1)),(container.getPosition().y+7.5));*/
-             PLayers::getVectorPlayer()[i]->playerHead2.setPosition(container.getPosition().x+(100*(i+1)),(container.getPosition().y+7.5));
-             PLayers::getVectorPlayer()[i]->playerHead.setPosition(container.getPosition().x+(100*(i+1)),(container.getPosition().y+7.5));
+           /*  PLayers::getVectorPlayer()[i]->playerHead2.setPosition(container.getPosition().x+(100*(i+1)),(container.getPosition().y+7.5));
+             PLayers::getVectorPlayer()[i]->playerHead.setPosition(container.getPosition().x+(100*(i+1)),(container.getPosition().y+7.5));*/
+            PLayers::getVectorPlayer()[i]->playerHead2.setPosition(container.getPosition().x+((container.getSize().x/5)*i),(container.getPosition().y+7.5));
+             PLayers::getVectorPlayer()[i]->playerHead.setPosition(container.getPosition().x+((container.getSize().x/5)*i),(container.getPosition().y+7.5));
+
 
              lives[i].setFont(font);
             // lives[i].setFillColor(sf::Color::White);

@@ -8,17 +8,28 @@
 #include "GameDisplayController.h"
 
 
-class PauseMenu {
+class TeamVsTeamMenu {
 	GameGUI::Menu* menu;
 
 	bool EsqPressed = false;
 
 	enum ButtonActions {
-		RESUME,
-		SAVE,
-		OPTIONS,
-		GO_MAIN_MENU,
+        //Dos jugadores
+        PLVSIA,
+        PLVSPL,
+        //Tres jugadores
+		PL1VS2IA,
+        PLVSPLIA,
+        PL2VS1IA,
+        //Cuatro jugadores
+		PL1VS3IA,
+        PLVSPL2IA,
+        PL2VS2IA,
+        PLIAVSPLIA,
+        //
+        BACK,
 		QUIT
+
 	};
 
 	sf::Texture texture;
@@ -27,9 +38,6 @@ class PauseMenu {
 	sf::RectangleShape menuBackgroundShadow;
 	sf::RectangleShape menuBackgroundShadow1;
 	sf::RectangleShape menuBackgroundShadow2;
-
-	GameGUI::Slider* masterVolumenSlider;
-	GameGUI::Slider* musicSlider;
 
 	void createBackgroundMenu(sf::RenderWindow& window) {
 		menu->setPosition(sf::Vector2f((int)window.getSize().x / 2 - (int)menu->getSize().x / 2, (int)window.getSize().y / 2 - (int)menu->getSize().y / 2));
@@ -53,7 +61,7 @@ class PauseMenu {
 	}
 
 public:
-	PauseMenu(sf::RenderWindow& window) {
+	TeamVsTeamMenu(sf::RenderWindow& window) {
 		menu = new GameGUI::Menu(window);
 
 		texture.loadFromFile("../textures/interface/Background_orange_squares.png");
@@ -63,38 +71,96 @@ public:
 		background.setScale(sf::Vector2f(2, 2));
 		background.setTextureRect({ 0, 0, (int)window.getSize().x, (int)window.getSize().y });
 
-		menu->addButton("                Reanudar                ", ButtonActions::RESUME);
-		menu->addButton("                 Guardar                 ", ButtonActions::SAVE);
-		menu->addButton("                 Opciones                 ", ButtonActions::OPTIONS);
-		menu->addButton("        Ir al menu principal       ", ButtonActions::GO_MAIN_MENU);
-		menu->addButton("                    Salir                    ", ButtonActions::QUIT);
+
+		
 
 		createBackgroundMenu(window);
+	}
+
+
+	void actualizeNumPLayers(int numPlayers) {
+		
+        switch ((numPlayers))
+        {
+        case 2:
+            menu->addButton("               Jugador vs IA               ", ButtonActions:: PLVSIA);
+		menu->addButton("                  Jugador vs Jugador                ", ButtonActions::PLVSPL);
+		menu->addButton("          Atrás       ", ButtonActions::BACK);
+		menu->addButton("                    Salir                    ", ButtonActions::QUIT);
+            break;
+
+        case 3:
+        menu->addButton("               1 Jugador Vs 2 IA                ", ButtonActions::PL1VS2IA);
+		menu->addButton("               2 Jugadores Vs 1 IA                 ", ButtonActions::PL2VS1IA);
+        menu->addButton("               1 Jugador vs Jugador IA                ", ButtonActions::PLVSPLIA);
+		menu->addButton("         Atrás        ", ButtonActions::BACK);
+		menu->addButton("                    Salir                    ", ButtonActions::QUIT);
+            break;
+
+        case 4:
+        menu->addButton("            1 Jugador Vs  3 IA                ", ButtonActions::PL1VS3IA);
+		menu->addButton("            1 Jugadores Vs 2 Jugadores 1 IA                 ", ButtonActions::PLVSPL2IA);
+        menu->addButton("            2 Jugadores Vs 2 IA                ", ButtonActions::PL2VS2IA);
+		menu->addButton("            Jugador IA  Vs Jugador IA                 ", ButtonActions::PLIAVSPLIA);
+		menu->addButton("          Atrás        ", ButtonActions::BACK);
+		menu->addButton("                    Salir                    ", ButtonActions::QUIT);
+            break;
+        
+        default:
+            break;
+        }
 	}
 
 private:
 	void userActions(sf::Event& event, sf::RenderWindow*& window, GameDisplayController& gameDisplay, Game& game) {
 		int id = menu->onEvent(event);
 		switch (id) {
-		case ButtonActions::RESUME:
-			gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
-			GameTime::resumeGameTime();
+
+        //2 players
+		case ButtonActions::PLVSIA:
+        
+			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			break;
 
-		case ButtonActions::SAVE:
+		case ButtonActions::PLVSPL:
+        	gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 					
 			break;
-				
-		case ButtonActions::OPTIONS:
-			OptionsMenu::lastGameStateOptionsMenu = GameDisplayController::GameState::PAUSE_MENU;
-			gameDisplay.setGameState(GameDisplayController::GameState::OPTIONS_MENU);
+
+    
+		//3 players		
+		case ButtonActions::PL1VS2IA:
+			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			break;
-				
-		case ButtonActions::GO_MAIN_MENU:
-			game.deleteMap();
-			gameDisplay.setGameState(GameDisplayController::GameState::MAIN_MENU);
+
+        case ButtonActions::PLVSPLIA:
+			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			break;
-				
+
+        case ButtonActions::PL2VS1IA:
+			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			break;
+
+        //4 players
+
+        case ButtonActions::PL1VS3IA:
+			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			break;
+        case ButtonActions::PLVSPL2IA:
+			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			break;
+
+        case ButtonActions::PL2VS2IA:
+			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			break;
+        case ButtonActions::PLIAVSPLIA:
+			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			break;
+
+       	case ButtonActions::BACK:
+			//window->close();
+			break;	
+        
 		case ButtonActions::QUIT:
 			window->close();
 			break;
@@ -115,7 +181,7 @@ private:
 public:
 	void menuActions(GameDisplayController& gameDisplay, Game game) {
 		// Manage window events and pass a callback to manage this menu buttons
-		gameDisplay.manageGameInterface(gameDisplay, std::bind(&PauseMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
+		gameDisplay.manageGameInterface(gameDisplay, std::bind(&TeamVsTeamMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
 		if (gameDisplay.pauseMenuReprocessDisplay) {
 			gameDisplay.pauseMenuReprocessDisplay = false;
 			createBackgroundMenu(*gameDisplay.getWindow());
@@ -123,25 +189,5 @@ public:
 		draw(*gameDisplay.getWindow());
 	}
 
-	void checkUserPauseActions(GameDisplayController& gameDisplay) {
-		if (gameDisplay.getGameState() == GameDisplayController::GameState::PLAYING || gameDisplay.getGameState() == GameDisplayController::GameState::PAUSE_MENU) {
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-				if (!EsqPressed) {
-					EsqPressed = true;
-					if (gameDisplay.getGameState() == GameDisplayController::GameState::PAUSE_MENU) {
-						GameTime::resumeGameTime();
-						gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
-					}
-					else {
-						GameTime::stopGameTime();
-						gameDisplay.setGameState(GameDisplayController::GameState::PAUSE_MENU);
-					}
-				}
-			}
-			else {
-				EsqPressed = false;
-			}
-		}
-	}
 };
 

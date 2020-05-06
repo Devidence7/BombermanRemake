@@ -2,8 +2,9 @@
 #include <SFML/Graphics.hpp>
 #include "GUI/Theme.hpp"
 #include "GUI/GameGUI.hpp"
-#include "../Music/GameSounds.h"
+#include "../Music/GameMusic.h"
 #include "../GameEngine.hpp"
+#include "OptionsMenu.h"
 #include "GameDisplayController.h"
 
 
@@ -46,7 +47,21 @@ private:
 	GameGUI::CheckBox* fullScreenCheckBox;
 	GameGUI::Slider* fpsSlider; GameGUI::Label* fpsText;
 
+public:
+	OptionsMenu(sf::RenderWindow& window) {
+		texture.loadFromFile("../textures/interface/Background_orange_squares.png");
+		texture.setRepeated(true);
+
+		background.setTexture(texture);
+		background.setColor(sf::Color(255, 255, 0, 5));
+		background.setScale(sf::Vector2f(2, 2));
+		background.setTextureRect({ 0, 0, (int)window.getSize().x, (int)window.getSize().y });
+
+		createAudioMenu(window);
+	}
+
 private:
+
 	void createBackgroundMenu(sf::RenderWindow& window, bool addButton = true) {
 		if (addButton) {
 			GameGUI::HorizontalBoxLayout* hbox2 = menu->addHorizontalBoxLayout();
@@ -89,8 +104,8 @@ private:
 		hbox->addButton("Audio", ButtonActions::AUDIO);
 		hbox->addButton("Graficos", ButtonActions::GRAPHICS);
 		hbox->addButton("Controles", ButtonActions::CONTROLS);
-		
-		GameGUI::FormLayout *f = menu->addFormLayout();
+
+		GameGUI::FormLayout* f = menu->addFormLayout();
 
 		masterVolumenSlider = new GameGUI::Slider();
 		masterVolumenSlider->setQuantum(2);
@@ -120,7 +135,7 @@ private:
 		createBackgroundMenu(window);
 	}
 
-	void createGraphicsMenu(sf::RenderWindow& window, GameDisplayController &gameDisplay) {
+	void createGraphicsMenu(sf::RenderWindow& window, GameDisplayController& gameDisplay) {
 		menu = new GameGUI::Menu(window);
 
 		GameGUI::HorizontalBoxLayout* hbox = menu->addHorizontalBoxLayout();
@@ -149,7 +164,7 @@ private:
 		fpsSlider = new GameGUI::Slider();
 		fpsSlider->setQuantum(2);
 		fpsSlider->setValue(gameDisplay.FPSs);
-		
+
 		GameGUI::HorizontalBoxLayout* fpsLine = new GameGUI::HorizontalBoxLayout();
 		fpsLine->add(fpsSlider, ButtonActions::FPS);
 		if (gameDisplay.FPSs) {
@@ -159,26 +174,12 @@ private:
 			fpsText = fpsLine->addLabel("MAX");
 			fpsSlider->setValue(100);
 		}
-		
+
 		f->addRow("FPS", fpsLine);
 
 		createBackgroundMenu(window);
 	}
 
-public:
-	OptionsMenu(sf::RenderWindow& window) {
-		texture.loadFromFile("../textures/interface/Background_orange_squares.png");
-		texture.setRepeated(true);
-
-		background.setTexture(texture);
-		background.setColor(sf::Color(255, 255, 0, 5));
-		background.setScale(sf::Vector2f(2, 2));
-		background.setTextureRect({ 0, 0, (int)window.getSize().x, (int)window.getSize().y });
-
-		createAudioMenu(window);
-	}
-
-private:
 	void userActions(sf::Event& event, sf::RenderWindow* &window, GameDisplayController& gameDisplay, Game& game) {
 		int id = menu->onEvent(event);
 		switch (id) {

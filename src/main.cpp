@@ -15,6 +15,12 @@
 #include "Interface/OptionsMenu.h"
 #include "Interface/PauseMenu.h"
 #include "Interface/GameOver.h"
+#include "Interface/AllVsAllMenu.h"
+#include "Interface/GameTypeMenu.h"
+#include "Interface/MultiplayerMenu.h"
+#include "Interface/StoryModeMenu.h"
+#include "Interface/TeamVsTeamMenu.h"
+#include "Interface/DifficultMenu.h"
 #include "Interface/LoadingScreen.h"
 #include "Interface/UserKeyPress.h"
 #include <unistd.h>
@@ -42,8 +48,13 @@ int main(int argc, char* argv[]) {
 	OptionsMenu optionsMenu(*gameDisplayController.getWindow());
 	PauseMenu pauseMenu(*gameDisplayController.getWindow());
 	GameOver gameOverMenu(*gameDisplayController.getWindow());
+	MultiplayerMenu multiplayerMenu(*gameDisplayController.getWindow());
+	StoryModeMenu storyModeMenu(*gameDisplayController.getWindow());
+	GameTypeMenu gameTypeMenu(*gameDisplayController.getWindow());
+	AllVsAllMenu allVSallMenu(*gameDisplayController.getWindow());
+	TeamVsTeamMenu teamVSteamMenu(*gameDisplayController.getWindow());
+	DifficultyMenu difficultyMenu(*gameDisplayController.getWindow());
 	GameInterface gameInterface;
-	UserKeyPress userKeyPressManager;
 
 	// Start game loop
 	while (gameDisplayController.windowOpen()) {
@@ -57,12 +68,41 @@ int main(int argc, char* argv[]) {
 
 		case GameDisplayController::GameState::LOADING:
 			//Mostrar pantalla de carga
-		//	ls.draw(*gameDisplayController.getWindow());
-			game.startNewGame(*gameDisplayController.getWindow());
+			
+			game.startNewGame(*gameDisplayController.getWindow(),gameDisplayController);
+			
 			gameInterface.iniPlayers();
+			ls.draw(*gameDisplayController.getWindow());
 			gameDisplayController.setGameState(GameDisplayController::GameState::PLAYING);
 			break;
 		
+		case GameDisplayController::GameState::VS_NUMPLAYERS_MENU:
+			multiplayerMenu.menuActions(gameDisplayController, game);
+			break;
+
+		case GameDisplayController::GameState::GAME_TYPE:
+			gameTypeMenu.menuActions(gameDisplayController, game);
+			break;
+
+		case GameDisplayController::GameState::ALLVSALL:
+		//cout<<game.gameOptions.numPlayers<<endl;
+			allVSallMenu.actualizeNumPlayers(*gameDisplayController.getWindow(),game.gameOptions.numPlayers);
+			allVSallMenu.menuActions(gameDisplayController, game);
+			break;
+
+		case GameDisplayController::GameState::TEAM:
+			teamVSteamMenu.actualizeNumPLayers(game.gameOptions.numPlayers);
+			teamVSteamMenu.menuActions(gameDisplayController, game);
+			break;
+
+		case GameDisplayController::GameState::DIFFICULTY:
+			difficultyMenu.menuActions(gameDisplayController, game);
+			break;
+		
+		case GameDisplayController::GameState::STORY_MENU:
+			storyModeMenu.menuActions(gameDisplayController, game);
+			break;
+
 
 		case GameDisplayController::GameState::OPTIONS_MENU:
 			optionsMenu.menuActions(gameDisplayController, game);
@@ -70,7 +110,7 @@ int main(int argc, char* argv[]) {
 
 		case GameDisplayController::GameState::PAUSE_MENU:
 			pauseMenu.menuActions(gameDisplayController, game);
-			userKeyPressManager.checkUserPauseActions(gameDisplayController);
+			pauseMenu.checkUserPauseActions(gameDisplayController);
 			break;
 
 		case GameDisplayController::GameState::GAME_OVER:
@@ -78,35 +118,23 @@ int main(int argc, char* argv[]) {
 			//gameOverMenu.checkUserPauseActions(gameDisplayController);
 			break;
 
-	
-
 		case GameDisplayController::GameState::PLAYING:
+		
 			game.update(gameDisplayController);
-
+		
 			// Clear screen from previous drawings
 			gameDisplayController.getWindow()->clear();
+
 			// Draw the player and the scene
 			game.draw(*gameDisplayController.getWindow());
-			/*for(Player_ptr &player : PLayers::getVectorPlayer()){
-				playersLives.push_back(player->getLives());
-				cout<<playersLives.front();
-			}*/
+		
 			gameInterface.update(GameTime::getTimeNow());
-			/*if (game.gameOptions.multiplayerGame) {
-				//gameI.update(time.getTimeNow(),playersLives.front(),playersLives.back());
-				gameInterface.drawMulti(*gameDisplayController.getWindow());
-			}*/
-			//else {
+			
 			gameInterface.draw(*gameDisplayController.getWindow());
 			//}
 
-			//gameDisplayController.manageGameInterface(gameDisplayController);
-
-			userKeyPressManager.checkUserPauseActions(gameDisplayController);
-			userKeyPressManager.checkUserKeysPress(gameDisplayController, game);
-
-
-			//gameOverMenu.checkUserGameOverActions(gameDisplayController);
+			gameDisplayController.manageGameInterface(gameDisplayController);
+			pauseMenu.checkUserPauseActions(gameDisplayController);
 		}
 
 		// Update display window window
