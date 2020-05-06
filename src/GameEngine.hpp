@@ -101,24 +101,27 @@ public:
 
 	void moveCamera(GameDisplayController& gameDisplay) {
 		if (PLayers::getVectorPlayer().size() == 1) {
-			gameDisplay.camera.setCenter(PLayers::getVectorPlayer()[0]->getCenterPosition());
-		}
+			gameDisplay.getWindow()->getSize();
+			gameDisplay.getWindow()->getDefaultView().getCenter();
+			PLayers::getVectorPlayer()[0]->getCenterPosition();
 
-		//gameDisplay.camera.ge
+			sf::Vector2f distCenter2Player =  PLayers::getVectorPlayer()[0]->getCenterPosition() - gameDisplay.camera.getCenter();
+			
+			float squareRadius = 150;
+			if (distCenter2Player.x > squareRadius) {
+				gameDisplay.camera.setCenter(sf::Vector2f(gameDisplay.camera.getCenter().x + (distCenter2Player.x - squareRadius) / 20, gameDisplay.camera.getCenter().y));
+			}
+			else if (distCenter2Player.x < -squareRadius) {
+				gameDisplay.camera.setCenter(sf::Vector2f(gameDisplay.camera.getCenter().x + (distCenter2Player.x + squareRadius) / 20, gameDisplay.camera.getCenter().y));
+			}
 
-		/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad8)) {
-			gameDisplay.camera.move(sf::Vector2f(0, -1));
+			if (distCenter2Player.y > squareRadius) {
+				gameDisplay.camera.setCenter(sf::Vector2f(gameDisplay.camera.getCenter().x, gameDisplay.camera.getCenter().y + (distCenter2Player.y - squareRadius) / 20));
+			}
+			else if (distCenter2Player.y < -squareRadius) {
+				gameDisplay.camera.setCenter(sf::Vector2f(gameDisplay.camera.getCenter().x, gameDisplay.camera.getCenter().y + (distCenter2Player.y + squareRadius) / 20));
+			}
 		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad5)) {
-			gameDisplay.camera.move(sf::Vector2f(0, 1));
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad4)) {
-			gameDisplay.camera.move(sf::Vector2f(-1, 0));
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad6)) {
-			gameDisplay.camera.move(sf::Vector2f(1, 0));
-		}*/
-
 
 		gameDisplay.updateCamera();
 	}
