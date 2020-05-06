@@ -49,7 +49,6 @@ public:
 	void setOnMove(sf::Vector2f dir, bool onm = true){
 		onMove = onm;
 		this->velocity = sf::Vector2f(dir.x * this->baseSpeed, dir.y * this->baseSpeed);
-		std::cout << "v: " << velocity.x << " " << velocity.y << "\n";
 	}
 
 

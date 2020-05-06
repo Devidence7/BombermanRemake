@@ -86,6 +86,7 @@ void Bomb::update()
 				onMove = false;
 			}else{
 				move(velocity);
+//				setPosition(getPosition() + velocity);
 			}
 		}
 		
