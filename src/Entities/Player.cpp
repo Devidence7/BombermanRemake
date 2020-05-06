@@ -113,6 +113,13 @@ void PlayerEntity::animate(sf::Vector2f velocity) {
 			animLastTic = GameTime::getTimeNow();
 		}
 	}
+
+
+	if (controlsInverted) {
+		if (GameTime::getTimeNow() - lastControlInvertedTime > 20) {
+			controlsInverted = false;
+		}
+	}
 }
 
 sf::FloatRect PlayerEntity::getGlobalBounds() const {
@@ -216,20 +223,39 @@ bool PlayerEntity::updatePlayer() {
 
 	if (playerDown) {
 		velocity.y = baseSpeed * speedBoost * moveTime;
-		lastMovement = LookingAt::down;
 	}
 	if (playerUp) {
 		velocity.y = -baseSpeed * speedBoost * moveTime;
-		lastMovement = LookingAt::up;
 	}
 	if (playerLeft) {
 		velocity.x = -baseSpeed * speedBoost * moveTime;
-		lastMovement = LookingAt::left;
 	}
 	if (playerRight) {
 		velocity.x = baseSpeed * speedBoost * moveTime;
-		lastMovement = LookingAt::right;
 		//lives--;
+	}
+
+	// If bomberman has dizzy debuff
+	if (controlsInverted) {
+		velocity = -velocity;
+	}
+
+	// Look dir whit velocity
+	if (velocity.x != 0) {
+		if (velocity.x > 0) {
+			lastMovement = LookingAt::right;
+		}
+		else {
+			lastMovement = LookingAt::left;
+		}
+	}
+	else if (velocity.y != 0) {
+		if (velocity.y > 0) {
+			lastMovement = LookingAt::down;
+		}
+		else {
+			lastMovement = LookingAt::up;
+		}
 	}
 
 	// Call animate function to change current sprite if needed.
@@ -250,4 +276,9 @@ bool PlayerEntity::updatePlayer() {
 void PlayerEntity::setJumpingBomb() {
 	//Actializar frames
 	return;
+}
+
+void PlayerEntity::invertControls() {
+	controlsInverted = true;
+	lastControlInvertedTime = GameTime::getTimeNow();
 }

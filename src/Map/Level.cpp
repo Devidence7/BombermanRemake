@@ -154,7 +154,7 @@ void Level::update()
 			{
 				if (!Random::getIntNumberBetween(0, 1))
 				{
-					int randomObject = Random::getIntNumberBetween(0, 7);
+					int randomObject = Random::getIntNumberBetween(0, 9);
 					Entity_ptr powerUp;
 					switch (randomObject)
 					{
@@ -178,6 +178,12 @@ void Level::update()
 						break;
 					case 6:
 						powerUp = std::make_shared<KickBombsPowerUp>(KickBombsPowerUp((*it)->getPosition()));
+						break;
+					case 7:
+						powerUp = std::make_shared<DisseasePowerUp>(DisseasePowerUp((*it)->getPosition()));
+						break;
+					case 8:
+						powerUp = std::make_shared<PassBombsPowerUp>(PassBombsPowerUp((*it)->getPosition()));
 						break;
 					default:
 						powerUp = std::make_shared<ExtraLifePowerUp>(ExtraLifePowerUp((*it)->getPosition()));

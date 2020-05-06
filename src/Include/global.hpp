@@ -51,12 +51,14 @@ enum EnemyType
 
 enum PowerUpType
 {
+	dissease = 0,
 	moreSpeed = 1,
 	moreFire = 2,
 	lessFire = 3,
 	moreBombs = 4,
 	kickBombs = 6,
 	grabBombs = 7,
+	passBombs = 12,
 	extraLife = 14,
 	moreTime = 18,
 	lessSpeed = 19
