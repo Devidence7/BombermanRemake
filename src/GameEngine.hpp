@@ -89,12 +89,7 @@ public:
 	void updatePlayers( GameDisplayController& gameDisplay) {
 		int ply=1;
 		for (Player_ptr player : PLayers::getVectorPlayer()) {
-				if (player->updatePlayer()) {
-					// If there is nothing in that cell:
-					Entity_ptr b = std::make_shared<Bomb>(Bomb(player));
-					b->setPosition(level->getMapCellCorner(player->getCenterPosition()));
-					level->addNewItem(b);
-				}
+			player->updatePlayer();
 
 			//player->updatePlayer();
 			player->playerActions();

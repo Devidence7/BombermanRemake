@@ -38,7 +38,7 @@ public:
 
 	double lastMovementTime = 0;
 
-	bool controlsInverted;
+	bool controlsInverted = false;
 	double lastControlInvertedTime = 0;
 
 	PlayerTexture* playerTexture;
@@ -109,5 +109,9 @@ public:
 	void setJumpingBomb();
 
 	void invertControls();
-	
+
+	void bombExploted(Entity_ptr b);
+
+	void changeBombs2time();
+
 };

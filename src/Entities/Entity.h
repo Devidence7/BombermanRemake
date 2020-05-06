@@ -31,7 +31,7 @@ protected:
 	bool canThroughBomb = false; //puede atravesar bombas
 
 	ActionsAvalible actionAvaible = ActionsAvalible::NONE_ACTION;
-
+	int score = 0;
 	std::list<std::shared_ptr<Entity>> BombsAsociated;
 	std::shared_ptr<Entity> BombTaked = nullptr;
 
@@ -81,6 +81,9 @@ public:
 	}
 
 	void setAction(ActionsAvalible _action){
+		if(actionAvaible == ActionsAvalible::REMOTE_BOMB && _action != actionAvaible){
+			changeBombs2time();
+		}
 		actionAvaible =_action;
 	}
 
@@ -123,5 +126,20 @@ public:
 
 
 	void drawEntityHitbox(sf::RenderWindow &w);
+
+	void incrementScore(int S){
+		score += S;
+	}
+
+	virtual void bombExploted(std::shared_ptr<Entity> b);
+
+	ActionsAvalible getActionAssigned(){
+		return actionAvaible;
+	}
+
+	void AssignBomb(std::shared_ptr<Entity> b){
+		BombsAsociated.push_back(b);
+	}
+	void changeBombs2time();
 
 };
