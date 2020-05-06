@@ -57,9 +57,6 @@ public:
 		unsigned int pixelsY = window.getSize().y;
 		
 	//	PLayers::insertPlayers(gameOptions.numPlayers);
-		sf::View view(sf::FloatRect(0.f, 0.f, pixelsX, pixelsY));
-		view.move(sf::Vector2f(0, -48));
-		window.setView(view);
 
 		GameTime::startGameTime();
 		GameMusic::playWorld1Music();
@@ -107,6 +104,30 @@ public:
 		}
 	}
 
+	void moveCamera(GameDisplayController& gameDisplay) {
+		if (PLayers::getVectorPlayer().size() == 1) {
+			gameDisplay.camera.setCenter(PLayers::getVectorPlayer()[0]->getCenterPosition());
+		}
+
+		//gameDisplay.camera.ge
+
+		/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad8)) {
+			gameDisplay.camera.move(sf::Vector2f(0, -1));
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad5)) {
+			gameDisplay.camera.move(sf::Vector2f(0, 1));
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad4)) {
+			gameDisplay.camera.move(sf::Vector2f(-1, 0));
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad6)) {
+			gameDisplay.camera.move(sf::Vector2f(1, 0));
+		}*/
+
+
+		gameDisplay.updateCamera();
+	}
+
 	void update(GameDisplayController &gameDisplay) {
 		level->update();
 		updatePlayers(gameDisplay);
@@ -120,6 +141,9 @@ public:
 			
 			gameDisplay.setGameState(GameDisplayController::GameState::GAME_OVER);
 		}
+
+		//Update camera:
+		moveCamera(gameDisplay);
 	}
 
 	void drawPlayers(sf::RenderWindow& w) {

@@ -27,7 +27,7 @@ public:
 	const int spriteFrames = 4;
 
 	double explosionCounter;
-	const double explosionTime = 1.35;
+	const double explosionTime = 3;
 
 	// Player which bomb is from:
 	std::shared_ptr<PlayerEntity> player;
