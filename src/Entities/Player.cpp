@@ -169,7 +169,7 @@ void PlayerEntity::realizeActions()
 			Level::canTakeBomb(me);
 			break;
 		case ActionsAvalible::KICK_BOM:
-			Level::canKickBomb(me);
+		//	Level::canKickBomb(me);
 			break;
 
 		default:

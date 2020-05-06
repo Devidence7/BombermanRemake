@@ -77,7 +77,7 @@ public:
 
 
 private:
-	void userActions(sf::Event& event, sf::RenderWindow* &window, GameDisplayController& gameDisplay, Game& game) {
+	void userActions(sf::Event& event, sf::RenderWindow* &window, GameDisplayController& gameDisplay,Game& game) {
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//													BUTTON PRESSED
@@ -85,14 +85,18 @@ private:
 		int id = menu->onEvent(event);
 		switch (id) {
 		case ButtonActions::SINGLEPLAYER:
-			gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
-			game.gameOptions.numPlayers = 1;
-			game.startNewGame(*window);
+		game.gameOptions.numPlayers = 1;
+		//.iniPlayers();
+			//gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
+			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			//game.startNewGame(*window);
 			break;
 		case ButtonActions::MULTIPLAYER:
-			gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
-			game.gameOptions.numPlayers = 2;
-			game.startNewGame(*window);
+		    game.gameOptions.numPlayers = 2;
+			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+		//	gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
+			
+			
 			break;
 		case ButtonActions::OPCIONS:
 			OptionsMenu::lastGameStateOptionsMenu = GameDisplayController::GameState::MAIN_MENU;

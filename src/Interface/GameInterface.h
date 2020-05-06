@@ -32,6 +32,19 @@ public:
         }
 
         //cout<<PLayers::getVectorPlayer().size()<<endl;
+        
+       
+        time.setFont(font);
+        //time.setFillColor(sf::Color::White);
+      time.setColor(sf::Color::White);
+        time.setString(to_string(timeLeft/60)+":"+to_string(timeLeft%60));
+        time.setPosition(container.getPosition().x+(container.getSize().x/2)-100,(container.getPosition().y+7.5));
+        time.setScale(0.5,0.5);
+    
+    }
+
+    void iniPlayers(){
+        cout<<PLayers::getVectorPlayer().size()<<endl;
         for (int i=0;i< PLayers::getVectorPlayer().size();i++){
             /* lifeSprite[i].setTexture(lifeTexture,false);
              lifeSprite[i].setScale(0.1,0.1);
@@ -43,19 +56,11 @@ public:
             // lives[i].setFillColor(sf::Color::White);
             lives[i].setColor(sf::Color::White);
             lives[i].setString("X"+to_string(PLayers::getVectorPlayer()[i]->getLives()));
-              lives[i].setPosition(PLayers::getVectorPlayer()[i]->playerHead2.getPosition().x+35,PLayers::getVectorPlayer()[i]->playerHead2.getPosition().y+7.5);
+            lives[i].setPosition(PLayers::getVectorPlayer()[i]->playerHead2.getPosition().x+35,PLayers::getVectorPlayer()[i]->playerHead2.getPosition().y+7.5);
              lives[i].setScale(0.5,0.5);
 
         
         }
-       
-        time.setFont(font);
-        //time.setFillColor(sf::Color::White);
-      time.setColor(sf::Color::White);
-        time.setString(to_string(timeLeft/60)+":"+to_string(timeLeft%60));
-        time.setPosition(container.getPosition().x+(container.getSize().x/2)-100,(container.getPosition().y+7.5));
-        time.setScale(0.5,0.5);
-    
     }
 
     void draw(sf::RenderWindow& w) {

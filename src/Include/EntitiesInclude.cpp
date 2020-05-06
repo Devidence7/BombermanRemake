@@ -10,7 +10,7 @@ void PLayers::addPlayer()
     players.push_back(p);
 }
 void PLayers::insertPlayers(int numPlayers)
-{   //cout<<numPlayers<<endl;
+{   cout<<numPlayers<<endl;
     for (int i=0;i<numPlayers;i++){
         addPlayer();
     }

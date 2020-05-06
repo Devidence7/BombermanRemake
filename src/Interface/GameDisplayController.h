@@ -20,7 +20,8 @@ public:
         OPTIONS_MENU,
         PAUSE_MENU,
 		GAME_OVER,
-		RESTART
+		LOADING
+		//RESTART
     };
 
     GameState gameState;

@@ -31,14 +31,14 @@ private:
 	//MainMenu mainMenu;
 public:
 	struct GameOptions {
-		//bool multiplayerGame = false;
-		int numPlayers=2;
+	
+		int numPlayers;
 	};
 	GameOptions gameOptions;
 
 	Game() {
 	//	cout<<gameOptions.numPlayers<<endl;
-		PLayers::insertPlayers(gameOptions.numPlayers);
+	//	PLayers::insertPlayers(gameOptions.numPlayers);
 		
 	//	PLayers::insertPlayers();
 		Enemies::insertarEnemigos(dimX, dimY);
@@ -50,6 +50,7 @@ public:
 	}
 
 	void startNewGame(sf::RenderWindow& window){
+		PLayers::insertPlayers(gameOptions.numPlayers);
 	//	PLayers::insertPlayers(gameOptions.numPlayers);
 		unsigned int pixelsX = window.getSize().x;
 		unsigned int pixelsY = window.getSize().y;

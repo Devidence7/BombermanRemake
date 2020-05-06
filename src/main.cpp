@@ -15,7 +15,9 @@
 #include "Interface/OptionsMenu.h"
 #include "Interface/PauseMenu.h"
 #include "Interface/GameOver.h"
+#include "Interface/LoadingScreen.h"
 #include "Interface/UserKeyPress.h"
+#include <unistd.h>
 
 
 int main(int argc, char* argv[]) {
@@ -27,9 +29,11 @@ int main(int argc, char* argv[]) {
 
 	// Create new game
 	Game game = Game();
+	
 
 	// Create a Multiple interface controller
 	auto gameDisplayController = GameDisplayController();
+	LoadingScreen ls =LoadingScreen(*gameDisplayController.getWindow());
 
 	// Play Title music
 	GameMusic::playTitleMusic();
@@ -47,8 +51,18 @@ int main(int argc, char* argv[]) {
 
 		switch (gameDisplayController.gameState) {
 		case GameDisplayController::GameState::MAIN_MENU:
+		
 			gameMainMenu.menuActions(gameDisplayController, game);
 			break;
+
+		case GameDisplayController::GameState::LOADING:
+			//Mostrar pantalla de carga
+		//	ls.draw(*gameDisplayController.getWindow());
+			game.startNewGame(*gameDisplayController.getWindow());
+			gameInterface.iniPlayers();
+			gameDisplayController.setGameState(GameDisplayController::GameState::PLAYING);
+			break;
+		
 
 		case GameDisplayController::GameState::OPTIONS_MENU:
 			optionsMenu.menuActions(gameDisplayController, game);
@@ -64,12 +78,7 @@ int main(int argc, char* argv[]) {
 			//gameOverMenu.checkUserPauseActions(gameDisplayController);
 			break;
 
-		case GameDisplayController::GameState::RESTART:
-			game.restartGame(*gameDisplayController.getWindow());
-			/*cout<<"holi5"<<endl;
-			gameDisplayController.setGameState(GameDisplayController::GameState::PLAYING);
-			cout<<"holi6"<<endl;*/
-			break;
+	
 
 		case GameDisplayController::GameState::PLAYING:
 			game.update(gameDisplayController);
