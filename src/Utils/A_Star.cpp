@@ -30,7 +30,7 @@ sf::Vector2i selectCloseObjetive(const sf::Vector2i &positionEnemy, const std::v
     return objetive;
 }
 
-ANode generateRandomMovement(sf::Vector2i fromPosition)
+ANode_Ptr generateRandomMovement(sf::Vector2i fromPosition)
 {
 	sf::Vector2i direction;
     sf::Vector2i nextPostion;
@@ -54,24 +54,24 @@ ANode generateRandomMovement(sf::Vector2i fromPosition)
         }
         nextPostion = fromPosition + direction;
     }while(j < 12 && !checkValidPosition(nextPostion));
-	return ANode(nextPostion, direction, sf::Vector2i(0, 0), 0);
+	return std::make_shared<ANode>(ANode(nextPostion, direction, sf::Vector2i(0, 0), 0));
 }
 
-void generateRandomPath(sf::Vector2i position, std::list<ANode> & path)
+void generateRandomPath(sf::Vector2i position, std::list<ANode_Ptr> & path)
 {
     path.clear();
-	ANode node = generateRandomMovement(position);
+	ANode_Ptr node = generateRandomMovement(position);
 	path.push_back(node);
 	for (int i = 0; i < 5; i++)
 	{
-		node = generateRandomMovement(node.getPosition());
+		node = generateRandomMovement(node->getPosition());
 		path.push_back(node);
 	}
 }
 
 
 
-void generatePath(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, int RangeVision, std::list<ANode> & path)
+void generatePath(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, int RangeVision, std::list<ANode_Ptr> & path)
 {
     //si ve al menos 1 -> buscar
     std::vector<sf::Vector2i> objetivesOnRange;
@@ -125,14 +125,14 @@ void generatePath(const sf::Vector2i &positionEnemy, const std::vector<sf::Vecto
     //Generar camino aleatorio
 }
 
-bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, std::list<ANode> & path)
+bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> & path)
 {
     path.clear();
-    Heap<ANode> frontera;
-    std::map<vec2i, ANode *> expanded;
+    Heap<ANode_Ptr> frontera;
+    std::map<vec2i, ANode_Ptr> expanded;
     sf::Vector2i objetive = selectCloseObjetive(positionEnemy, objetives);
 
-    ANode *currentNode = new ANode(positionEnemy, sf::Vector2i(0, 0), objetive, 0.0f);
+    ANode_Ptr currentNode = std::make_shared<ANode>(ANode(positionEnemy, sf::Vector2i(0, 0), objetive, 0.0f));
 
     bool finded = false;
     while (!finded)
@@ -148,14 +148,14 @@ bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector
                 {
                     sf::Vector2i nodePosition(currentNode->xPosition() + i, currentNode->yPosition() + j);
                     sf::Vector2i objetiveP = selectCloseObjetive(positionEnemy, objetives);
-                    ANode *newNode = new ANode(nodePosition, sf::Vector2i(i, j), objetiveP, currentNode->fAcum() + 1, currentNode);
+                    ANode_Ptr newNode = std::make_shared<ANode>(ANode(nodePosition, sf::Vector2i(i, j), objetiveP, currentNode->fAcum() + 1, currentNode));
                     if (checkValidPosition(nodePosition) && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(currentNode))
                     { //Si es una posicion valida y no se ha expandido
                         frontera.add(newNode);
                     }
                     else
                     {
-                        delete newNode;
+                        newNode = nullptr;
                     }
                 }
             }
@@ -174,7 +174,7 @@ bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector
         }
     }
 
-    std::list<ANode *> list_actions;
+    std::list<ANode_Ptr> list_actions;
     //Si no se ha encontrado -> seleccionar aleatorio
     if (!finded)
     {
@@ -206,8 +206,8 @@ bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector
     std::cout << "Corregido eliminacion del primer nodo\n";
     while (!list_actions.empty())
     {
-        ANode *e = list_actions.back();
-        path.push_back(*e);
+        ANode_Ptr e = list_actions.back();
+        path.push_back(e);
         list_actions.pop_back();
     }
 

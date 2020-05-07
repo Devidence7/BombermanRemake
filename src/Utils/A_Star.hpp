@@ -63,14 +63,14 @@ class ANode
 {
     sf::Vector2i currentPostion;
     sf::Vector2i direction_to_arrive;
-    ANode *parent;
+    std::shared_ptr<ANode> parent;
     float f, h;
 
 public:
     ANode(){
         direction_to_arrive = sf::Vector2i(0,0);
     }
-    ANode(const sf::Vector2i &cp, sf::Vector2i dir, const sf::Vector2i &objetive, float fAcum, ANode *p = nullptr)
+    ANode(const sf::Vector2i cp, sf::Vector2i dir, const sf::Vector2i objetive, float fAcum, std::shared_ptr<ANode> p = nullptr)
         : currentPostion(cp), direction_to_arrive(dir), f(fAcum), parent(p)
     {
         h = manhattan(cp, objetive);
@@ -87,10 +87,10 @@ public:
     }
     inline float costNode() const { return h + f; }
     inline bool isObjetive() const { return h == 0; }
-    inline void setParent(ANode *p) { parent = p; }
+    inline void setParent(std::shared_ptr<ANode> p) { parent = p; }
     const sf::Vector2i &getPosition() const { return currentPostion; }
     sf::Vector2i getAction() const { return direction_to_arrive; }
-    ANode *getParent() const { return parent; }
+    std::shared_ptr<ANode> getParent() const { return parent; }
     inline bool operator<(const ANode &other) const
     {
         return (f + h) < other.costNode();
@@ -122,9 +122,12 @@ public:
     inline int xPosition() { return currentPostion.x; }
     inline int yPosition() { return currentPostion.y; }
 
-    ~ANode() {}
+    ~ANode() {
+        //std::cout << "Eliminando nodo\n";
+    }
 };
 
+typedef std::shared_ptr<ANode> ANode_Ptr;
 
 //class AStar{
 //
@@ -137,12 +140,12 @@ inline bool checkObjetive(const sf::Vector2i &currentP, const sf::Vector2i &obje
 
 inline bool checkValidPosition(const sf::Vector2i &v);
 
-ANode generateRandomMovement(sf::Vector2i fromPosition);
-void generateRandomPath(sf::Vector2i position, std::list<ANode> & path);
-void generatePath(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, int RangeVision, std::list<ANode> & path);
+ANode_Ptr generateRandomMovement(sf::Vector2i fromPosition);
+void generateRandomPath(sf::Vector2i position, std::list<ANode_Ptr> & path);
+void generatePath(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, int RangeVision, std::list<ANode_Ptr> & path);
 
 sf::Vector2i selectCloseObjetive(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives);
 
-bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, std::list<ANode> & path);
+bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> & path);
 #include "../Include/EntitiesInclude.hpp"
 //};

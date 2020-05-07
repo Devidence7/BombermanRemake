@@ -52,13 +52,13 @@ void EnemyEntity::generateMovements()
 void EnemyEntity::drawMovements(sf::RenderWindow &w)
 {
 	sf::FloatRect dim = this->getGlobalBounds();
-	for (ANode &an : movements)
+	for (ANode_Ptr &an : movements)
 	{
 		sf::RectangleShape rece;
 		rece.setSize(sf::Vector2f((dim.width / 2), (dim.height / 2)));
 		rece.setFillColor(colorPath);
-		sf::Vector2i posi = an.getPosition();
-		sf::Vector2f posf = MapCoordinates2GlobalCoorCenter(an.getPosition());
+		sf::Vector2i posi = an->getPosition();
+		sf::Vector2f posf = MapCoordinates2GlobalCoorCenter(an->getPosition());
 		//std::cout << "pos " << posi.x << "( " << posf.x<< ")" << posi.y << "( " << posf.y<< ")" << std::endl;
 		posf -= sf::Vector2f(dim.width / 4, dim.height / 4);
 		rece.setPosition(posf);
@@ -108,22 +108,22 @@ void EnemyEntity::updateVelocity()
 	{
 		//movements = generateRandomPath(getMapCoordinates(getCenterPosition()));
 		this->generateMovements();
-		currentMovement = movements.front();
 		if(movements.size() < 1){
 			std::cout << "ERRORR movimientos vacios no esperados\n";
 		}
+		currentMovement = movements.front();
 		movements.pop_front();
 		//currentMovement.inverseDirection();
 		onCollision = false;
 	}
-	else if (checkArrivePosition(this->getCenterPosition(), currentMovement.getPosition(), currentMovement.getAction()))
+	else if (checkArrivePosition(this->getCenterPosition(), currentMovement->getPosition(), currentMovement->getAction()))
 	{ //Si esta en posicions
-		currentMovement = movements.front();
 		if (movements.size() < 1)
 		{
 			//movements = generateRandomPath(getMapCoordinates(getCenterPosition()));
 			this->generateMovements();
 		}
+		currentMovement = movements.front();
 		movements.pop_front();
 	}
 
@@ -134,13 +134,13 @@ void EnemyEntity::updateVelocity()
 	}
 	lastMovementTime = GameTime::getTimeNow();
 
-	if(currentMovement.getAction().x > 1 || currentMovement.getAction().y >1 ){
+	if(currentMovement->getAction().x > 1 || currentMovement->getAction().y >1 ){
 		std::cout<< "Error en accion\n";
 		volatile int x = 0;
 	}
 
-	velocity.x = baseSpeed * currentMovement.getAction().x ;//* moveTime;
-	velocity.y = baseSpeed * currentMovement.getAction().y ;//* moveTime;
+	velocity.x = baseSpeed * currentMovement->getAction().x ;//* moveTime;
+	velocity.y = baseSpeed * currentMovement->getAction().y ;//* moveTime;
 	//std::cout << "Vel: " << velocity.x << " " << velocity.y << std::endl;
 
 	move(velocity.x, velocity.y);

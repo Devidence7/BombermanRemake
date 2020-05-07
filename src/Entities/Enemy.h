@@ -29,16 +29,16 @@ private:
 	double lastMovementTime = 0;
 
 	protected:
-	int rangoVision = 1; // Rango de celdas cuadrada que puede ver al jugador
+	int rangoVision = 3; // Rango de celdas cuadrada que puede ver al jugador
 	sf::Vector2i siteRespectPlayer; // Sitio respecto jugador a donde ira a buscar un camino si existe
 	int numConsecutiveMovements = 5;
 
-	ANode currentMovement;
+	ANode_Ptr currentMovement;
 
 	sf::Color colorPath;
 
 protected:
-	std::list<ANode> movements;
+	std::list<ANode_Ptr> movements;
 	EnemyType enemyType;
 	
 public:
