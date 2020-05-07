@@ -26,7 +26,7 @@ private:
 	// Dim level map:
 	int dimY = 15;
 	int dimX = 25;
-	int stage=1;
+	int stage=3;
 	int timeLeft = 299;
 	int timeToShow;
 	// Initialize textures
@@ -86,7 +86,7 @@ public:
 	void startNewGame(sf::RenderWindow& window, GameDisplayController &gameDisplay){
 		//	cout<<gameOptions.numPlayers<<endl;
 		int numEnemies=numEnemigos*gameOptions.difLevel*(stage/0.75); 
-		Enemies::insertarEnemigos(dimX, dimY,numEnemies);
+		Enemies::insertarEnemigos(dimX, dimY,numEnemies,stage);
 		//insertEnemies(7);
 		level = new Level(dimX, dimY);
 		//Enemies::insertarEnemigos(dimX, dimY);
@@ -105,7 +105,7 @@ public:
 
 	void restartGame(sf::RenderWindow& window,GameDisplayController &gameDisplay){
 		deleteMap();
-		Enemies::insertarEnemigos(dimX, dimY,numEnemigos*gameOptions.difLevel*(stage/0.75));
+		Enemies::insertarEnemigos(dimX, dimY,numEnemigos*gameOptions.difLevel*(stage/0.75),stage);
 		startNewGame(window,gameDisplay);
 		
 	}
@@ -113,7 +113,7 @@ public:
 	void newStage(sf::RenderWindow& window,GameDisplayController &gameDisplay){
 		deleteMap();
 		stage++;
-		Enemies::insertarEnemigos(dimX, dimY,numEnemigos*gameOptions.difLevel*(stage/0.75));
+		Enemies::insertarEnemigos(dimX, dimY,numEnemigos*gameOptions.difLevel*(stage/0.75),stage);
 		startNewGame(window,gameDisplay);
 		
 	}

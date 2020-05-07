@@ -48,12 +48,37 @@ bool Enemies::cehckSomeCollision(Entity_ptr e){
 
 std::vector<Enemy_ptr> Enemies::enemies;
 
-void Enemies::insertarEnemigos(int dimX, int dimY,int numEnemies) {
+void Enemies::insertarEnemigos(int dimX, int dimY,int numEnemies,int stage) {
 	std::vector<Enemy_ptr> a(numEnemies);
-	//int enemyType;
+	int enemyType;
 	for (int i=0;i<numEnemies;i++){
-		//enemyType=Random::getIntNumberBetween(1,7);
-		a[i]=std::make_shared<EnemyEntity>(Balloon());
+		enemyType=Random::getIntNumberBetween(1,7);
+		enemyType=(enemyType%(stage*2))+1;
+		switch(enemyType){
+			case 1:
+				a[i]=std::make_shared<EnemyEntity>(Balloon());
+				break;
+			case 2:
+				a[i]=std::make_shared<EnemyEntity>(Ice());
+				break;
+			case 3:
+				a[i]=std::make_shared<EnemyEntity>(Barrel());
+				break;
+			case 4:
+				a[i]=std::make_shared<EnemyEntity>(Coin());
+				break;
+			case 5:
+				a[i]=std::make_shared<EnemyEntity>(Blob());
+				break;
+			case 6:
+				a[i]=std::make_shared<EnemyEntity>(Ghost());
+				break;
+			case 7:
+				a[i]=std::make_shared<EnemyEntity>(Hypo());
+				break;
+			default:
+				break;
+		}
 		enemies.push_back(a[i]);
 	}
 	/*Enemy_ptr e1 = std::make_shared<EnemyEntity>(Balloon());
