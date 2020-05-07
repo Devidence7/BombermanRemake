@@ -66,47 +66,11 @@ void EnemyEntity::drawMovements(sf::RenderWindow &w)
 	}
 }
 
-/*ANode EnemyEntity::generateRandomMovement(sf::Vector2i fromPosition)
-{
-	sf::Vector2i direction;
-	int mul = Random::getIntNumberBetween(0, 1);
-	if (!mul)
-	{
-		mul = -1;
-	}
-	if (Random::getIntNumberBetween(0, 1))
-	{
-		direction.y = mul;
-		direction.x = 0;
-	}
-	else
-	{
-		direction.y = 0;
-		direction.x = mul;
-	}
-	sf::Vector2i nextPostion = fromPosition + direction;
-	return ANode(nextPostion, direction, sf::Vector2i(0, 0), 0);
-}
-
-void EnemyEntity::generateRandomPath()
-{
-	ANode node = generateRandomMovement(getMapCoordinates(this->getCenterPosition()));
-	movements.clear();
-	movements.push_back(node);
-	for (int i = 0; i < 5; i++)
-	{
-		node = generateRandomMovement(node.getPosition());
-		movements.push_back(node);
-	}
-}
-*/
 
 void EnemyEntity::updateVelocity()
 {
-	std::cout << "Update Velocity\n";
 	if (onCollision)
 	{
-		//movements = generateRandomPath(getMapCoordinates(getCenterPosition()));
 		this->generateMovements();
 		if(movements.size() < 1){
 			std::cout << "ERRORR movimientos vacios no esperados\n";
@@ -120,7 +84,6 @@ void EnemyEntity::updateVelocity()
 	{ //Si esta en posicions
 		if (movements.size() < 1)
 		{
-			//movements = generateRandomPath(getMapCoordinates(getCenterPosition()));
 			this->generateMovements();
 		}
 		currentMovement = movements.front();

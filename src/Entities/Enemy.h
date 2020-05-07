@@ -46,10 +46,6 @@ public:
 
 	void startMovement();
 
-	//ANode generateRandomMovement(sf::Vector2i fromPosition);
-
-	//void generateRandomPath();
-
 	virtual void generateMovements();
 
 	void updateVelocity();

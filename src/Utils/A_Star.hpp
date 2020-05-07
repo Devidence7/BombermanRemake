@@ -129,12 +129,6 @@ public:
 
 typedef std::shared_ptr<ANode> ANode_Ptr;
 
-//class AStar{
-//
-//float sizeX;
-//float sizeY;
-//public:
-//    AStar(std::vector<std::vector<Entity_ptr>> &_map) : sizeX(_map.size()), sizeY(_map[0].size()){}
 
 inline bool checkObjetive(const sf::Vector2i &currentP, const sf::Vector2i &objetivePosition);
 
@@ -148,4 +142,3 @@ sf::Vector2i selectCloseObjetive(const sf::Vector2i &positionEnemy, const std::v
 
 bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> & path);
 #include "../Include/EntitiesInclude.hpp"
-//};

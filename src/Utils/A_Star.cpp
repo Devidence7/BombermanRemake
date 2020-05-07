@@ -199,22 +199,13 @@ bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector
         }
         currentNode = currentNode->getParent();
     }
-    std::cout << "corrigiendo eliminacion del primer nodo\n";
-    /*if(list_actions.size() > 0){
-        list_actions.pop_back(); //Eliminar nodo inicio
-    }*/
-    std::cout << "Corregido eliminacion del primer nodo\n";
+
     while (!list_actions.empty())
     {
         ANode_Ptr e = list_actions.back();
         path.push_back(e);
         list_actions.pop_back();
     }
-
-    //limpiar nodos
-    // for(std::map<vec2i, ANode*>::iterator it = expanded.begin(); it != expanded.end(); ++it){
-    //     delete (it)->second;
-    // }
 
     return finded;
 }
