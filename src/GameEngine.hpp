@@ -128,6 +128,7 @@ Game(){
 			if (colissionWithEnemies(player)) {
 				player->setExpiredEntity();
 			}	
+			if(player)
 			ply++;
 		}
 	}
@@ -205,8 +206,7 @@ Game(){
 			totalLives+=player->getLives();
 		}
 		
-		if(totalLives==0){
-			
+		if(totalLives==0){	
 			gameDisplay.setGameState(GameDisplayController::GameState::GAME_OVER);
 		}
 
@@ -252,9 +252,7 @@ Game(){
 		while (it != Enemies::getVectorEnemies().end()) {
 			
 			// Update the enemies.
-			cout<<"Update"<<endl;
 			(*it)->update();
-			cout<<"CheckAndFix"<<endl;
 			level->checkAndFixCollisions((*it));
 			
 			if ((*it)->getExpiredEntity()) {

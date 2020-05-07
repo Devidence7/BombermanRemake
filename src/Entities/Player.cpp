@@ -5,7 +5,7 @@ PlayerEntity::PlayerEntity(PlayerControls& pControls) : Entity(), playerControls
 	isFireDestroyable = true;
 	fireCanGoThroght = true;
 	collisioner = false;
-
+	dead=false;
 	animLastTic = GameTime::getTimeNow();
 	baseSpeed = 2.5;
 	lastMovement = LookingAt::down;
@@ -45,10 +45,10 @@ void PlayerEntity::setExpiredEntity() {
 	if (!expiredEntity) {
 		this->BombTaked = nullptr;
 		expiredEntity = true;
-		if(!dead){
+		//if(!dead){
 		    currentFrame = 0;
 		    animLastTic = GameTime::getTimeNow();
-		}
+		//}
 	}
 }
 
@@ -84,18 +84,20 @@ void PlayerEntity::animate(sf::Vector2f velocity) {
 		}
 	}
 	else {
-		if (currentFrame == 6 && GameTime::getTimeNow() - animLastTic > frameSpeed) {
+		if (currentFrame == 6 && GameTime::getTimeNow() - animLastTic > frameSpeed ) {
 			lives--;
 			if (lives > 0) {
-
+				expiredEntity = false;
+				setPosition(100, 100);
 
 			}
 			else {
 				lives = 0;
+				dead=true;
+				setExpiredEntity();
 				//dead=true;
 			}
-			expiredEntity = false;
-			setPosition(100, 100);
+			
 		
 	
 			/*else{
@@ -107,7 +109,7 @@ void PlayerEntity::animate(sf::Vector2f velocity) {
 			setPosition(100, 100);*/
 		}
 
-		if (GameTime::getTimeNow() - animLastTic > frameSpeed) {
+		if (GameTime::getTimeNow() - animLastTic > frameSpeed && !dead) {
 			setTextureRect(playerTexture->getDeathSprite(currentFrame));
 			playerColorEntity.setTextureRect(playerTexture->getDeathSprite(currentFrame));
 			currentFrame = (currentFrame + 1) % deathFrames;
@@ -122,6 +124,7 @@ void PlayerEntity::animate(sf::Vector2f velocity) {
 		}
 	}
 }
+
 
 sf::FloatRect PlayerEntity::getGlobalBounds() const {
 	sf::FloatRect dim = sf::Sprite::getGlobalBounds();

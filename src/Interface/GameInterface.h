@@ -4,7 +4,7 @@
 #include "../Include/global.hpp"
 #include <iostream>
 #define MAX_NUMBER_OF_ITEMS 4
-#define MAX_NUMBER_OF_PLAYERS 2
+#define MAX_NUMBER_OF_PLAYERS 4
 #define MAX_NUMBER_OF_PU 4
 #define HEAD_DIM 36
 #define HEAD_START 10

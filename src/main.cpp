@@ -9,7 +9,6 @@
 
 #include "Interface/GUI/GameGUI.hpp"
 #include "Interface/GUI/Theme.hpp"
-
 #include "Interface/GameDisplayController.h"
 #include "Interface/MainMenu.h"
 #include "Interface/OptionsMenu.h"
@@ -20,7 +19,6 @@
 #include "Interface/DifficultMenu.h"
 #include "Interface/LoadingScreen.h"
 #include "Interface/UserKeyPress.h"
-#include <unistd.h>
 
 
 int main(int argc, char* argv[]) {
@@ -45,7 +43,7 @@ int main(int argc, char* argv[]) {
 	OptionsMenu optionsMenu(*gameDisplayController.getWindow());
 	PauseMenu pauseMenu(*gameDisplayController.getWindow());
 	GameOver gameOverMenu(*gameDisplayController.getWindow());
-	MultiplayerMenu multiplayerMenu(*gameDisplayController.getWindow());
+	MultiplayerMenu multiplayerMenu(*gameDisplayController.getWindow(),gameDisplayController);
 	StoryModeMenu storyModeMenu(*gameDisplayController.getWindow());
 	DifficultyMenu difficultyMenu(*gameDisplayController.getWindow());
 	GameInterface gameInterface(*gameDisplayController.getWindow());
@@ -98,7 +96,6 @@ int main(int argc, char* argv[]) {
 		case GameDisplayController::GameState::GAME_OVER:
 			gameDisplayController.getWindow()->setView(gameDisplayController.menuView);
 			gameOverMenu.menuActions(gameDisplayController, game);
-			//gameOverMenu.checkUserPauseActions(gameDisplayController);
 			break;
 
 
