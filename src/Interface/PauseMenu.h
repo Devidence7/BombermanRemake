@@ -98,6 +98,8 @@ private:
 		case ButtonActions::QUIT:
 			window->close();
 			break;
+		default:
+			break;
 		}
 	}
 

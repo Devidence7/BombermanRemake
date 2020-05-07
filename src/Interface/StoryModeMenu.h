@@ -16,8 +16,16 @@ class StoryModeMenu {
 	enum ButtonActions {
 		SINGLEPLAYER,
 		COOP,
+		EASYLEVEL,
+		NORMALLEVEL,
+		HARDLEVEL,
         BACK,
 		QUIT
+	};
+
+	enum MenuState{
+		MAIN,
+		NUMPLAYERS
 	};
 
 	sf::Texture texture;
@@ -26,6 +34,7 @@ class StoryModeMenu {
 	sf::RectangleShape menuBackgroundShadow;
 	sf::RectangleShape menuBackgroundShadow1;
 	sf::RectangleShape menuBackgroundShadow2;
+	StoryModeMenu::MenuState previousMenu;
 
 	void createBackgroundMenu(sf::RenderWindow& window) {
 		menu->setPosition(sf::Vector2f((int)window.getSize().x / 2 - (int)menu->getSize().x / 2, (int)window.getSize().y / 2 - (int)menu->getSize().y / 2));
@@ -50,7 +59,7 @@ class StoryModeMenu {
 
 public:
 	StoryModeMenu(sf::RenderWindow& window) {
-		menu = new GameGUI::Menu(window);
+		previousMenu=MenuState::MAIN;
 
 		texture.loadFromFile("../textures/interface/Background_orange_squares.png");
 		texture.setRepeated(true);
@@ -58,13 +67,8 @@ public:
 		background.setTexture(texture);
 		background.setScale(sf::Vector2f(2, 2));
 		background.setTextureRect({ 0, 0, (int)window.getSize().x, (int)window.getSize().y });
+		createNumPlayersMenu(window);
 
-		menu->addButton("                1 jugador               ", ButtonActions::SINGLEPLAYER);
-		menu->addButton("                2 jugadores                 ", ButtonActions::COOP);
-		menu->addButton("            Ir al menu principal       ", ButtonActions::BACK);
-		menu->addButton("                    Salir                    ", ButtonActions::QUIT);
-
-		createBackgroundMenu(window);
 	}
 
 private:
@@ -72,28 +76,90 @@ private:
 		int id = menu->onEvent(event);
 		switch (id) {
 		case ButtonActions::SINGLEPLAYER:
-        game.gameOptions.numPlayers=1;
+			previousMenu=MenuState::NUMPLAYERS;
+        	game.gameOptions.numPlayers=1;
+			createDifficultyMenu(*window);
 
-			gameDisplay.setGameState(GameDisplayController::GameState::DIFFICULTY);
+			
 			break;
 
 		case ButtonActions::COOP:
-        game.gameOptions.numPlayers=2;
-        	gameDisplay.setGameState(GameDisplayController::GameState::DIFFICULTY);
+			previousMenu=MenuState::NUMPLAYERS;
+        	game.gameOptions.numPlayers=2;
+			createDifficultyMenu(*window);
+        	
 					
 			break;
-			
-		case ButtonActions::BACK:
-			gameDisplay.setGameState(GameDisplayController::GameState::MAIN_MENU);
+
+		case ButtonActions::EASYLEVEL:
+
+            game.gameOptions.difLevel=1;
+			previousMenu=MenuState::MAIN;
+				createNumPlayersMenu(*window);
+			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			break;
+
+		case ButtonActions::NORMALLEVEL:
+            game.gameOptions.difLevel=1.5;
+			previousMenu=MenuState::MAIN;
+				createNumPlayersMenu(*window);
+			createNumPlayersMenu(*window);
+        	gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+					
 			break;
 				
-		case ButtonActions::QUIT:
+		case ButtonActions::HARDLEVEL:
+            game.gameOptions.difLevel=1.75;
+			previousMenu=MenuState::MAIN;
+				createNumPlayersMenu(*window);
+			//OptionsMenu::lastGameStateOptionsMenu = GameDisplayController::GameState::MULTIPLAYER_MENU;
+			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			break;
+		
+
+			
+		case ButtonActions::BACK:
+		switch(previousMenu){
+			case MAIN:
+				gameDisplay.setGameState(GameDisplayController::GameState::MAIN_MENU);
+				break;
+			case NUMPLAYERS:
+				previousMenu=MenuState::MAIN;
+				createNumPlayersMenu(*window);
+				break;
+			default:
+				break;		
+		}
+		break;
+
+			case ButtonActions::QUIT:
 			window->close();
 			break;
 		}
 	}
 
+	void createDifficultyMenu(sf::RenderWindow& window){
+		menu = new GameGUI::Menu(window);
+		menu->addButton("                Facil               ", ButtonActions::EASYLEVEL);
+		menu->addButton("                Normal                 ", ButtonActions::NORMALLEVEL);
+		menu->addButton("                Dificil                ", ButtonActions::HARDLEVEL);
+		menu->addButton("            Atras       ", ButtonActions::BACK);
+
+		createBackgroundMenu(window);
+	}
+
+
+	void createNumPlayersMenu(sf::RenderWindow& window){
+		menu = new GameGUI::Menu(window);
+		menu->addButton("                1 jugador               ", ButtonActions::SINGLEPLAYER);
+		menu->addButton("                2 jugadores                 ", ButtonActions::COOP);
+		menu->addButton("            		Atras       ", ButtonActions::BACK);
+		createBackgroundMenu(window);
+	}
+
 	void draw(sf::RenderWindow& window) {
+		
+
 		window.draw(background);
 
 		window.draw(menuBackgroundShadow2);
@@ -108,8 +174,8 @@ public:
 	void menuActions(GameDisplayController& gameDisplay, Game& game) {
 		// Manage window events and pass a callback to manage this menu buttons
 		gameDisplay.manageGameInterface(gameDisplay, std::bind(&StoryModeMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
-		if (gameDisplay.pauseMenuReprocessDisplay) {
-			gameDisplay.pauseMenuReprocessDisplay = false;
+		if (gameDisplay.storyReprocessDisplay) {
+			gameDisplay.storyReprocessDisplay = false;
 			createBackgroundMenu(*gameDisplay.getWindow());
 		}
 		draw(*gameDisplay.getWindow());

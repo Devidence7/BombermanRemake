@@ -72,10 +72,6 @@ int main(int argc, char* argv[]) {
 			multiplayerMenu.menuActions(gameDisplayController, game);
 			break;
 
-
-		case GameDisplayController::GameState::DIFFICULTY:
-			difficultyMenu.menuActions(gameDisplayController, game);
-			break;
 		
 		case GameDisplayController::GameState::STORY_MENU:
 			storyModeMenu.menuActions(gameDisplayController, game);

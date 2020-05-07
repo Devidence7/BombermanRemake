@@ -26,8 +26,12 @@ private:
 	// Dim level map:
 	int dimY = 15;
 	int dimX = 25;
+	int stage=1;
+	int timeLeft = 299;
+	int timeToShow;
 	// Initialize textures
 	TextureStorage textureStorage;
+	int numEnemigos=7;
 	//MainMenu mainMenu;
 /*enum dificultad{
 	EASY,
@@ -42,7 +46,8 @@ public:
 	struct GameOptions {
 	
 		int numPlayers;
-	//	double difLevel;
+		double difLevel;
+		
 		
 	};
 	GameOptions gameOptions;
@@ -61,10 +66,12 @@ public:
 		break;
 	}
 } */
-Game(){
+/*Game(){
 	Enemies::insertarEnemigos(dimX, dimY);
-}
-
+}*/
+	int gameTime(){
+		return timeLeft;
+	}
 
 	void insertPlayers(UserKeyPress &userKeyPress, int numPlayers) {
 		for (int i = 0; i < numPlayers; i++) {
@@ -72,13 +79,15 @@ Game(){
 		}
 	}
 
-	void insertEnemies(int numEnemigos){
+	/*void insertEnemies(int numEnemigos){
 		Enemies::insertarEnemigos(dimX, dimY);
-	}
+	}*/
 
 	void startNewGame(sf::RenderWindow& window, GameDisplayController &gameDisplay){
 		//	cout<<gameOptions.numPlayers<<endl;
-		//Enemies::insertarEnemigos(dimX, dimY);
+		int numEnemies=numEnemigos*gameOptions.difLevel*(stage/0.75); 
+		cout<<numEnemies<<endl;
+		Enemies::insertarEnemigos(dimX, dimY,numEnemies);
 		//insertEnemies(7);
 		level = new Level(dimX, dimY);
 		//Enemies::insertarEnemigos(dimX, dimY);
@@ -97,7 +106,7 @@ Game(){
 
 	void restartGame(sf::RenderWindow& window,GameDisplayController &gameDisplay){
 		deleteMap();
-		Enemies::insertarEnemigos(dimX, dimY);
+		Enemies::insertarEnemigos(dimX, dimY,numEnemigos*gameOptions.difLevel*(stage/0.75));
 		startNewGame(window,gameDisplay);
 		
 	}
@@ -212,6 +221,10 @@ Game(){
 
 		//Update camera:
 		moveCamera(gameDisplay);
+			timeToShow = timeLeft -GameTime::getTimeNow();;
+		if (timeToShow <= 0) {
+			gameDisplay.setGameState(GameDisplayController::GameState::GAME_OVER);
+		}
 	}
 
 	void drawPlayers(sf::RenderWindow& w) {

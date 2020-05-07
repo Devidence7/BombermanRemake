@@ -48,6 +48,8 @@ public:
 	bool optionsMenuReprocessDisplay = false;
 	bool pauseMenuReprocessDisplay = false;
 	bool gameOverReprocessDisplay = false;
+	bool multiplayerReprocessDisplay = false;
+	bool storyReprocessDisplay = false;
 
 	
 	/**
@@ -132,6 +134,8 @@ public:
 		optionsMenuReprocessDisplay = true;
 		pauseMenuReprocessDisplay = true;
 		gameOverReprocessDisplay=true;
+		multiplayerReprocessDisplay = true;
+		storyReprocessDisplay = true;
 	}
 
 	void updateCamera() {

@@ -138,56 +138,81 @@ private:
 			break;
 
 		case ButtonActions::PLVSIA:
-        
+			previousMenu=MenuState::MAIN;
+			createNumPlaySelection(*window,gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			break;
 
 		case ButtonActions::PLVSPL:
+			previousMenu=MenuState::MAIN;
+			createNumPlaySelection(*window,gameDisplay);
         	gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 					
 			break;
 				
 		case ButtonActions::PL12IA:
+			previousMenu=MenuState::MAIN;
+			createNumPlaySelection(*window,gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			break;
 
         case ButtonActions::PL21IA:
+			previousMenu=MenuState::MAIN;
+			createNumPlaySelection(*window,gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			break;
 
         case ButtonActions::PL13IA:
+			previousMenu=MenuState::MAIN;
+			createNumPlaySelection(*window,gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			break;
         case ButtonActions::PL22IA:
+			previousMenu=MenuState::MAIN;
+			createNumPlaySelection(*window,gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			break;
 
 		
 		case ButtonActions::PL1VS2IA:
+			previousMenu=MenuState::MAIN;
+			createNumPlaySelection(*window,gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			break;
 
         case ButtonActions::PLVSPLIA:
+			previousMenu=MenuState::MAIN;
+			createNumPlaySelection(*window,gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			break;
 
         case ButtonActions::PL2VS1IA:
+			previousMenu=MenuState::MAIN;
+			createNumPlaySelection(*window,gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			break;
 
         //4 players
 
         case ButtonActions::PL1VS3IA:
+			previousMenu=MenuState::MAIN;
+			createNumPlaySelection(*window,gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			break;
         case ButtonActions::PLVSPL2IA:
+			previousMenu=MenuState::MAIN;
+			createNumPlaySelection(*window,gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			break;
 
         case ButtonActions::PL2VS2IA:
+			previousMenu=MenuState::MAIN;
+			createNumPlaySelection(*window,gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			break;
         case ButtonActions::PLIAVSPLIA:
+			previousMenu=MenuState::MAIN;
+			createNumPlaySelection(*window,gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			break;
 
@@ -318,8 +343,8 @@ public:
 	void menuActions(GameDisplayController& gameDisplay, Game& game) {
 		// Manage window events and pass a callback to manage this menu buttons
 		gameDisplay.manageGameInterface(gameDisplay, std::bind(&MultiplayerMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
-		if (gameDisplay.pauseMenuReprocessDisplay) {
-			gameDisplay.pauseMenuReprocessDisplay = false;
+		if (gameDisplay.multiplayerReprocessDisplay) {
+			gameDisplay.multiplayerReprocessDisplay = false;
 			createBackgroundMenu(*gameDisplay.getWindow());
 		}
 		draw(*gameDisplay.getWindow());

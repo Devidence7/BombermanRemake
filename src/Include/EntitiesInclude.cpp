@@ -47,8 +47,14 @@ bool Enemies::cehckSomeCollision(Entity_ptr e){
 }
 
 std::vector<Enemy_ptr> Enemies::enemies;
-void Enemies::insertarEnemigos(int dimX, int dimY) {
-	Enemy_ptr e1 = std::make_shared<EnemyEntity>(Balloon());
+
+void Enemies::insertarEnemigos(int dimX, int dimY,int numEnemies) {
+	std::vector<Enemy_ptr> a(numEnemies);
+	for (int i=0;i<numEnemies;i++){
+		a[i]=std::make_shared<EnemyEntity>(Balloon());
+		enemies.push_back(a[i]);
+	}
+	/*Enemy_ptr e1 = std::make_shared<EnemyEntity>(Balloon());
 	Enemy_ptr e2 = std::make_shared<EnemyEntity>(Ice());
 	Enemy_ptr e3 = std::make_shared<EnemyEntity>(Barrel());
 	Enemy_ptr e4 = std::make_shared<EnemyEntity>(Coin());
@@ -61,7 +67,7 @@ void Enemies::insertarEnemigos(int dimX, int dimY) {
 	enemies.push_back(e4);
 	enemies.push_back(e5);
 	enemies.push_back(e6);
-	enemies.push_back(e7);
+	enemies.push_back(e7);*/
 
 	for (Enemy_ptr e : enemies) {
 		int x, y;
