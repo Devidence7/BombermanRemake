@@ -36,8 +36,8 @@ public:
         
        
         time.setFont(font);
-        //time.setFillColor(sf::Color::White);
-      time.setColor(sf::Color::White);
+        time.setFillColor(sf::Color::White);
+      //time.setColor(sf::Color::White);
         time.setString(to_string(timeLeft/60)+":"+to_string(timeLeft%60));
         time.setPosition(container.getPosition().x+(container.getSize().x/2)-100,(container.getPosition().y+7.5));
         time.setScale(0.5,0.5);
@@ -57,8 +57,8 @@ public:
             
 
              lives[i].setFont(font);
-            // lives[i].setFillColor(sf::Color::White);
-            lives[i].setColor(sf::Color::White);
+             lives[i].setFillColor(sf::Color::White);
+            //lives[i].setColor(sf::Color::White);
             lives[i].setString("X"+to_string(PLayers::getVectorPlayer()[i]->getLives()));
             lives[i].setPosition(PLayers::getVectorPlayer()[i]->playerHead2.getPosition().x+35,PLayers::getVectorPlayer()[i]->playerHead2.getPosition().y+7.5);
              lives[i].setScale(0.5,0.5);
