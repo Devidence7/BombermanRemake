@@ -69,10 +69,8 @@ void EnemyEntity::drawMovements(sf::RenderWindow &w)
 
 void EnemyEntity::updateVelocity()
 {
-	std::cout << "Update Velocity\n";
 	if (onCollision)
 	{
-		//movements = generateRandomPath(getMapCoordinates(getCenterPosition()));
 		this->generateMovements();
 		if(movements.size() < 1){
 			std::cout << "ERRORR movimientos vacios no esperados\n";
@@ -86,7 +84,6 @@ void EnemyEntity::updateVelocity()
 	{ //Si esta en posicions
 		if (movements.size() < 1)
 		{
-			//movements = generateRandomPath(getMapCoordinates(getCenterPosition()));
 			this->generateMovements();
 		}
 		currentMovement = movements.front();
