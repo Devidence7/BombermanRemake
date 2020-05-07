@@ -51,6 +51,7 @@
         "random": "cpp",
         "string_view": "cpp",
         "codecvt": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "set": "cpp"
     }
 }

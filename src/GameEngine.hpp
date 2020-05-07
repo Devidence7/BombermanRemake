@@ -84,6 +84,10 @@ public:
 	}*/
 
 	void startNewGame(sf::RenderWindow& window, GameDisplayController &gameDisplay){
+		// Restart time parameters
+		GameTime::startGameTime();
+		GameMusic::playWorld1Music();
+
 		//	cout<<gameOptions.numPlayers<<endl;
 		int numEnemies=numEnemigos*gameOptions.difLevel*(stage/0.75); 
 		Enemies::insertarEnemigos(dimX, dimY,numEnemies,stage);
@@ -98,9 +102,6 @@ public:
 		sf::View view(sf::FloatRect(0.f, 0.f, pixelsX, pixelsY));
 		view.move(sf::Vector2f(0, -48));
 		window.setView(view);
-
-		GameTime::startGameTime();
-		GameMusic::playWorld1Music();
 	}
 
 	void restartGame(sf::RenderWindow& window,GameDisplayController &gameDisplay){
@@ -176,7 +177,6 @@ public:
 			sf::Vector2f zoomMoreRadius = sf::Vector2f(zoomLessRadius.x * 2, zoomLessRadius.y * 2);
 			sf::Vector2f squareRadius = sf::Vector2f(zoomLessRadius.x * 1.5, zoomLessRadius.y * 1.5);
 			double zoomValue = gameDisplay.getWindow()->getSize().x / gameDisplay.camera.getSize().x;
-			cout << zoomValue << endl;
 
 			for (Player_ptr player : PLayers::getVectorPlayer()) {
 				sf::Vector2f distCenter2Player = sf::Vector2f(gameDisplay.getWindow()->mapCoordsToPixel(player->getCenterPosition()) - gameDisplay.getWindow()->mapCoordsToPixel(gameDisplay.camera.getCenter()));
