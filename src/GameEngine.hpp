@@ -177,7 +177,6 @@ public:
 			sf::Vector2f zoomMoreRadius = sf::Vector2f(zoomLessRadius.x * 2, zoomLessRadius.y * 2);
 			sf::Vector2f squareRadius = sf::Vector2f(zoomLessRadius.x * 1.5, zoomLessRadius.y * 1.5);
 			double zoomValue = gameDisplay.getWindow()->getSize().x / gameDisplay.camera.getSize().x;
-			cout << zoomValue << endl;
 
 			for (Player_ptr player : PLayers::getVectorPlayer()) {
 				sf::Vector2f distCenter2Player = sf::Vector2f(gameDisplay.getWindow()->mapCoordsToPixel(player->getCenterPosition()) - gameDisplay.getWindow()->mapCoordsToPixel(gameDisplay.camera.getCenter()));
