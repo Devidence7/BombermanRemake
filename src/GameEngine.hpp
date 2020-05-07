@@ -79,7 +79,7 @@ Game(){
 	void startNewGame(sf::RenderWindow& window, GameDisplayController &gameDisplay){
 		//	cout<<gameOptions.numPlayers<<endl;
 		//Enemies::insertarEnemigos(dimX, dimY);
-		insertEnemies(7);
+		//insertEnemies(7);
 		level = new Level(dimX, dimY);
 		//Enemies::insertarEnemigos(dimX, dimY);
 		insertPlayers(*gameDisplay.userKeyPress, gameOptions.numPlayers);
