@@ -381,6 +381,9 @@ void Level::checkAndFixCollisions(Entity_ptr eCollisioning)
 	sf::Vector2f centerPosition = eCollisioning->getCenterPosition();
 	sf::Vector2i position = getMapCoordinates(centerPosition);
 	Entity_ptr currentPos;
+	if(!Level::isValidCell(position)){
+		std::cout << "Position invalida\n";
+	}
 	if ((currentPos = getCellMiniMapObject(position)) != nullptr)
 	{
 		//getOrDie(*eCollisioning, currentPos);

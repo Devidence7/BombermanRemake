@@ -20,13 +20,16 @@ EnemyEntity::EnemyEntity() : Entity()
 }
 
 void EnemyEntity::startMovement(){
-	generateRandomPath();
+	//generateRandomPath();
+	/*generateRandomPath(getMapCoordinates(getCenterPosition()), movements);
 	
+	//this->generateMovements();
 	currentMovement = movements.front();
 	movements.pop_front();
 	velocity.x = baseSpeed * currentMovement.getAction().x;
 	velocity.y = baseSpeed * currentMovement.getAction().y;
-	updateVelocity();
+	updateVelocity();*/
+	setCollision();
 }
 
 void EnemyEntity::generateMovements()
@@ -37,20 +40,25 @@ void EnemyEntity::generateMovements()
 		sf::Vector2f posPlayer = player->getCenterPosition();
 		objetives.push_back(getMapCoordinates(posPlayer));
 	}
-
-	movements = pathFinding(getMapCoordinates(this->getCenterPosition()), objetives);
+	bool f;
+	movements.clear();
+	generatePath(getMapCoordinates(this->getCenterPosition()), objetives, rangoVision, movements);
+	//movements = pathFinding(getMapCoordinates(this->getCenterPosition()), objetives, f);
+	if(movements.size() < 1){
+		generateRandomPath(getMapCoordinates(getCenterPosition()), movements);
+	}
 }
 
 void EnemyEntity::drawMovements(sf::RenderWindow &w)
 {
 	sf::FloatRect dim = this->getGlobalBounds();
-	for (ANode &an : movements)
+	for (ANode_Ptr &an : movements)
 	{
 		sf::RectangleShape rece;
 		rece.setSize(sf::Vector2f((dim.width / 2), (dim.height / 2)));
 		rece.setFillColor(colorPath);
-		sf::Vector2i posi = an.getPosition();
-		sf::Vector2f posf = MapCoordinates2GlobalCoorCenter(an.getPosition());
+		sf::Vector2i posi = an->getPosition();
+		sf::Vector2f posf = MapCoordinates2GlobalCoorCenter(an->getPosition());
 		//std::cout << "pos " << posi.x << "( " << posf.x<< ")" << posi.y << "( " << posf.y<< ")" << std::endl;
 		posf -= sf::Vector2f(dim.width / 4, dim.height / 4);
 		rece.setPosition(posf);
@@ -58,7 +66,7 @@ void EnemyEntity::drawMovements(sf::RenderWindow &w)
 	}
 }
 
-ANode EnemyEntity::generateRandomMovement(sf::Vector2i fromPosition)
+/*ANode EnemyEntity::generateRandomMovement(sf::Vector2i fromPosition)
 {
 	sf::Vector2i direction;
 	int mul = Random::getIntNumberBetween(0, 1);
@@ -91,25 +99,32 @@ void EnemyEntity::generateRandomPath()
 		movements.push_back(node);
 	}
 }
+*/
 
 void EnemyEntity::updateVelocity()
 {
+	std::cout << "Update Velocity\n";
 	if (onCollision)
 	{
-		generateRandomPath();
+		//movements = generateRandomPath(getMapCoordinates(getCenterPosition()));
+		this->generateMovements();
+		if(movements.size() < 1){
+			std::cout << "ERRORR movimientos vacios no esperados\n";
+		}
 		currentMovement = movements.front();
 		movements.pop_front();
 		//currentMovement.inverseDirection();
 		onCollision = false;
 	}
-	else if (checkArrivePosition(this->getCenterPosition(), currentMovement.getPosition(), currentMovement.getAction()))
+	else if (checkArrivePosition(this->getCenterPosition(), currentMovement->getPosition(), currentMovement->getAction()))
 	{ //Si esta en posicions
-		currentMovement = movements.front();
-		movements.pop_front();
 		if (movements.size() < 1)
 		{
-			generateRandomPath();
+			//movements = generateRandomPath(getMapCoordinates(getCenterPosition()));
+			this->generateMovements();
 		}
+		currentMovement = movements.front();
+		movements.pop_front();
 	}
 
 	double moveTime = 0;
@@ -119,8 +134,13 @@ void EnemyEntity::updateVelocity()
 	}
 	lastMovementTime = GameTime::getTimeNow();
 
-	velocity.x = baseSpeed * currentMovement.getAction().x * moveTime;
-	velocity.y = baseSpeed * currentMovement.getAction().y * moveTime;
+	if(currentMovement->getAction().x > 1 || currentMovement->getAction().y >1 ){
+		std::cout<< "Error en accion\n";
+		volatile int x = 0;
+	}
+
+	velocity.x = baseSpeed * currentMovement->getAction().x ;//* moveTime;
+	velocity.y = baseSpeed * currentMovement->getAction().y ;//* moveTime;
 	//std::cout << "Vel: " << velocity.x << " " << velocity.y << std::endl;
 
 	move(velocity.x, velocity.y);

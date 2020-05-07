@@ -17,7 +17,7 @@ const int MAX = 20*30;
 template <typename T>
 class Heap{
 	int tam = 0;
-	T * elementos[MAX];
+	T elementos[MAX];
 
 	public:
 		Heap() : tam (0){}
@@ -26,16 +26,16 @@ class Heap{
 		int tamanyo() {return this->tam;}
 		
 		//Añade elemento 'e' en el vector, siguiendo el algoritmo del monticulo
-		void add(T * e){
+		void add(T e){
 			this->elementos[this->tam] = e;
 			for (int i = this->tam++; i > 0 && *this->elementos[i] < *this->elementos[(i-1)/2]; i = (i-1)/2){
-				T * aux = this->elementos[i];
+				T aux = this->elementos[i];
 				this->elementos[i] = this->elementos[(i-1)/2];
 				this->elementos[(i-1)/2] = aux;
 			}
 		}
 
-		bool containsNode(const T * t){
+		bool containsNode(const T t){
 			bool contains = false;
 			for(int i = 0; i < tam && !contains; i++){
 				contains = *t == *elementos[i];
@@ -44,8 +44,8 @@ class Heap{
 		}
 
 		//Duelve el primer elemento del monticulo y lo elimina del mismo, siguiendo el algoritmo del monticulo
-		T * pop(){
-			T * ret = this->elementos[0];
+		T pop(){
+			T ret = this->elementos[0];
 			this->tam--;
 			this->elementos[0] = this->elementos[this->tam];
 			int hijo = 1;
@@ -57,7 +57,7 @@ class Heap{
 				if( *this->elementos[hijo] >= *this->elementos[i]){
 					break;
 				}
-				T * aux = this->elementos[hijo];
+				T aux = this->elementos[hijo];
 				this->elementos[hijo] = this->elementos[i];
 				this->elementos[i] = aux;
 			}
