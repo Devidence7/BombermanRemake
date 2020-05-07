@@ -298,7 +298,7 @@ void Level::draw(sf::RenderWindow &w)
 	}
 }
 
-bool Level::createFire(int type, int posX, int posY)
+bool Level::createFire(int type, int posX, int posY, Player_ptr p)
 {
 	// Get the object in cell
 	Entity_ptr e = getCellMiniMapObject(getMapCoordinates(posX, posY));
@@ -307,12 +307,19 @@ bool Level::createFire(int type, int posX, int posY)
 	{
 		e->setExpiredEntity();
 		addEntity(e);
+			//TODO Asignar puntaciones
+		if(std::dynamic_pointer_cast<EnemyEntity>(e) != nullptr){
+			p->incrementScore(0);
+		}else if(std::dynamic_pointer_cast<Player_ptr>(e) != nullptr){
+			p->incrementScore(0);
+		}
+		p->incrementScore(50);
 	}
 
 	if (!e || e->getFireCanGoThroght())
 	{
 		e = nullptr;
-		Entity_ptr f = std::make_shared<Fire>(Fire(type));
+		Entity_ptr f = std::make_shared<Fire>(Fire(p, type));
 		f->setPosition(posX, posY);
 		addNewItem(f);
 		//addEntity(f);
@@ -325,14 +332,14 @@ bool Level::createFire(int type, int posX, int posY)
 void Level::createFires(Bomb &b)
 {
 	sf::Vector2f pos = b.getPosition();
-
+	Player_ptr p2score = b.player2Score;
 	// Central:
-	createFire(0, pos.x, pos.y);
+	createFire(0, pos.x, pos.y, p2score);
 	// Down:
 	for (int i = 1; i <= b.bombPower; i++)
 	{
 		int fireType = i == b.bombPower ? 2 : 1;
-		if (createFire(fireType, pos.x, pos.y + 48 * i))
+		if (createFire(fireType, pos.x, pos.y + 48 * i, p2score))
 		{
 			break;
 		}
@@ -341,7 +348,7 @@ void Level::createFires(Bomb &b)
 	for (int i = 1; i <= b.bombPower; i++)
 	{
 		int fireType = i == b.bombPower ? 3 : 1;
-		if (createFire(fireType, pos.x, pos.y - 48 * i))
+		if (createFire(fireType, pos.x, pos.y - 48 * i, p2score))
 		{
 			break;
 		}
@@ -350,7 +357,7 @@ void Level::createFires(Bomb &b)
 	for (int i = 1; i <= b.bombPower; i++)
 	{
 		int fireType = i == b.bombPower ? 6 : 4;
-		if (createFire(fireType, pos.x - 48 * i, pos.y))
+		if (createFire(fireType, pos.x - 48 * i, pos.y, p2score))
 		{
 			break;
 		}
@@ -359,7 +366,7 @@ void Level::createFires(Bomb &b)
 	for (int i = 1; i <= b.bombPower; i++)
 	{
 		int fireType = i == b.bombPower ? 5 : 4;
-		if (createFire(fireType, pos.x + 48 * i, pos.y))
+		if (createFire(fireType, pos.x + 48 * i, pos.y, p2score))
 		{
 			break;
 		}
@@ -605,9 +612,11 @@ bool Level::addBomb(Player_ptr p)
 	sf::Vector2f currentPos = Level::getMapCellCorner(p->getCenterPosition());
 	if (Level::getCellMiniMapObject(getMapCoordinates(currentPos)) == nullptr)
 	{
-		Entity_ptr b = std::make_shared<Bomb>(Bomb(p));
+		Bomb_ptr b = std::make_shared<Bomb>(Bomb(p));
 		b->setPosition(currentPos);
 		Level::addNewItem(b);
+		b->me = b;
+		p->AssignBomb(b);
 		return true;
 	}
 	return false;
@@ -717,6 +726,7 @@ void Level::ThrowBomb(Player_ptr p, Bomb_ptr b)
 		b->setObjetive(MapCoordinates2GlobalCoorCorner(fallPosition));
 		b->setOnFlight(normalize(dirThrow));
 	}
+	b->player2Score = p;
 }
 
 

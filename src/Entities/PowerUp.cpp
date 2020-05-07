@@ -159,7 +159,7 @@ void GrabBombsPowerUp::setPlayerStatus(PlayerEntity& pe) {
 
 KickBombsPowerUp::KickBombsPowerUp(sf::Vector2f pos) : PowerUp() {
 	powerUpType = kickBombs;
-
+	
 	// Set position
 	setPosition(pos);
 

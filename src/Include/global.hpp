@@ -59,7 +59,7 @@ enum PowerUpType
 	kickBombs = 6,
 	grabBombs = 7,
 	passBombs = 12,
-	extraLife = 14,
+	extraLife = 17,
 	moreTime = 18,
 	lessSpeed = 19
 };

@@ -61,7 +61,7 @@ public:
 		background.setColor(sf::Color(255, 255, 0, 5));
 		background.setTexture(texture);
 		background.setScale(sf::Vector2f(2, 2));
-		background.setTextureRect({ 0, 0, (int)window.getSize().x, (int)window.getSize().y });
+		background.setTextureRect({ window.getPosition().x, window.getPosition().y, (int)window.getSize().x, (int)window.getSize().y });
 
 		menu->addButton("                Reanudar                ", ButtonActions::RESUME);
 		menu->addButton("                 Guardar                 ", ButtonActions::SAVE);

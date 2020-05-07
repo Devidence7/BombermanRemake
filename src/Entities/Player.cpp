@@ -1,6 +1,7 @@
 #include "../Map/Level.hpp"
 
 PlayerEntity::PlayerEntity(PlayerControls& pControls) : Entity(), playerControls(pControls) {
+
 	isFireDestroyable = true;
 	fireCanGoThroght = true;
 	collisioner = false;
@@ -42,6 +43,7 @@ int PlayerEntity::getPowerOfBombs() {
 
 void PlayerEntity::setExpiredEntity() {
 	if (!expiredEntity) {
+		this->BombTaked = nullptr;
 		expiredEntity = true;
 		if(!dead){
 		    currentFrame = 0;
@@ -158,7 +160,9 @@ void PlayerEntity::realizeActions()
 		case ActionsAvalible::KICK_BOM:
 		//	Level::canKickBomb(me);
 			break;
-
+		case ActionsAvalible::REMOTE_BOMB:
+			if(BombsAsociated.size() > 0)
+				BombsAsociated.front()->setExpiredEntity();
 		default:
 			break;
 		}
@@ -281,3 +285,10 @@ void PlayerEntity::invertControls() {
 	controlsInverted = true;
 	lastControlInvertedTime = GameTime::getTimeNow();
 }
+
+
+void PlayerEntity::bombExploted(Entity_ptr b){
+	BombsAsociated.remove(b);
+	numOfBombs++;
+}
+

@@ -5,14 +5,15 @@
 Bomb::Bomb(std::shared_ptr<PlayerEntity> p) : Entity()
 {
 	player = p;
+	player2Score = p;
 	baseSpeed = 25; //TODO: HACER BIEN
 	this->bombPower = p->getPowerOfBombs();
 	isFireDestroyable = true;
 	fireCanGoThroght = false;
+	isRemoteBomb = p->getActionAssigned() == ActionsAvalible::REMOTE_BOMB;
 
 	explosionCounter = GameTime::getTimeNow();
 	spriteCounter = GameTime::getTimeNow();
-
 	// Texture Controller:
 	bombTexture = &TextureStorage::getBombTexture();
 	// Set starting sprite
@@ -25,7 +26,7 @@ void Bomb::setExpiredEntity()
 {
 	GameSounds::playBombSound();
 	expiredEntity = true;
-	player->numOfBombs += 1;
+	player->bombExploted(this->me);
 }
 
 bool Bomb::isColliderWith(Entity_ptr eCollisioning){
@@ -62,7 +63,7 @@ void Bomb::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType col
 void Bomb::update()
 {
 	// If it is time to explote:
-	if (GameTime::getTimeNow() - explosionCounter > explosionTime && !onFlight && canExplote)
+	if ((!isRemoteBomb && GameTime::getTimeNow() - explosionCounter > explosionTime || signalExplote) && !onFlight && canExplote )
 	{
 		setExpiredEntity();
 		setPosition(Level::getMapCellCorner(getCenterPosition()));//Asegurarse de que se centra antes de esplotar
@@ -99,8 +100,9 @@ sf::FloatRect Bomb::getGlobalBounds() const
 	return sf::FloatRect(dim.left + 6, dim.top + 3, dim.width - 6, dim.height - 6);
 }
 
-Fire::Fire(int type ) : Entity()
+Fire::Fire(Player_ptr p, int type ) : Entity()
 {
+	player2Score = p;
 	spriteStartTime = GameTime::getTimeNow();
 	spriteLastFrameTime = GameTime::getTimeNow();
 	explosionType = type;
@@ -116,6 +118,8 @@ Fire::Fire(int type ) : Entity()
 void Fire::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT)
 {
 	eCollisioning->setExpiredEntity();
+	//TODO: Check if have increment score
+	player2Score->incrementScore(0);
 }
 
 void Fire::update()

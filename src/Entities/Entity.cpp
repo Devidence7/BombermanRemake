@@ -222,3 +222,15 @@ void Entity::drawEntityHitbox(sf::RenderWindow &w)
 	lines[1].color = sf::Color::Red;
 	w.draw(lines);
 }
+
+
+void Entity::bombExploted(Entity_ptr b){
+	BombsAsociated.remove(b);
+}
+
+void Entity::changeBombs2time(){
+	for(Entity_ptr e : BombsAsociated){
+		Bomb_ptr b = std::dynamic_pointer_cast<Bomb>(e);
+		b->isRemoteBomb = false;
+	}
+}

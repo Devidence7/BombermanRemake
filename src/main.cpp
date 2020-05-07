@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
 
 		switch (gameDisplayController.gameState) {
 		case GameDisplayController::GameState::MAIN_MENU:
-		
+			gameDisplayController.getWindow()->setView(gameDisplayController.menuView);
 			gameMainMenu.menuActions(gameDisplayController, game);
 			break;
 
@@ -85,18 +85,22 @@ int main(int argc, char* argv[]) {
 
 
 		case GameDisplayController::GameState::OPTIONS_MENU:
+			gameDisplayController.getWindow()->setView(gameDisplayController.menuView);
 			optionsMenu.menuActions(gameDisplayController, game);
 			break;
 
 		case GameDisplayController::GameState::PAUSE_MENU:
+			gameDisplayController.getWindow()->setView(gameDisplayController.menuView);
 			pauseMenu.menuActions(gameDisplayController, game);
 			pauseMenu.checkUserPauseActions(gameDisplayController);
 			break;
 
 		case GameDisplayController::GameState::GAME_OVER:
+			gameDisplayController.getWindow()->setView(gameDisplayController.menuView);
 			gameOverMenu.menuActions(gameDisplayController, game);
 			//gameOverMenu.checkUserPauseActions(gameDisplayController);
 			break;
+
 
 		case GameDisplayController::GameState::PLAYING:
 		
@@ -116,6 +120,8 @@ int main(int argc, char* argv[]) {
 			gameDisplayController.manageGameInterface(gameDisplayController);
 			pauseMenu.checkUserPauseActions(gameDisplayController);
 		}
+
+
 
 		// Update display window window
 		gameDisplayController.getWindow()->display();

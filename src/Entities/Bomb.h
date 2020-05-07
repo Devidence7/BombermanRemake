@@ -27,10 +27,14 @@ public:
 	const int spriteFrames = 4;
 
 	double explosionCounter;
-	const double explosionTime = 1.35;
+	const double explosionTime = 3;
 
+	bool isRemoteBomb = false;
+	bool signalExplote = false;
 	// Player which bomb is from:
 	std::shared_ptr<PlayerEntity> player;
+	std::shared_ptr<PlayerEntity> player2Score;
+	std::shared_ptr<Bomb> me;
 
 	/***********
 	 * Methods
@@ -42,6 +46,12 @@ public:
 	bool isColliderWith(std::shared_ptr<Entity> eCollisioning) override;	
 	void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) override;
 	void update();
+	void setPlayer2Score(std::shared_ptr<PlayerEntity> p){
+		player2Score = p;
+	}
+	std::shared_ptr<PlayerEntity> getPlayer2Score(){
+		return player2Score;
+	} 
 	void setOnFlight(sf::Vector2f dir, bool onf = true){
 		onFlight = onf;
 		this->velocity = sf::Vector2f(dir.x * this->baseSpeed, dir.y * this->baseSpeed);
@@ -57,6 +67,7 @@ public:
 class Fire : public Entity {
 public:
 	FireTexture* fireTexture;
+	std::shared_ptr<PlayerEntity> player2Score;
 
 	double spriteStartTime;
 	double spriteLastFrameTime;
@@ -68,7 +79,7 @@ public:
 	double expiredTime = 0.5;
 	int explosionType;
 
-	Fire(int type = 0);
+	Fire(std::shared_ptr<PlayerEntity> p, int type = 0);
 	void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) override;
 
 	void update() override;

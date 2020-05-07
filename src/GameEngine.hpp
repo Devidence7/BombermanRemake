@@ -119,12 +119,7 @@ Game(){
 	void updatePlayers( GameDisplayController& gameDisplay) {
 		int ply=1;
 		for (Player_ptr player : PLayers::getVectorPlayer()) {
-				if (player->updatePlayer()) {
-					// If there is nothing in that cell:
-					Entity_ptr b = std::make_shared<Bomb>(Bomb(player));
-					b->setPosition(level->getMapCellCorner(player->getCenterPosition()));
-					level->addNewItem(b);
-				}
+			player->updatePlayer();
 
 			//player->updatePlayer();
 			player->playerActions();
@@ -135,6 +130,69 @@ Game(){
 			}	
 			ply++;
 		}
+	}
+
+	void moveCamera(GameDisplayController& gameDisplay) {
+		if (PLayers::getVectorPlayer().size() == 1) {
+
+			sf::Vector2f distCenter2Player =  PLayers::getVectorPlayer()[0]->getCenterPosition() - gameDisplay.camera.getCenter();
+			
+			float squareRadius = 150;
+			if (distCenter2Player.x > squareRadius) {
+				gameDisplay.camera.setCenter(sf::Vector2f(gameDisplay.camera.getCenter().x + (distCenter2Player.x - squareRadius) / 20, gameDisplay.camera.getCenter().y));
+			}
+			else if (distCenter2Player.x < -squareRadius) {
+				gameDisplay.camera.setCenter(sf::Vector2f(gameDisplay.camera.getCenter().x + (distCenter2Player.x + squareRadius) / 20, gameDisplay.camera.getCenter().y));
+			}
+
+			if (distCenter2Player.y > squareRadius) {
+				gameDisplay.camera.setCenter(sf::Vector2f(gameDisplay.camera.getCenter().x, gameDisplay.camera.getCenter().y + (distCenter2Player.y - squareRadius) / 20));
+			}
+			else if (distCenter2Player.y < -squareRadius) {
+				gameDisplay.camera.setCenter(sf::Vector2f(gameDisplay.camera.getCenter().x, gameDisplay.camera.getCenter().y + (distCenter2Player.y + squareRadius) / 20));
+			}
+		}
+		else {
+			gameDisplay.getWindow()->getSize();
+			
+			sf::Vector2f zoomLessRadius = sf::Vector2f(gameDisplay.getWindow()->getSize().x / 6, gameDisplay.getWindow()->getSize().y / 6);
+			sf::Vector2f zoomMoreRadius = sf::Vector2f(zoomLessRadius.x * 2, zoomLessRadius.y * 2);
+
+			float squareRadius = zoomLessRadius.x;
+			
+			for (Player_ptr player : PLayers::getVectorPlayer()) {
+				sf::Vector2f distCenter2Player = sf::Vector2f(gameDisplay.getWindow()->mapCoordsToPixel(player->getCenterPosition()) - gameDisplay.getWindow()->mapCoordsToPixel(gameDisplay.camera.getCenter()));
+				//cout << distCenter2Player.x << "   ---   " << distCenter2Player.y << endl;
+
+				if (distCenter2Player.x > squareRadius) {
+					gameDisplay.camera.setCenter(sf::Vector2f(gameDisplay.camera.getCenter().x + (distCenter2Player.x - squareRadius) / 20, gameDisplay.camera.getCenter().y));
+				}
+				else if (distCenter2Player.x < -squareRadius) {
+					gameDisplay.camera.setCenter(sf::Vector2f(gameDisplay.camera.getCenter().x + (distCenter2Player.x + squareRadius) / 20, gameDisplay.camera.getCenter().y));
+				}
+
+				if (distCenter2Player.y > squareRadius) {
+					gameDisplay.camera.setCenter(sf::Vector2f(gameDisplay.camera.getCenter().x, gameDisplay.camera.getCenter().y + (distCenter2Player.y - squareRadius) / 20));
+				}
+				else if (distCenter2Player.y < -squareRadius) {
+					gameDisplay.camera.setCenter(sf::Vector2f(gameDisplay.camera.getCenter().x, gameDisplay.camera.getCenter().y + (distCenter2Player.y + squareRadius) / 20));
+				}
+
+				if (distCenter2Player.y > zoomMoreRadius.y || distCenter2Player.y < -zoomMoreRadius.y) {
+					gameDisplay.camera.zoom(1.005);
+				}
+				if (distCenter2Player.x > zoomMoreRadius.x || distCenter2Player.x < -zoomMoreRadius.x) {
+					gameDisplay.camera.zoom(1.005);
+				}
+
+				if ((distCenter2Player.y < zoomLessRadius.y && distCenter2Player.y > -zoomLessRadius.y) && (distCenter2Player.x < zoomLessRadius.x && distCenter2Player.x > -zoomLessRadius.x)) {
+					gameDisplay.camera.zoom(0.999);
+				}
+				
+			}
+		}
+
+		gameDisplay.updateCamera();
 	}
 
 	void update(GameDisplayController &gameDisplay) {
@@ -150,6 +208,9 @@ Game(){
 			
 			gameDisplay.setGameState(GameDisplayController::GameState::GAME_OVER);
 		}
+
+		//Update camera:
+		moveCamera(gameDisplay);
 	}
 
 	void drawPlayers(sf::RenderWindow& w) {

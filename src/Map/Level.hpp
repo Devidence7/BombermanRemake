@@ -36,7 +36,7 @@ public:
 	*/
 
 	static void draw(sf::RenderWindow &w);
-	static bool createFire(int type, int posX, int posY);
+	static bool createFire(int type, int posX, int posY, Player_ptr p);
 	static void createFires(Bomb &b);
 	static void checkAndFixCollisions(Entity_ptr eCollisioning);
 
