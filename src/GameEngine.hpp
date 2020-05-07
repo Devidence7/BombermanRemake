@@ -146,10 +146,10 @@ public:
 				}
 
 				if (distCenter2Player.y > zoomMoreRadius.y || distCenter2Player.y < -zoomMoreRadius.y) {
-					gameDisplay.camera.zoom(1.001);
+					gameDisplay.camera.zoom(1.005);
 				}
 				if (distCenter2Player.x > zoomMoreRadius.x || distCenter2Player.x < -zoomMoreRadius.x) {
-					gameDisplay.camera.zoom(1.001);
+					gameDisplay.camera.zoom(1.005);
 				}
 
 				if ((distCenter2Player.y < zoomLessRadius.y && distCenter2Player.y > -zoomLessRadius.y) && (distCenter2Player.x < zoomLessRadius.x && distCenter2Player.x > -zoomLessRadius.x)) {
