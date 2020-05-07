@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <memory>
+#include <iostream>
 #include <list>
 
 #include "../GameMaths/GeometryMaths.hpp"
@@ -37,7 +38,14 @@ protected:
 
 	sf::Vector2f positionObjetive;
 
+
 public:
+	int rangoVision = 0; // Rango de celdas cuadrada que puede ver al jugador
+	sf::Vector2i siteRespectPlayer; // Sitio respecto jugador a donde ira a buscar un camino si existe
+	int numConsecutiveMovements = 5;
+	int numMovenet = 0;
+
+
 	Entity();
 	virtual sf::Vector2f getCenterPosition();
 
@@ -83,6 +91,9 @@ public:
 	void setAction(ActionsAvalible _action){
 		if(actionAvaible == ActionsAvalible::REMOTE_BOMB && _action != actionAvaible){
 			changeBombs2time();
+		}
+		if(_action == ActionsAvalible::KICK_BOM){
+			std::cout << "Action kick bomb\n";
 		}
 		actionAvaible =_action;
 	}

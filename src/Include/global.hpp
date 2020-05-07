@@ -73,6 +73,15 @@ enum CollisionType
 	CORNER = 3,
 };
 
+enum TypeSeekIA
+{
+	OBJETIVE_POSITION = 0,
+	NEAR_POSITION = 1,	//Tratar de atajar al jugador yendo a la posicón cercana
+	FAR_POSITION = 2, //Tratar de atajar al jugador yendo a la posición lejana
+	LOKIN_POSITION = 3, //Tratar de ir dónde está mirando el jugador
+	ALL_POSIBLE_POSITION = 4, //Tratará de llegar a cualquier posicón dónde pueda ir el jugador
+};
+
 const int TOTAL_ENEMY_FRAMES = 13;
 const int THRESHOLD_CENTER_CELL = 2;
 // Debug features:
