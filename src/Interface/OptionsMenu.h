@@ -2,8 +2,9 @@
 #include <SFML/Graphics.hpp>
 #include "GUI/Theme.hpp"
 #include "GUI/GameGUI.hpp"
-#include "../Music/GameSounds.h"
+#include "../Music/GameMusic.h"
 #include "../GameEngine.hpp"
+#include "OptionsMenu.h"
 #include "GameDisplayController.h"
 
 

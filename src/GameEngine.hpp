@@ -29,12 +29,42 @@ private:
 	// Initialize textures
 	TextureStorage textureStorage;
 	//MainMenu mainMenu;
+/*enum dificultad{
+	EASY,
+	NORMAL,
+	HARD
+};*/
+
+
+
+
 public:
 	struct GameOptions {
-		//bool multiplayerGame = false;
-		int numPlayers=2;
+	
+		int numPlayers;
+	//	double difLevel;
+		
 	};
 	GameOptions gameOptions;
+
+/*	double getDificultad(dificultad d){
+	switch(d){
+		case EASY:
+			return 1;
+			break;
+		case NORMAL:
+			return 1.5;
+			break;
+		case HARD:
+			return 1.75;
+		default:
+		break;
+	}
+} */
+Game(){
+	Enemies::insertarEnemigos(dimX, dimY);
+}
+
 
 	void insertPlayers(UserKeyPress &userKeyPress, int numPlayers) {
 		for (int i = 0; i < numPlayers; i++) {
@@ -42,45 +72,48 @@ public:
 		}
 	}
 
+	void insertEnemies(int numEnemigos){
+		Enemies::insertarEnemigos(dimX, dimY);
+	}
+
 	void startNewGame(sf::RenderWindow& window, GameDisplayController &gameDisplay){
 		//	cout<<gameOptions.numPlayers<<endl;
-		level = new Level(dimX, dimY);
-		insertPlayers(*gameDisplay.userKeyPress, gameOptions.numPlayers);
-
-		//	PLayers::insertPlayers();
 		//Enemies::insertarEnemigos(dimX, dimY);
-		
-		//mainMenu(w);
-
-	//	PLayers::insertPlayers(gameOptions.numPlayers);
+		//insertEnemies(7);
+		level = new Level(dimX, dimY);
+		//Enemies::insertarEnemigos(dimX, dimY);
+		insertPlayers(*gameDisplay.userKeyPress, gameOptions.numPlayers);
+	
 		unsigned int pixelsX = window.getSize().x;
 		unsigned int pixelsY = window.getSize().y;
-		
-	//	PLayers::insertPlayers(gameOptions.numPlayers);
+			
+		sf::View view(sf::FloatRect(0.f, 0.f, pixelsX, pixelsY));
+		view.move(sf::Vector2f(0, -48));
+		window.setView(view);
 
 		GameTime::startGameTime();
 		GameMusic::playWorld1Music();
 	}
 
-	void restartGame(sf::RenderWindow& window){
-		//GameTime::startGameTime();
-			for (Player_ptr player : PLayers::getVectorPlayer()) {
+	void restartGame(sf::RenderWindow& window,GameDisplayController &gameDisplay){
+		deleteMap();
+		Enemies::insertarEnemigos(dimX, dimY);
+		startNewGame(window,gameDisplay);
 		
-				//player.reset();
-				//cout<<"holi"<<endl;
-				player->lives=3;
-		
-			}
-			
-			//	Enemies::insertarEnemigos(dimX, dimY);
-			//GameTime::startGameTime();
-		    GameMusic::playWorld1Music();
+	}
 
-			//Enemies::insertarEnemigos(dimX, dimY);
-			level->reiniciar(dimX,dimY);
-		
-		//level = new Level(dimX, dimY);
-		//startNewGame(window);
+	void deleteMap(){
+		delete level;
+		auto it = Enemies::getVectorEnemies().begin();
+		while (it != Enemies::getVectorEnemies().end()) {
+				it->reset();
+				it = Enemies::getVectorEnemies().erase(it);
+		}
+		auto it2 =  PLayers::getVectorPlayer().begin();
+		while (it2 !=  PLayers::getVectorPlayer().end()) {
+				it2->reset();
+				it2 = PLayers::getVectorPlayer().erase(it2);
+		}
 	}
 
 	void updatePlayers( GameDisplayController& gameDisplay) {
@@ -171,7 +204,7 @@ public:
 		for (Player_ptr player : PLayers::getVectorPlayer()) {
 			totalLives+=player->getLives();
 		}
-		//cout<<totalLives<<endl;
+		
 		if(totalLives==0){
 			
 			gameDisplay.setGameState(GameDisplayController::GameState::GAME_OVER);
@@ -217,17 +250,23 @@ public:
 		auto it = Enemies::getVectorEnemies().begin();
 		int counter = 0;
 		while (it != Enemies::getVectorEnemies().end()) {
+			
 			// Update the enemies.
+			cout<<"Update"<<endl;
 			(*it)->update();
+			cout<<"CheckAndFix"<<endl;
 			level->checkAndFixCollisions((*it));
+			
 			if ((*it)->getExpiredEntity()) {
 				it->reset();
 				it = Enemies::getVectorEnemies().erase(it);
 			}
+			
 			else {
 				++it;
 				counter++;
 			}
+			
 		}
 	}
 

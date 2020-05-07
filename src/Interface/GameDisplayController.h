@@ -31,7 +31,11 @@ public:
         OPTIONS_MENU,
         PAUSE_MENU,
 		GAME_OVER,
-		RESTART
+		STORY_MENU,
+		VS_NUMPLAYERS_MENU,
+		DIFFICULTY,
+		LOADING
+		//RESTART
     };
 
     GameState gameState;

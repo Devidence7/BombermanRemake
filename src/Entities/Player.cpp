@@ -158,7 +158,7 @@ void PlayerEntity::realizeActions()
 			Level::canTakeBomb(me);
 			break;
 		case ActionsAvalible::KICK_BOM:
-			Level::canKickBomb(me);
+		//	Level::canKickBomb(me);
 			break;
 		case ActionsAvalible::REMOTE_BOMB:
 			if(BombsAsociated.size() > 0)

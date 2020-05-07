@@ -79,7 +79,7 @@ public:
         game_over.setString("       GAME OVER");
         game_over.setPosition(sf::Vector2f((int)window.getSize().x / 2 - (int)menu->getSize().x / 2, ((int)window.getSize().y / 2 - (int)menu->getSize().y / 2)-150));
         //game_over.setFillColor(sf::Color::White);
-        game_over.setFillColor(sf::Color::Black);
+        game_over.setColor(sf::Color::Black);
         game_over.setScale(2,2);
 	}
 
@@ -88,12 +88,14 @@ private:
 		int id = menu->onEvent(event);
 		switch (id) {
 		case ButtonActions::RETRY:
+		game.restartGame(*window,gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
-			game.restartGame(*window);
+			
 			
 			break;
 				
 		case ButtonActions::GO_MAIN_MENU:
+		game.deleteMap();
 			gameDisplay.setGameState(GameDisplayController::GameState::MAIN_MENU);
 			break;
 				

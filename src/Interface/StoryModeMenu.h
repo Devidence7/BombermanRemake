@@ -8,16 +8,15 @@
 #include "GameDisplayController.h"
 
 
-class PauseMenu {
+class StoryModeMenu {
 	GameGUI::Menu* menu;
 
 	bool EsqPressed = false;
 
 	enum ButtonActions {
-		RESUME,
-		SAVE,
-		OPTIONS,
-		GO_MAIN_MENU,
+		SINGLEPLAYER,
+		COOP,
+        BACK,
 		QUIT
 	};
 
@@ -27,9 +26,6 @@ class PauseMenu {
 	sf::RectangleShape menuBackgroundShadow;
 	sf::RectangleShape menuBackgroundShadow1;
 	sf::RectangleShape menuBackgroundShadow2;
-
-	GameGUI::Slider* masterVolumenSlider;
-	GameGUI::Slider* musicSlider;
 
 	void createBackgroundMenu(sf::RenderWindow& window) {
 		menu->setPosition(sf::Vector2f((int)window.getSize().x / 2 - (int)menu->getSize().x / 2, (int)window.getSize().y / 2 - (int)menu->getSize().y / 2));
@@ -53,7 +49,7 @@ class PauseMenu {
 	}
 
 public:
-	PauseMenu(sf::RenderWindow& window) {
+	StoryModeMenu(sf::RenderWindow& window) {
 		menu = new GameGUI::Menu(window);
 
 		texture.loadFromFile("../textures/interface/Background_orange_squares.png");
@@ -61,12 +57,11 @@ public:
 		background.setColor(sf::Color(255, 255, 0, 5));
 		background.setTexture(texture);
 		background.setScale(sf::Vector2f(2, 2));
-		background.setTextureRect({ window.getPosition().x, window.getPosition().y, (int)window.getSize().x, (int)window.getSize().y });
+		background.setTextureRect({ 0, 0, (int)window.getSize().x, (int)window.getSize().y });
 
-		menu->addButton("                Reanudar                ", ButtonActions::RESUME);
-		menu->addButton("                 Guardar                 ", ButtonActions::SAVE);
-		menu->addButton("                 Opciones                 ", ButtonActions::OPTIONS);
-		menu->addButton("        Ir al menu principal       ", ButtonActions::GO_MAIN_MENU);
+		menu->addButton("                1 jugador               ", ButtonActions::SINGLEPLAYER);
+		menu->addButton("                2 jugadores                 ", ButtonActions::COOP);
+		menu->addButton("            Ir al menu principal       ", ButtonActions::BACK);
 		menu->addButton("                    Salir                    ", ButtonActions::QUIT);
 
 		createBackgroundMenu(window);
@@ -76,22 +71,19 @@ private:
 	void userActions(sf::Event& event, sf::RenderWindow*& window, GameDisplayController& gameDisplay, Game& game) {
 		int id = menu->onEvent(event);
 		switch (id) {
-		case ButtonActions::RESUME:
-			gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
-			GameTime::resumeGameTime();
+		case ButtonActions::SINGLEPLAYER:
+        game.gameOptions.numPlayers=1;
+
+			gameDisplay.setGameState(GameDisplayController::GameState::DIFFICULTY);
 			break;
 
-		case ButtonActions::SAVE:
+		case ButtonActions::COOP:
+        game.gameOptions.numPlayers=2;
+        	gameDisplay.setGameState(GameDisplayController::GameState::DIFFICULTY);
 					
 			break;
-				
-		case ButtonActions::OPTIONS:
-			OptionsMenu::lastGameStateOptionsMenu = GameDisplayController::GameState::PAUSE_MENU;
-			gameDisplay.setGameState(GameDisplayController::GameState::OPTIONS_MENU);
-			break;
-				
-		case ButtonActions::GO_MAIN_MENU:
-			game.deleteMap();
+			
+		case ButtonActions::BACK:
 			gameDisplay.setGameState(GameDisplayController::GameState::MAIN_MENU);
 			break;
 				
@@ -113,35 +105,14 @@ private:
 	}
 
 public:
-	void menuActions(GameDisplayController& gameDisplay, Game game) {
+	void menuActions(GameDisplayController& gameDisplay, Game& game) {
 		// Manage window events and pass a callback to manage this menu buttons
-		gameDisplay.manageGameInterface(gameDisplay, std::bind(&PauseMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
+		gameDisplay.manageGameInterface(gameDisplay, std::bind(&StoryModeMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
 		if (gameDisplay.pauseMenuReprocessDisplay) {
 			gameDisplay.pauseMenuReprocessDisplay = false;
 			createBackgroundMenu(*gameDisplay.getWindow());
 		}
 		draw(*gameDisplay.getWindow());
-	}
-
-	void checkUserPauseActions(GameDisplayController& gameDisplay) {
-		if (gameDisplay.getGameState() == GameDisplayController::GameState::PLAYING || gameDisplay.getGameState() == GameDisplayController::GameState::PAUSE_MENU) {
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-				if (!EsqPressed) {
-					EsqPressed = true;
-					if (gameDisplay.getGameState() == GameDisplayController::GameState::PAUSE_MENU) {
-						GameTime::resumeGameTime();
-						gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
-					}
-					else {
-						GameTime::stopGameTime();
-						gameDisplay.setGameState(GameDisplayController::GameState::PAUSE_MENU);
-					}
-				}
-			}
-			else {
-				EsqPressed = false;
-			}
-		}
 	}
 };
 

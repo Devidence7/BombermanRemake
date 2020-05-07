@@ -729,6 +729,7 @@ void Level::ThrowBomb(Player_ptr p, Bomb_ptr b)
 	b->player2Score = p;
 }
 
+
 void Level::reiniciar(int dimX, int dimY)
 {
 	miniMap.clear();

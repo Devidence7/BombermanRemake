@@ -2,15 +2,12 @@
 #include <iostream>
 
 #include <SFML/Graphics.hpp>
-
+#include "GUI/Theme.hpp"
 #include "GUI/GameGUI.hpp"
-
-#include "InterfacePaths.h"
-#include "GameInterface.h"
+#include "../Music/GameMusic.h"
+#include "../GameEngine.hpp"
 #include "OptionsMenu.h"
 #include "GameDisplayController.h"
-#include "../GameEngine.hpp"
-#include "../Music/GameMusic.h"
 
 
 using namespace GameGUI;
@@ -87,15 +84,18 @@ private:
 		int id = menu->onEvent(event);
 		switch (id) {
 		case ButtonActions::SINGLEPLAYER:
-			gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
-			game.gameOptions.numPlayers = 1;
-			game.startNewGame(*window, gameDisplay);
+			gameDisplay.setGameState(GameDisplayController::GameState::STORY_MENU);
+			//game.startNewGame(*window);
 			break;
 		case ButtonActions::MULTIPLAYER:
-			gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
-			game.gameOptions.numPlayers = 2;
-			game.startNewGame(*window, gameDisplay);
+		  //  game.gameOptions.numPlayers = 2;
+		  gameDisplay.setGameState(GameDisplayController::GameState::VS_NUMPLAYERS_MENU);
+		
+			
+			
 			break;
+
+		
 		case ButtonActions::OPCIONS:
 			OptionsMenu::lastGameStateOptionsMenu = GameDisplayController::GameState::MAIN_MENU;
 			gameDisplay.setGameState(GameDisplayController::GameState::OPTIONS_MENU);

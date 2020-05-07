@@ -15,7 +15,12 @@
 #include "Interface/OptionsMenu.h"
 #include "Interface/PauseMenu.h"
 #include "Interface/GameOver.h"
+#include "Interface/MultiplayerMenu.h"
+#include "Interface/StoryModeMenu.h"
+#include "Interface/DifficultMenu.h"
+#include "Interface/LoadingScreen.h"
 #include "Interface/UserKeyPress.h"
+#include <unistd.h>
 
 
 int main(int argc, char* argv[]) {
@@ -27,9 +32,11 @@ int main(int argc, char* argv[]) {
 
 	// Create new game
 	Game game = Game();
+	
 
 	// Create a Multiple interface controller
 	auto gameDisplayController = GameDisplayController();
+	LoadingScreen ls =LoadingScreen(*gameDisplayController.getWindow());
 
 	// Play Title music
 	GameMusic::playTitleMusic();
@@ -38,7 +45,10 @@ int main(int argc, char* argv[]) {
 	OptionsMenu optionsMenu(*gameDisplayController.getWindow());
 	PauseMenu pauseMenu(*gameDisplayController.getWindow());
 	GameOver gameOverMenu(*gameDisplayController.getWindow());
-	GameInterface gameInterface;
+	MultiplayerMenu multiplayerMenu(*gameDisplayController.getWindow());
+	StoryModeMenu storyModeMenu(*gameDisplayController.getWindow());
+	DifficultyMenu difficultyMenu(*gameDisplayController.getWindow());
+	GameInterface gameInterface(*gameDisplayController.getWindow());
 
 	// Start game loop
 	while (gameDisplayController.windowOpen()) {
@@ -49,6 +59,30 @@ int main(int argc, char* argv[]) {
 			gameDisplayController.getWindow()->setView(gameDisplayController.menuView);
 			gameMainMenu.menuActions(gameDisplayController, game);
 			break;
+
+		case GameDisplayController::GameState::LOADING:
+			//Mostrar pantalla de carga
+			
+			game.startNewGame(*gameDisplayController.getWindow(),gameDisplayController);
+			
+			gameInterface.iniPlayers();
+			ls.draw(*gameDisplayController.getWindow());
+			gameDisplayController.setGameState(GameDisplayController::GameState::PLAYING);
+			break;
+		
+		case GameDisplayController::GameState::VS_NUMPLAYERS_MENU:
+			multiplayerMenu.menuActions(gameDisplayController, game);
+			break;
+
+
+		case GameDisplayController::GameState::DIFFICULTY:
+			difficultyMenu.menuActions(gameDisplayController, game);
+			break;
+		
+		case GameDisplayController::GameState::STORY_MENU:
+			storyModeMenu.menuActions(gameDisplayController, game);
+			break;
+
 
 		case GameDisplayController::GameState::OPTIONS_MENU:
 			gameDisplayController.getWindow()->setView(gameDisplayController.menuView);
@@ -67,39 +101,24 @@ int main(int argc, char* argv[]) {
 			//gameOverMenu.checkUserPauseActions(gameDisplayController);
 			break;
 
-		case GameDisplayController::GameState::RESTART:
-			gameDisplayController.getWindow()->setView(gameDisplayController.menuView);
-			game.restartGame(*gameDisplayController.getWindow());
-			/*cout<<"holi5"<<endl;
-			gameDisplayController.setGameState(GameDisplayController::GameState::PLAYING);
-			cout<<"holi6"<<endl;*/
-			break;
 
 		case GameDisplayController::GameState::PLAYING:
+		
 			game.update(gameDisplayController);
-
+		
 			// Clear screen from previous drawings
 			gameDisplayController.getWindow()->clear();
+
 			// Draw the player and the scene
 			game.draw(*gameDisplayController.getWindow());
-			/*for(Player_ptr &player : PLayers::getVectorPlayer()){
-				playersLives.push_back(player->getLives());
-				cout<<playersLives.front();
-			}*/
+		
 			gameInterface.update(GameTime::getTimeNow());
-			/*if (game.gameOptions.multiplayerGame) {
-				//gameI.update(time.getTimeNow(),playersLives.front(),playersLives.back());
-				gameInterface.drawMulti(*gameDisplayController.getWindow());
-			}*/
-			//else {
+			
 			gameInterface.draw(*gameDisplayController.getWindow());
 			//}
 
 			gameDisplayController.manageGameInterface(gameDisplayController);
 			pauseMenu.checkUserPauseActions(gameDisplayController);
-			// userKeyPressManager.checkUserKeysPress(gameDisplayController, game);			
-
-			//gameOverMenu.checkUserGameOverActions(gameDisplayController);
 		}
 
 
