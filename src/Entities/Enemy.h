@@ -12,6 +12,7 @@ class EnemyEntity : public Entity {
 private:
 	EnemyTexture* enemyTexture;
 	LookingAtBi lookingDir = bRight;
+	
 
 	double spriteStartTime;
 	double spriteLastFrameTime;
@@ -40,6 +41,7 @@ protected:
 	EnemyType enemyType;
 	
 public:
+	std::shared_ptr<EnemyEntity> me;
 	EnemyEntity();
 
 	void startMovement();

@@ -80,7 +80,9 @@ void Enemies::insertarEnemigos(int dimX, int dimY,int numEnemies) {
 		do {
 			y = Random::getIntNumberBetween(0, dimY / 2);
 		} while (y < 3);
-		e->setPosition(sf::Vector2f((x * 2 + 1) * SIZE_PILLAR - 3, (y * 2 + 1) * SIZE_PILLAR - 3));
+		//e->setPosition(sf::Vector2f((x * 2 + 1) * SIZE_PILLAR - 3, (y * 2 + 1) * SIZE_PILLAR - 3));
+		e->setPosition(MapCoordinates2GlobalCoorCorner(x*2+1, y*2+1));
+		e->me=e;
 		e->startMovement();
 	}
 }

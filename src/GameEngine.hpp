@@ -86,7 +86,6 @@ public:
 	void startNewGame(sf::RenderWindow& window, GameDisplayController &gameDisplay){
 		//	cout<<gameOptions.numPlayers<<endl;
 		int numEnemies=numEnemigos*gameOptions.difLevel*(stage/0.75); 
-		cout<<numEnemies<<endl;
 		Enemies::insertarEnemigos(dimX, dimY,numEnemies);
 		//insertEnemies(7);
 		level = new Level(dimX, dimY);
