@@ -128,7 +128,7 @@ Game(){
 			if (colissionWithEnemies(player)) {
 				player->setExpiredEntity();
 			}	
-			if(player)
+			
 			ply++;
 		}
 	}

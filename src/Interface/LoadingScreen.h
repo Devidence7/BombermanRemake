@@ -34,13 +34,15 @@ LoadingScreen(sf::RenderWindow& window){
 		background.setScale(resizeVal, resizeVal);
         
       stageText.setFont(font);
-      stageText.setFillColor(sf::Color::White);
+      //stageText.setFillColor(sf::Color::White);
+      stageText.setColor(sf::Color::White);
       stageText.setString("STAGE " + to_string(stage));
       stageText.setPosition(sf::Vector2f(window.getSize().x / 2-(window.getSize().x/9) , window.getSize().y/2- (window.getSize().y/9)));
       stageText.setScale(2,2);
 
       loading.setFont(font);
-     loading.setFillColor(sf::Color::White);
+      //loading.setFillColor(sf::Color::White);
+      loading.setColor(sf::Color::White);
       loading.setString("Loading...");
       loading.setPosition(sf::Vector2f(window.getSize().x /2-(window.getSize().x/12), (window.getSize().y/2+200)));
       loading.setScale(1,1);
