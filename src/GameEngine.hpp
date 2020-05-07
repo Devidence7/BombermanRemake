@@ -252,9 +252,7 @@ Game(){
 		while (it != Enemies::getVectorEnemies().end()) {
 			
 			// Update the enemies.
-			cout<<"Update"<<endl;
 			(*it)->update();
-			cout<<"CheckAndFix"<<endl;
 			level->checkAndFixCollisions((*it));
 			
 			if ((*it)->getExpiredEntity()) {
