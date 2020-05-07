@@ -111,6 +111,14 @@ public:
 		
 	}
 
+	void newStage(sf::RenderWindow& window,GameDisplayController &gameDisplay){
+		deleteMap();
+		stage++;
+		Enemies::insertarEnemigos(dimX, dimY,numEnemigos*gameOptions.difLevel*(stage/0.75));
+		startNewGame(window,gameDisplay);
+		
+	}
+
 	void deleteMap(){
 		delete level;
 		auto it = Enemies::getVectorEnemies().begin();

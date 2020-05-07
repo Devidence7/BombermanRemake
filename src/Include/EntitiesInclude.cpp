@@ -50,7 +50,9 @@ std::vector<Enemy_ptr> Enemies::enemies;
 
 void Enemies::insertarEnemigos(int dimX, int dimY,int numEnemies) {
 	std::vector<Enemy_ptr> a(numEnemies);
+	//int enemyType;
 	for (int i=0;i<numEnemies;i++){
+		//enemyType=Random::getIntNumberBetween(1,7);
 		a[i]=std::make_shared<EnemyEntity>(Balloon());
 		enemies.push_back(a[i]);
 	}
