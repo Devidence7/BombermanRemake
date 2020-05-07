@@ -26,7 +26,7 @@ private:
 	// Dim level map:
 	int dimY = 15;
 	int dimX = 25;
-	int stage=3;
+	int stage=1;
 	int timeLeft = 299;
 	int timeToShow;
 	// Initialize textures
