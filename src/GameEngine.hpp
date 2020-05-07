@@ -84,6 +84,10 @@ public:
 	}*/
 
 	void startNewGame(sf::RenderWindow& window, GameDisplayController &gameDisplay){
+		// Restart time parameters
+		GameTime::startGameTime();
+		GameMusic::playWorld1Music();
+
 		//	cout<<gameOptions.numPlayers<<endl;
 		int numEnemies=numEnemigos*gameOptions.difLevel*(stage/0.75); 
 		Enemies::insertarEnemigos(dimX, dimY,numEnemies);
@@ -98,9 +102,6 @@ public:
 		sf::View view(sf::FloatRect(0.f, 0.f, pixelsX, pixelsY));
 		view.move(sf::Vector2f(0, -48));
 		window.setView(view);
-
-		GameTime::startGameTime();
-		GameMusic::playWorld1Music();
 	}
 
 	void restartGame(sf::RenderWindow& window,GameDisplayController &gameDisplay){
