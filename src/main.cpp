@@ -20,7 +20,6 @@
 #include "Interface/DifficultMenu.h"
 #include "Interface/LoadingScreen.h"
 #include "Interface/UserKeyPress.h"
-#include <unistd.h>
 
 
 int main(int argc, char* argv[]) {
