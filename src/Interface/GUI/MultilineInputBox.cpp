@@ -22,7 +22,7 @@ MultilineInputBox::MultilineInputBox(float width, unsigned int lines) : m_box(Bo
 
 	m_text.setFont(Theme::getFont());
 	m_text.setPosition(offset, offset);
-	m_text.setColor(Theme::input.textColor);
+	m_text.setFillColor(Theme::input.textColor);
 	//m_text.setFillColor(Theme::input.textColor);
 	m_text.setCharacterSize(Theme::textCharacterSize);
 

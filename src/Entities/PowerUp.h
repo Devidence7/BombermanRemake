@@ -99,3 +99,9 @@ public:
 	void setPlayerStatus(PlayerEntity& pe);
 };
 
+class RemoteBombPowerUp : public PowerUp {
+public:
+	RemoteBombPowerUp(sf::Vector2f pos);
+	void setPlayerStatus(PlayerEntity& pe);
+};
+

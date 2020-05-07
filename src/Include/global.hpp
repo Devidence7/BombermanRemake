@@ -56,6 +56,7 @@ enum PowerUpType
 	moreFire = 2,
 	lessFire = 3,
 	moreBombs = 4,
+	remoteBombs = 5,
 	kickBombs = 6,
 	grabBombs = 7,
 	passBombs = 12,

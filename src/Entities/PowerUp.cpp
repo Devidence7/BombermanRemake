@@ -187,15 +187,6 @@ void ExtraLifePowerUp::setPlayerStatus(PlayerEntity& pe) {
 }
 
 
-
-
-
-
-
-
-
-
-
 PassBombsPowerUp::PassBombsPowerUp(sf::Vector2f pos) : PowerUp() {
 	powerUpType = passBombs;
 
@@ -207,7 +198,7 @@ PassBombsPowerUp::PassBombsPowerUp(sf::Vector2f pos) : PowerUp() {
 }
 
 void PassBombsPowerUp::setPlayerStatus(PlayerEntity& pe) {
-	
+	// Player can jump bombs
 }
 
 
@@ -224,4 +215,20 @@ DisseasePowerUp::DisseasePowerUp(sf::Vector2f pos) : PowerUp() {
 
 void DisseasePowerUp::setPlayerStatus(PlayerEntity& pe) {
 	pe.invertControls();
+}
+
+
+
+RemoteBombPowerUp::RemoteBombPowerUp(sf::Vector2f pos) : PowerUp() {
+	powerUpType = remoteBombs;
+
+	// Set position
+	setPosition(pos);
+
+	// Set starting sprite
+	setTextureRect(powerUpTexture->getFrame(powerUpType, 0));
+}
+
+void RemoteBombPowerUp::setPlayerStatus(PlayerEntity& pe) {
+	
 }
