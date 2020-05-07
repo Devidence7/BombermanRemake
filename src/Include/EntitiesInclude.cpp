@@ -3,6 +3,17 @@
 std::vector<Player_ptr> PLayers::players;
 std::vector<std::vector<Entity_ptr>> EntityMap::entityMap;
 
+
+bool checkSomeCollisionOnVector(Entity_ptr e, std::vector<Entity_ptr> &v){
+	bool collision = false;
+	sf::FloatRect body = e->getGlobalBounds();
+	for(Entity_ptr ev : v){
+		if(collision){break;}
+		collision = body.intersects(ev->getGlobalBounds());
+	}
+	return collision;
+}
+
 void PLayers::addPlayer(PlayerEntity::PlayerControls& playerControls) {
 	Player_ptr p = std::make_shared<PlayerEntity>(PlayerEntity(playerControls));
 	p->me = p;
@@ -11,6 +22,28 @@ void PLayers::addPlayer(PlayerEntity::PlayerControls& playerControls) {
 
 std::vector<Player_ptr>& PLayers::getVectorPlayer() {
 	return players;
+}
+
+
+bool PLayers::cehckSomeCollision(Entity_ptr e){
+	bool collision = false;
+	sf::FloatRect body = e->getGlobalBounds();
+	for(Player_ptr ev : players){
+		if(collision){break;}
+		collision = body.intersects(ev->getGlobalBounds());
+	}
+	return collision;
+}
+
+
+bool Enemies::cehckSomeCollision(Entity_ptr e){
+	bool collision = false;
+	sf::FloatRect body = e->getGlobalBounds();
+	for(Enemy_ptr ev : enemies){
+		if(collision){break;}
+		collision = body.intersects(ev->getGlobalBounds());
+	}
+	return collision;
 }
 
 std::vector<Enemy_ptr> Enemies::enemies;
@@ -50,7 +83,8 @@ std::vector<Enemy_ptr>& Enemies::getVectorEnemies() {
 void EntityMap::addEntity(Entity_ptr e, sf::Vector2i pos) {
 	EntityMap::entityMap[pos.x][pos.y] = e;
 }
-Entity_ptr EntityMap::getEntity(sf::Vector2i pos) {
+
+Entity_ptr & EntityMap::getEntity(sf::Vector2i pos) {
 	return EntityMap::entityMap[pos.x][pos.y];
 }
 

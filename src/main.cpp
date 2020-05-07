@@ -15,11 +15,8 @@
 #include "Interface/OptionsMenu.h"
 #include "Interface/PauseMenu.h"
 #include "Interface/GameOver.h"
-#include "Interface/AllVsAllMenu.h"
-#include "Interface/GameTypeMenu.h"
 #include "Interface/MultiplayerMenu.h"
 #include "Interface/StoryModeMenu.h"
-#include "Interface/TeamVsTeamMenu.h"
 #include "Interface/DifficultMenu.h"
 #include "Interface/LoadingScreen.h"
 #include "Interface/UserKeyPress.h"
@@ -50,11 +47,8 @@ int main(int argc, char* argv[]) {
 	GameOver gameOverMenu(*gameDisplayController.getWindow());
 	MultiplayerMenu multiplayerMenu(*gameDisplayController.getWindow());
 	StoryModeMenu storyModeMenu(*gameDisplayController.getWindow());
-	GameTypeMenu gameTypeMenu(*gameDisplayController.getWindow());
-	AllVsAllMenu allVSallMenu(*gameDisplayController.getWindow());
-	TeamVsTeamMenu teamVSteamMenu(*gameDisplayController.getWindow());
 	DifficultyMenu difficultyMenu(*gameDisplayController.getWindow());
-	GameInterface gameInterface;
+	GameInterface gameInterface(*gameDisplayController.getWindow());
 
 	// Start game loop
 	while (gameDisplayController.windowOpen()) {
@@ -80,20 +74,6 @@ int main(int argc, char* argv[]) {
 			multiplayerMenu.menuActions(gameDisplayController, game);
 			break;
 
-		case GameDisplayController::GameState::GAME_TYPE:
-			gameTypeMenu.menuActions(gameDisplayController, game);
-			break;
-
-		case GameDisplayController::GameState::ALLVSALL:
-		//cout<<game.gameOptions.numPlayers<<endl;
-			allVSallMenu.actualizeNumPlayers(*gameDisplayController.getWindow(),game.gameOptions.numPlayers);
-			allVSallMenu.menuActions(gameDisplayController, game);
-			break;
-
-		case GameDisplayController::GameState::TEAM:
-			teamVSteamMenu.actualizeNumPLayers(game.gameOptions.numPlayers);
-			teamVSteamMenu.menuActions(gameDisplayController, game);
-			break;
 
 		case GameDisplayController::GameState::DIFFICULTY:
 			difficultyMenu.menuActions(gameDisplayController, game);

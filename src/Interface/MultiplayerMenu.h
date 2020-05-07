@@ -14,11 +14,42 @@ class MultiplayerMenu {
 	bool EsqPressed = false;
 
 	enum ButtonActions {
+		//NUmJUGADORES
 		TWOPLAYERS,
 		THREEPLAYERS,
 		FOURPLAYERS,
+    
+        //TIPO DE JUEGO
+        ALLVSALL,
+        TEAM,
+
+	//VERSUS
+	//Dos jugadores
+        //Dos jugadores
+        PLVSIA,
+        PLVSPL,
+        //Tres jugadores
+		PL12IA,
+        PL21IA,
+        //Cuatro jugadores
+		PL13IA,
+        PL22IA,
+
+	//TEAM
+        
+        //Tres jugadores
+		PL1VS2IA,
+        PLVSPLIA,
+        PL2VS1IA,
+        //Cuatro jugadores
+		PL1VS3IA,
+        PLVSPL2IA,
+        PL2VS2IA,
+        PLIAVSPLIA,
+        //
         BACK,
 		QUIT
+
 	};
 
 	sf::Texture texture;
@@ -73,23 +104,88 @@ private:
 	void userActions(sf::Event& event, sf::RenderWindow*& window, GameDisplayController& gameDisplay, Game& game) {
 		int id = menu->onEvent(event);
 		switch (id) {
+
+
 		case ButtonActions::TWOPLAYERS:
         game.gameOptions.numPlayers=2;
 
-			gameDisplay.setGameState(GameDisplayController::GameState::GAME_TYPE);
+			createAllVSAllMenu(*window,gameDisplay,game.gameOptions.numPlayers);
 			break;
 
 		case ButtonActions::THREEPLAYERS:
         game.gameOptions.numPlayers=3;
-        	gameDisplay.setGameState(GameDisplayController::GameState::GAME_TYPE);
+        	createGameTypeMenu(*window,gameDisplay);
 					
 			break;
 				
 		case ButtonActions::FOURPLAYERS:
         game.gameOptions.numPlayers=4;
 			//OptionsMenu::lastGameStateOptionsMenu = GameDisplayController::GameState::MULTIPLAYER_MENU;
-			gameDisplay.setGameState(GameDisplayController::GameState::GAME_TYPE);
+			createGameTypeMenu(*window,gameDisplay);
 			break;
+
+		case ButtonActions::ALLVSALL:
+			createAllVSAllMenu(*window,gameDisplay,game.gameOptions.numPlayers);
+			break;
+
+		case ButtonActions::TEAM:
+        	createTeamVSTeamMenu(*window,gameDisplay,game.gameOptions.numPlayers);		
+			break;
+
+		case ButtonActions::PLVSIA:
+        
+			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			break;
+
+		case ButtonActions::PLVSPL:
+        	gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+					
+			break;
+				
+		case ButtonActions::PL12IA:
+			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			break;
+
+        case ButtonActions::PL21IA:
+			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			break;
+
+        case ButtonActions::PL13IA:
+			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			break;
+        case ButtonActions::PL22IA:
+			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			break;
+
+		
+		case ButtonActions::PL1VS2IA:
+			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			break;
+
+        case ButtonActions::PLVSPLIA:
+			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			break;
+
+        case ButtonActions::PL2VS1IA:
+			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			break;
+
+        //4 players
+
+        case ButtonActions::PL1VS3IA:
+			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			break;
+        case ButtonActions::PLVSPL2IA:
+			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			break;
+
+        case ButtonActions::PL2VS2IA:
+			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			break;
+        case ButtonActions::PLIAVSPLIA:
+			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			break;
+
 				
 		case ButtonActions::BACK:
 			gameDisplay.setGameState(GameDisplayController::GameState::MAIN_MENU);
@@ -99,6 +195,105 @@ private:
 			window->close();
 			break;
 		}
+	}
+
+	void createGameTypeMenu(sf::RenderWindow& window, GameDisplayController &gameDisplay){
+
+			menu = new GameGUI::Menu(window);
+
+		texture.loadFromFile("../textures/interface/Background_orange_squares.png");
+		texture.setRepeated(true);
+		background.setColor(sf::Color(255, 255, 0, 5));
+		background.setTexture(texture);
+		background.setScale(sf::Vector2f(2, 2));
+		background.setTextureRect({ 0, 0, (int)window.getSize().x, (int)window.getSize().y });
+
+		menu->addButton("                Todos contra todos              ", ButtonActions::ALLVSALL);
+		menu->addButton("                Batalla por equipos                 ", ButtonActions::TEAM);
+		menu->addButton("            Ir al menu principal       ", ButtonActions::BACK);
+		menu->addButton("                   Salir                    ", ButtonActions::QUIT);
+
+		createBackgroundMenu(window);
+
+	}
+
+
+	void createAllVSAllMenu(sf::RenderWindow& window, GameDisplayController &gameDisplay,int numPlayers){
+			menu = new GameGUI::Menu(window);
+
+		texture.loadFromFile("../textures/interface/Background_orange_squares.png");
+		texture.setRepeated(true);
+		background.setColor(sf::Color(255, 255, 0, 5));
+		background.setTexture(texture);
+		background.setScale(sf::Vector2f(2, 2));
+		background.setTextureRect({ 0, 0, (int)window.getSize().x, (int)window.getSize().y });
+
+			 switch ((numPlayers))
+        {
+        case 2:
+        	menu->addButton("               Jugador vs IA               ", ButtonActions:: PLVSIA);
+			menu->addButton("                  Jugador vs Jugador                ", ButtonActions::PLVSPL);
+			menu->addButton("          Atras       ", ButtonActions::BACK);
+			menu->addButton("                    Salir                    ", ButtonActions::QUIT);
+            break;
+
+        case 3:
+       		menu->addButton("               1  Jugador , 2 IA                ", ButtonActions::PL12IA);
+			menu->addButton("               2  Jugadores , 1 IA                 ", ButtonActions::PL21IA);
+			menu->addButton("         Atras        ", ButtonActions::BACK);
+			menu->addButton("                    Salir                    ", ButtonActions::QUIT);
+            break;
+
+        case 4:
+        	menu->addButton("            1 Jugador , 3 IA                ", ButtonActions::PL13IA);
+			menu->addButton("                2 Jugadores , 2 IA                 ", ButtonActions::PL22IA);
+			menu->addButton("          Atrás        ", ButtonActions::BACK);
+			menu->addButton("                    Salir                    ", ButtonActions::QUIT);
+            break;
+        
+        default:
+            break;
+        }
+		createBackgroundMenu(window);
+	}
+
+
+
+	void createTeamVSTeamMenu(sf::RenderWindow& window, GameDisplayController &gameDisplay,int numPlayers){
+		menu = new GameGUI::Menu(window);
+
+		texture.loadFromFile("../textures/interface/Background_orange_squares.png");
+		texture.setRepeated(true);
+		background.setColor(sf::Color(255, 255, 0, 5));
+		background.setTexture(texture);
+		background.setScale(sf::Vector2f(2, 2));
+		background.setTextureRect({ 0, 0, (int)window.getSize().x, (int)window.getSize().y });
+		
+			  switch ((numPlayers))
+        {
+        
+        case 3:
+        menu->addButton("               1 Jugador Vs 2 IA                ", ButtonActions::PL1VS2IA);
+		menu->addButton("               2 Jugadores Vs 1 IA                 ", ButtonActions::PL2VS1IA);
+        menu->addButton("               1 Jugador vs Jugador IA                ", ButtonActions::PLVSPLIA);
+		menu->addButton("         Atrás        ", ButtonActions::BACK);
+		menu->addButton("                    Salir                    ", ButtonActions::QUIT);
+            break;
+
+        case 4:
+        menu->addButton("            1 Jugador Vs  3 IA                ", ButtonActions::PL1VS3IA);
+		menu->addButton("            1 Jugadores Vs 2 Jugadores 1 IA                 ", ButtonActions::PLVSPL2IA);
+        menu->addButton("            2 Jugadores Vs 2 IA                ", ButtonActions::PL2VS2IA);
+		menu->addButton("            Jugador IA  Vs Jugador IA                 ", ButtonActions::PLIAVSPLIA);
+		menu->addButton("          Atrás        ", ButtonActions::BACK);
+		menu->addButton("                    Salir                    ", ButtonActions::QUIT);
+            break;
+        
+        default:
+            break;
+        }
+		createBackgroundMenu(window);
+
 	}
 
 	void draw(sf::RenderWindow& window) {
@@ -123,25 +318,6 @@ public:
 		draw(*gameDisplay.getWindow());
 	}
 
-	void checkUserPauseActions(GameDisplayController& gameDisplay) {
-		if (gameDisplay.getGameState() == GameDisplayController::GameState::PLAYING || gameDisplay.getGameState() == GameDisplayController::GameState::PAUSE_MENU) {
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-				if (!EsqPressed) {
-					EsqPressed = true;
-					if (gameDisplay.getGameState() == GameDisplayController::GameState::PAUSE_MENU) {
-						GameTime::resumeGameTime();
-						gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
-					}
-					else {
-						GameTime::stopGameTime();
-						gameDisplay.setGameState(GameDisplayController::GameState::PAUSE_MENU);
-					}
-				}
-			}
-			else {
-				EsqPressed = false;
-			}
-		}
-	}
+	
 };
 

@@ -88,12 +88,14 @@ private:
 		int id = menu->onEvent(event);
 		switch (id) {
 		case ButtonActions::RETRY:
+		game.restartGame(*window,gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
-			game.restartGame(*window,gameDisplay);
+			
 			
 			break;
 				
 		case ButtonActions::GO_MAIN_MENU:
+		game.deleteMap();
 			gameDisplay.setGameState(GameDisplayController::GameState::MAIN_MENU);
 			break;
 				

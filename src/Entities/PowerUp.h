@@ -21,71 +21,81 @@ public:
 	void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) override;
 
 	virtual void setPlayerStatus(PlayerEntity &pe);
-
-	virtual void addPowerUp2Player(PlayerEntity &pe);
-
 };
 
 class MoreFirePowerUp : public PowerUp {
 public:
 	MoreFirePowerUp(sf::Vector2f pos);
 	void setPlayerStatus(PlayerEntity& pe);
-	void addPowerUp2Player(PlayerEntity &pe);
+	
 };
 
 class LessFirePowerUp : public PowerUp {
 public:
 	LessFirePowerUp(sf::Vector2f pos);
 	void setPlayerStatus(PlayerEntity& pe);
-	void addPowerUp2Player(PlayerEntity &pe);
+	
 };
 
 class MoreSpeedPowerUp : public PowerUp {
 public:
 	MoreSpeedPowerUp(sf::Vector2f pos);
 	void setPlayerStatus(PlayerEntity& pe);
-	void addPowerUp2Player(PlayerEntity &pe);
+	
 };
 
 class LessSpeedPowerUp : public PowerUp {
 public:
 	LessSpeedPowerUp(sf::Vector2f pos);
 	void setPlayerStatus(PlayerEntity& pe);
-	void addPowerUp2Player(PlayerEntity &pe);
+	
 };
 
 class MoreBombsPowerUp : public PowerUp {
 public:
 	MoreBombsPowerUp(sf::Vector2f pos);
 	void setPlayerStatus(PlayerEntity& pe);
-	void addPowerUp2Player(PlayerEntity &pe);
+	
 };
 
 class MoreTimePowerUp : public PowerUp {
 public:
 	MoreTimePowerUp(sf::Vector2f pos);
 	void setPlayerStatus(PlayerEntity& pe);
-	void addPowerUp2Player(PlayerEntity &pe);
+	
 };
 
 class GrabBombsPowerUp : public PowerUp {
 public:
 	GrabBombsPowerUp(sf::Vector2f pos);
 	void setPlayerStatus(PlayerEntity& pe);
-	void addPowerUp2Player(PlayerEntity &pe);
+	
 };
 
 class KickBombsPowerUp : public PowerUp {
 public:
 	KickBombsPowerUp(sf::Vector2f pos);
 	void setPlayerStatus(PlayerEntity& pe);
-	void addPowerUp2Player(PlayerEntity &pe);
+	
 };
 
 class ExtraLifePowerUp : public PowerUp {
 public:
 	ExtraLifePowerUp(sf::Vector2f pos);
 	void setPlayerStatus(PlayerEntity& pe);
-	void addPowerUp2Player(PlayerEntity &pe);
+	
+};
+
+// Dizzyness
+class DisseasePowerUp : public PowerUp {
+public:
+	DisseasePowerUp(sf::Vector2f pos);
+	void setPlayerStatus(PlayerEntity& pe);
+};
+
+class PassBombsPowerUp : public PowerUp {
+public:
+	PassBombsPowerUp(sf::Vector2f pos);
+	void setPlayerStatus(PlayerEntity& pe);
 };
 

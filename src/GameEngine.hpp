@@ -29,11 +29,11 @@ private:
 	// Initialize textures
 	TextureStorage textureStorage;
 	//MainMenu mainMenu;
-enum dificultad{
+/*enum dificultad{
 	EASY,
 	NORMAL,
 	HARD
-};
+};*/
 
 
 
@@ -42,12 +42,12 @@ public:
 	struct GameOptions {
 	
 		int numPlayers;
-		double difLevel;
+	//	double difLevel;
 		
 	};
 	GameOptions gameOptions;
 
-	double getDificultad(dificultad d){
+/*	double getDificultad(dificultad d){
 	switch(d){
 		case EASY:
 			return 1;
@@ -60,7 +60,11 @@ public:
 		default:
 		break;
 	}
-} 
+} */
+Game(){
+	Enemies::insertarEnemigos(dimX, dimY);
+}
+
 
 	void insertPlayers(UserKeyPress &userKeyPress, int numPlayers) {
 		for (int i = 0; i < numPlayers; i++) {
@@ -68,21 +72,21 @@ public:
 		}
 	}
 
+	void insertEnemies(int numEnemigos){
+		Enemies::insertarEnemigos(dimX, dimY);
+	}
+
 	void startNewGame(sf::RenderWindow& window, GameDisplayController &gameDisplay){
 		//	cout<<gameOptions.numPlayers<<endl;
+		//Enemies::insertarEnemigos(dimX, dimY);
+		insertEnemies(7);
 		level = new Level(dimX, dimY);
+		//Enemies::insertarEnemigos(dimX, dimY);
 		insertPlayers(*gameDisplay.userKeyPress, gameOptions.numPlayers);
-
-		//	PLayers::insertPlayers();
-		Enemies::insertarEnemigos(dimX, dimY);
-		
-		//mainMenu(w);
-
-	//	PLayers::insertPlayers(gameOptions.numPlayers);
+	
 		unsigned int pixelsX = window.getSize().x;
 		unsigned int pixelsY = window.getSize().y;
-		
-	//	PLayers::insertPlayers(gameOptions.numPlayers);
+			
 		sf::View view(sf::FloatRect(0.f, 0.f, pixelsX, pixelsY));
 		view.move(sf::Vector2f(0, -48));
 		window.setView(view);
@@ -93,6 +97,7 @@ public:
 
 	void restartGame(sf::RenderWindow& window,GameDisplayController &gameDisplay){
 		deleteMap();
+		Enemies::insertarEnemigos(dimX, dimY);
 		startNewGame(window,gameDisplay);
 		
 	}
@@ -113,7 +118,7 @@ public:
 
 	void updatePlayers( GameDisplayController& gameDisplay) {
 		int ply=1;
-		for (Player_ptr& player : PLayers::getVectorPlayer()) {
+		for (Player_ptr player : PLayers::getVectorPlayer()) {
 				if (player->updatePlayer()) {
 					// If there is nothing in that cell:
 					Entity_ptr b = std::make_shared<Bomb>(Bomb(player));
@@ -137,7 +142,7 @@ public:
 		updatePlayers(gameDisplay);
 		updateEnemies();
 		int totalLives=0;
-		for (Player_ptr& player : PLayers::getVectorPlayer()) {
+		for (Player_ptr player : PLayers::getVectorPlayer()) {
 			totalLives+=player->getLives();
 		}
 		
@@ -149,7 +154,7 @@ public:
 
 	void drawPlayers(sf::RenderWindow& w) {
 
-		for (Player_ptr& player : PLayers::getVectorPlayer()) {
+		for (Player_ptr player : PLayers::getVectorPlayer()) {
 			w.draw(*player);
 			w.draw(player->playerUpdateColor());
 #ifdef HITBOX_DEBUG_MODE
@@ -159,7 +164,7 @@ public:
 	}
 
 	void drawEnemies(sf::RenderWindow& w) {
-		for (Enemy_ptr& e : Enemies::getVectorEnemies()) {
+		for (Enemy_ptr e : Enemies::getVectorEnemies()) {
 			w.draw(*e);
 #ifdef HITBOX_DEBUG_MODE
 			e->drawEntityHitbox(w);
@@ -171,7 +176,7 @@ public:
 
 	bool colissionWithEnemies(Entity_ptr eCol) {
 		bool intersec = false;
-		for (Enemy_ptr& e : Enemies::getVectorEnemies()) {
+		for (Enemy_ptr e : Enemies::getVectorEnemies()) {
 			intersec = intersec || (e->CanHurtPlayer() && e->collision(*eCol));
 		}
 		return intersec;
@@ -185,8 +190,9 @@ public:
 		while (it != Enemies::getVectorEnemies().end()) {
 			
 			// Update the enemies.
+			cout<<"Update"<<endl;
 			(*it)->update();
-
+			cout<<"CheckAndFix"<<endl;
 			level->checkAndFixCollisions((*it));
 			
 			if ((*it)->getExpiredEntity()) {
