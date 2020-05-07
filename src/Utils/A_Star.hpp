@@ -67,11 +67,17 @@ class ANode
     float f, h;
 
 public:
-    ANode(){}
+    ANode(){
+        direction_to_arrive = sf::Vector2i(0,0);
+    }
     ANode(const sf::Vector2i &cp, sf::Vector2i dir, const sf::Vector2i &objetive, float fAcum, ANode *p = nullptr)
         : currentPostion(cp), direction_to_arrive(dir), f(fAcum), parent(p)
     {
         h = manhattan(cp, objetive);
+        if(direction_to_arrive.x > 1 || direction_to_arrive.y >1 ){
+		    std::cout<< "Error al construir accion\n";
+		    volatile int x = 0;
+	    }
     }
 
     inline void inverseDirection(){
@@ -131,8 +137,12 @@ inline bool checkObjetive(const sf::Vector2i &currentP, const sf::Vector2i &obje
 
 inline bool checkValidPosition(const sf::Vector2i &v);
 
+ANode generateRandomMovement(sf::Vector2i fromPosition);
+void generateRandomPath(sf::Vector2i position, std::list<ANode> & path);
+void generatePath(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, int RangeVision, std::list<ANode> & path);
+
 sf::Vector2i selectCloseObjetive(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives);
 
-std::list<ANode> &pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives);
+bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, std::list<ANode> & path);
 #include "../Include/EntitiesInclude.hpp"
 //};

@@ -28,6 +28,11 @@ private:
 
 	double lastMovementTime = 0;
 
+	protected:
+	int rangoVision = 1; // Rango de celdas cuadrada que puede ver al jugador
+	sf::Vector2i siteRespectPlayer; // Sitio respecto jugador a donde ira a buscar un camino si existe
+	int numConsecutiveMovements = 5;
+
 	ANode currentMovement;
 
 	sf::Color colorPath;
@@ -41,9 +46,9 @@ public:
 
 	void startMovement();
 
-	ANode generateRandomMovement(sf::Vector2i fromPosition);
+	//ANode generateRandomMovement(sf::Vector2i fromPosition);
 
-	void generateRandomPath();
+	//void generateRandomPath();
 
 	virtual void generateMovements();
 
@@ -72,36 +77,42 @@ public:
 	Balloon();
 };
 
+//O'neal
 class Ice : public EnemyEntity {
 public:
 
 	Ice();
 };
 
+//Dahl
 class Barrel : public EnemyEntity {
 public:
 
 	Barrel();
 };
 
+//Pontan
 class Coin : public EnemyEntity {
 public:
 
 	Coin();
 };
 
+//Doria
 class Blob : public EnemyEntity {
 public:
 
 	Blob();
 };
 
+//Ovape
 class Ghost : public EnemyEntity {
 public:
 
 	Ghost();
 };
 
+//Pass
 class Hypo : public EnemyEntity {
 public:
 

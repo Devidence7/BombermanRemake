@@ -51,5 +51,8 @@ public:
     static Entity_ptr & getCellEntMapObject(int x, int y);
     static Entity_ptr & getCellEntMapObject(sf::Vector2i pos);
     static bool isValidCell(sf::Vector2i v);
+    static sf::Vector2i size(){
+        return sf::Vector2i(entityMap[0].size(), entityMap.size());
+    }
 };
 
