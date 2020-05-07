@@ -247,11 +247,15 @@ private:
 
 	void createNumPlaySelection(sf::RenderWindow& window, GameDisplayController &gameDisplay){
 		menu = new GameGUI::Menu(window);
+		GameGUI::HorizontalBoxLayout* hboxQuit = menu->addHorizontalBoxLayout();
+		
 
 		menu->addButton("                2 jugadores               ", ButtonActions::TWOPLAYERS);
 		menu->addButton("                3 jugadores                 ", ButtonActions::THREEPLAYERS);
 		menu->addButton("                4 jugadores                 ", ButtonActions::FOURPLAYERS);
-		menu->addButton("                   Atras       ", ButtonActions::BACK);
+	//	menu->addButton("                   Atras       ", ButtonActions::BACK);
+			hboxQuit->addButton("Atras", ButtonActions::BACK);
+
 
 		createBackgroundMenu(window);
 	}
@@ -259,10 +263,13 @@ private:
 	void createGameTypeMenu(sf::RenderWindow& window, GameDisplayController &gameDisplay){
 
 			menu = new GameGUI::Menu(window);
+			GameGUI::HorizontalBoxLayout* hboxQuit = menu->addHorizontalBoxLayout();
 
 		menu->addButton("                Todos contra todos              ", ButtonActions::ALLVSALL);
 		menu->addButton("                Batalla por equipos                 ", ButtonActions::TEAM);
-		menu->addButton("            		    Atras      ", ButtonActions::BACK);
+		//menu->addButton("            		    Atras      ", ButtonActions::BACK);
+
+			hboxQuit->addButton("Atras", ButtonActions::BACK);
 
 		createBackgroundMenu(window);
 
@@ -271,24 +278,25 @@ private:
 
 	void createAllVSAllMenu(sf::RenderWindow& window, GameDisplayController &gameDisplay,int numPlayers){
 			menu = new GameGUI::Menu(window);
+			GameGUI::HorizontalBoxLayout* hboxQuit = menu->addHorizontalBoxLayout();
 			 switch ((numPlayers))
         {
         case 2:
         	menu->addButton("                   Jugador vs IA               ", ButtonActions:: PLVSIA);
 			menu->addButton("                  Jugador vs Jugador                ", ButtonActions::PLVSPL);
-			menu->addButton("                        Atras       ", ButtonActions::BACK);
+			hboxQuit->addButton("Atras", ButtonActions::BACK);
             break;
 
         case 3:
        		menu->addButton("               1  Jugador , 2 IA                ", ButtonActions::PL12IA);
 			menu->addButton("               2  Jugadores , 1 IA                 ", ButtonActions::PL21IA);
-			menu->addButton("                      Atras        ", ButtonActions::BACK);
+			hboxQuit->addButton("Atras", ButtonActions::BACK);
             break;
 
         case 4:
         	menu->addButton("                 1 Jugador , 3 IA                ", ButtonActions::PL13IA);
 			menu->addButton("                2 Jugadores , 2 IA                 ", ButtonActions::PL22IA);
-			menu->addButton("                        Atras        ", ButtonActions::BACK);
+			hboxQuit->addButton("Atras", ButtonActions::BACK);
             break;
         
         default:
@@ -301,6 +309,7 @@ private:
 
 	void createTeamVSTeamMenu(sf::RenderWindow& window, GameDisplayController &gameDisplay,int numPlayers){
 		menu = new GameGUI::Menu(window);
+		GameGUI::HorizontalBoxLayout* hboxQuit = menu->addHorizontalBoxLayout();
 		
 			  switch ((numPlayers))
         {
@@ -309,7 +318,7 @@ private:
         menu->addButton("                 1 Jugador Vs 2 IA                ", ButtonActions::PL1VS2IA);
 		menu->addButton("                 2 Jugadores Vs 1 IA                 ", ButtonActions::PL2VS1IA);
         menu->addButton("                1 Jugador vs Jugador IA                ", ButtonActions::PLVSPLIA);
-		menu->addButton("                          Atras        ", ButtonActions::BACK);
+		hboxQuit->addButton("Atras", ButtonActions::BACK);
 	
             break;
 
@@ -318,7 +327,7 @@ private:
 		menu->addButton("          	 1 Jugadores Vs 2 Jugadores 1 IA                 ", ButtonActions::PLVSPL2IA);
         menu->addButton("          	    2 Jugadores Vs 2 IA                ", ButtonActions::PL2VS2IA);
 		menu->addButton("             Jugador IA  Vs Jugador IA                 ", ButtonActions::PLIAVSPLIA);
-		menu->addButton("                        Atras        ", ButtonActions::BACK);
+		hboxQuit->addButton("Atras", ButtonActions::BACK);
             break;
         
         default:

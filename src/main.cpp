@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
 
 	// Create a Multiple interface controller
 	auto gameDisplayController = GameDisplayController();
-	LoadingScreen ls =LoadingScreen(*gameDisplayController.getWindow());
+	LoadingScreen ls =LoadingScreen(*gameDisplayController.getWindow(),game);
 
 	// Play Title music
 	GameMusic::playTitleMusic();

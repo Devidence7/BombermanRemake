@@ -23,8 +23,8 @@ class LoadingScreen{
     sf::Text loading;
     int stage=1;
 public:
-LoadingScreen(sf::RenderWindow& window){
-   
+LoadingScreen(sf::RenderWindow& window,Game game){
+   stage=game.stage;
 	background.setFillColor(sf::Color(0, 0, 0));
      if(!font.loadFromFile("../textures/mainMenu/OpenSans-Bold.ttf")){
             //cosas
@@ -48,8 +48,8 @@ LoadingScreen(sf::RenderWindow& window){
       loading.setScale(1,1);
 
  }
- void updateStage(int newStage){
-     stage=newStage;
+ void updateStage(Game game){
+      stage=game.stage;
  }
 
  void draw(sf::RenderWindow& window) {

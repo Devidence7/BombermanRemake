@@ -26,7 +26,7 @@ private:
 	// Dim level map:
 	int dimY = 15;
 	int dimX = 25;
-	int stage=1;
+	
 	int timeLeft = 299;
 	int timeToShow;
 	// Initialize textures
@@ -50,6 +50,7 @@ public:
 		
 		
 	};
+	int stage=1;
 	GameOptions gameOptions;
 
 /*	double getDificultad(dificultad d){
