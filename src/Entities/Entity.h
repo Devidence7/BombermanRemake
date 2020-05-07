@@ -92,9 +92,6 @@ public:
 		if(actionAvaible == ActionsAvalible::REMOTE_BOMB && _action != actionAvaible){
 			changeBombs2time();
 		}
-		if(_action == ActionsAvalible::KICK_BOM){
-			std::cout << "Action kick bomb\n";
-		}
 		actionAvaible =_action;
 	}
 
