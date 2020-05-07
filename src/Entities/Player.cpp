@@ -7,6 +7,7 @@ PlayerEntity::PlayerEntity(PlayerControls& pControls) : Entity(), playerControls
 	collisioner = false;
 	dead=false;
 	animLastTic = GameTime::getTimeNow();
+	lastMovementTime = GameTime::getTimeNow();
 	baseSpeed = 2.5;
 	lastMovement = LookingAt::down;
 	lives = 3;
