@@ -97,7 +97,7 @@ void Bomb::update()
 sf::FloatRect Bomb::getGlobalBounds() const
 {
 	sf::FloatRect dim = sf::Sprite::getGlobalBounds();
-	return sf::FloatRect(dim.left + 6, dim.top + 3, dim.width - 6, dim.height - 6);
+	return sf::FloatRect(dim.left + 3, dim.top + 3, dim.width - 6, dim.height - 6);
 }
 
 Fire::Fire(Player_ptr p, int type ) : Entity()

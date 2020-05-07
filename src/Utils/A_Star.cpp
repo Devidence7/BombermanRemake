@@ -116,7 +116,6 @@ void generatePath(const sf::Vector2i &positionEnemy, const std::vector<sf::Vecto
         }
         pathFinding(positionEnemy, objetivesOnRange, path);
         if(path.empty()){
-            std::cout << "EMPTYY!!\n";
             generateRandomPath(positionEnemy, path);
         }
     }else{

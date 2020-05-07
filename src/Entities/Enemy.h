@@ -29,9 +29,7 @@ private:
 	double lastMovementTime = 0;
 
 	protected:
-	int rangoVision = 3; // Rango de celdas cuadrada que puede ver al jugador
-	sf::Vector2i siteRespectPlayer; // Sitio respecto jugador a donde ira a buscar un camino si existe
-	int numConsecutiveMovements = 5;
+
 
 	ANode_Ptr currentMovement;
 

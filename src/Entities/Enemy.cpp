@@ -40,13 +40,13 @@ void EnemyEntity::generateMovements()
 		sf::Vector2f posPlayer = player->getCenterPosition();
 		objetives.push_back(getMapCoordinates(posPlayer));
 	}
-	bool f;
 	movements.clear();
 	generatePath(getMapCoordinates(this->getCenterPosition()), objetives, rangoVision, movements);
 	//movements = pathFinding(getMapCoordinates(this->getCenterPosition()), objetives, f);
 	if(movements.size() < 1){
 		generateRandomPath(getMapCoordinates(getCenterPosition()), movements);
 	}
+	numMovenet = numConsecutiveMovements;
 }
 
 void EnemyEntity::drawMovements(sf::RenderWindow &w)
@@ -82,12 +82,13 @@ void EnemyEntity::updateVelocity()
 	}
 	else if (checkArrivePosition(this->getCenterPosition(), currentMovement->getPosition(), currentMovement->getAction()))
 	{ //Si esta en posicions
-		if (movements.size() < 1)
+		if (movements.size() < 1 || numMovenet < 1)
 		{
 			this->generateMovements();
 		}
 		currentMovement = movements.front();
 		movements.pop_front();
+		numMovenet --;
 	}
 
 	double moveTime = 0;
@@ -155,7 +156,7 @@ void EnemyEntity::update()
 sf::FloatRect EnemyEntity::getGlobalBounds() const
 {
 	sf::FloatRect dim = sf::Sprite::getGlobalBounds();
-	return sf::FloatRect(dim.left + 6, dim.top + 3, dim.width - 6, dim.height - 6);
+	return sf::FloatRect(dim.left + 6, dim.top + 6, dim.width - 6, dim.height - 6);
 }
 
 Balloon::Balloon() : EnemyEntity()
