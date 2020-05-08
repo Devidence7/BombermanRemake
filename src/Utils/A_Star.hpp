@@ -136,9 +136,9 @@ inline bool checkValidPosition(const sf::Vector2i &v, std::shared_ptr<Entity> e)
 
 ANode_Ptr generateRandomMovement(std::shared_ptr<Entity> e,  sf::Vector2i fromPosition);
 void generateRandomPath(sf::Vector2i position, std::list<ANode_Ptr> & path, std::shared_ptr<Entity> e);
-void generatePath(std::shared_ptr<Entity> e, std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> & path);
+void generatePath(std::shared_ptr<Entity> e, std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> & path, TypeSeekIA typeSeek);
                              
 sf::Vector2i selectCloseObjetive(std::shared_ptr<Entity> e, const std::vector<sf::Vector2i> &objetives);
 
-bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> & path, std::shared_ptr<Entity> e);
+bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> & path, std::shared_ptr<Entity> e,  TypeSeekIA typeSeek);
 

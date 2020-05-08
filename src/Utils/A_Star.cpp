@@ -82,11 +82,11 @@ void generateRandomPath(sf::Vector2i position, std::list<ANode_Ptr> &path, Entit
     }
 }
 
-void generatePath(Entity_ptr e, std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> &path)
+void generatePath(Entity_ptr e, std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> &path,  TypeSeekIA typeSeek)
 {
     sf::Vector2i positionEnemy = getMapCoordinates(e->getCenterPosition());
     //si ve al menos 1 -> buscar
-    if (!pathFinding(positionEnemy, objetives, path, e))
+    if (!pathFinding(positionEnemy, objetives, path, e, typeSeek))
     {
         std::cout << "NO ENCONTARDO\n";
         objetives.clear();
@@ -114,7 +114,7 @@ void generatePath(Entity_ptr e, std::vector<sf::Vector2i> &objetives, std::list<
         goTo.y = max(goTo.y, sizeMap.y);
         objetives.push_back(goTo);
     }
-    pathFinding(positionEnemy, objetives, path, e);
+    pathFinding(positionEnemy, objetives, path, e, typeSeek);
     if (path.empty())
     {
         generateRandomPath(positionEnemy, path, e);
@@ -123,7 +123,7 @@ void generatePath(Entity_ptr e, std::vector<sf::Vector2i> &objetives, std::list<
 
 
 
-bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> &path, Entity_ptr e)
+bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> &path, Entity_ptr e, TypeSeekIA typeSeek)
 {
     path.clear();
     Heap<ANode_Ptr> frontera;
@@ -178,7 +178,7 @@ bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector
             sf::Vector2i posObjetiv =  currentNode->getPosition();
             vec2i pOb = vec2i(posObjetiv);
             objetivesFound[pOb]++;
-            found = e->typeSeek == TypeSeekIA::BEST_PATH || (objetivesFound[pOb] > 0 && e->typeSeek == TypeSeekIA::SECOND_BEST_PATH) || (e->typeSeek == TypeSeekIA::LONG_PATH && int(manhattan(posObjetiv, positionEnemy) * 1.5) <= currentNode->costNode());
+            found = typeSeek == TypeSeekIA::BEST_PATH || (objetivesFound[pOb] > 0 && typeSeek == TypeSeekIA::SECOND_BEST_PATH) || (typeSeek == TypeSeekIA::LONG_PATH && int(manhattan(posObjetiv, positionEnemy) * 1.5) <= currentNode->costNode());
           //  std::cout << "Coste camino" << currentNode->costNode() << "\n";
             bestfounds++;
             if(frontera.isEmpty()){

@@ -100,11 +100,11 @@ public:
 
 	void realizeActions();
 
-	bool playerActions();
+	virtual bool playerActions();
 	/*
 	 * Update player position.
 	 */
-	bool updatePlayer();
+	virtual bool updatePlayer();
 
 	void setJumpingBomb();
 
@@ -112,6 +112,32 @@ public:
 
 	void bombExploted(Entity_ptr b);
 
-	void changeBombs2time();
+	//void changeBombs2time();
+
+};
+
+class PlayerIAEntity : public PlayerEntity
+{
+public:
+
+	/*
+	Constructor of Entity
+	*/
+	PlayerIAEntity(PlayerControls& playerControls);
+
+//	sf::FloatRect getGlobalBounds() const override; Modificar??
+
+//	void update() override;
+	void setCollision(std::shared_ptr<Entity> e) override;
+
+//	void realizeActions();
+
+	bool playerActions() override;
+	/*
+	 * Update player position.
+	 */
+	bool updatePlayer() override;
+
+//	void invertControls(); ??
 
 };

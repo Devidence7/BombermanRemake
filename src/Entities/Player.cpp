@@ -43,7 +43,7 @@ int PlayerEntity::getPowerOfBombs() {
 }
 
 void PlayerEntity::setExpiredEntity() {
-	return;
+	//return;
 	if (!expiredEntity) {
 		this->BombTaked = nullptr;
 		expiredEntity = true;
