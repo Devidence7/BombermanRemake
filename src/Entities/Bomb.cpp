@@ -34,14 +34,14 @@ bool Bomb::isColliderWith(Entity_ptr eCollisioning){
 }	
 
 
-void Bomb::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT)
+void Bomb::onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<Entity> eCollisioner, CollisionType colT)
 {
 	if (this->onFlight){
 		return;
 	}
 	Player_ptr p;
 	 if(!eCollisioning->CanThroughBomb()){
-		Entity::onCollission(eCollisioning, colT);
+		Entity::onCollission(eCollisioning, eCollisioner,colT);
 	}
 	else  if ( (p = std::dynamic_pointer_cast<PlayerEntity>(eCollisioning)) != nullptr)
 	{
@@ -49,12 +49,12 @@ void Bomb::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType col
 	}
 	else if (std::dynamic_pointer_cast<EnemyEntity>(eCollisioning) != nullptr)
 	{
-		Entity::onCollission(eCollisioning, colT);
+		Entity::onCollission(eCollisioning, eCollisioner, colT);
 	}
 	else
 	{
 		//stop Bomb? Fire?
-		Entity::onCollission(eCollisioning, colT);
+		Entity::onCollission(eCollisioning, eCollisioner, colT);
 	}
 }
 
@@ -115,7 +115,7 @@ Fire::Fire(Player_ptr p, int type ) : Entity()
 	setTexture(fireTexture->getTexture());
 }
 
-void Fire::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT)
+void Fire::onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<Entity> eCollisioner, CollisionType colT)
 {
 	eCollisioning->setExpiredEntity();
 	//TODO: Check if have increment score

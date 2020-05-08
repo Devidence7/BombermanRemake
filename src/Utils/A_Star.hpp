@@ -131,14 +131,14 @@ typedef std::shared_ptr<ANode> ANode_Ptr;
 
 
 inline bool checkObjetive(const sf::Vector2i &currentP, const sf::Vector2i &objetivePosition);
+#include "../Entities/Entity.h"
+inline bool checkValidPosition(const sf::Vector2i &v, std::shared_ptr<Entity> e);
 
-inline bool checkValidPosition(const sf::Vector2i &v);
+ANode_Ptr generateRandomMovement(std::shared_ptr<Entity> e,  sf::Vector2i fromPosition);
+void generateRandomPath(sf::Vector2i position, std::list<ANode_Ptr> & path, std::shared_ptr<Entity> e);
+void generatePath(std::shared_ptr<Entity> e, std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> & path);
+                             
+sf::Vector2i selectCloseObjetive(std::shared_ptr<Entity> e, const std::vector<sf::Vector2i> &objetives);
 
-ANode_Ptr generateRandomMovement(sf::Vector2i fromPosition);
-void generateRandomPath(sf::Vector2i position, std::list<ANode_Ptr> & path);
-void generatePath(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, int RangeVision, std::list<ANode_Ptr> & path);
+bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> & path, std::shared_ptr<Entity> e);
 
-sf::Vector2i selectCloseObjetive(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives);
-
-bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> & path);
-#include "../Include/EntitiesInclude.hpp"

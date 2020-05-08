@@ -8,6 +8,7 @@
 #include "../Include/global.hpp"
 #include "../Exceptions/ExceptionsGame.hpp"
 #include "../Logic/Random.h"
+#include "../Utils/OmittedAreas.hpp"
 
 class Entity : public sf::Sprite
 {
@@ -44,7 +45,10 @@ public:
 	sf::Vector2i siteRespectPlayer; // Sitio respecto jugador a donde ira a buscar un camino si existe
 	int numConsecutiveMovements = 5;
 	int numMovenet = 0;
-
+	TypePositionRelative typePosIA = TypePositionRelative::OBJETIVE_POSITION;
+	TypeSeekIA typeSeek = TypeSeekIA::SECOND_BEST_PATH;
+	int longMorePAth = 3;
+	std::list<OmittedArea> OmittedAreas;
 
 	Entity();
 	virtual sf::Vector2f getCenterPosition();
@@ -61,8 +65,8 @@ public:
 		velocity.y = vel.y * baseSpeed;
 	}
 
-	virtual void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT );
-	void setCollision();
+	virtual void onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<Entity> onCollission, CollisionType colT );
+	virtual void setCollision(std::shared_ptr<Entity> col);
 
 	bool collision(const Entity &e) const;
 

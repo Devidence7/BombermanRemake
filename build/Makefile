@@ -19,13 +19,14 @@ UtilsInzPath=$(GUIPath)/Utils
 MusicPath=$(src)/Music
 LevelPath=$(src)/Map
 
+UtilsPath=$(src)/Utils
 
 libs=-L$(bin) -lEntities -lTextures -lGui
 libEntities=-L$(bin) -lEntities 
 
-bomberman: $(src)/main.cpp $(src)/Include/global.hpp $(bin)/Level.o $(src)/GameEngine.hpp $(bin)/libEntities.a $(bin)/libGui.a $(bin)/libTextures.a $(bin)/Random.o $(bin)/Time.o  $(src)/Include/EntitiesInclude.cpp $(src)/Utils/A_Star.cpp 
-	$(CC) -o bomberman  $(src)/main.cpp $(src)/Include/EntitiesInclude.cpp $(src)/Utils/A_Star.cpp  $(MusicPath)/GameMusic.cpp $(MusicPath)/GameSounds.cpp  \
-		$(bin)/Level.o $(bin)/Random.o $(bin)/Time.o  \
+bomberman: $(src)/main.cpp $(src)/Include/global.hpp $(bin)/Level.o $(src)/GameEngine.hpp $(bin)/libEntities.a $(bin)/libGui.a $(bin)/libTextures.a $(bin)/Random.o $(bin)/Time.o  $(src)/Include/EntitiesInclude.cpp $(bin)/IAFunctions.o $(bin)/A_Star.o
+	$(CC) -o bomberman  $(src)/main.cpp $(src)/Include/EntitiesInclude.cpp  $(MusicPath)/GameMusic.cpp $(MusicPath)/GameSounds.cpp  \
+		$(bin)/Level.o $(bin)/Random.o $(bin)/Time.o  $(bin)/IAFunctions.o $(bin)/A_Star.o \
 		$(bin)/Arrow.o $(bin)/Box.o $(bin)/Cross.o $(UtilsInzPath)/ItemBox.hpp \
 		$(bin)/FormLayout.o $(bin)/HorizontalBoxLayout.o $(bin)/Layout.o $(bin)/Menu.o $(bin)/VerticalBoxLayout.o \
 		$(libs) \
@@ -36,8 +37,14 @@ GameEngine.o: $(src)/GameEngine.cpp $(src)/GameEngine.hpp
 
 
 $(bin)/Level.o: $(LevelPath)/Level.cpp $(LevelPath)/Level.hpp
-	$(CC) -c $(LevelPath)/Level.cpp -o $(bin)/Level.o $(std)
+	$(CC) -c $(LevelPath)/Level.cpp -o $(bin)/Level.o $(std) $(O)
 	
+$(bin)/IAFunctions.o: $(UtilsPath)/IAFunctions.cpp $(UtilsPath)/IAFunctions.hpp
+	$(CC) -c $(UtilsPath)/IAFunctions.cpp -o $(bin)/IAFunctions.o $(std) $(O)
+
+$(bin)/A_Star.o:$(UtilsPath)/A_Star.hpp $(UtilsPath)/A_Star.cpp
+	$(CC) -c $(UtilsPath)/A_Star.cpp -o $(bin)/A_Star.o $(std) $(O)
+
 clear: 
 	rm bomberman || true
 	rm $(bin)/*.o  || true
@@ -64,25 +71,25 @@ $(bin)/Time.o: $(logicPath)/Time.cpp $(logicPath)/Time.h
 	ar rc $(bin)/libEntities.a $(bin)/Entity.o $(bin)/Bomb.o $(bin)/BrickWall.o $(bin)/Enemy.o $(bin)/Pillar.o $(bin)/PowerUp.o $(bin)/Player.o
 	ranlib $(bin)/libEntities.a
 
-../bin/Entity.o:  $(entityPath)/Entity.h $(entityPath)/Entity.cpp
+../bin/Entity.o:  $(entityPath)/Entity.h $(entityPath)/Entity.cpp $(UtilsPath)/OmittedAreas.hpp
 	$(CC) -o $(bin)/Entity.o -c $(entityPath)/Entity.cpp $(O) $(std)
 
-../bin/Bomb.o: $(entityPath)/Bomb.cpp $(entityPath)/Bomb.h $(entityPath)/Entity.h $(entityPath)/Entity.cpp
+../bin/Bomb.o: $(entityPath)/Bomb.cpp $(entityPath)/Bomb.h $(bin)/Entity.o
 	$(CC) -o $(bin)/Bomb.o -c $(entityPath)/Bomb.cpp $(std) $(O)
 
-../bin/BrickWall.o: $(entityPath)/BrickWall.cpp $(entityPath)/BrickWall.h $(entityPath)/Entity.h $(entityPath)/Entity.cpp
+../bin/BrickWall.o: $(entityPath)/BrickWall.cpp $(entityPath)/BrickWall.h $(bin)/Entity.o
 	$(CC) -o $(bin)/BrickWall.o -c $(entityPath)/BrickWall.cpp $(std) $(O)
 
-../bin/Enemy.o: $(entityPath)/Enemy.cpp $(entityPath)/Enemy.h $(entityPath)/Entity.h $(entityPath)/Entity.cpp
+../bin/Enemy.o: $(entityPath)/Enemy.cpp $(entityPath)/Enemy.h $(bin)/Entity.o
 	$(CC) -o $(bin)/Enemy.o -c $(entityPath)/Enemy.cpp $(std) $(O)
 
-../bin/Pillar.o: $(entityPath)/Pillar.cpp $(entityPath)/Pillar.hpp  $(entityPath)/Entity.h $(entityPath)/Entity.cpp
+../bin/Pillar.o: $(entityPath)/Pillar.cpp $(entityPath)/Pillar.hpp  $(bin)/Entity.o
 	$(CC) -o $(bin)/Pillar.o -c $(entityPath)/Pillar.cpp $(std) $(O)
 
-../bin/Player.o: $(entityPath)/Player.cpp $(entityPath)/Player.h $(entityPath)/Entity.h $(entityPath)/Entity.cpp
+../bin/Player.o: $(entityPath)/Player.cpp $(entityPath)/Player.h $(bin)/Entity.o
 	$(CC) -o $(bin)/Player.o -c $(entityPath)/Player.cpp $(std)  $(O)
 
-../bin/PowerUp.o: $(entityPath)/PowerUp.cpp $(entityPath)/PowerUp.h $(entityPath)/Entity.h $(entityPath)/Entity.cpp
+../bin/PowerUp.o: $(entityPath)/PowerUp.cpp $(entityPath)/PowerUp.h $(bin)/Entity.o
 	$(CC) -o $(bin)/PowerUp.o -c $(entityPath)/PowerUp.cpp  $(std) $(O) 
 
 

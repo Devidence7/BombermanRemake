@@ -118,7 +118,7 @@ void Level::chechAndFixBombCollision(Bomb_ptr b)
 		}
 		else
 		{
-			b->setCollision();
+			b->setCollision(nullptr);
 			b->onMove = false;
 			b->canExplote = true;
 			b->setPosition(getMapCellCorner(globalPos));
@@ -389,10 +389,9 @@ void Level::checkAndFixCollisions(Entity_ptr eCollisioning)
 	if(!Level::isValidCell(position)){
 		std::cout << "Position invalida\n";
 	}
-	if ((currentPos = getCellMiniMapObject(position)) != nullptr)
+	if ((currentPos = getCellMiniMapObject(position)) != nullptr )
 	{
-		//getOrDie(*eCollisioning, currentPos);
-		currentPos->onCollission(eCollisioning, CollisionType::NONE);
+		currentPos->onCollission(eCollisioning, currentPos,CollisionType::NONE);
 	}
 	//detectar caso
 	sf::FloatRect body = eCollisioning->getGlobalBounds();
@@ -444,17 +443,17 @@ void Level::checkAndFixCollisions(Entity_ptr eCollisioning)
 			 * 	    | X |
 			************************/
 		Entity_ptr e;
-		if ((e = getCellMiniMapObject(position2.x, position2.y)) != nullptr)
+		if ((e = getCellMiniMapObject(position2.x, position2.y)) != nullptr && e->isColliderWith(eCollisioning))
 		{
 			sf::Vector2f pos = eCollisioning->getPosition();
 			if (horizontal)
 			{
 				//					pos.x += moveGetOrDie_x(*eCollisioning, e);
-				e->onCollission(eCollisioning, CollisionType::HORIZONTAL);
+				e->onCollission(eCollisioning, e,CollisionType::HORIZONTAL);
 			}
 			else if (vertical)
 			{
-				e->onCollission(eCollisioning, CollisionType::VERTICAL);
+				e->onCollission(eCollisioning, e,CollisionType::VERTICAL);
 			}
 		}
 	}
@@ -465,11 +464,17 @@ void Level::checkAndFixCollisions(Entity_ptr eCollisioning)
 		Entity_ptr e_horizontal, e_vertical, e_diagonal;
 		int numIntersecciones = 0;
 		e_horizontal = getCellMiniMapObject(position2.x, position.y);
-		numIntersecciones++;
+		if(e_horizontal && !e_horizontal->isColliderWith(eCollisioning)){
+			e_horizontal = nullptr;
+		}
 		e_vertical = getCellMiniMapObject(position.x, position2.y);
-		numIntersecciones++;
+		if(e_vertical && !e_vertical->isColliderWith(eCollisioning)){
+			e_vertical = nullptr;
+		}
 		e_diagonal = getCellMiniMapObject(position2.x, position2.y);
-		numIntersecciones++;
+		if(e_diagonal && !e_diagonal->isColliderWith(eCollisioning)){
+			e_diagonal = nullptr;
+		}
 
 		if (e_horizontal && e_vertical)
 		{
@@ -478,8 +483,8 @@ void Level::checkAndFixCollisions(Entity_ptr eCollisioning)
 				 * | ? | x |
 				 * 
 				************************/
-			e_horizontal->onCollission(eCollisioning, CollisionType::HORIZONTAL);
-			e_vertical->onCollission(eCollisioning, CollisionType::VERTICAL);
+			e_horizontal->onCollission(eCollisioning,e_horizontal, CollisionType::HORIZONTAL);
+			e_vertical->onCollission(eCollisioning, e_vertical,CollisionType::VERTICAL);
 		}
 		else if (e_diagonal && e_horizontal)
 		{
@@ -487,7 +492,7 @@ void Level::checkAndFixCollisions(Entity_ptr eCollisioning)
 				 * | x | p |
 				 * | x |   |
 			************************/
-			e_horizontal->onCollission(eCollisioning, CollisionType::HORIZONTAL);
+			e_horizontal->onCollission(eCollisioning, e_horizontal,CollisionType::HORIZONTAL);
 		}
 		else if (e_diagonal && e_vertical)
 		{
@@ -495,7 +500,7 @@ void Level::checkAndFixCollisions(Entity_ptr eCollisioning)
 				 * |   | p |
 				 * | x | x |
 			************************/
-			e_vertical->onCollission(eCollisioning, CollisionType::VERTICAL);
+			e_vertical->onCollission(eCollisioning, e_vertical, CollisionType::VERTICAL);
 		}
 		else
 		{
@@ -525,13 +530,9 @@ void Level::checkAndFixCollisions(Entity_ptr eCollisioning)
 			************************/
 				col = e_diagonal;
 			}
-			if (!col)
-			{	//Si no hay colision -> fin
-				//return;
-			}
-			else
+			if (col)
 			{
-				col->onCollission(eCollisioning, CollisionType::CORNER);
+				col->onCollission(eCollisioning, col, CollisionType::CORNER);
 				RealPos = eCollisioning->getPosition();
 			}
 		}

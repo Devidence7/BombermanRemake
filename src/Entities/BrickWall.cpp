@@ -33,19 +33,19 @@ void BrickWall::update()
  
 
 bool BrickWall::isColliderWith(std::shared_ptr<Entity> eCollisioning) {
-	return eCollisioning->CanThroughWall();
+	return !eCollisioning->CanThroughWall();
 }
 
-void BrickWall::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT)
+void BrickWall::onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<Entity> eCollisioner, CollisionType colT)
 {
 	if (std::dynamic_pointer_cast<EnemyEntity>(eCollisioning))
 	{
 		//Puede atravesar????
-		Entity::onCollission(eCollisioning, colT);
+		Entity::onCollission(eCollisioning, eCollisioner ,colT);
 	}
 	else
 	{
-		Entity::onCollission(eCollisioning, colT);
+		Entity::onCollission(eCollisioning, eCollisioner,colT);
 	}
 }
 

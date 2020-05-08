@@ -1,17 +1,29 @@
 #include "A_Star.hpp"
+#include "../Include/EntitiesInclude.hpp"
+
 
 bool checkObjetive(const sf::Vector2i &currentP, const sf::Vector2i &objetivePosition)
 {
     return currentP.x == objetivePosition.x && currentP.y == objetivePosition.y;
 }
 
-bool checkValidPosition(const sf::Vector2i &v)
+bool checkValidPosition(const sf::Vector2i &v, Entity_ptr e)
 {
-    if (!EntityMap::isValidCell(v))
-    {
-        std::cout << "NOT VALID " << v.x << " " << v.y << std::endl;
+    // if (!EntityMap::isValidCell(v))
+    // {
+    //     std::cout << "NOT VALID " << v.x << " " << v.y << std::endl;
+    // }
+    bool valid = (EntityMap::isValidCell(v) && (EntityMap::getCellEntMapObject(v) == nullptr || !EntityMap::getCellEntMapObject(v)->isColliderWith(e)));
+    if(valid){
+        //Verficar si es un area omitida
+        for(OmittedArea oa : e->OmittedAreas){
+            if(oa == v){
+                valid = false;
+                break;
+            }
+        }
     }
-    return (EntityMap::isValidCell(v) && EntityMap::getCellEntMapObject(v) == nullptr);
+    return valid;
 }
 
 sf::Vector2i selectCloseObjetive(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives)
@@ -30,13 +42,14 @@ sf::Vector2i selectCloseObjetive(const sf::Vector2i &positionEnemy, const std::v
     return objetive;
 }
 
-ANode_Ptr generateRandomMovement(sf::Vector2i fromPosition)
+ANode_Ptr generateRandomMovement(Entity_ptr e, sf::Vector2i fromPosition)
 {
-	sf::Vector2i direction;
+    sf::Vector2i direction;
     sf::Vector2i nextPostion;
     int j = 0;
-    do{
-        j++;    
+    do
+    {
+        j++;
         int mul = Random::getIntNumberBetween(0, 1);
         if (!mul)
         {
@@ -53,88 +66,80 @@ ANode_Ptr generateRandomMovement(sf::Vector2i fromPosition)
             direction.x = mul;
         }
         nextPostion = fromPosition + direction;
-    }while(j < 12 && !checkValidPosition(nextPostion));
-	return std::make_shared<ANode>(ANode(nextPostion, direction, sf::Vector2i(0, 0), 0));
+    } while (j < 12 && !checkValidPosition(nextPostion, e));
+    return std::make_shared<ANode>(ANode(nextPostion, direction, sf::Vector2i(0, 0), 0));
 }
 
-void generateRandomPath(sf::Vector2i position, std::list<ANode_Ptr> & path)
+void generateRandomPath(sf::Vector2i position, std::list<ANode_Ptr> &path, Entity_ptr e)
 {
     path.clear();
-	ANode_Ptr node = generateRandomMovement(position);
-	path.push_back(node);
-	for (int i = 0; i < 5; i++)
-	{
-		node = generateRandomMovement(node->getPosition());
-		path.push_back(node);
-	}
-}
-
-
-
-void generatePath(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, int RangeVision, std::list<ANode_Ptr> & path)
-{
-    //si ve al menos 1 -> buscar
-    std::vector<sf::Vector2i> objetivesOnRange;
-    if (RangeVision != 0)
+    ANode_Ptr node = generateRandomMovement(e, position);
+    path.push_back(node);
+    for (int i = 0; i < 5; i++)
     {
-        for (int i = 0; i < objetives.size(); i++)
-        {
-            if (RangeVision < 1 || (objetives[i].x - positionEnemy.x < RangeVision && objetives[i].y - positionEnemy.y < RangeVision))
-            {
-                objetivesOnRange.push_back(objetives[i]);
-            }
-        }
-
-        bool finded = false;
-        if(objetivesOnRange.size() > 0){
-            
-            if (!pathFinding(positionEnemy, objetivesOnRange, path))
-            {
-                objetivesOnRange.clear();
-            }else{
-                return;
-            }
-        }
-        sf::Vector2i sizeMap = EntityMap::size();
-        if (objetivesOnRange.size() == 0)
-        {
-            sf::Vector2i goTo;
-            if (RangeVision > 0)
-            {
-                goTo = sf::Vector2i(Random::getIntNumberBetween(-RangeVision, RangeVision), Random::getIntNumberBetween(-RangeVision, RangeVision));
-            }
-            else
-            {
-                goTo = sf::Vector2i(Random::getIntNumberBetween(-sizeMap.x - 2, sizeMap.x - 2), Random::getIntNumberBetween(-sizeMap.y - 2, sizeMap.y - 2));
-            }
-            goTo = positionEnemy + goTo ;
-            goTo.x = min(goTo.x, 1);
-            goTo.y = min(goTo.y, 1);
-            goTo.x = max(goTo.x, sizeMap.x);
-            goTo.y = max(goTo.y, sizeMap.y);
-            objetivesOnRange.push_back(goTo);
-        }
-        pathFinding(positionEnemy, objetivesOnRange, path);
-        if(path.empty()){
-            generateRandomPath(positionEnemy, path);
-        }
-    }else{
-        generateRandomPath(positionEnemy, path);
+        node = generateRandomMovement(e, node->getPosition());
+        path.push_back(node);
     }
-    //Generar camino aleatorio
 }
 
-bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> & path)
+void generatePath(Entity_ptr e, std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> &path)
+{
+    sf::Vector2i positionEnemy = getMapCoordinates(e->getCenterPosition());
+    //si ve al menos 1 -> buscar
+    if (!pathFinding(positionEnemy, objetives, path, e))
+    {
+        std::cout << "NO ENCONTARDO\n";
+        objetives.clear();
+    }
+    else
+    {
+        return;
+    }
+    sf::Vector2i sizeMap = EntityMap::size();
+    if (objetives.size() == 0)
+    {
+        sf::Vector2i goTo;
+        if (e->rangoVision > 0)
+        {
+            goTo = sf::Vector2i(Random::getIntNumberBetween(-e->rangoVision, e->rangoVision), Random::getIntNumberBetween(-e->rangoVision, e->rangoVision));
+        }
+        else
+        {
+            goTo = sf::Vector2i(Random::getIntNumberBetween(-sizeMap.x - 2, sizeMap.x - 2), Random::getIntNumberBetween(-sizeMap.y - 2, sizeMap.y - 2));
+        }
+        goTo = positionEnemy + goTo;
+        goTo.x = min(goTo.x, 1);
+        goTo.y = min(goTo.y, 1);
+        goTo.x = max(goTo.x, sizeMap.x);
+        goTo.y = max(goTo.y, sizeMap.y);
+        objetives.push_back(goTo);
+    }
+    pathFinding(positionEnemy, objetives, path, e);
+    if (path.empty())
+    {
+        generateRandomPath(positionEnemy, path, e);
+    }
+}
+
+
+
+bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> &path, Entity_ptr e)
 {
     path.clear();
     Heap<ANode_Ptr> frontera;
     std::map<vec2i, ANode_Ptr> expanded;
+    std::map<vec2i, int> objetivesFound;
+    for(sf::Vector2i o: objetives){
+        objetivesFound[vec2i(o)] = 0;
+    }
     sf::Vector2i objetive = selectCloseObjetive(positionEnemy, objetives);
-
+    
+    int bestfounds = 0;
+    ANode_Ptr lastBest;
     ANode_Ptr currentNode = std::make_shared<ANode>(ANode(positionEnemy, sf::Vector2i(0, 0), objetive, 0.0f));
 
-    bool finded = false;
-    while (!finded)
+    bool found = false;
+    while (!found)
     {
 
         expanded[vec2i(currentNode->getPosition())] = currentNode;
@@ -148,7 +153,7 @@ bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector
                     sf::Vector2i nodePosition(currentNode->xPosition() + i, currentNode->yPosition() + j);
                     sf::Vector2i objetiveP = selectCloseObjetive(positionEnemy, objetives);
                     ANode_Ptr newNode = std::make_shared<ANode>(ANode(nodePosition, sf::Vector2i(i, j), objetiveP, currentNode->fAcum() + 1, currentNode));
-                    if (checkValidPosition(nodePosition) && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(currentNode))
+                    if (checkValidPosition(nodePosition, e) && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(currentNode))
                     { //Si es una posicion valida y no se ha expandido
                         frontera.add(newNode);
                     }
@@ -169,14 +174,27 @@ bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector
         //currentNode = *
         if (currentNode->isObjetive())
         {
-            finded = true;
+            lastBest = currentNode;
+            sf::Vector2i posObjetiv =  currentNode->getPosition();
+            vec2i pOb = vec2i(posObjetiv);
+            objetivesFound[pOb]++;
+            found = e->typeSeek == TypeSeekIA::BEST_PATH || (objetivesFound[pOb] > 0 && e->typeSeek == TypeSeekIA::SECOND_BEST_PATH) || (e->typeSeek == TypeSeekIA::LONG_PATH && int(manhattan(posObjetiv, positionEnemy) * 1.5) <= currentNode->costNode());
+          //  std::cout << "Coste camino" << currentNode->costNode() << "\n";
+            bestfounds++;
+            if(frontera.isEmpty()){
+                break;
+            }
+            if(!found){
+                currentNode = frontera.pop();
+            }
         }
     }
 
     std::list<ANode_Ptr> list_actions;
     //Si no se ha encontrado -> seleccionar aleatorio
-    if (!finded)
+    if (!found && lastBest == nullptr)
     {
+        std::cout << "NO Best found\n";
         int randomNode = Random::getIntNumberBetween(0, expanded.size() - 1);
         for (auto &p : expanded)
         {
@@ -186,17 +204,18 @@ bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector
             }
             else
             {
-                currentNode = p.second;
+                lastBest = p.second;
                 break;
             }
         }
     }
-    while (currentNode != nullptr)
+    while (lastBest != nullptr)
     {
-        if(currentNode->getParent() != nullptr){
-            list_actions.push_back(currentNode);
+        if (lastBest->getParent() != nullptr)
+        {
+            list_actions.push_back(lastBest);
         }
-        currentNode = currentNode->getParent();
+        lastBest = lastBest->getParent();
     }
 
     while (!list_actions.empty())
@@ -206,5 +225,5 @@ bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector
         list_actions.pop_back();
     }
 
-    return finded;
+    return found;
 }

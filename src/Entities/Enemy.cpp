@@ -1,4 +1,5 @@
 #include "../Include/EntitiesInclude.hpp"
+#include "../Utils/IAFunctions.hpp"
 
 EnemyEntity::EnemyEntity() : Entity()
 {
@@ -29,24 +30,26 @@ void EnemyEntity::startMovement(){
 	velocity.x = baseSpeed * currentMovement.getAction().x;
 	velocity.y = baseSpeed * currentMovement.getAction().y;
 	updateVelocity();*/
-	setCollision();
+	setCollision(nullptr);
 }
 
 void EnemyEntity::generateMovements()
 {
-	std::vector<sf::Vector2i> objetives;
+/*	std::vector<sf::Vector2i> objetives;
 	for (Player_ptr player : PLayers::getVectorPlayer())
 	{
 		sf::Vector2f posPlayer = player->getCenterPosition();
 		objetives.push_back(getMapCoordinates(posPlayer));
 	}
 	movements.clear();
-	generatePath(getMapCoordinates(this->getCenterPosition()), objetives, rangoVision, movements);
+	generatePath(this->me, objetives, movements);*/
+	seekAnyPlayerOrRandom(movements, me);
 	//movements = pathFinding(getMapCoordinates(this->getCenterPosition()), objetives, f);
 	if(movements.size() < 1){
-		generateRandomPath(getMapCoordinates(getCenterPosition()), movements);
+		generateRandomPath(getMapCoordinates(getCenterPosition()), movements, me);
 	}
 	numMovenet = numConsecutiveMovements;
+	OmittedAreas.clear();
 }
 
 void EnemyEntity::drawMovements(sf::RenderWindow &w)
@@ -118,7 +121,14 @@ void EnemyEntity::setExpiredEntity()
 	//velocity = sf::Vector2f(0, 0);
 }
 
-void EnemyEntity::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT)
+void EnemyEntity::setCollision(std::shared_ptr<Entity> col){
+	this->Entity::setCollision(col);
+	if(col != nullptr){
+		OmittedAreas.push_back(OmittedArea(getMapCoordinates(col->getCenterPosition())));
+	}
+}
+
+void EnemyEntity::onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<Entity> eCollisioner, CollisionType colT)
 {
 	if (std::dynamic_pointer_cast<PlayerEntity>(eCollisioning))
 	{
@@ -168,6 +178,12 @@ Balloon::Balloon() : EnemyEntity()
 Ice::Ice() : EnemyEntity()
 {
 	enemyType = ice;
+	this->rangoVision = -1;
+	this->numConsecutiveMovements = 7;
+	this->typeSeek = TypeSeekIA::LONG_PATH;
+	this->longMorePAth = 10;
+	this->typePosIA = TypePositionRelative::OBJETIVE_POSITION;
+	this->canThroughWall = true;
 	//move(200, 200);
 }
 
