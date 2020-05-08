@@ -188,6 +188,11 @@ void Level::update()
 					case 9:
 						powerUp = std::make_shared<RemoteBombPowerUp>(RemoteBombPowerUp((*it)->getPosition()));
 						break;
+
+					//Añadir teleporter
+
+				
+				
 					default:
 						powerUp = std::make_shared<ExtraLifePowerUp>(ExtraLifePowerUp((*it)->getPosition()));
 						break;

@@ -18,6 +18,7 @@
 #include "Interface/StoryModeMenu.h"
 #include "Interface/DifficultMenu.h"
 #include "Interface/LoadingScreen.h"
+#include "Interface/VictoryScreen.h"
 #include "Interface/UserKeyPress.h"
 
 
@@ -47,6 +48,7 @@ int main(int argc, char* argv[]) {
 	StoryModeMenu storyModeMenu(*gameDisplayController.getWindow());
 	DifficultyMenu difficultyMenu(*gameDisplayController.getWindow());
 	GameInterface gameInterface(*gameDisplayController.getWindow());
+	VictoryScreen victory(*gameDisplayController.getWindow(),game);
 
 	// Start game loop
 	while (gameDisplayController.windowOpen()) {
@@ -56,11 +58,17 @@ int main(int argc, char* argv[]) {
 		case GameDisplayController::GameState::MAIN_MENU:
 			gameDisplayController.getWindow()->setView(gameDisplayController.menuView);
 			gameMainMenu.menuActions(gameDisplayController, game);
+			//victory.menuActions(gameDisplayController, game);
+			break;
+
+		case GameDisplayController::GameState::VICTORY:
+			gameDisplayController.getWindow()->setView(gameDisplayController.menuView);
+			victory.menuActions(gameDisplayController, game);
 			break;
 
 		case GameDisplayController::GameState::LOADING:
 			//Mostrar pantalla de carga
-			
+			cout<<"Nivel: "<<game.stage<<endl;
 			game.startNewGame(*gameDisplayController.getWindow(),gameDisplayController);
 			
 			gameInterface.iniPlayers();
