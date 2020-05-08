@@ -39,7 +39,6 @@ void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
 }
 
 // Callbacks
-
 void Button::onStateChanged(State state)
 {
 	m_box.applyState(state);

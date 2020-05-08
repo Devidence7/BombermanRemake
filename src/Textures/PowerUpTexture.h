@@ -10,4 +10,5 @@ public:
 	PowerUpTexture();
 
 	sf::IntRect& getFrame(int x, int y);
+	sf::IntRect& getFrame(int x);
 };

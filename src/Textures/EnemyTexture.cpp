@@ -1,9 +1,8 @@
 #include "EnemyTexture.h"
 
-EnemyTexture::EnemyTexture()
-{
-	frameSize.x = 51;
-	frameSize.y = 54;
+EnemyTexture::EnemyTexture() {
+	frameSize.x = 49;
+	frameSize.y = 49;
 
 	// Get texture sprites:
 	if (!this->texture.loadFromFile("../textures/Entities/enemies.png"))
@@ -17,7 +16,7 @@ EnemyTexture::EnemyTexture()
 	{
 		for (int x = 0; x < 13; x++)
 		{
-			sf::IntRect frame((frameSize.x + 3) * x, frameSize.y * y, frameSize.x, frameSize.y);
+			sf::IntRect frame((frameSize.x + 6) * x, (frameSize.y + 6) * y, frameSize.x, frameSize.y);
 			frames.push_back(frame);
 		}
 	}

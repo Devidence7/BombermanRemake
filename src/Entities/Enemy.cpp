@@ -43,7 +43,7 @@ void EnemyEntity::generateMovements()
 	}
 	movements.clear();
 	generatePath(this->me, objetives, movements);*/
-	seekAnyPlayerOrRandom(movements, me);
+	// seekAnyPlayerOrRandom(movements, me);
 	//movements = pathFinding(getMapCoordinates(this->getCenterPosition()), objetives, f);
 	if(movements.size() < 1){
 		generateRandomPath(getMapCoordinates(getCenterPosition()), movements, me);
@@ -166,7 +166,7 @@ void EnemyEntity::update()
 sf::FloatRect EnemyEntity::getGlobalBounds() const
 {
 	sf::FloatRect dim = sf::Sprite::getGlobalBounds();
-	return sf::FloatRect(dim.left + 6, dim.top + 6, dim.width - 6, dim.height - 6);
+	return sf::FloatRect(dim.left, dim.top + 9, dim.width - 6, dim.height - 6);
 }
 
 Balloon::Balloon() : EnemyEntity()
