@@ -44,7 +44,7 @@ public:
 	sf::FloatRect getGlobalBounds() const override;
 	void setExpiredEntity() override;
 	bool isColliderWith(std::shared_ptr<Entity> eCollisioning) override;	
-	void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) override;
+	void onCollission(std::shared_ptr<Entity> eCollisioning,std::shared_ptr<Entity> eCollisioner, CollisionType colT) override;
 	void update();
 	void setPlayer2Score(std::shared_ptr<PlayerEntity> p){
 		player2Score = p;
@@ -80,7 +80,7 @@ public:
 	int explosionType;
 
 	Fire(std::shared_ptr<PlayerEntity> p, int type = 0);
-	void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) override;
+	void onCollission(std::shared_ptr<Entity> eCollisioning,std::shared_ptr<Entity> eCollisioner, CollisionType colT) override;
 
 	void update() override;
 };

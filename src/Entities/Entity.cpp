@@ -31,17 +31,17 @@ bool Entity::CanHurtPlayer()
 	return canHurtPlayers;
 }
 
-void Entity::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT)
+void Entity::onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<Entity> eCollisioner,CollisionType colT)
 {
 	sf::Vector2f position = eCollisioning->getPosition();
 	switch (colT)
 	{
 	case HORIZONTAL:
-		eCollisioning->setCollision();
+		eCollisioning->setCollision(eCollisioner);
 		position.x += this->moveOnX(eCollisioning);
 		break;
 	case VERTICAL:
-		eCollisioning->setCollision();
+		eCollisioning->setCollision(eCollisioner);
 		position.y += this->moveOnY(eCollisioning);
 		break;
 	case CORNER:
@@ -54,7 +54,7 @@ void Entity::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType c
 	eCollisioning->setPosition(position);
 }
 
-void Entity::setCollision()
+void Entity::setCollision(std::shared_ptr<Entity> col)
 {
 	onCollision = true;
 }

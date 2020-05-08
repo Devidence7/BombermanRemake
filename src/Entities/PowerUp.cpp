@@ -21,7 +21,7 @@ PowerUp::PowerUp() : Entity()
 
 void PowerUp::update() {}
 
-void PowerUp::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT)
+void PowerUp::onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<Entity> eCollisioner, CollisionType colT)
 {
 	std::shared_ptr<PlayerEntity> pe;
 	if (!this->expiredEntity && (pe = std::dynamic_pointer_cast<PlayerEntity>(eCollisioning)) != nullptr)
@@ -198,7 +198,7 @@ PassBombsPowerUp::PassBombsPowerUp(sf::Vector2f pos) : PowerUp() {
 }
 
 void PassBombsPowerUp::setPlayerStatus(PlayerEntity& pe) {
-	// Player can jump bombs
+	pe.setAction(ActionsAvalible::THROUGH_BOMB);
 }
 
 
@@ -230,5 +230,5 @@ RemoteBombPowerUp::RemoteBombPowerUp(sf::Vector2f pos) : PowerUp() {
 }
 
 void RemoteBombPowerUp::setPlayerStatus(PlayerEntity& pe) {
-	
+	pe.setAction(ActionsAvalible::REMOTE_BOMB);
 }

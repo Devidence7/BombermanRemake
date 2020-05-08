@@ -30,7 +30,7 @@ void EnemyEntity::startMovement(){
 	velocity.x = baseSpeed * currentMovement.getAction().x;
 	velocity.y = baseSpeed * currentMovement.getAction().y;
 	updateVelocity();*/
-	setCollision();
+	setCollision(nullptr);
 }
 
 void EnemyEntity::generateMovements()
@@ -49,6 +49,7 @@ void EnemyEntity::generateMovements()
 		generateRandomPath(getMapCoordinates(getCenterPosition()), movements, me);
 	}
 	numMovenet = numConsecutiveMovements;
+	OmittedAreas.clear();
 }
 
 void EnemyEntity::drawMovements(sf::RenderWindow &w)
@@ -120,7 +121,14 @@ void EnemyEntity::setExpiredEntity()
 	//velocity = sf::Vector2f(0, 0);
 }
 
-void EnemyEntity::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT)
+void EnemyEntity::setCollision(std::shared_ptr<Entity> col){
+	this->Entity::setCollision(col);
+	if(col != nullptr){
+		OmittedAreas.push_back(OmittedArea(getMapCoordinates(col->getCenterPosition())));
+	}
+}
+
+void EnemyEntity::onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<Entity> eCollisioner, CollisionType colT)
 {
 	if (std::dynamic_pointer_cast<PlayerEntity>(eCollisioning))
 	{

@@ -52,7 +52,9 @@ public:
 
 	void setExpiredEntity() override;
 
-	void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) override;
+	void onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<Entity> eCollisioner, CollisionType colT) override;
+
+	void setCollision(std::shared_ptr<Entity> col) override;
 
 	void update() override;
 

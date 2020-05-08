@@ -143,7 +143,7 @@ void PlayerEntity::update() {
 	return;
 }
 
-void PlayerEntity::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) {
+void PlayerEntity::onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<Entity> eCollisioner, CollisionType colT) {
 	return;
 }
 

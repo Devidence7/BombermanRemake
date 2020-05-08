@@ -18,7 +18,7 @@ public:
 
 	void update();
 
-	void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) override;
+	void onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<Entity> eCollisioner, CollisionType colT) override;
 
 	virtual void setPlayerStatus(PlayerEntity &pe);
 };

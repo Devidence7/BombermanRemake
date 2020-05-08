@@ -118,7 +118,7 @@ void Level::chechAndFixBombCollision(Bomb_ptr b)
 		}
 		else
 		{
-			b->setCollision();
+			b->setCollision(nullptr);
 			b->onMove = false;
 			b->canExplote = true;
 			b->setPosition(getMapCellCorner(globalPos));
@@ -386,7 +386,7 @@ void Level::checkAndFixCollisions(Entity_ptr eCollisioning)
 	}
 	if ((currentPos = getCellMiniMapObject(position)) != nullptr )
 	{
-		currentPos->onCollission(eCollisioning, CollisionType::NONE);
+		currentPos->onCollission(eCollisioning, currentPos,CollisionType::NONE);
 	}
 	//detectar caso
 	sf::FloatRect body = eCollisioning->getGlobalBounds();
@@ -444,11 +444,11 @@ void Level::checkAndFixCollisions(Entity_ptr eCollisioning)
 			if (horizontal)
 			{
 				//					pos.x += moveGetOrDie_x(*eCollisioning, e);
-				e->onCollission(eCollisioning, CollisionType::HORIZONTAL);
+				e->onCollission(eCollisioning, e,CollisionType::HORIZONTAL);
 			}
 			else if (vertical)
 			{
-				e->onCollission(eCollisioning, CollisionType::VERTICAL);
+				e->onCollission(eCollisioning, e,CollisionType::VERTICAL);
 			}
 		}
 	}
@@ -478,8 +478,8 @@ void Level::checkAndFixCollisions(Entity_ptr eCollisioning)
 				 * | ? | x |
 				 * 
 				************************/
-			e_horizontal->onCollission(eCollisioning, CollisionType::HORIZONTAL);
-			e_vertical->onCollission(eCollisioning, CollisionType::VERTICAL);
+			e_horizontal->onCollission(eCollisioning,e_horizontal, CollisionType::HORIZONTAL);
+			e_vertical->onCollission(eCollisioning, e_vertical,CollisionType::VERTICAL);
 		}
 		else if (e_diagonal && e_horizontal)
 		{
@@ -487,7 +487,7 @@ void Level::checkAndFixCollisions(Entity_ptr eCollisioning)
 				 * | x | p |
 				 * | x |   |
 			************************/
-			e_horizontal->onCollission(eCollisioning, CollisionType::HORIZONTAL);
+			e_horizontal->onCollission(eCollisioning, e_horizontal,CollisionType::HORIZONTAL);
 		}
 		else if (e_diagonal && e_vertical)
 		{
@@ -495,7 +495,7 @@ void Level::checkAndFixCollisions(Entity_ptr eCollisioning)
 				 * |   | p |
 				 * | x | x |
 			************************/
-			e_vertical->onCollission(eCollisioning, CollisionType::VERTICAL);
+			e_vertical->onCollission(eCollisioning, e_vertical, CollisionType::VERTICAL);
 		}
 		else
 		{
@@ -527,7 +527,7 @@ void Level::checkAndFixCollisions(Entity_ptr eCollisioning)
 			}
 			if (col)
 			{
-				col->onCollission(eCollisioning, CollisionType::CORNER);
+				col->onCollission(eCollisioning, col, CollisionType::CORNER);
 				RealPos = eCollisioning->getPosition();
 			}
 		}
