@@ -52,6 +52,7 @@ public:
 	};
 	int stage;
 	GameOptions gameOptions;
+	bool debug=false;
 
 /*	double getDificultad(dificultad d){
 	switch(d){
@@ -92,10 +93,11 @@ Game(){
 		//	cout<<gameOptions.numPlayers<<endl;
 		int numEnemies=numEnemigos*gameOptions.difLevel*(stage/0.75);
 	
-
-		Enemies::insertarEnemigos(dimX, dimY,numEnemies,stage);
+		if(!debug){
+			Enemies::insertarEnemigos(dimX, dimY,numEnemies,stage);
+		}
 		//insertEnemies(7);
-		level = new Level(dimX, dimY);
+		level = new Level(dimX, dimY,debug);
 		//Enemies::insertarEnemigos(dimX, dimY);
 		insertPlayers(*gameDisplay.userKeyPress, gameOptions.numPlayers);
 	
@@ -109,6 +111,7 @@ Game(){
 
 	void restartGame(sf::RenderWindow& window,GameDisplayController &gameDisplay){
 		deleteMap();
+		cout<<numEnemigos<<endl;
 		Enemies::insertarEnemigos(dimX, dimY,numEnemigos*gameOptions.difLevel*(stage/0.75),stage);
 		startNewGame(window,gameDisplay);
 		
@@ -160,6 +163,8 @@ Game(){
 	}
 
 	void moveCamera(GameDisplayController& gameDisplay) {
+		gameDisplay.updateCamera();
+
 		if (PLayers::getVectorPlayer().size() == 1) {
 
 			sf::Vector2f distCenter2Player =  PLayers::getVectorPlayer()[0]->getCenterPosition() - gameDisplay.camera.getCenter();
@@ -184,7 +189,7 @@ Game(){
 			
 			sf::Vector2f zoomLessRadius = sf::Vector2f(gameDisplay.getWindow()->getSize().x / 6, gameDisplay.getWindow()->getSize().y / 6);
 			sf::Vector2f zoomMoreRadius = sf::Vector2f(zoomLessRadius.x * 2, zoomLessRadius.y * 2);
-			sf::Vector2f squareRadius = sf::Vector2f(zoomLessRadius.x * 1.5, zoomLessRadius.y * 1.5);
+			sf::Vector2f squareRadius = sf::Vector2f(zoomLessRadius.x * 0.5, zoomLessRadius.y * 0.5);
 			double zoomValue = gameDisplay.getWindow()->getSize().x / gameDisplay.camera.getSize().x;
 
 			for (Player_ptr player : PLayers::getVectorPlayer()) {
@@ -212,7 +217,7 @@ Game(){
 					gameDisplay.camera.zoom(1.005);
 				}
 
-				if (zoomValue < 1.4 && (distCenter2Player.y < zoomLessRadius.y && distCenter2Player.y > -zoomLessRadius.y) && (distCenter2Player.x < zoomLessRadius.x && distCenter2Player.x > -zoomLessRadius.x)) {
+				if (zoomValue < 1.2 && (distCenter2Player.y < zoomLessRadius.y && distCenter2Player.y > -zoomLessRadius.y) && (distCenter2Player.x < zoomLessRadius.x && distCenter2Player.x > -zoomLessRadius.x)) {
 					gameDisplay.camera.zoom(0.999);
 				}
 				
@@ -241,7 +246,8 @@ Game(){
 		
 		timeToShow = timeLeft -GameTime::getTimeNow();;
 		if (timeToShow <= 0) {
-			gameDisplay.setGameState(GameDisplayController::GameState::VICTORY);
+			//gameDisplay.setGameState(GameDisplayController::GameState::VICTORY);
+			Enemies::insertarEnemigosExtra(dimX,dimY);
 		}
 	}
 

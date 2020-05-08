@@ -1,6 +1,6 @@
-/*#include "../Include/EntitiesInclude.hpp"
+#include "../Include/EntitiesInclude.hpp"
 
-
+/*
 Teleporter::Teleporter() : Entity()
 {
 	isFireDestroyable = false;

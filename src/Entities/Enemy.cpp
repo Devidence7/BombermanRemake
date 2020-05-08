@@ -166,7 +166,7 @@ void EnemyEntity::update()
 sf::FloatRect EnemyEntity::getGlobalBounds() const
 {
 	sf::FloatRect dim = sf::Sprite::getGlobalBounds();
-	return sf::FloatRect(dim.left + 6, dim.top + 6, dim.width - 6, dim.height - 6);
+	return sf::FloatRect(dim.left, dim.top + 9, dim.width - 6, dim.height - 6);
 }
 
 Balloon::Balloon() : EnemyEntity()

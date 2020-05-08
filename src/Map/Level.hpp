@@ -25,10 +25,13 @@ class Level
 	static std::vector<Bomb_ptr > onFlightBombs;
 	static std::vector<std::vector<Entity_ptr>> miniMap;
 	static sf::RectangleShape flooro;
+	//bool hasAppearedExit=false;
 
 public:
 	Level(int dimX, int dimY);
 	static sf::Vector2i sizeLevel();
+	Level(int dimX, int dimY,bool debug);
+	
 	static void update();
 
 	/*

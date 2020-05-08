@@ -7,10 +7,7 @@
 namespace GameGUI
 {
 
-// FIXME: if you click a button, then drag and release elsewhere, 
-// and click again without moving the mouse after releasing it will trigger a button press.
-
-// Simple press button.
+	// Simple press button.
 // A callback is triggered when the button is activated.
 class Button : public Widget
 {

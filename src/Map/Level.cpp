@@ -5,7 +5,7 @@ std::vector<Bomb_ptr> Level::onFlightBombs;
 std::vector<std::vector<Entity_ptr>> Level::miniMap;
 sf::RectangleShape Level::flooro;
 
-Level::Level(int dimX, int dimY)
+Level::Level(int dimX, int dimY,bool debug)
 {
 	// Reserve space for faster insert, delete of the entities
 	entities.reserve(10000);
@@ -50,7 +50,7 @@ Level::Level(int dimX, int dimY)
 							break;
 						}
 					}
-					if (!intersec)
+					if (!intersec && !debug)
 					{
 						addWall(x, y);
 					}
@@ -192,6 +192,7 @@ void Level::update()
 					case 9:
 						powerUp = std::make_shared<RemoteBombPowerUp>(RemoteBombPowerUp((*it)->getPosition()));
 						break;
+					
 
 					//Añadir teleporter
 

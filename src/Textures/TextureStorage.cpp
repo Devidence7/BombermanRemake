@@ -9,6 +9,7 @@ EnemyTexture TextureStorage::enemyTexture;
 PowerUpTexture TextureStorage::powerUpTexture;
 
 
+
 TextureStorage::TextureStorage() {}
 
 PlayerTexture &TextureStorage::getPlayerTexture()

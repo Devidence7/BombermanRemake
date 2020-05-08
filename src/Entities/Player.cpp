@@ -28,14 +28,15 @@ PlayerEntity::PlayerEntity(PlayerControls& pControls) : Entity(), playerControls
 
 	playerHead.setTexture(playerColor->getTexture());
 	playerHead.setColor(tempColor);
-	playerHead.setTextureRect(sf::IntRect(sf::Vector2i(10, 5), sf::Vector2i(36, 36)));
+	playerHead.setTextureRect(sf::IntRect(sf::Vector2i(9, 0), sf::Vector2i(39, 39)));
 
 	playerHead2.setTexture(playerTexture->getTexture());
-	playerHead2.setTextureRect(sf::IntRect(sf::Vector2i(10, 5), sf::Vector2i(36, 36)));
+	playerHead2.setTextureRect(sf::IntRect(sf::Vector2i(9, 0), sf::Vector2i(39, 39)));
 
 
 	// TODO: Remove this
-	move(100, 100);
+	
+	move(Random::getIntNumberBetween(48,500), Random::getIntNumberBetween(48,500));
 }
 
 int PlayerEntity::getPowerOfBombs() {

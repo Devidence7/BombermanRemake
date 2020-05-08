@@ -15,6 +15,7 @@ class TextureStorage {
 	static EnemyTexture enemyTexture; 
 	static PowerUpTexture powerUpTexture;
 
+
 public:
 
 	TextureStorage();
@@ -32,4 +33,6 @@ public:
 	static EnemyTexture& getEnemyTexture();
 
 	static PowerUpTexture& getPowerUpTexture();
+
+	
 };

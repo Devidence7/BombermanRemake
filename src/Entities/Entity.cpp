@@ -2,6 +2,10 @@
 #include "../Include/EntitiesInclude.hpp"
 #include "../Map/Level.hpp"
 
+ActionsAvalible Entity::getActionsAvaliable() {
+	return actionAvaible;
+}
+
 Entity::Entity() : Sprite() {}
 
 sf::FloatRect Entity::getGlobalBounds() const

@@ -32,10 +32,10 @@ enum PlayerEvent
 enum ActionsAvalible
 {
 	NONE_ACTION = 0,
-	GRAB_BOMB = 1,
-	THROUGH_BOMB = 2,
-	REMOTE_BOMB = 3,
-	KICK_BOM = 4
+	GRAB_BOMB = 7,
+	THROUGH_BOMB = 12,
+	REMOTE_BOMB = 5,
+	KICK_BOM = 6
 };
 
 enum EnemyType

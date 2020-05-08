@@ -20,3 +20,7 @@ sf::IntRect &PowerUpTexture::getFrame(int x, int y)
 {
 	return frames[y * 10 + x];
 }
+
+sf::IntRect& PowerUpTexture::getFrame(int x) {
+	return frames[x];
+}
