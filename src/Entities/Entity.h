@@ -50,6 +50,8 @@ public:
 	int longMorePAth = 3;
 	std::list<OmittedArea> OmittedAreas;
 
+	ActionsAvalible getActionsAvaliable();
+
 	Entity();
 	virtual sf::Vector2f getCenterPosition();
 
