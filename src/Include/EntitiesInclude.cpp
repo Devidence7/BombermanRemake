@@ -47,6 +47,33 @@ bool Enemies::cehckSomeCollision(Entity_ptr e){
 }
 
 std::vector<Enemy_ptr> Enemies::enemies;
+void Enemies::insertarEnemigosExtra(int dimX, int dimY){
+	Enemy_ptr e1 = std::make_shared<EnemyEntity>(Ice());
+	Enemy_ptr e2 = std::make_shared<EnemyEntity>(Ice());
+	Enemy_ptr e3 = std::make_shared<EnemyEntity>(Ice());
+	enemies.push_back(e1);
+	enemies.push_back(e2);
+	enemies.push_back(e3);
+
+	for (Enemy_ptr e : enemies) {
+		int x, y;
+		do {
+			x = Random::getIntNumberBetween(0, dimX / 2);
+
+		} while (x < 3);
+		do {
+			y = Random::getIntNumberBetween(0, dimY / 2);
+		} while (y < 3);
+		//e->setPosition(sf::Vector2f((x * 2 + 1) * SIZE_PILLAR - 3, (y * 2 + 1) * SIZE_PILLAR - 3));
+		e->setPosition(MapCoordinates2GlobalCoorCorner(x*2+1, y*2+1));
+		e->me=e;
+		e->startMovement();
+	}
+
+
+
+}
+
 
 void Enemies::insertarEnemigos(int dimX, int dimY,int numEnemies,int stage) {
 	std::vector<Enemy_ptr> a(numEnemies);
@@ -81,6 +108,8 @@ void Enemies::insertarEnemigos(int dimX, int dimY,int numEnemies,int stage) {
 		}
 		enemies.push_back(a[i]);
 	}
+	a.clear();
+		
 	/*Enemy_ptr e1 = std::make_shared<EnemyEntity>(Balloon());
 	Enemy_ptr e2 = std::make_shared<EnemyEntity>(Ice());
 	Enemy_ptr e3 = std::make_shared<EnemyEntity>(Barrel());

@@ -52,6 +52,7 @@ public:
 	};
 	int stage;
 	GameOptions gameOptions;
+	bool debug=false;
 
 /*	double getDificultad(dificultad d){
 	switch(d){
@@ -92,10 +93,11 @@ Game(){
 		//	cout<<gameOptions.numPlayers<<endl;
 		int numEnemies=numEnemigos*gameOptions.difLevel*(stage/0.75);
 	
-
-		Enemies::insertarEnemigos(dimX, dimY,numEnemies,stage);
+		if(!debug){
+			Enemies::insertarEnemigos(dimX, dimY,numEnemies,stage);
+		}
 		//insertEnemies(7);
-		level = new Level(dimX, dimY);
+		level = new Level(dimX, dimY,debug);
 		//Enemies::insertarEnemigos(dimX, dimY);
 		insertPlayers(*gameDisplay.userKeyPress, gameOptions.numPlayers);
 	
@@ -109,6 +111,7 @@ Game(){
 
 	void restartGame(sf::RenderWindow& window,GameDisplayController &gameDisplay){
 		deleteMap();
+		cout<<numEnemigos<<endl;
 		Enemies::insertarEnemigos(dimX, dimY,numEnemigos*gameOptions.difLevel*(stage/0.75),stage);
 		startNewGame(window,gameDisplay);
 		
@@ -241,7 +244,8 @@ Game(){
 		
 		timeToShow = timeLeft -GameTime::getTimeNow();;
 		if (timeToShow <= 0) {
-			gameDisplay.setGameState(GameDisplayController::GameState::VICTORY);
+			//gameDisplay.setGameState(GameDisplayController::GameState::VICTORY);
+			Enemies::insertarEnemigosExtra(dimX,dimY);
 		}
 	}
 

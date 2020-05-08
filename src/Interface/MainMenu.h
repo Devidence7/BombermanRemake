@@ -25,6 +25,7 @@ class MainMenu {
 	enum ButtonActions {
 		SINGLEPLAYER,
 		MULTIPLAYER,
+		DEBUG,
 		OPCIONS,
 		QUIT
 	};
@@ -50,6 +51,7 @@ public:
 
 		menu->addButton("           Modo historia            ", ButtonActions::SINGLEPLAYER);
 		menu->addButton("           Modo batalla            ", ButtonActions::MULTIPLAYER);
+		menu->addButton("      Modo sin muros para Victor       ", ButtonActions::DEBUG);
 		menu->addButton("               Opciones                 ", ButtonActions::OPCIONS);
 		menu->addButton("                  Salir                    ", ButtonActions::QUIT);
 
@@ -84,15 +86,22 @@ private:
 		int id = menu->onEvent(event);
 		switch (id) {
 		case ButtonActions::SINGLEPLAYER:
+			game.debug=false;
 			gameDisplay.setGameState(GameDisplayController::GameState::STORY_MENU);
 			//game.startNewGame(*window);
 			break;
 		case ButtonActions::MULTIPLAYER:
 		  //  game.gameOptions.numPlayers = 2;
+		  game.debug=false;
 		  gameDisplay.setGameState(GameDisplayController::GameState::VS_NUMPLAYERS_MENU);
 		
-			
-			
+		break;
+
+		case ButtonActions::DEBUG:
+			game.gameOptions.numPlayers = 2;
+			game.debug=true;
+			gameDisplay.setGameState(GameDisplayController::GameState::STORY_MENU);
+			//game.startNewGame(*window);
 			break;
 
 		
