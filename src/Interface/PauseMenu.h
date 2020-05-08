@@ -93,6 +93,7 @@ private:
 		case ButtonActions::GO_MAIN_MENU:
 			game.deleteMap();
 			gameDisplay.setGameState(GameDisplayController::GameState::MAIN_MENU);
+			GameMusic::playTitleMusic();
 			break;
 				
 		case ButtonActions::QUIT:

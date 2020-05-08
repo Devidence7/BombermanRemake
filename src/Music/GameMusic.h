@@ -11,6 +11,7 @@ class GameMusic {
 		if (!currentTrack.openFromFile(musicLocation))
 			throw ExceptionLoadImage("No se ha podido cargar el track: " + musicLocation);
 		currentTrack.play();
+		currentTrack.setLoop(true);
 		updateVolumen();
 	}
 
@@ -65,4 +66,5 @@ public:
 	static void playWorld3Music() {
 		insertMusicTrack("../music/Music/World 3.flac");
 	}
+
 };

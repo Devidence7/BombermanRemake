@@ -28,10 +28,10 @@ PlayerEntity::PlayerEntity(PlayerControls& pControls) : Entity(), playerControls
 
 	playerHead.setTexture(playerColor->getTexture());
 	playerHead.setColor(tempColor);
-	playerHead.setTextureRect(sf::IntRect(sf::Vector2i(10, 5), sf::Vector2i(36, 36)));
+	playerHead.setTextureRect(sf::IntRect(sf::Vector2i(9, 0), sf::Vector2i(39, 39)));
 
 	playerHead2.setTexture(playerTexture->getTexture());
-	playerHead2.setTextureRect(sf::IntRect(sf::Vector2i(10, 5), sf::Vector2i(36, 36)));
+	playerHead2.setTextureRect(sf::IntRect(sf::Vector2i(9, 0), sf::Vector2i(39, 39)));
 
 
 	// TODO: Remove this
@@ -43,7 +43,7 @@ int PlayerEntity::getPowerOfBombs() {
 }
 
 void PlayerEntity::setExpiredEntity() {
-	return;
+	// return;
 	if (!expiredEntity) {
 		this->BombTaked = nullptr;
 		expiredEntity = true;
