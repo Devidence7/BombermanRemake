@@ -218,6 +218,7 @@ public:
 		level->update();
 		updatePlayers(gameDisplay);
 		updateEnemies();
+
 		int totalLives=0;
 		for (Player_ptr player : PLayers::getVectorPlayer()) {
 			totalLives+=player->getLives();
@@ -229,7 +230,8 @@ public:
 
 		//Update camera:
 		moveCamera(gameDisplay);
-			timeToShow = timeLeft -GameTime::getTimeNow();;
+		
+		timeToShow = timeLeft -GameTime::getTimeNow();;
 		if (timeToShow <= 0) {
 			gameDisplay.setGameState(GameDisplayController::GameState::GAME_OVER);
 		}
