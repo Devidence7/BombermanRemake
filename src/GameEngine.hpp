@@ -50,7 +50,7 @@ public:
 		
 		
 	};
-	int stage=1;
+	int stage;
 	GameOptions gameOptions;
 
 /*	double getDificultad(dificultad d){
@@ -67,9 +67,9 @@ public:
 		break;
 	}
 } */
-/*Game(){
-	Enemies::insertarEnemigos(dimX, dimY);
-}*/
+Game(){
+	stage=1;
+}
 	int gameTime(){
 		return timeLeft;
 	}
@@ -90,7 +90,9 @@ public:
 		GameMusic::playWorld1Music();
 
 		//	cout<<gameOptions.numPlayers<<endl;
-		int numEnemies=numEnemigos*gameOptions.difLevel*(stage/0.75); 
+		int numEnemies=numEnemigos*gameOptions.difLevel*(stage/0.75);
+	
+
 		Enemies::insertarEnemigos(dimX, dimY,numEnemies,stage);
 		//insertEnemies(7);
 		level = new Level(dimX, dimY);
@@ -109,6 +111,12 @@ public:
 		deleteMap();
 		Enemies::insertarEnemigos(dimX, dimY,numEnemigos*gameOptions.difLevel*(stage/0.75),stage);
 		startNewGame(window,gameDisplay);
+		
+	}
+
+	void passLevel(){
+		
+		stage=stage+1;
 		
 	}
 
@@ -233,7 +241,7 @@ public:
 		
 		timeToShow = timeLeft -GameTime::getTimeNow();;
 		if (timeToShow <= 0) {
-			gameDisplay.setGameState(GameDisplayController::GameState::GAME_OVER);
+			gameDisplay.setGameState(GameDisplayController::GameState::VICTORY);
 		}
 	}
 

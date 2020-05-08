@@ -21,10 +21,8 @@ class LoadingScreen{
     sf::Font font;
     sf::Text stageText;
     sf::Text loading;
-    int stage=1;
 public:
 LoadingScreen(sf::RenderWindow& window,Game game){
-   stage=game.stage;
 	background.setFillColor(sf::Color(0, 0, 0));
      if(!font.loadFromFile("../textures/mainMenu/OpenSans-Bold.ttf")){
             //cosas
@@ -36,21 +34,19 @@ LoadingScreen(sf::RenderWindow& window,Game game){
       stageText.setFont(font);
       //stageText.setFillColor(sf::Color::White);
       stageText.setColor(sf::Color::White);
-      stageText.setString("STAGE " + to_string(stage));
+      stageText.setString("NIVEL " + to_string(game.stage));
       stageText.setPosition(sf::Vector2f(window.getSize().x / 2-(window.getSize().x/9) , window.getSize().y/2- (window.getSize().y/9)));
       stageText.setScale(2,2);
 
       loading.setFont(font);
       //loading.setFillColor(sf::Color::White);
       loading.setColor(sf::Color::White);
-      loading.setString("Loading...");
+      loading.setString("Cargando...");
       loading.setPosition(sf::Vector2f(window.getSize().x /2-(window.getSize().x/12), (window.getSize().y/2+200)));
       loading.setScale(1,1);
 
  }
- void updateStage(Game game){
-      stage=game.stage;
- }
+
 
  void draw(sf::RenderWindow& window) {
      window.draw(background);
