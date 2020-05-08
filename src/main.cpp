@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
 
 	// Create a Multiple interface controller
 	auto gameDisplayController = GameDisplayController();
-	LoadingScreen ls =LoadingScreen(*gameDisplayController.getWindow());
+	LoadingScreen ls =LoadingScreen(*gameDisplayController.getWindow(),game);
 
 	// Play Title music
 	GameMusic::playTitleMusic();
@@ -96,21 +96,23 @@ int main(int argc, char* argv[]) {
 
 
 		case GameDisplayController::GameState::PLAYING:
+
+			// Clear screen from previous drawings
+			gameDisplayController.getWindow()->clear();
 		
 			game.update(gameDisplayController);
 		
-			// Clear screen from previous drawings
-			gameDisplayController.getWindow()->clear();
-
 			// Draw the player and the scene
 			game.draw(*gameDisplayController.getWindow());
-		
-			gameInterface.update(GameTime::getTimeNow());
 			
-			gameInterface.draw(*gameDisplayController.getWindow());
-			//}
-
+			// Manage user window actions
 			gameDisplayController.manageGameInterface(gameDisplayController);
+
+			gameInterface.update();
+
+			gameInterface.draw(gameDisplayController);
+
+			// Manage pause menu when playing
 			pauseMenu.checkUserPauseActions(gameDisplayController);
 		}
 

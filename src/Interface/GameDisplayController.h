@@ -18,6 +18,7 @@ class GameDisplayController {
 public:
 	sf::View menuView;
 	sf::View camera;
+	sf::View playingGuiView;
 
 	unsigned int FPSs;
 	unsigned int windowWidth;
@@ -78,6 +79,9 @@ public:
 		// CAMERA
 		menuView = sf::View(sf::FloatRect(0.f, 0.f, window->getSize().x, window->getSize().y));
 		camera = sf::View (sf::FloatRect(0.f, 0.f, window->getSize().x, window->getSize().y));
+		//camera.setViewport(sf::FloatRect(0.f, 0.2f, 1.f, 1.f));
+		playingGuiView = sf::View(sf::FloatRect(0.f, 0.f, window->getSize().x, window->getSize().y / 5));
+		playingGuiView.setViewport(sf::FloatRect(0.f, 0.f, 1.f, 0.2f));
 	}
 
 	/**
@@ -139,7 +143,7 @@ public:
 	}
 
 	void updateCamera() {
-		window->setView(camera);
+		window->setView(camera); 
 	}
 
 	/**
