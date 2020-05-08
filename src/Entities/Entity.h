@@ -44,7 +44,9 @@ public:
 	sf::Vector2i siteRespectPlayer; // Sitio respecto jugador a donde ira a buscar un camino si existe
 	int numConsecutiveMovements = 5;
 	int numMovenet = 0;
-
+	TypePositionRelative typePosIA = TypePositionRelative::OBJETIVE_POSITION;
+	TypeSeekIA typeSeek = TypeSeekIA::SECOND_BEST_PATH;
+	int longMorePAth = 3;
 
 	Entity();
 	virtual sf::Vector2f getCenterPosition();

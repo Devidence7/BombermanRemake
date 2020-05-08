@@ -1,4 +1,5 @@
 #include "../Include/EntitiesInclude.hpp"
+#include "../Utils/IAFunctions.hpp"
 
 EnemyEntity::EnemyEntity() : Entity()
 {
@@ -34,17 +35,18 @@ void EnemyEntity::startMovement(){
 
 void EnemyEntity::generateMovements()
 {
-	std::vector<sf::Vector2i> objetives;
+/*	std::vector<sf::Vector2i> objetives;
 	for (Player_ptr player : PLayers::getVectorPlayer())
 	{
 		sf::Vector2f posPlayer = player->getCenterPosition();
 		objetives.push_back(getMapCoordinates(posPlayer));
 	}
 	movements.clear();
-	generatePath(getMapCoordinates(this->getCenterPosition()), objetives, rangoVision, movements);
+	generatePath(this->me, objetives, movements);*/
+	seekAnyPlayerOrRandom(movements, me);
 	//movements = pathFinding(getMapCoordinates(this->getCenterPosition()), objetives, f);
 	if(movements.size() < 1){
-		generateRandomPath(getMapCoordinates(getCenterPosition()), movements);
+		generateRandomPath(getMapCoordinates(getCenterPosition()), movements, me);
 	}
 	numMovenet = numConsecutiveMovements;
 }
@@ -168,6 +170,12 @@ Balloon::Balloon() : EnemyEntity()
 Ice::Ice() : EnemyEntity()
 {
 	enemyType = ice;
+	this->rangoVision = -1;
+	this->numConsecutiveMovements = 7;
+	this->typeSeek = TypeSeekIA::LONG_PATH;
+	this->longMorePAth = 10;
+	this->typePosIA = TypePositionRelative::OBJETIVE_POSITION;
+	this->canThroughWall = true;
 	//move(200, 200);
 }
 

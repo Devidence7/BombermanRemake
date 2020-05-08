@@ -33,7 +33,7 @@ void BrickWall::update()
  
 
 bool BrickWall::isColliderWith(std::shared_ptr<Entity> eCollisioning) {
-	return eCollisioning->CanThroughWall();
+	return !eCollisioning->CanThroughWall();
 }
 
 void BrickWall::onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT)
