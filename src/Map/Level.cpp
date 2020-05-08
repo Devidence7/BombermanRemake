@@ -64,6 +64,10 @@ Level::Level(int dimX, int dimY)
 	}
 }
 
+sf::Vector2i Level::sizeLevel(){
+	return sf::Vector2i(miniMap[0].size(),  miniMap.size());
+}
+
 bool Level::isValidCell(sf::Vector2i v)
 {
 	return v.x > 0 && v.y > -1 && miniMap.size() - 1 > v.y && miniMap[0].size() - 1 > v.x;

@@ -28,7 +28,7 @@ class Level
 
 public:
 	Level(int dimX, int dimY);
-	
+	static sf::Vector2i sizeLevel();
 	static void update();
 
 	/*
