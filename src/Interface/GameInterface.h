@@ -98,6 +98,8 @@ public:
 			lives[i].setOutlineColor(sf::Color(0, 0, 0));
 			lives[i].setOutlineThickness(3);
 
+			
+
 			sf::FloatRect textRect = lives[i].getLocalBounds();
 			lives[i].setOrigin(textRect.left + textRect.width / 2.0f,
 				textRect.top + textRect.height / 2.0f);
@@ -115,6 +117,18 @@ public:
 		gameDisplay.getWindow()->draw(container);
 
 		for (int i = 0; i < PLayers::getVectorPlayer().size(); i++) {
+			if (PLayers::getVectorPlayer()[i]->getActionsAvaliable()) {
+
+				PowerUpTexture t = TextureStorage::getPowerUpTexture();
+				PLayers::getVectorPlayer()[i]->playerCurrentAbility.setTexture(t.getTexture());
+				PLayers::getVectorPlayer()[i]->playerCurrentAbility.setTextureRect(t.getFrame(PLayers::getVectorPlayer()[i]->getActionsAvaliable()));
+
+				PLayers::getVectorPlayer()[i]->playerCurrentAbility.setPosition(
+					PLayers::getVectorPlayer()[i]->playerHead2.getPosition().x - PLayers::getVectorPlayer()[i]->playerCurrentAbility.getTextureRect().width / 3 * 2,
+					PLayers::getVectorPlayer()[i]->playerHead2.getPosition().y - PLayers::getVectorPlayer()[i]->playerCurrentAbility.getTextureRect().height / 3);
+				gameDisplay.getWindow()->draw(PLayers::getVectorPlayer()[i]->playerCurrentAbility);
+			}
+
 			gameDisplay.getWindow()->draw(PLayers::getVectorPlayer()[i]->playerHead2);
 			gameDisplay.getWindow()->draw(PLayers::getVectorPlayer()[i]->playerHead);
 

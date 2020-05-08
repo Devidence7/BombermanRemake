@@ -19,8 +19,12 @@ public:
 	int numOfBombs = 1;
 	int powerOfBombs = 1;
 	bool dead=false;
+
+	// Sprites for GUI
 	sf::Sprite playerHead;
 	sf::Sprite playerHead2;
+	sf::Sprite playerCurrentAbility;
+
 	bool isBombKeyPresed = false;
 	bool isActionKeyPresed = false;
 
