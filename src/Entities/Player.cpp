@@ -35,7 +35,8 @@ PlayerEntity::PlayerEntity(PlayerControls& pControls) : Entity(), playerControls
 
 
 	// TODO: Remove this
-	move(100, 100);
+	
+	move(Random::getIntNumberBetween(48,500), Random::getIntNumberBetween(48,500));
 }
 
 int PlayerEntity::getPowerOfBombs() {
