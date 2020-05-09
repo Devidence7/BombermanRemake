@@ -9,6 +9,7 @@
 
 #include "../Include/EntitiesInclude.hpp"
 #include "../Textures/WallTexture.h"
+#include "../Entities/Teleporter.h"
 
 #include "../Include/global.hpp"
 #include "../Logic/Random.h"
@@ -25,11 +26,12 @@ class Level
 	static std::vector<Bomb_ptr > onFlightBombs;
 	static std::vector<std::vector<Entity_ptr>> miniMap;
 	static sf::RectangleShape flooro;
-	//bool hasAppearedExit=false;
+	
 
 public:
 	//Level(int dimX, int dimY);
 	static sf::Vector2i sizeLevel();
+	//Teleporter tel;
 	Level(int dimX, int dimY,bool debug);
 	
 	static void update();

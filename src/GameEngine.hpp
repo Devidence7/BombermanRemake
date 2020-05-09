@@ -8,7 +8,7 @@
 #include "Textures/TextureStorage.h"
 #include "Interface/GameInterface.h"
 #include "Music/GameMusic.h"
-#include "Interface/GameDisplayController.h"
+///#include "Interface/GameDisplayController.h"
 
 #define MAX_NUMBER_OF_STAGES 3
 #define DEFAULT_NUM_OF_ENEMIES 7
@@ -302,7 +302,7 @@ Game(){
 		return intersec;
 	}
 
-	
+
 
 	void updateEnemies() {
 		auto it = Enemies::getVectorEnemies().begin();
@@ -319,7 +319,7 @@ Game(){
 				it = Enemies::getVectorEnemies().erase(it);
 				numEnemigos--;
 				if(numEnemigos==0){
-					endOfStage=true;
+					//level->Level::tel.openTeleporter();
 				}
 			}
 			
@@ -340,6 +340,7 @@ Game(){
 			if ((*it2)->getExpiredEntity()) {
 				it2->reset();
 				it2 = Enemies::getVectorEnemies().erase(it2);
+				
 			}
 			
 			else {

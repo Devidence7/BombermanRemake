@@ -2,8 +2,7 @@
 #include "Entity.h"
 #include "Player.h"
 #include "../Textures/TextureStorage.h"
-#include "../Textures/TextureStorage.h"
-#include "GameDisplayController.h"
+#include "../Interface/GameDisplayController.h"
 
 class Teleporter : public Entity {
 public:
@@ -20,6 +19,8 @@ public:
 	};
 
 	TeleporterState teleporterState = TeleporterState::CLOSE;
+
+	Teleporter();
 
 	Teleporter(sf::Vector2f pos);
 

@@ -9,13 +9,14 @@ Level::Level(int dimX, int dimY,bool debug)
 {
 	// Reserve space for faster insert, delete of the entities
 	entities.reserve(10000);
-
 	// Create map matrix:
 	EntityMap::entityMap = std::vector<std::vector<Entity_ptr>>(dimY + 2, std::vector<Entity_ptr>(dimX + 2, nullptr));
 	miniMap = std::vector<std::vector<Entity_ptr>>(dimY + 2, std::vector<Entity_ptr>(dimX + 2, nullptr));
 	// Background:
 	flooro.setSize(sf::Vector2f((dimX + 2) * sizeTextureX, (dimY + 2) * sizeTextureY));
 	flooro.setFillColor(sf::Color(0, 100, 0));
+
+
 
 	// Create all pillars:
 	for (int x = 0; x < dimX + 2; x++)
@@ -826,4 +827,3 @@ bool Level::canKickBomb(Player_ptr p)
 	}
 	return false;
 }
-//TODO: Asociar puntuacion a jugador que lanza
