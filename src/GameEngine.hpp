@@ -10,6 +10,9 @@
 #include "Music/GameMusic.h"
 #include "Interface/GameDisplayController.h"
 
+#define MAX_NUMBER_OF_STAGES 3
+#define DEFAULT_NUM_OF_ENEMIES 7
+
 Level *level;
 
 using namespace sf;
@@ -47,6 +50,7 @@ public:
 	GameOptions gameOptions;
 	bool debug=false;
 	bool timesUp=false;
+	bool endOfStage=false;
 
 Game(){
 	stage=1;
@@ -67,7 +71,7 @@ Game(){
 		GameMusic::playWorld1Music();
 
 		//	cout<<gameOptions.numPlayers<<endl;
-		int numEnemies=numEnemigos*gameOptions.difLevel*(stage/0.75);
+		int numEnemies=DEFAULT_NUM_OF_ENEMIES*gameOptions.difLevel*(stage/0.75);
 	
 		if(!debug){
 			Enemies::insertarEnemigos(dimX, dimY,numEnemies,stage);
@@ -88,15 +92,21 @@ Game(){
 	void restartGame(sf::RenderWindow& window,GameDisplayController &gameDisplay){
 		timesUp=false;
 		deleteMap();
-		cout<<numEnemigos<<endl;
 		Enemies::insertarEnemigos(dimX, dimY,numEnemigos*gameOptions.difLevel*(stage/0.75),stage);
 		startNewGame(window,gameDisplay);
 		
 	}
 
 	void passLevel(){
-		
-		stage=stage+1;
+		if(stage<=MAX_NUMBER_OF_STAGES){
+			stage=stage+1;
+		}
+		else{
+			
+			//PANTALLA DE VICTORIA FINAL
+
+		}
+
 		
 	}
 
@@ -124,6 +134,11 @@ Game(){
 		while (it3 != Enemies::getVectorEnemiesExtra().end()) {
 				it3->reset();
 				it3 = Enemies::getVectorEnemiesExtra().erase(it3);
+		}
+		auto it4 = Enemies::getVectorEnemiesExtraTel().begin();
+		while (it4 != Enemies::getVectorEnemiesExtraTel().end()) {
+				it4->reset();
+				it4 = Enemies::getVectorEnemiesExtraTel().erase(it4);
 		}
 
 		
@@ -281,6 +296,7 @@ Game(){
 	void updateEnemies() {
 		auto it = Enemies::getVectorEnemies().begin();
 		int counter = 0;
+		
 		while (it != Enemies::getVectorEnemies().end()) {
 			
 			// Update the enemies.
@@ -290,6 +306,10 @@ Game(){
 			if ((*it)->getExpiredEntity()) {
 				it->reset();
 				it = Enemies::getVectorEnemies().erase(it);
+				numEnemigos--;
+				if(numEnemigos==0){
+					endOfStage=true;
+				}
 			}
 			
 			else {

@@ -18,6 +18,8 @@ protected:
 	//sf::Vector2f size; // Size of the Entity
 	bool expiredEntity = false; // Mark the entity as expired to be delete
 
+	bool isTeleport=false;
+
 	// Can be destroyed:
 	bool isFireDestroyable = false;
 	bool fireCanGoThroght = false;

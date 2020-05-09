@@ -23,7 +23,7 @@ class LoadingScreen{
     sf::Text loading;
 public:
 LoadingScreen(sf::RenderWindow& window,Game game){
-	background.setFillColor(sf::Color(0, 0, 0));
+	background.setFillColor(sf::Color(0, 0, 0,255));
      if(!font.loadFromFile("../textures/mainMenu/OpenSans-Bold.ttf")){
             //cosas
         }

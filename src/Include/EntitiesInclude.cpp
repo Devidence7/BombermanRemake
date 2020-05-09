@@ -48,6 +48,29 @@ bool Enemies::cehckSomeCollision(Entity_ptr e){
 
 std::vector<Enemy_ptr> Enemies::enemies;
 std::vector<Enemy_ptr> Enemies::enemiesExtra;
+std::vector<Enemy_ptr> Enemies::enemiesExtra;
+
+void Enemies::insertarEnemigosExtraTel(int posX, int posY){
+	std::vector<Enemy_ptr> a(7);
+	int x, y;
+	for(int i=0;i<3;i++){
+		a[i] = std::make_shared<EnemyEntity>(Coin());
+		enemiesExtra.push_back(a[i]);
+	}
+	
+	for (Enemy_ptr e : enemiesExtra) {
+	
+		//e->setPosition(sf::Vector2f((x * 2 + 1) * SIZE_PILLAR - 3, (y * 2 + 1) * SIZE_PILLAR - 3));
+		e->setPosition(MapCoordinates2GlobalCoorCorner(posX,posY));
+		e->me=e;
+		e->startMovement();
+	}
+
+	}
+
+
+
+
 void Enemies::insertarEnemigosExtra(int dimX, int dimY){
 	std::vector<Enemy_ptr> a(7);
 	int x, y;

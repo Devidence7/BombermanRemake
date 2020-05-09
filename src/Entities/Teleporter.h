@@ -1,6 +1,9 @@
 #pragma once
 #include "Entity.h"
+#include "Player.h"
 #include "../Textures/TextureStorage.h"
+#include "../Textures/TextureStorage.h"
+#include "GameDisplayController.h"
 
 class Teleporter : public Entity {
 public:
@@ -22,7 +25,7 @@ public:
 
 	void update();
 
-	void onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<Entity> eCollisioner, CollisionType colT) override;
+	void onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<Entity> eCollisioner, CollisionType colT,GameDisplayController &gameDisplay);
 
 	void openTeleporter();
 };

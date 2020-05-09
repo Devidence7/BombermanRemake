@@ -163,6 +163,7 @@ Fire::Fire(Player_ptr p, int type ) : Entity()
 void Fire::onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<Entity> eCollisioner, CollisionType colT)
 {
 	eCollisioning->setExpiredEntity();
+
 	//TODO: Check if have increment score
 	player2Score->incrementScore(0);
 }
