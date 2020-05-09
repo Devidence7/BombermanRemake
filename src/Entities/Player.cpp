@@ -38,7 +38,7 @@ PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team) : Entity(), pla
 
 
 	// TODO: Remove this
-	actionAvaible = ActionsAvalible::GRAB_BOMB;
+	actionAvaible = ActionsAvalible::KICK_BOM;
 	move(Random::getIntNumberBetween(48,500), Random::getIntNumberBetween(48,500));
 }
 

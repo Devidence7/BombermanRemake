@@ -92,6 +92,10 @@ void Bomb::setPosition(sf::Vector2f pos) {
 	this->sf::Sprite::setPosition(sf::Vector2f(pos.x + 24, pos.y + 24));
 }
 
+sf::Vector2f Bomb::getCenterPosition() {
+	return this->sf::Sprite::getPosition();
+}
+
 void Bomb::update()
 {
 	// If it is time to explote:
@@ -124,8 +128,6 @@ void Bomb::update()
 			rePutBomb = true;
 			onFlight = false;
 			cornerModuleBefore = 99999;
-			
-			//move(-24, -24);
 		}
 		else {
 			cornerModuleBefore = module;
@@ -143,7 +145,7 @@ void Bomb::update()
 		else {
 			move(sf::Vector2f(velocity.x * velMult, velocity.y * velMult));
 		}
-		// rotateBomb(velMult);
+		rotateBomb(velMult);
 		lastMove = GameTime::getTimeNow();
 	}
 
@@ -153,7 +155,13 @@ void Bomb::update()
 sf::FloatRect Bomb::getGlobalBounds() const
 {
 	sf::FloatRect dim = sf::Sprite::getGlobalBounds();
-	return sf::FloatRect(dim.left + 3, dim.top + 3, dim.width - 6, dim.height - 6);
+	if (!onMove) {
+		return sf::FloatRect(dim.left + 3, dim.top + 3, dim.width - 6, dim.height - 6);
+	}
+	else {
+		return sf::FloatRect(dim.left + 18, dim.top + 18, dim.width - 36, dim.height - 36);
+	}
+	
 }
 
 Fire::Fire(Player_ptr p, int type ) : Entity()
