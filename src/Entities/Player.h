@@ -6,7 +6,6 @@
 #include "../Logic/Time.h"
 #include <memory>
 #include "Entity.h"
-#include "Bomb.h"
 
 using namespace std;
 
@@ -114,7 +113,7 @@ public:
 
 	void invertControls();
 
-	void bombExploted(Entity_ptr b);
+	void bombExploted(std::shared_ptr<Entity> b);
 
 	//void changeBombs2time();
 

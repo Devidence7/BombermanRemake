@@ -32,6 +32,8 @@ sf::Vector2i generateObjetive2Player(Entity_ptr p, Entity_ptr e, std::vector<sf:
     default:
         break;
     }
+
+    return sf::Vector2i();
 }
 
 void seekAnyPlayerOrRandom(list<ANode_Ptr> &movements, Entity_ptr e, TypeSeekIA typeSeek)

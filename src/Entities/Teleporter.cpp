@@ -1,6 +1,5 @@
 #include "Teleporter.h"
 #include "../Logic/Time.h"
-#include "../Include/EntitiesInclude.hpp"
 
 
 Teleporter::Teleporter() : Entity() {
@@ -54,13 +53,13 @@ void Teleporter::update() {
 	}
 }
 //
-void Teleporter::onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<Entity> eCollisioner, CollisionType colT,GameDisplayController &gameDisplay) {
-		std::shared_ptr<PlayerEntity> pe;
+void Teleporter::onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<Entity> eCollisioner, CollisionType colT) {
+		/*std::shared_ptr<PlayerEntity> pe;
 	if (!this->expiredEntity && (pe = std::dynamic_pointer_cast<PlayerEntity>(eCollisioning)) != nullptr){
 		if(teleporterState=OPEN){
 			gameDisplay.setGameState(GameDisplayController::GameState::VICTORY);
 		}
-	}
+	}*/
 //	}
 }
 
