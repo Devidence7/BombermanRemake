@@ -27,7 +27,7 @@ private:
 	int dimY = 15;
 	int dimX = 25;
 	
-	int timeLeft = 10;
+	int timeLeft = 299;
 	int timeToShow;
 	
 	// Initialize textures
@@ -48,20 +48,6 @@ public:
 	bool debug=false;
 	bool timesUp=false;
 
-/*	double getDificultad(dificultad d){
-	switch(d){
-		case EASY:
-			return 1;
-			break;
-		case NORMAL:
-			return 1.5;
-			break;
-		case HARD:
-			return 1.75;
-		default:
-		break;
-	}
-} */
 Game(){
 	stage=1;
 }
@@ -134,6 +120,13 @@ Game(){
 				it2->reset();
 				it2 = PLayers::getVectorPlayer().erase(it2);
 		}
+		auto it3 = Enemies::getVectorEnemiesExtra().begin();
+		while (it3 != Enemies::getVectorEnemiesExtra().end()) {
+				it3->reset();
+				it3 = Enemies::getVectorEnemiesExtra().erase(it3);
+		}
+
+		
 	}
 
 	void updatePlayers( GameDisplayController& gameDisplay) {
@@ -263,6 +256,15 @@ Game(){
 			e->drawMovements(w);
 #endif
 		}
+
+		for (Enemy_ptr e2 : Enemies::getVectorEnemiesExtra()) {
+			w.draw(*e2);
+#ifdef HITBOX_DEBUG_MODE
+			e2->drawEntityHitbox(w);
+			//		e->generateMovements();
+			e2->drawMovements(w);
+#endif
+		}
 		
 	}
 
@@ -292,6 +294,25 @@ Game(){
 			
 			else {
 				++it;
+				counter++;
+			}
+			
+		}
+		auto it2 = Enemies::getVectorEnemiesExtra().begin();
+		counter = 0;
+		while (it2 != Enemies::getVectorEnemiesExtra().end()) {
+			
+			// Update the enemies.
+			(*it2)->update();
+			level->checkAndFixCollisions((*it2));
+			
+			if ((*it2)->getExpiredEntity()) {
+				it2->reset();
+				it2 = Enemies::getVectorEnemies().erase(it2);
+			}
+			
+			else {
+				++it2;
 				counter++;
 			}
 			

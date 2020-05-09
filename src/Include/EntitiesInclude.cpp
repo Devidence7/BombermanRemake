@@ -47,12 +47,17 @@ bool Enemies::cehckSomeCollision(Entity_ptr e){
 }
 
 std::vector<Enemy_ptr> Enemies::enemies;
-std::vector<Enemy_ptr> enemiesExtra;
+std::vector<Enemy_ptr> Enemies::enemiesExtra;
 void Enemies::insertarEnemigosExtra(int dimX, int dimY){
-	/*int numEnemigos=enemies.size();
+	std::vector<Enemy_ptr> a(7);
 	int x, y;
-	for (int i=0;i<7;i++){
-		enemiesExtra[i]=std::make_shared<EnemyEntity>(Ice());
+	for(int i=0;i<7;i++){
+		a[i] = std::make_shared<EnemyEntity>(Coin());
+		enemiesExtra.push_back(a[i]);
+	}
+	
+	for (Enemy_ptr e : enemiesExtra) {
+		int x, y;
 		do {
 			x = Random::getIntNumberBetween(0, dimX / 2);
 
@@ -60,19 +65,12 @@ void Enemies::insertarEnemigosExtra(int dimX, int dimY){
 		do {
 			y = Random::getIntNumberBetween(0, dimY / 2);
 		} while (y < 3);
-		enemiesExtra[i]->setPosition(MapCoordinates2GlobalCoorCorner(x*2+1, y*2+1));
-		enemiesExtra[i]->me=enemiesExtra[i];
-		enemiesExtra[i]->startMovement();
-		//enemies.push_back(enemiesExtra[i]);
-
-	}*/
-
-
-		
+		//e->setPosition(sf::Vector2f((x * 2 + 1) * SIZE_PILLAR - 3, (y * 2 + 1) * SIZE_PILLAR - 3));
+		e->setPosition(MapCoordinates2GlobalCoorCorner(x*2+1, y*2+1));
+		e->me=e;
+		e->startMovement();
 	}
 
-	void clearEnemiesExtra(){
-			enemiesExtra.clear();
 	}
 
 
@@ -144,6 +142,10 @@ void Enemies::insertarEnemigos(int dimX, int dimY,int numEnemies,int stage) {
 }
 std::vector<Enemy_ptr>& Enemies::getVectorEnemies() {
 	return enemies;
+}
+
+std::vector<Enemy_ptr>& Enemies::getVectorEnemiesExtra() {
+	return enemiesExtra;
 }
 
 void EntityMap::addEntity(Entity_ptr e, sf::Vector2i pos) {
