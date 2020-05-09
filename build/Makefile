@@ -97,8 +97,8 @@ $(bin)/Time.o: $(logicPath)/Time.cpp $(logicPath)/Time.h
 #	Compile Textures 			#
 #################################
 
-$(bin)/libTextures.a: $(bin)/TextureVector.o $(bin)/BombTexture.o $(bin)/EnemyTexture.o $(bin)/FireTexture.o $(bin)/PowerUpTexture.o $(bin)/TextureStorage.o $(bin)/WallTexture.o $(bin)/PlayerTexture.o
-	ar rc $(bin)/libTextures.a  $(bin)/TextureVector.o $(bin)/BombTexture.o $(bin)/EnemyTexture.o $(bin)/FireTexture.o $(bin)/PlayerTexture.o $(bin)/PowerUpTexture.o $(bin)/TextureStorage.o $(bin)/WallTexture.o
+$(bin)/libTextures.a: $(bin)/TextureVector.o $(bin)/BombTexture.o $(bin)/EnemyTexture.o $(bin)/FireTexture.o $(bin)/PowerUpTexture.o $(bin)/TeleporterTexture.o $(bin)/TextureStorage.o $(bin)/WallTexture.o $(bin)/PlayerTexture.o
+	ar rc $(bin)/libTextures.a  $(bin)/TextureVector.o $(bin)/BombTexture.o $(bin)/EnemyTexture.o $(bin)/FireTexture.o $(bin)/PlayerTexture.o $(bin)/PowerUpTexture.o $(bin)/TeleporterTexture.o $(bin)/TextureStorage.o $(bin)/WallTexture.o
 	ranlib $(bin)/libTextures.a
 
 $(bin)/TextureVector.o: $(texturesPath)/TextureVector.cpp $(texturesPath)/TextureVector.h
@@ -118,6 +118,9 @@ $(bin)/PlayerTexture.o: $(texturesPath)/PlayerTexture.cpp $(texturesPath)/Player
 
 $(bin)/PowerUpTexture.o: $(texturesPath)/PowerUpTexture.cpp $(texturesPath)/PowerUpTexture.h
 	$(CC) -o $(bin)/PowerUpTexture.o -c $(texturesPath)/PowerUpTexture.cpp  $(std) $(O)
+
+$(bin)/TeleporterTexture.o: $(texturesPath)/TeleporterTexture.cpp $(texturesPath)/TeleporterTexture.h
+	$(CC) -o $(bin)/TeleporterTexture.o -c $(texturesPath)/TeleporterTexture.cpp  $(std) $(O)
 
 $(bin)/TextureStorage.o: $(texturesPath)/TextureStorage.cpp $(texturesPath)/TextureStorage.h
 	$(CC) -o $(bin)/TextureStorage.o -c $(texturesPath)/TextureStorage.cpp  $(std) $(O)
