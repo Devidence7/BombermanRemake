@@ -738,6 +738,7 @@ void Level::ThrowBomb(Player_ptr p, Bomb_ptr b)
 		onFlightBombs.push_back(b);
 		b->setObjetive(MapCoordinates2GlobalCoorCorner(fallPosition));
 		b->setOnFlight(normalize(dirThrow));
+		b->setPosition(Level::getMapCellCorner(p->getCenterPosition()));
 	}
 	b->player2Score = p;
 }

@@ -2,11 +2,10 @@
 #include "../Music/GameSounds.h"
 #include "../Map/Level.hpp"
 
-Bomb::Bomb(std::shared_ptr<PlayerEntity> p) : Entity()
-{
+Bomb::Bomb(std::shared_ptr<PlayerEntity> p) : Entity() {
 	player = p;
 	player2Score = p;
-	baseSpeed = 25; //TODO: HACER BIEN
+	baseSpeed = 25; //TODO: HACER BIENdsds adee
 	this->bombPower = p->getPowerOfBombs();
 	isFireDestroyable = true;
 	fireCanGoThroght = false;
@@ -20,6 +19,14 @@ Bomb::Bomb(std::shared_ptr<PlayerEntity> p) : Entity()
 	setTextureRect(bombTexture->getFrame(0));
 	// Set sprite Sheet texture
 	setTexture(bombTexture->getTexture());
+
+	auto bombLimits = getLocalBounds();
+	setOrigin(bombLimits.width / 2, bombLimits.height / 2);
+}
+
+void Bomb::setPosition(sf::Vector2f pos) {
+	auto bombLimits = getLocalBounds();
+	Entity::setPosition(sf::Vector2f(pos.x + bombLimits.width / 2, pos.y + bombLimits.height / 2));
 }
 
 void Bomb::setExpiredEntity()
@@ -58,7 +65,20 @@ void Bomb::onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<E
 	}
 }
 
+void Bomb::rotateBomb(double velMult) {
+	if (velocity.x < 0) {
+		rotate(-100 * velMult);
+	}
+	else {
+		rotate(100 * velMult);
+	}
+	
+}
 
+sf::Vector2f Bomb::getCornerPos() {
+	auto bombLimits = getLocalBounds();
+	return sf::Vector2f(this->getPosition().x - bombLimits.width / 2, this->getPosition().y - bombLimits.height / 2);
+}
 
 void Bomb::update()
 {
@@ -75,24 +95,46 @@ void Bomb::update()
 		actualFrame = (actualFrame + 1) % spriteFrames;
 		setTextureRect(bombTexture->getFrame(actualFrame));
 		spriteCounter = GameTime::getTimeNow();
-		if(onFlight){
-			move(velocity);
-			if (moduleVector(positionObjetive - this->getPosition()) < baseSpeed) {
-				this->setPosition(positionObjetive);
-				rePutBomb = true;
-				onFlight = false;
-			}
-		}else if(onMove)
-		{
-			if(onCollision){
-				onMove = false;
-				onCollision = false;
-			}else{
-				move(velocity);
-			}
-		}
-		
 	}
+
+	if (GameTime::getTimeNow() - moveCounter > moveSpeed) {
+		moveCounter = GameTime::getTimeNow();
+	}
+
+	if (onFlight) {
+		double velMult = GameTime::getTimeNow() - lastMove < 0.5 ? GameTime::getTimeNow() - lastMove : 0.5;
+		velMult *= 10;
+		move(sf::Vector2f(velocity.x * velMult, velocity.y * velMult));
+		double module = moduleVector(positionObjetive - getCornerPos());
+
+		if (module > cornerModuleBefore) {
+			this->setPosition(positionObjetive);
+			rePutBomb = true;
+			onFlight = false;
+			cornerModuleBefore = 99999;
+		}
+		else {
+			cornerModuleBefore = module;
+		}
+		rotateBomb(velMult);
+		lastMove = GameTime::getTimeNow();
+	}
+	else if (onMove) {
+		double velMult = GameTime::getTimeNow() - lastMove < 0.5 ? GameTime::getTimeNow() - lastMove : 0.5;
+		velMult *= 20;
+		if (onCollision) {
+			onMove = false;
+			onCollision = false;
+		}
+		else {
+			move(sf::Vector2f(velocity.x * velMult, velocity.y * velMult));
+		}
+		// rotateBomb(velMult);
+		lastMove = GameTime::getTimeNow();
+	}
+
+	
+	
 }
 sf::FloatRect Bomb::getGlobalBounds() const
 {
@@ -113,6 +155,9 @@ Fire::Fire(Player_ptr p, int type ) : Entity()
 	setTextureRect(fireTexture->getFrame(0, type));
 	// Set sprite Sheet texture
 	setTexture(fireTexture->getTexture());
+
+	auto fireLimits = getLocalBounds();
+	setOrigin(fireLimits.width / 2, fireLimits.height / 2);
 }
 
 void Fire::onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<Entity> eCollisioner, CollisionType colT)
