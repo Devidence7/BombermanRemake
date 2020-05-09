@@ -17,7 +17,7 @@ inline bool isOnVision(std::shared_ptr<Entity> p, sf::Vector2i PointReference, i
 
 sf::Vector2i generateObjetive2Player(std::shared_ptr<Entity> p, std::shared_ptr<Entity> e,  std::vector<sf::Vector2i> &objetives);
 
-void seekAnyPlayerOrRandom(list<ANode_Ptr> & movements, std::shared_ptr<Entity> e);
+void seekAnyPlayerOrRandom(list<ANode_Ptr> & movements, std::shared_ptr<Entity> e,  TypeSeekIA typeSeek);
 
 
 //#include "../Include/EntitiesInclude.hpp"

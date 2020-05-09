@@ -51,6 +51,7 @@ public:
 	TypeSeekIA typeSeek = TypeSeekIA::SECOND_BEST_PATH;
 	int longMorePAth = 3;
 	std::list<OmittedArea> OmittedAreas;
+	int team = 0;
 
 	ActionsAvalible getActionsAvaliable();
 

@@ -43,7 +43,7 @@ void EnemyEntity::generateMovements()
 	}
 	movements.clear();
 	generatePath(this->me, objetives, movements);*/
-	// seekAnyPlayerOrRandom(movements, me);
+	seekAnyPlayerOrRandom(movements, me, typeSeek);
 	//movements = pathFinding(getMapCoordinates(this->getCenterPosition()), objetives, f);
 	if(movements.size() < 1){
 		generateRandomPath(getMapCoordinates(getCenterPosition()), movements, me);

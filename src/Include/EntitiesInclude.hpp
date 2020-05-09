@@ -15,6 +15,8 @@ typedef std::shared_ptr<EnemyEntity> Enemy_ptr;
 typedef std::shared_ptr<Pillar> Pillar_ptr;
 #include "../Entities/Player.h"
 typedef std::shared_ptr<PlayerEntity> Player_ptr;
+#include "../Entities/PlayerIA.hpp"
+typedef std::shared_ptr<PlayerIAEntity> PlayerIA_ptr;
 #include "../Entities/PowerUp.h"
 typedef std::shared_ptr<PlayerEntity> PowerUp_ptr;
 
@@ -26,7 +28,8 @@ class PLayers
     PLayers(){};
 
 public:
-    static void addPlayer(PlayerEntity::PlayerControls &playerControls);
+    static void addPlayer(PlayerEntity::PlayerControls &playerControls, int team = 0);
+    static void addIAPlayer(PlayerEntity::PlayerControls &playerControls, int team = 0);
     static std::vector<Player_ptr> &getVectorPlayer();
     static bool cehckSomeCollision(Entity_ptr e);
 };

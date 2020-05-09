@@ -63,8 +63,7 @@ public:
 	/*
 	Constructor of Entity
 	*/
-	PlayerEntity(PlayerControls& playerControls);
-	//PlayerEntity(PlayerControls* playerControls);
+	PlayerEntity(PlayerControls& playerControls, int _team);
 
 	int getPowerOfBombs();
 
@@ -105,11 +104,11 @@ public:
 
 	void realizeActions();
 
-	bool playerActions();
+	virtual bool playerActions();
 	/*
 	 * Update player position.
 	 */
-	bool updatePlayer();
+	virtual bool updatePlayer();
 
 	void setJumpingBomb();
 
@@ -117,6 +116,6 @@ public:
 
 	void bombExploted(Entity_ptr b);
 
-	void changeBombs2time();
+	//void changeBombs2time();
 
 };
