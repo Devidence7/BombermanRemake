@@ -18,6 +18,10 @@ public:
 
 	sf::IntRect& getMoveSprite(LookingAt lookat, int i);
 
+	sf::IntRect& getIdleSpriteWithBomb(LookingAt lookat);
+
+	sf::IntRect& getMoveSpriteWithBomb(LookingAt lookat, int i);
+
 	sf::IntRect& getDeathSprite(int i);
 };
 
