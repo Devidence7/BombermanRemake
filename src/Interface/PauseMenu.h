@@ -91,6 +91,7 @@ private:
 			break;
 				
 		case ButtonActions::GO_MAIN_MENU:
+			game.timesUp=false;
 			game.deleteMap();
 			gameDisplay.setGameState(GameDisplayController::GameState::MAIN_MENU);
 			GameMusic::playTitleMusic();

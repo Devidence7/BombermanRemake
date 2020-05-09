@@ -95,8 +95,8 @@ public:
 			// lives[i].setPosition(PLayers::getVectorPlayer()[i]->playerHead2.getPosition().x + 35, PLayers::getVectorPlayer()[i]->playerHead2.getPosition().y + 7.5);
 			// lives[i].setScale(0.5, 0.5);
 			lives[i].setCharacterSize(23);
-			lives[i].setOutlineColor(sf::Color(0, 0, 0));
-			lives[i].setOutlineThickness(3);
+			//lives[i].setOutlineColor(sf::Color(0, 0, 0));
+			//lives[i].setOutlineThickness(3);
 
 			
 

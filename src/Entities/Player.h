@@ -64,6 +64,7 @@ public:
 	Constructor of Entity
 	*/
 	PlayerEntity(PlayerControls& playerControls);
+	//PlayerEntity(PlayerControls* playerControls);
 
 	int getPowerOfBombs();
 

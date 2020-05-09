@@ -27,20 +27,13 @@ private:
 	int dimY = 15;
 	int dimX = 25;
 	
-	int timeLeft = 299;
+	int timeLeft = 10;
 	int timeToShow;
+	
 	// Initialize textures
 	TextureStorage textureStorage;
 	int numEnemigos=7;
 	//MainMenu mainMenu;
-/*enum dificultad{
-	EASY,
-	NORMAL,
-	HARD
-};*/
-
-
-
 
 public:
 	struct GameOptions {
@@ -53,6 +46,7 @@ public:
 	int stage;
 	GameOptions gameOptions;
 	bool debug=false;
+	bool timesUp=false;
 
 /*	double getDificultad(dificultad d){
 	switch(d){
@@ -81,10 +75,6 @@ Game(){
 		}
 	}
 
-	/*void insertEnemies(int numEnemigos){
-		Enemies::insertarEnemigos(dimX, dimY);
-	}*/
-
 	void startNewGame(sf::RenderWindow& window, GameDisplayController &gameDisplay){
 		// Restart time parameters
 		GameTime::startGameTime();
@@ -110,6 +100,7 @@ Game(){
 	}
 
 	void restartGame(sf::RenderWindow& window,GameDisplayController &gameDisplay){
+		timesUp=false;
 		deleteMap();
 		cout<<numEnemigos<<endl;
 		Enemies::insertarEnemigos(dimX, dimY,numEnemigos*gameOptions.difLevel*(stage/0.75),stage);
@@ -245,7 +236,8 @@ Game(){
 		moveCamera(gameDisplay);
 		
 		timeToShow = timeLeft -GameTime::getTimeNow();;
-		if (timeToShow <= 0) {
+		if (timeToShow <= 0 && !timesUp) {
+			timesUp=true;
 			//gameDisplay.setGameState(GameDisplayController::GameState::VICTORY);
 			Enemies::insertarEnemigosExtra(dimX,dimY);
 		}
@@ -271,6 +263,7 @@ Game(){
 			e->drawMovements(w);
 #endif
 		}
+		
 	}
 
 	bool colissionWithEnemies(Entity_ptr eCol) {

@@ -99,8 +99,9 @@ private:
 
 		case ButtonActions::DEBUG:
 			game.gameOptions.numPlayers = 2;
+			game.gameOptions.difLevel=1;
 			game.debug=true;
-			gameDisplay.setGameState(GameDisplayController::GameState::STORY_MENU);
+			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			//game.startNewGame(*window);
 			break;
 
