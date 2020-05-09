@@ -53,15 +53,16 @@ bool Enemies::cehckSomeCollision(Entity_ptr e){
 }
 
 std::vector<Enemy_ptr> Enemies::enemies;
+std::vector<Enemy_ptr> Enemies::enemiesExtra;
 void Enemies::insertarEnemigosExtra(int dimX, int dimY){
-	Enemy_ptr e1 = std::make_shared<EnemyEntity>(Ice());
-	Enemy_ptr e2 = std::make_shared<EnemyEntity>(Ice());
-	Enemy_ptr e3 = std::make_shared<EnemyEntity>(Ice());
-	enemies.push_back(e1);
-	enemies.push_back(e2);
-	enemies.push_back(e3);
-
-	for (Enemy_ptr e : enemies) {
+	std::vector<Enemy_ptr> a(7);
+	int x, y;
+	for(int i=0;i<7;i++){
+		a[i] = std::make_shared<EnemyEntity>(Coin());
+		enemiesExtra.push_back(a[i]);
+	}
+	
+	for (Enemy_ptr e : enemiesExtra) {
 		int x, y;
 		do {
 			x = Random::getIntNumberBetween(0, dimX / 2);
@@ -76,9 +77,8 @@ void Enemies::insertarEnemigosExtra(int dimX, int dimY){
 		e->startMovement();
 	}
 
+	}
 
-
-}
 
 
 void Enemies::insertarEnemigos(int dimX, int dimY,int numEnemies,int stage) {
@@ -148,6 +148,10 @@ void Enemies::insertarEnemigos(int dimX, int dimY,int numEnemies,int stage) {
 }
 std::vector<Enemy_ptr>& Enemies::getVectorEnemies() {
 	return enemies;
+}
+
+std::vector<Enemy_ptr>& Enemies::getVectorEnemiesExtra() {
+	return enemiesExtra;
 }
 
 void EntityMap::addEntity(Entity_ptr e, sf::Vector2i pos) {

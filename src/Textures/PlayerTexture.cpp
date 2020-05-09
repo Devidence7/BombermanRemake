@@ -29,6 +29,14 @@
 		return frames[lookat * 4 + i];
 	}
 
+	sf::IntRect& PlayerTexture::getIdleSpriteWithBomb(LookingAt lookat) {
+		return frames[16 + lookat * 7];
+	}
+
+	sf::IntRect& PlayerTexture::getMoveSpriteWithBomb(LookingAt lookat, int i) {
+		return frames[16 + lookat * 7 + i];
+	}
+
 	sf::IntRect& PlayerTexture::getDeathSprite(int i) {
 		return frames[44 + i];
 	}

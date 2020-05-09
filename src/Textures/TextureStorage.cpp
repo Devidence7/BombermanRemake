@@ -7,6 +7,7 @@ BombTexture TextureStorage::bombTexture;
 FireTexture TextureStorage::fireTexture;
 EnemyTexture TextureStorage::enemyTexture;
 PowerUpTexture TextureStorage::powerUpTexture;
+TeleporterTexture TextureStorage::teleporterTexture;
 
 
 
@@ -44,5 +45,10 @@ EnemyTexture &TextureStorage::getEnemyTexture()
 PowerUpTexture &TextureStorage::getPowerUpTexture()
 {
 	return powerUpTexture;
+}
+
+TeleporterTexture &TextureStorage::getTeleporterTexture()
+{
+	return teleporterTexture;
 }
 

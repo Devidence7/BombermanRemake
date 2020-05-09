@@ -29,18 +29,11 @@ private:
 	
 	int timeLeft = 299;
 	int timeToShow;
+	
 	// Initialize textures
 	TextureStorage textureStorage;
 	int numEnemigos=7;
 	//MainMenu mainMenu;
-/*enum dificultad{
-	EASY,
-	NORMAL,
-	HARD
-};*/
-
-
-
 
 public:
 	struct GameOptions {
@@ -53,21 +46,8 @@ public:
 	int stage;
 	GameOptions gameOptions;
 	bool debug=false;
+	bool timesUp=false;
 
-/*	double getDificultad(dificultad d){
-	switch(d){
-		case EASY:
-			return 1;
-			break;
-		case NORMAL:
-			return 1.5;
-			break;
-		case HARD:
-			return 1.75;
-		default:
-		break;
-	}
-} */
 Game(){
 	stage=1;
 }
@@ -83,10 +63,6 @@ Game(){
 			PLayers::addIAPlayer(userKeyPress.getPlayerControls(i+1));
 		}
 	}
-
-	/*void insertEnemies(int numEnemigos){
-		Enemies::insertarEnemigos(dimX, dimY);
-	}*/
 
 	void startNewGame(sf::RenderWindow& window, GameDisplayController &gameDisplay){
 		// Restart time parameters
@@ -117,6 +93,7 @@ Game(){
 	}
 
 	void restartGame(sf::RenderWindow& window,GameDisplayController &gameDisplay){
+		timesUp=false;
 		deleteMap();
 		cout<<numEnemigos<<endl;
 		Enemies::insertarEnemigos(dimX, dimY,numEnemigos*gameOptions.difLevel*(stage/0.75),stage);
@@ -150,6 +127,13 @@ Game(){
 				it2->reset();
 				it2 = PLayers::getVectorPlayer().erase(it2);
 		}
+		auto it3 = Enemies::getVectorEnemiesExtra().begin();
+		while (it3 != Enemies::getVectorEnemiesExtra().end()) {
+				it3->reset();
+				it3 = Enemies::getVectorEnemiesExtra().erase(it3);
+		}
+
+		
 	}
 
 	void updatePlayers( GameDisplayController& gameDisplay) {
@@ -252,7 +236,8 @@ Game(){
 		moveCamera(gameDisplay);
 		
 		timeToShow = timeLeft -GameTime::getTimeNow();;
-		if (timeToShow <= 0) {
+		if (timeToShow <= 0 && !timesUp) {
+			timesUp=true;
 			//gameDisplay.setGameState(GameDisplayController::GameState::VICTORY);
 			Enemies::insertarEnemigosExtra(dimX,dimY);
 		}
@@ -282,6 +267,16 @@ Game(){
 			e->drawMovements(w);
 #endif
 		}
+
+		for (Enemy_ptr e2 : Enemies::getVectorEnemiesExtra()) {
+			w.draw(*e2);
+#ifdef HITBOX_DEBUG_MODE
+			e2->drawEntityHitbox(w);
+			//		e->generateMovements();
+			e2->drawMovements(w);
+#endif
+		}
+		
 	}
 
 	bool colissionWithEnemies(Entity_ptr eCol) {
@@ -310,6 +305,25 @@ Game(){
 			
 			else {
 				++it;
+				counter++;
+			}
+			
+		}
+		auto it2 = Enemies::getVectorEnemiesExtra().begin();
+		counter = 0;
+		while (it2 != Enemies::getVectorEnemiesExtra().end()) {
+			
+			// Update the enemies.
+			(*it2)->update();
+			level->checkAndFixCollisions((*it2));
+			
+			if ((*it2)->getExpiredEntity()) {
+				it2->reset();
+				it2 = Enemies::getVectorEnemies().erase(it2);
+			}
+			
+			else {
+				++it2;
 				counter++;
 			}
 			

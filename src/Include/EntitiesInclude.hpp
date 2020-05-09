@@ -36,12 +36,16 @@ public:
 
 class Enemies{
     static std::vector<Enemy_ptr> enemies;
+    static std::vector<Enemy_ptr> enemiesExtra;
+   
 
 public:
     static void insertarEnemigosExtra(int dimX, int dimY);
     static void insertarEnemigos(int dimX, int dimY,int numEnemies,int stage);
     static std::vector<Enemy_ptr> &getVectorEnemies();
+    static std::vector<Enemy_ptr> &getVectorEnemiesExtra();
     static bool cehckSomeCollision(Entity_ptr e);
+   
 };
 
 class EntityMap
