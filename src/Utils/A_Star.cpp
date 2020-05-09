@@ -9,22 +9,37 @@ bool checkObjetive(const sf::Vector2i &currentP, const sf::Vector2i &objetivePos
 
 bool checkValidPosition(const sf::Vector2i &v, Entity_ptr e)
 {
-    // if (!EntityMap::isValidCell(v))
-    // {
-    //     std::cout << "NOT VALID " << v.x << " " << v.y << std::endl;
-    // }
     bool valid = (EntityMap::isValidCell(v) && (EntityMap::getCellEntMapObject(v) == nullptr || !EntityMap::getCellEntMapObject(v)->isColliderWith(e)));
     if(valid){
         //Verficar si es un area omitida
-        for(OmittedArea oa : e->OmittedAreas){
-            if(oa == v){
-                valid = false;
-                break;
+        if(e->OmittedAreas.size() > 0){
+            for(OmittedArea oa : e->OmittedAreas){
+                if(oa == v){
+                    valid = false;
+                    break;
+                }
+        }
+        }
+    }
+    return valid;
+}
+
+inline bool checkValidPositionOrDestroyer(const sf::Vector2i &v, std::shared_ptr<Entity> e){
+    bool valid = (EntityMap::isValidCell(v) && (EntityMap::getCellEntMapObject(v) == nullptr || !EntityMap::getCellEntMapObject(v)->isColliderWith(e) || EntityMap::getCellEntMapObject(v)->getIsFireDestroyable()));
+    if(valid){
+        //Verficar si es un area omitida
+        if(e->OmittedAreas.size() > 0){
+            for(OmittedArea oa : e->OmittedAreas){
+                if(oa == v){
+                    valid = false;
+                    break;
+                }
             }
         }
     }
     return valid;
 }
+
 
 sf::Vector2i selectCloseObjetive(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives)
 {
@@ -123,7 +138,7 @@ void generatePath(Entity_ptr e, std::vector<sf::Vector2i> &objetives, std::list<
 
 
 
-bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> &path, Entity_ptr e, TypeSeekIA typeSeek)
+bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> &path, Entity_ptr e, TypeSeekIA typeSeek, bool alternativePath)
 {
     path.clear();
     Heap<ANode_Ptr> frontera;
@@ -155,6 +170,114 @@ bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector
                     ANode_Ptr newNode = std::make_shared<ANode>(ANode(nodePosition, sf::Vector2i(i, j), objetiveP, currentNode->fAcum() + 1, currentNode));
                     if (checkValidPosition(nodePosition, e) && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(currentNode))
                     { //Si es una posicion valida y no se ha expandido
+                        frontera.add(newNode);
+                    }
+                    else
+                    {
+                        newNode = nullptr;
+                    }
+                }
+            }
+        }
+        //Extraer nodo
+        if (frontera.isEmpty())
+        {
+            break;
+        }
+        currentNode = frontera.pop();
+
+        //currentNode = *
+        if (currentNode->isObjetive())
+        {
+            lastBest = currentNode;
+            sf::Vector2i posObjetiv =  currentNode->getPosition();
+            vec2i pOb = vec2i(posObjetiv);
+            objetivesFound[pOb]++;
+            found = typeSeek == TypeSeekIA::BEST_PATH || (objetivesFound[pOb] > 0 && typeSeek == TypeSeekIA::SECOND_BEST_PATH) || (typeSeek == TypeSeekIA::LONG_PATH && int(manhattan(posObjetiv, positionEnemy) * 1.5) <= currentNode->costNode());
+          //  std::cout << "Coste camino" << currentNode->costNode() << "\n";
+            bestfounds++;
+            if(frontera.isEmpty()){
+                break;
+            }
+            if(!found){
+                currentNode = frontera.pop();
+            }
+        }
+    }
+
+    std::list<ANode_Ptr> list_actions;
+    //Si no se ha encontrado -> seleccionar aleatorio
+    if (!found && lastBest == nullptr && alternativePath)
+    {
+        std::cout << "NO Best found\n";
+        int randomNode = Random::getIntNumberBetween(0, expanded.size() - 1);
+        for (auto &p : expanded)
+        {
+            if (randomNode > 0)
+            {
+                randomNode--;
+            }
+            else
+            {
+                lastBest = p.second;
+                break;
+            }
+        }
+    }
+    while (lastBest != nullptr)
+    {
+        if (lastBest->getParent() != nullptr)
+        {
+            list_actions.push_back(lastBest);
+        }
+        lastBest = lastBest->getParent();
+    }
+
+    while (!list_actions.empty())
+    {
+        ANode_Ptr e = list_actions.back();
+        path.push_back(e);
+        list_actions.pop_back();
+    }
+
+    return found;
+}
+
+
+
+bool pathFindingBreakingWalls(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> &path, Entity_ptr e, TypeSeekIA typeSeek)
+{
+    path.clear();
+    Heap<ANode_Ptr> frontera;
+    std::map<vec2i, ANode_Ptr> expanded;
+    std::map<vec2i, int> objetivesFound;
+    for(sf::Vector2i o: objetives){
+        objetivesFound[vec2i(o)] = 0;
+    }
+    sf::Vector2i objetive = selectCloseObjetive(positionEnemy, objetives);
+    
+    int bestfounds = 0;
+    ANode_Ptr lastBest;
+    ANode_Ptr currentNode = std::make_shared<ANode>(ANode(positionEnemy, sf::Vector2i(0, 0), objetive, 0.0f));
+
+    bool found = false;
+    while (!found)
+    {
+
+        expanded[vec2i(currentNode->getPosition())] = currentNode;
+        //expandir nodos
+        for (int i = -1; i < 2; i++)
+        {
+            for (int j = -1; j < 2; j++)
+            {
+                if (abs(i) != abs(j))
+                {
+                    sf::Vector2i nodePosition(currentNode->xPosition() + i, currentNode->yPosition() + j);
+                    sf::Vector2i objetiveP = selectCloseObjetive(positionEnemy, objetives);
+                    ANode_Ptr newNode = std::make_shared<ANode>(ANode(nodePosition, sf::Vector2i(i, j), objetiveP, currentNode->fAcum() + 1, currentNode));
+                    if (checkValidPositionOrDestroyer(nodePosition, e) && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(currentNode))
+                    { //Si es una posicion valida y no se ha expandido
+                        newNode->incrementCost(8); // TODO: variable segun IA
                         frontera.add(newNode);
                     }
                     else

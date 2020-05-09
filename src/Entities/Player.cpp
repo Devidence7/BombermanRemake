@@ -1,6 +1,8 @@
 #include "../Map/Level.hpp"
 
-PlayerEntity::PlayerEntity(PlayerControls& pControls) : Entity(), playerControls(pControls) {
+PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team) : Entity(), playerControls(pControls) {
+
+	team = _team;
 
 	isFireDestroyable = true;
 	fireCanGoThroght = true;

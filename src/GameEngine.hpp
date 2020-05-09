@@ -75,9 +75,12 @@ Game(){
 		return timeLeft;
 	}
 
-	void insertPlayers(UserKeyPress &userKeyPress, int numPlayers) {
+	void insertPlayers(UserKeyPress &userKeyPress, int numPlayers, int numIAPlayer) {
 		for (int i = 0; i < numPlayers; i++) {
 			PLayers::addPlayer(userKeyPress.getPlayerControls(i+1));
+		}
+		for(int i = 0; i < numIAPlayer; i++){
+			PLayers::addIAPlayer(userKeyPress.getPlayerControls(i+1));
 		}
 	}
 
@@ -99,7 +102,11 @@ Game(){
 		//insertEnemies(7);
 		level = new Level(dimX, dimY,debug);
 		//Enemies::insertarEnemigos(dimX, dimY);
-		insertPlayers(*gameDisplay.userKeyPress, gameOptions.numPlayers);
+		if(debug){
+			insertPlayers(*gameDisplay.userKeyPress, 0, 2);
+		}else{
+			insertPlayers(*gameDisplay.userKeyPress, gameOptions.numPlayers, 0);
+		}
 	
 		unsigned int pixelsX = window.getSize().x;
 		unsigned int pixelsY = window.getSize().y;
@@ -257,6 +264,10 @@ Game(){
 			w.draw(*player);
 			w.draw(player->playerUpdateColor());
 #ifdef HITBOX_DEBUG_MODE
+			PlayerIA_ptr pIA;
+			if((pIA = std::dynamic_pointer_cast<PlayerIAEntity>(player)) != nullptr){
+				pIA->drawMovements(w);
+			}
 			player->drawEntityHitbox(w);
 #endif
 		}

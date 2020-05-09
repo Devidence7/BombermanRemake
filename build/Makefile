@@ -67,8 +67,8 @@ $(bin)/Time.o: $(logicPath)/Time.cpp $(logicPath)/Time.h
 #################################
 
 
-../bin/libEntities.a: ../bin/Entity.o  ../bin/Bomb.o  ../bin/BrickWall.o ../bin/Enemy.o ../bin/Pillar.o  ../bin/PowerUp.o  ../bin/Player.o
-	ar rc $(bin)/libEntities.a $(bin)/Entity.o $(bin)/Bomb.o $(bin)/BrickWall.o $(bin)/Enemy.o $(bin)/Pillar.o $(bin)/PowerUp.o $(bin)/Player.o
+../bin/libEntities.a: ../bin/Entity.o  ../bin/Bomb.o  ../bin/BrickWall.o ../bin/Enemy.o ../bin/Pillar.o  ../bin/PowerUp.o  ../bin/Player.o $(bin)/PlayerIA.o
+	ar rc $(bin)/libEntities.a $(bin)/Entity.o $(bin)/Bomb.o $(bin)/BrickWall.o $(bin)/Enemy.o $(bin)/Pillar.o $(bin)/PowerUp.o $(bin)/Player.o $(bin)/PlayerIA.o
 	ranlib $(bin)/libEntities.a
 
 ../bin/Entity.o:  $(entityPath)/Entity.h $(entityPath)/Entity.cpp $(UtilsPath)/OmittedAreas.hpp
@@ -88,6 +88,9 @@ $(bin)/Time.o: $(logicPath)/Time.cpp $(logicPath)/Time.h
 
 ../bin/Player.o: $(entityPath)/Player.cpp $(entityPath)/Player.h $(bin)/Entity.o
 	$(CC) -o $(bin)/Player.o -c $(entityPath)/Player.cpp $(std)  $(O)
+
+../bin/PlayerIA.o: $(entityPath)/PlayerIA.cpp $(entityPath)/PlayerIA.hpp $(bin)/Player.o
+	$(CC) -o $(bin)/PlayerIA.o -c $(entityPath)/PlayerIA.cpp $(std)  $(O)
 
 ../bin/PowerUp.o: $(entityPath)/PowerUp.cpp $(entityPath)/PowerUp.h $(bin)/Entity.o
 	$(CC) -o $(bin)/PowerUp.o -c $(entityPath)/PowerUp.cpp  $(std) $(O) 

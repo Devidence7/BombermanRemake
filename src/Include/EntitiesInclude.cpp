@@ -14,8 +14,14 @@ bool checkSomeCollisionOnVector(Entity_ptr e, std::vector<Entity_ptr> &v){
 	return collision;
 }
 
-void PLayers::addPlayer(PlayerEntity::PlayerControls& playerControls) {
-	Player_ptr p = std::make_shared<PlayerEntity>(PlayerEntity(playerControls));
+void PLayers::addPlayer(PlayerEntity::PlayerControls& playerControls, int team) {
+	Player_ptr p = std::make_shared<PlayerEntity>(PlayerEntity(playerControls, team));
+	p->me = p;
+	players.push_back(p);
+}
+
+void PLayers::addIAPlayer(PlayerEntity::PlayerControls& playerControls, int team) {
+	PlayerIA_ptr p = std::make_shared<PlayerIAEntity>(PlayerIAEntity(playerControls, team));
 	p->me = p;
 	players.push_back(p);
 }

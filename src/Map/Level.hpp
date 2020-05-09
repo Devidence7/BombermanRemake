@@ -28,7 +28,7 @@ class Level
 	//bool hasAppearedExit=false;
 
 public:
-	Level(int dimX, int dimY);
+	//Level(int dimX, int dimY);
 	static sf::Vector2i sizeLevel();
 	Level(int dimX, int dimY,bool debug);
 	

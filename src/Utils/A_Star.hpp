@@ -21,6 +21,7 @@ class vec2i
 public:
     int x, y;
     vec2i(const sf::Vector2i &v) : x(v.x), y(v.y) {}
+
     inline bool operator==(const vec2i &other) const
     {
         return x == other.x && y == other.y;
@@ -86,6 +87,9 @@ public:
         currentPostion += direction_to_arrive;
     }
     inline float costNode() const { return h + f; }
+
+    inline void incrementCost(float x){ f += x;  }
+
     inline bool isObjetive() const { return h == 0; }
     inline void setParent(std::shared_ptr<ANode> p) { parent = p; }
     const sf::Vector2i &getPosition() const { return currentPostion; }
@@ -127,12 +131,14 @@ public:
     }
 };
 
+
 typedef std::shared_ptr<ANode> ANode_Ptr;
 
 
 inline bool checkObjetive(const sf::Vector2i &currentP, const sf::Vector2i &objetivePosition);
 #include "../Entities/Entity.h"
-inline bool checkValidPosition(const sf::Vector2i &v, std::shared_ptr<Entity> e);
+bool checkValidPosition(const sf::Vector2i &v, std::shared_ptr<Entity> e);
+bool checkValidPositionOrDestroyer(const sf::Vector2i &v, std::shared_ptr<Entity> e);
 
 ANode_Ptr generateRandomMovement(std::shared_ptr<Entity> e,  sf::Vector2i fromPosition);
 void generateRandomPath(sf::Vector2i position, std::list<ANode_Ptr> & path, std::shared_ptr<Entity> e);
@@ -140,5 +146,5 @@ void generatePath(std::shared_ptr<Entity> e, std::vector<sf::Vector2i> &objetive
                              
 sf::Vector2i selectCloseObjetive(std::shared_ptr<Entity> e, const std::vector<sf::Vector2i> &objetives);
 
-bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> & path, std::shared_ptr<Entity> e,  TypeSeekIA typeSeek);
-
+bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> & path, std::shared_ptr<Entity> e,  TypeSeekIA typeSeek, bool alternativePath = true);
+bool pathFindingBreakingWalls(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> &path, std::shared_ptr<Entity> e, TypeSeekIA typeSeek);
