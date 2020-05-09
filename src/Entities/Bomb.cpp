@@ -20,13 +20,7 @@ Bomb::Bomb(std::shared_ptr<PlayerEntity> p) : Entity() {
 	// Set sprite Sheet texture
 	setTexture(bombTexture->getTexture());
 
-	auto bombLimits = getLocalBounds();
-	setOrigin(bombLimits.width / 2, bombLimits.height / 2);
-}
-
-void Bomb::setPosition(sf::Vector2f pos) {
-	auto bombLimits = getLocalBounds();
-	Entity::setPosition(sf::Vector2f(pos.x + bombLimits.width / 2, pos.y + bombLimits.height / 2));
+	setOrigin(24,24);
 }
 
 void Bomb::setExpiredEntity()
@@ -66,18 +60,36 @@ void Bomb::onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<E
 }
 
 void Bomb::rotateBomb(double velMult) {
+	auto bombOri = getOrigin();
+	auto bombPos = getPosition();
+	auto bombLimits = getLocalBounds();
+	cout << "-----------" << endl;
+	cout << getOrigin().x << endl;
+	cout << getPosition().x << endl;
+	
+	
+
 	if (velocity.x < 0) {
 		rotate(-100 * velMult);
 	}
 	else {
 		rotate(100 * velMult);
 	}
+	cout << getOrigin().x << endl;
+	cout << getPosition().x << endl;
+
 	
+	// setOrigin(bombOri);
+	// setPosition(bombPos);
 }
 
-sf::Vector2f Bomb::getCornerPos() {
-	auto bombLimits = getLocalBounds();
-	return sf::Vector2f(this->getPosition().x - bombLimits.width / 2, this->getPosition().y - bombLimits.height / 2);
+
+sf::Vector2f Bomb::getPosition() {
+	return sf::Vector2f(this->sf::Sprite::getPosition().x - 24, this->sf::Sprite::getPosition().y - 24);
+}
+
+void Bomb::setPosition(sf::Vector2f pos) {
+	this->sf::Sprite::setPosition(sf::Vector2f(pos.x + 24, pos.y + 24));
 }
 
 void Bomb::update()
@@ -105,13 +117,15 @@ void Bomb::update()
 		double velMult = GameTime::getTimeNow() - lastMove < 0.5 ? GameTime::getTimeNow() - lastMove : 0.5;
 		velMult *= 10;
 		move(sf::Vector2f(velocity.x * velMult, velocity.y * velMult));
-		double module = moduleVector(positionObjetive - getCornerPos());
+		double module = moduleVector(positionObjetive - getPosition());
 
 		if (module > cornerModuleBefore) {
-			this->setPosition(positionObjetive);
+			setPosition(positionObjetive);
 			rePutBomb = true;
 			onFlight = false;
 			cornerModuleBefore = 99999;
+			
+			//move(-24, -24);
 		}
 		else {
 			cornerModuleBefore = module;
@@ -157,7 +171,6 @@ Fire::Fire(Player_ptr p, int type ) : Entity()
 	setTexture(fireTexture->getTexture());
 
 	auto fireLimits = getLocalBounds();
-	setOrigin(fireLimits.width / 2, fireLimits.height / 2);
 }
 
 void Fire::onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<Entity> eCollisioner, CollisionType colT)

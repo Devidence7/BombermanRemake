@@ -48,14 +48,17 @@ public:
 	 **********/
 
 	Bomb(std::shared_ptr<PlayerEntity> p);
-	void setPosition(sf::Vector2f pos);
+	// void setPosition(sf::Vector2f pos);
 	sf::FloatRect getGlobalBounds() const override;
 	void setExpiredEntity() override;
 	bool isColliderWith(std::shared_ptr<Entity> eCollisioning) override;	
 	void onCollission(std::shared_ptr<Entity> eCollisioning,std::shared_ptr<Entity> eCollisioner, CollisionType colT) override;
 	void rotateBomb(double rotVel);
-	sf::Vector2f getCornerPos();
 	void update();
+
+	virtual sf::Vector2f getPosition() override;
+	virtual void setPosition(sf::Vector2f pos) override;
+
 	void setPlayer2Score(std::shared_ptr<PlayerEntity> p){
 		player2Score = p;
 	}
