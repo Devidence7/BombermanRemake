@@ -20,8 +20,8 @@ void PLayers::addPlayer(PlayerEntity::PlayerControls& playerControls, int team) 
 	players.push_back(p);
 }
 
-void PLayers::addIAPlayer(PlayerEntity::PlayerControls& playerControls, int team) {
-	PlayerIA_ptr p = std::make_shared<PlayerIAEntity>(PlayerIAEntity(playerControls, team));
+void PLayers::addIAPlayer(PlayerEntity::PlayerControls& playerControls,int team,int IA) {
+	PlayerIA_ptr p = std::make_shared<PlayerIAEntity>(PlayerIAEntity(playerControls, team,IA));
 	p->me = p;
 	players.push_back(p);
 }
@@ -54,9 +54,9 @@ bool Enemies::cehckSomeCollision(Entity_ptr e){
 
 std::vector<Enemy_ptr> Enemies::enemies;
 std::vector<Enemy_ptr> Enemies::enemiesExtra;
-std::vector<Enemy_ptr> Enemies::enemiesExtra;
+//std::vector<Enemy_ptr> Enemies::enemiesExtra;
 
-void Enemies::insertarEnemigosExtraTel(int posX, int posY){
+/*void Enemies::insertarEnemigosExtraTel(int posX, int posY){
 	std::vector<Enemy_ptr> a(7);
 	int x, y;
 	for(int i=0;i<3;i++){
@@ -72,7 +72,7 @@ void Enemies::insertarEnemigosExtraTel(int posX, int posY){
 		e->startMovement();
 	}
 
-	}
+	}*/
 
 
 

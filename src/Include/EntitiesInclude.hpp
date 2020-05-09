@@ -29,7 +29,7 @@ class PLayers
 
 public:
     static void addPlayer(PlayerEntity::PlayerControls &playerControls, int team = 0);
-    static void addIAPlayer(PlayerEntity::PlayerControls &playerControls, int team = 0);
+    static void addIAPlayer(PlayerEntity::PlayerControls &playerControls,int team = 0, int IA=0);
     static std::vector<Player_ptr> &getVectorPlayer();
     static bool cehckSomeCollision(Entity_ptr e);
 };
@@ -37,16 +37,16 @@ public:
 class Enemies{
     static std::vector<Enemy_ptr> enemies;
     static std::vector<Enemy_ptr> enemiesExtra;
-     static std::vector<Enemy_ptr> enemiesExtraTel;
+  //   static std::vector<Enemy_ptr> enemiesExtraTel;
    
 
 public:
-    static void insertarEnemigosExtraTel(int dimX, int dimY);
+    //static void insertarEnemigosExtraTel(int dimX, int dimY);
     static void insertarEnemigosExtra(int dimX, int dimY);
     static void insertarEnemigos(int dimX, int dimY,int numEnemies,int stage);
     static std::vector<Enemy_ptr> &getVectorEnemies();
     static std::vector<Enemy_ptr> &getVectorEnemiesExtra();
-    static std::vector<Enemy_ptr> &getVectorEnemiesExtraTel();
+  //  static std::vector<Enemy_ptr> &getVectorEnemiesExtraTel();
     static bool cehckSomeCollision(Entity_ptr e);
    
 };

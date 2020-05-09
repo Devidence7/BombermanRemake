@@ -142,11 +142,11 @@ Game(){
 				it3->reset();
 				it3 = Enemies::getVectorEnemiesExtra().erase(it3);
 		}
-		auto it4 = Enemies::getVectorEnemiesExtraTel().begin();
+		/*auto it4 = Enemies::getVectorEnemiesExtraTel().begin();
 		while (it4 != Enemies::getVectorEnemiesExtraTel().end()) {
 				it4->reset();
 				it4 = Enemies::getVectorEnemiesExtraTel().erase(it4);
-		}
+		}*/
 
 		
 	}

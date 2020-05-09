@@ -9,12 +9,14 @@ class PlayerIAEntity : public PlayerEntity
 public:
 	ANode_Ptr currentMovement;
 	std::list<ANode_Ptr> movements;
+	int IAPlayer;
 
 	/*
 	Constructor of Entity
 	*/
-	PlayerIAEntity(PlayerControls &playerControls, int _team) : PlayerEntity(playerControls, _team){
+	PlayerIAEntity(PlayerControls &playerControls, int _team,int IA) : PlayerEntity(playerControls, _team){
 		colorPath = sf::Color(Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255));
+		IAPlayer=IA;
 	}
 
 //	sf::FloatRect getGlobalBounds() const override; Modificar??
