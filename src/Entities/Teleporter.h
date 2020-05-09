@@ -1,23 +1,28 @@
 #pragma once
 #include "Entity.h"
-#include "Player.h"
-#include "../Textures/PowerUpTexture.h"
-#include "../GameEngine.hpp"
 #include "../Textures/TextureStorage.h"
-/*
+
 class Teleporter : public Entity {
 public:
-	Texture* teleporterTexture;
-	int spriteCounter;
-	int spriteSpeed;
-	int actualFrame;
-	int spriteFrames;
-	Teleporter();
+	TeleporterTexture* teleporterTexture;
 
-	void open();
+	double spriteCounter;
+	const double spriteSpeed = 0.2;
+	int currentFrame = 0;
+	const int spriteFrames = 8;
 
-	void onCollission(std::shared_ptr<Entity> eCollisioning, CollisionType colT) override;
+	enum TeleporterState {
+		CLOSE = 0,
+		OPEN = 1
+	};
 
-	virtual void setPlayerStatus(Game &game);
+	TeleporterState teleporterState = TeleporterState::CLOSE;
+
+	Teleporter(sf::Vector2f pos);
+
+	void update();
+
+	void onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<Entity> eCollisioner, CollisionType colT) override;
+
+	void openTeleporter();
 };
-*/
