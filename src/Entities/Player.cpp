@@ -36,7 +36,7 @@ PlayerEntity::PlayerEntity(PlayerControls& pControls) : Entity(), playerControls
 
 
 	// TODO: Remove this
-	actionAvaible = ActionsAvalible::KICK_BOM;
+	//actionAvaible = ActionsAvalible::KICK_BOM;
 	move(Random::getIntNumberBetween(48,500), Random::getIntNumberBetween(48,500));
 }
 
