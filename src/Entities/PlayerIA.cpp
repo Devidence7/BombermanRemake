@@ -14,7 +14,7 @@ void PlayerIAEntity::setCollision(std::shared_ptr<Entity> col){
 //	void realizeActions();
 
 bool PlayerIAEntity::playerActions(){
-
+	return false;
 }
 /*
 * Update player position.
@@ -98,6 +98,8 @@ bool PlayerIAEntity::updateVelocity(){
 	velocity.x *=  baseSpeed * speedBoost * moveTime;
 	velocity.y *=  baseSpeed * speedBoost * moveTime;
 
+
+	return false;
 }
 
 bool PlayerIAEntity::updatePlayer(){
