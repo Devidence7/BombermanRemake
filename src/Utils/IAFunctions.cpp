@@ -114,6 +114,10 @@ void generateOmitedZones(sf::Vector2i positionP, std::list<OmittedArea> &AreasOm
     }
 }
 
+void createStateMap(Entity_ptr e){
+    
+}
+
 //TODO: Criterios de seleccion?
 void addPowerUpObjetive(sf::Vector2i poistionPU, std::vector<sf::Vector2i> &objetives)
 {
