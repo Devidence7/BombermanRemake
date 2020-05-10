@@ -184,6 +184,7 @@ void Level::brickWallOutcomes(Entity_ptr it) {
 			probability = Random::getFloatNumberBetween(0, 92);
 			cout << probability << endl;
 			Entity_ptr newObject = nullptr;
+			bool tryTeleport = false;
 
 			if (probability < 10) {
 				newObject = std::make_shared<MoreFirePowerUp>(MoreFirePowerUp((it)->getPosition()));
@@ -221,15 +222,16 @@ void Level::brickWallOutcomes(Entity_ptr it) {
 			else if (probability < 87) {
 				newObject = std::make_shared<ExtraLifePowerUp>(ExtraLifePowerUp((it)->getPosition()));
 			}
-			else if (!Level::exitHasApeared && probability < 93) {
+			else if (!Level::exitHasApeared && probability < 92) {
 				createTeleporter(it);
+				tryTeleport = true;
 			}	
 
 			if (newObject != nullptr) {
 				addEntityToMiniMap(newObject, getMapCoordinates((it)->getPosition()));
 				addNewItem(newObject);
 			}
-			else {
+			else if (!tryTeleport) {
 				// Do this always?
 				getCellMiniMapObject(getMapCoordinates((it)->getPosition())).reset();
 				getCellObject(getMapCoordinates((it)->getPosition())).reset();
