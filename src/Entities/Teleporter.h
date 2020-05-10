@@ -11,6 +11,7 @@ public:
 	const double spriteSpeed = 0.2;
 	int currentFrame = 0;
 	const int spriteFrames = 8;
+	bool playerCross = false;
 
 	enum TeleporterState {
 		CLOSE = 0,
@@ -28,4 +29,5 @@ public:
 	void onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<Entity> eCollisioner, CollisionType colT);
 
 	void openTeleporter();
+	void closeTeleporter();
 };

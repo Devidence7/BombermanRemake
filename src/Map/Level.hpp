@@ -26,8 +26,7 @@ class Level
 	static std::vector<Bomb_ptr > onFlightBombs;
 	static std::vector<std::vector<Entity_ptr>> miniMap;
 	static sf::RectangleShape flooro;
-	static bool exitHasApeared;
-	static bool finishLevel;
+
 	static int numWalls;
 	static int numEnemiesLeft;
 	static Teleporter_ptr teleporter;
@@ -35,6 +34,10 @@ class Level
 	
 
 public:
+	static bool exitHasApeared;
+	static bool canFinishLevel;
+	static bool levelFinished;
+
 	//Level(int dimX, int dimY);
 	static sf::Vector2i sizeLevel();
 	
@@ -80,4 +83,5 @@ public:
 	static void reiniciar(int dimX, int dimY);
 	static bool isValidCell(sf::Vector2i v); 
 	static void enemiesDefeated();
+	static void newEnemiesAppear();
 };

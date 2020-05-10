@@ -79,7 +79,7 @@ public:
         game_over.setString("    GAME OVER    ");
         game_over.setPosition(sf::Vector2f((int)window.getSize().x / 2 - (int)menu->getSize().x / 2, ((int)window.getSize().y / 2 - (int)menu->getSize().y / 2)-150));
         //game_over.setFillColor(sf::Color::White);
-        game_over.setColor(sf::Color::White);
+        game_over.setFillColor(sf::Color::White);
         game_over.setScale(2,2);
 	}
 

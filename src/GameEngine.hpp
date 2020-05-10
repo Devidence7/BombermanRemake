@@ -237,6 +237,11 @@ Game(){
 
 	void update(GameDisplayController &gameDisplay) {
 		level->update();
+
+		if (level->levelFinished) {
+			gameDisplay.setGameState(GameDisplayController::VICTORY);
+		}
+
 		updatePlayers(gameDisplay);
 		updateEnemies();
 
