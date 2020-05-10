@@ -70,6 +70,7 @@ public:
 	static bool addBomb(Player_ptr p);
 
 	static void chechAndFixBombCollision(Bomb_ptr b);
+	static void brickWallOutcomes(Entity_ptr it);
 	static bool areBombNear(Player_ptr p, sf::Vector2i &bombPosMap, bool checkOnFeet = true);
 	static bool canTakeBomb(Player_ptr p);
 	static bool canKickBomb(Player_ptr p);

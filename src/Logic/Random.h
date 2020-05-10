@@ -11,6 +11,7 @@ public:
 	static void initilizeRandomGen();
 
 	static int getIntNumberBetween(int a, int b);
+	static float getFloatNumberBetween(float a, float b);
 };
 
 //Random Random::randomGen;

@@ -5,7 +5,7 @@ PowerUp::PowerUp() : Entity()
 {
 	isFireDestroyable = true;
 	fireCanGoThroght = true;
-	this->collisioner = false;
+	collisioner = false;
 
 	spriteCounter = 0;
 	spriteSpeed = 15;
