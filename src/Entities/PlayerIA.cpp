@@ -169,6 +169,7 @@ bool PlayerIAEntity::updateRunawayState(){
 	if(movements.size()< 1){
 		currentState = StateIA::NON_OBJETIVE;
 	}
+	return false;
 }
 
 void PlayerIAEntity::putABomb(){

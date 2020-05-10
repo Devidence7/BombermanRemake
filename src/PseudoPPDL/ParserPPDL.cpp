@@ -1,5 +1,8 @@
 #include "ParserPPDL.hpp"
 #include <iostream>
+#include <algorithm>
+#include <cctype>
+#include <string>
 using namespace std;
 
 //Parser
@@ -21,7 +24,9 @@ void StateGenerator::generateState(ifstream &f, string estado)
         for(int i = 0; i < 2; i++){
             string text;
             std::getline(f, text);
-            boost::algorithm::to_lower(text);
+            // boost::algorithm::to_lower(text);
+            std::transform(text.begin(), text.end(), text.begin(),
+                [](unsigned char c) { return std::tolower(c); });
             found = text.find("rangovision");
             if (found != std::string::npos){
                 string val = text.substr(found + sizeof("rangovision"), text.size()) ;
@@ -53,7 +58,9 @@ void StateGenerator::readIA(string path)
     {
         while (!fileIA.eof())
         {
-            boost::algorithm::to_lower(line);
+            //boost::algorithm::to_lower(line);
+            std::transform(line.begin(), line.end(), line.begin(),
+                [](unsigned char c) { return std::tolower(c); });
             std::size_t found = line.find("estado");
             if (found != std::string::npos)
             {

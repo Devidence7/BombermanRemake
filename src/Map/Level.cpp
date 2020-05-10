@@ -174,7 +174,7 @@ void Level::createTeleporter(Entity_ptr it) {
 void Level::brickWallOutcomes(Entity_ptr it) {
 
 	// Last oportunity to get a teleporter
-	if (!Level::exitHasApeared && Level::numWalls == 1 || true) {
+	if (!Level::exitHasApeared && Level::numWalls == 1) {
 		createTeleporter(it);
 	}
 	// Russian Roullete

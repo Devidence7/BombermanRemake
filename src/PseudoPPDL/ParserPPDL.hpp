@@ -9,7 +9,6 @@
 
 #include "../Exceptions/ExceptionsGame.hpp"
 
-#include <boost/algorithm/string.hpp>
 #include "Estados.hpp"
 
 
