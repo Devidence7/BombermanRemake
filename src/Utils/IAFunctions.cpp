@@ -88,12 +88,22 @@ void generateOmitedZoneByBomb(sf::Vector2i bombPosition, std::list<OmittedArea> 
     //Añadir posicion de bomba?? no debería ser necesario por imposibilidad de llegar
 }
 
-void generateOmitedZones(std::list<OmittedArea> &AreasOmited)
+void generateOmitedZones(sf::Vector2i positionP, std::list<OmittedArea> &AreasOmited, int rangeVision)
 {
     sf::Vector2i sizeLevel = Level::sizeLevel();
-    for (int x = 0; x < sizeLevel.x; x++)
+    int rangeVisionX = positionP.x + rangeVision + 1;
+    int rangeVisionY = positionP.y + rangeVision + 1;
+    int byX = positionP.x;
+    int byY = positionP.y;
+    if(rangeVision < 0){
+        rangeVisionX = sizeLevel.x;
+        rangeVisionY = sizeLevel.y;
+        byX = 0;
+        byY = 0;
+    }
+    for (int x = byX; x < rangeVisionX; x++)
     {
-        for (int y = 0; y < sizeLevel.y; y++)
+        for (int y = byY; y < rangeVisionY; y++)
         {
             Entity_ptr e = Level::getCellMiniMapObject(x, y);
             if (std::dynamic_pointer_cast<Bomb>(e) != nullptr)
@@ -139,6 +149,7 @@ void selectEnemyPlayers(Entity_ptr IA, std::vector<sf::Vector2i> &objetives, int
     }
 }
 
+
 void tryKillAEnemy(Entity_ptr IA, std::list<ANode_Ptr> &movements, int rangeVision, int costDestroy)
 {
     std::vector<sf::Vector2i> objetives;
@@ -152,7 +163,16 @@ void tryKillAEnemy(Entity_ptr IA, std::list<ANode_Ptr> &movements, int rangeVisi
     }
 }
 
-
+bool somePlayerEnemyOnVision(sf::Vector2i pos, int rangeVision, int team){
+   bool onRange = false;
+    for(Player_ptr p : PLayers::getVectorPlayer()){
+        if(p->team != team){
+            onRange = isOnVision(pos, getMapCoordinates(p->getCenterPosition()), rangeVision);
+            if(onRange){break;}
+        }
+    }
+    return onRange;
+}
 
 bool somePlayerEnemyOnRange(sf::Vector2i pos, int rangeBomb, int team){
     bool onRange = false;

@@ -5,5 +5,6 @@ enum StateIA{
     PATROL = 1,
     KILL = 2,
     CATCH_PU = 3,
-    PERSEGUIR = 4
+    PERSEGUIR = 4,
+    RUNAWAY = 5
 };
