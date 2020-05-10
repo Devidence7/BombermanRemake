@@ -13,7 +13,7 @@ class WallTexture : public TextureVector {
 
 	sf::IntRect& getDefaultIntRect() override;
 
-	sf::IntRect &getRectWall(int i);
+	sf::IntRect &getRectWall(int i, int stage);
 
-	sf::IntRect &getRectPillar();
+	sf::IntRect &getRectPillar(int stage);
 };

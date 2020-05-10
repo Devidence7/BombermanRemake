@@ -32,6 +32,7 @@ class Level
 	static Teleporter_ptr teleporter;
 //	static Entity_ptr tel;
 	
+	static int stage;
 
 public:
 	static bool exitHasApeared;

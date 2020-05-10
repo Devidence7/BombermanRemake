@@ -147,7 +147,6 @@ public:
 		gameDisplay.manageGameInterface(gameDisplay, std::bind(&VictoryScreen::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
 		if (gameDisplay.gameOverReprocessDisplay) {
 			gameDisplay.gameOverReprocessDisplay = false;
-			delete(menu);
 			createVictoryScreen(*gameDisplay.getWindow(), game);
 		}
 		draw(*gameDisplay.getWindow());

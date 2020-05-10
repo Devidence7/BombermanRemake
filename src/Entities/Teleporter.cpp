@@ -53,7 +53,6 @@ void Teleporter::onCollission(std::shared_ptr<Entity> eCollisioning, std::shared
 			playerCross = true;
 			//GameDisplayController::displayController->setGameState(GameDisplayController::GameState::VICTORY);
 			// gameDisplay.setGameState(GameDisplayController::GameState::VICTORY);
-			cout << "VICTORIA HEEEY" << endl;
 		}
 	}
 //	}

@@ -7,6 +7,7 @@
 class BrickWall : public Entity {
 public:
 	WallTexture* wallTexture;
+	int stage;
 
 	double spriteStartTime;
 	double spriteLastFrameTime;
@@ -19,7 +20,7 @@ public:
 
 	bool isDestroyed = false;
 	
-	BrickWall(int &xloc, int &yloc);
+	BrickWall(int &xloc, int &yloc, int stage);
 	void update() override;
 
 	bool isColliderWith(std::shared_ptr<Entity> eCollisioning) override;

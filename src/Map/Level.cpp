@@ -8,6 +8,7 @@ bool Level::exitHasApeared = false;
 bool Level::canFinishLevel = false;
 bool Level::levelFinished = false;
 int Level::numWalls= 0;
+int Level::stage= 1;
 int Level::numEnemiesLeft = 0;
 Teleporter_ptr Level::teleporter = nullptr;
 
@@ -20,6 +21,8 @@ Level::Level(int dimX, int dimY, bool debug, int stage)
 	Level::numWalls = 0;
 	teleporter = nullptr;
 
+	Level::stage = stage;
+
 	// Reserve space for faster insert, delete of the entities
 	entities.reserve(10000);
 	// Create map matrix:
@@ -30,15 +33,16 @@ Level::Level(int dimX, int dimY, bool debug, int stage)
 
 	switch(stage){
 		case 1:
-			flooro.setFillColor(sf::Color(0, 100, 0));
+			flooro.setFillColor(sf::Color(0, 102, 10));
 			break;
 		case 2:
-			flooro.setFillColor(sf::Color(0, 0, 100));
+			flooro.setFillColor(sf::Color(34, 0, 102));
 			break;
 		case 3:
-			flooro.setFillColor(sf::Color(100, 69, 0));
+			flooro.setFillColor(sf::Color(102, 0, 128));
 			break;
 		default:
+			Level::stage = 3;
 			break;
 	}
 
@@ -332,7 +336,6 @@ void Level::update()
 	}
 
 	if (teleporter != nullptr) {
-		cout << Enemies::getVectorEnemies().size() << endl;
 		if (Enemies::getVectorEnemies().size() < 1) {
 			enemiesDefeated();
 		}
@@ -689,14 +692,14 @@ void Level::addEntity(Entity_ptr e)
 
 void Level::addPillar(int x, int y)
 {
-	Entity_ptr e = std::make_shared<Pillar>(Pillar(x, y));
+	Entity_ptr e = std::make_shared<Pillar>(Pillar(x, y, Level::stage-1));
 	addEntityToMap(e, x, y);
 	addEntityToMiniMap(e, x, y);
 }
 
 void Level::addWall(int x, int y)
 {
-	Entity_ptr e = std::make_shared<BrickWall>(BrickWall(x, y));
+	Entity_ptr e = std::make_shared<BrickWall>(BrickWall(x, y, Level::stage-1));
 	addEntityToMap(e, x, y);
 	addEntityToMiniMap(e, x, y);
 	Level::numWalls=numWalls+1;

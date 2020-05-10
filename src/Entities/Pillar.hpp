@@ -8,8 +8,9 @@
 class Pillar : public Entity {
 
 	WallTexture* wallTexture;
+	int stage;
 
 public:
-	Pillar(int &x, int &y);
+	Pillar(int &x, int &y, int stage);
 	void update() override;
 };
