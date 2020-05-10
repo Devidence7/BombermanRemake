@@ -2,29 +2,29 @@
 #include "../Logic/Time.h"
 
 
-Teleporter::Teleporter() : Entity() {
-	isTeleport=true;
-	isFireDestroyable = false;
-	fireCanGoThroght = false;
-	this->collisioner = false;
-
-	spriteCounter = GameTime::getTimeNow();
-
-	// Texture Controller:
-	teleporterTexture = &TextureStorage::getTeleporterTexture();
-	// Set sprite Sheet texture
-	setTexture(teleporterTexture->getTexture());
-	// Set starting sprite
-	setTextureRect(teleporterTexture->getDefaultIntRect());
-
-	setPosition(100,100);
-}
+//Teleporter::Teleporter() : Entity() {
+//	isTeleport=true;
+//	isFireDestroyable = false;
+//	fireCanGoThroght = false;
+//	collisioner = false;
+//
+//	spriteCounter = GameTime::getTimeNow();
+//
+//	// Texture Controller:
+//	teleporterTexture = &TextureStorage::getTeleporterTexture();
+//	// Set sprite Sheet texture
+//	setTexture(teleporterTexture->getTexture());
+//	// Set starting sprite
+//	setTextureRect(teleporterTexture->getDefaultIntRect());
+//
+//	setPosition(100,100);
+//}
 
 Teleporter::Teleporter(sf::Vector2f pos) : Entity() {
 	isTeleport=true;
 	isFireDestroyable = false;
 	fireCanGoThroght = false;
-	this->collisioner = false;
+	collisioner = false;
 
 	spriteCounter = GameTime::getTimeNow();
 
@@ -43,13 +43,6 @@ void Teleporter::update() {
 		currentFrame = (currentFrame + 1) % spriteFrames;
 		setTextureRect(teleporterTexture->getFrame(currentFrame, teleporterState));
 		spriteCounter = GameTime::getTimeNow();
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num9)) {
-		openTeleporter();
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num8)) {
-		teleporterState = TeleporterState::CLOSE;
 	}
 }
 //

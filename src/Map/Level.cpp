@@ -6,7 +6,9 @@ std::vector<std::vector<Entity_ptr>> Level::miniMap;
 sf::RectangleShape Level::flooro;
 bool Level::exitHasApeared;
 bool Level::finishLevel;
-int Level::numWalls;
+int Level::numWalls= 0;
+int Level::numEnemiesLeft = 0;
+Teleporter_ptr Level::teleporter = nullptr;
 
 
 Level::Level(int dimX, int dimY,bool debug,int stage)
@@ -154,6 +156,93 @@ void Level::chechAndFixBombCollision(Bomb_ptr b)
 	getCellMiniMapObject(mapPosition) = b; //Volver a poner bomb
 }
 
+void Level::createTeleporter(Entity_ptr it) {
+	Level::exitHasApeared = true;
+	Teleporter_ptr newObject = std::make_shared<Teleporter>(Teleporter((it)->getPosition()));
+	addEntityToMiniMap(newObject, getMapCoordinates((it)->getPosition()));
+	addNewItem(newObject);
+
+	teleporter = newObject;
+	if (numEnemiesLeft < 1) {
+		teleporter->openTeleporter();
+	}
+}
+
+void Level::brickWallOutcomes(Entity_ptr it) {
+
+	// Last oportunity to get a teleporter
+	if (!Level::exitHasApeared && Level::numWalls == 1) {
+		createTeleporter(it);
+	}
+	// Russian Roullete
+	else {
+		float probability = Random::getFloatNumberBetween(0, 1);
+		cout << probability << endl;
+		if (probability < 0.30) {
+			
+			probability = Random::getFloatNumberBetween(0, 92);
+			cout << probability << endl;
+			Entity_ptr newObject = nullptr;
+
+			if (probability < 10) {
+				newObject = std::make_shared<MoreFirePowerUp>(MoreFirePowerUp((it)->getPosition()));
+			}
+			else if (probability < 20) {
+				newObject = std::make_shared<LessFirePowerUp>(LessFirePowerUp((it)->getPosition()));
+			}
+			else if (probability < 30) {
+				newObject = std::make_shared<MoreBombsPowerUp>(MoreBombsPowerUp((it)->getPosition()));
+			}
+			else if (probability < 40) {
+				newObject = std::make_shared<MoreSpeedPowerUp>(MoreSpeedPowerUp((it)->getPosition()));
+			}
+			else if (probability < 50) {
+				newObject = std::make_shared<LessSpeedPowerUp>(LessSpeedPowerUp((it)->getPosition()));
+			}
+			else if (probability < 55) {
+				newObject = std::make_shared<MoreTimePowerUp>(MoreTimePowerUp((it)->getPosition()));
+			}
+			else if (probability < 60) {
+				newObject = std::make_shared<GrabBombsPowerUp>(GrabBombsPowerUp((it)->getPosition()));
+			}
+			else if (probability < 65) {
+				newObject = std::make_shared<KickBombsPowerUp>(KickBombsPowerUp((it)->getPosition()));
+			}
+			else if (probability < 75) {
+				newObject = std::make_shared<DisseasePowerUp>(DisseasePowerUp((it)->getPosition()));
+			}
+			else if (probability < 80) {
+				newObject = std::make_shared<PassBombsPowerUp>(PassBombsPowerUp((it)->getPosition()));
+			}
+			else if (probability < 85) {
+				newObject = std::make_shared<RemoteBombPowerUp>(RemoteBombPowerUp((it)->getPosition()));
+			}
+			else if (probability < 87) {
+				newObject = std::make_shared<ExtraLifePowerUp>(ExtraLifePowerUp((it)->getPosition()));
+			}
+			else if (!Level::exitHasApeared && probability < 92) {
+				createTeleporter(it);
+			}	
+
+			if (newObject != nullptr) {
+				addEntityToMiniMap(newObject, getMapCoordinates((it)->getPosition()));
+				addNewItem(newObject);
+			}
+			else {
+				// Do this always?
+				getCellMiniMapObject(getMapCoordinates((it)->getPosition())).reset();
+				getCellObject(getMapCoordinates((it)->getPosition())).reset();
+			}
+
+		}
+		else {
+			// Do this always?
+			getCellMiniMapObject(getMapCoordinates((it)->getPosition())).reset();
+			getCellObject(getMapCoordinates((it)->getPosition())).reset();
+		}
+	}
+}
+
 void Level::update()
 {
 	auto it = entities.begin();
@@ -179,72 +268,8 @@ void Level::update()
 			}
 			else if (std::dynamic_pointer_cast<BrickWall>((*it)) != nullptr)
 			{
-				if (!Level::exitHasApeared && Level::numWalls==1){
-						Level::exitHasApeared=true;
-						Entity_ptr tel=std::make_shared<Teleporter>(Teleporter((*it)->getPosition()));
-    					addEntityToMiniMap(tel, getMapCoordinates((*it)->getPosition()));
-				}
-				else{
-					if (!Random::getIntNumberBetween(0, 1)){
-						int randomObject = Random::getIntNumberBetween(0, 11);
-						Entity_ptr powerUp;
-						Entity_ptr tel;
-						switch (randomObject)
-						{
-						case 0:
-							powerUp = std::make_shared<MoreFirePowerUp>(MoreFirePowerUp((*it)->getPosition()));
-							break;
-						case 1:
-							powerUp = std::make_shared<LessFirePowerUp>(LessFirePowerUp((*it)->getPosition()));
-							break;
-						case 2:
-							powerUp = std::make_shared<MoreBombsPowerUp>(MoreBombsPowerUp((*it)->getPosition()));
-							break;
-						case 3:
-							powerUp = std::make_shared<LessSpeedPowerUp>(LessSpeedPowerUp((*it)->getPosition()));
-							break;
-						case 4:
-							powerUp = std::make_shared<MoreTimePowerUp>(MoreTimePowerUp((*it)->getPosition()));
-							break;
-						case 5:
-							powerUp = std::make_shared<GrabBombsPowerUp>(GrabBombsPowerUp((*it)->getPosition()));
-							break;
-						case 6:
-							powerUp = std::make_shared<KickBombsPowerUp>(KickBombsPowerUp((*it)->getPosition()));
-							break;
-						case 7:
-							powerUp = std::make_shared<DisseasePowerUp>(DisseasePowerUp((*it)->getPosition()));
-							break;
-						case 8:
-							powerUp = std::make_shared<PassBombsPowerUp>(PassBombsPowerUp((*it)->getPosition()));
-							break;
-						case 9:
-							powerUp = std::make_shared<RemoteBombPowerUp>(RemoteBombPowerUp((*it)->getPosition()));
-							break;
-
-						case 10:
-							if(Level::exitHasApeared==false){
-								Level::exitHasApeared=true;
-								tel=std::make_shared<Teleporter>(Teleporter((*it)->getPosition()));
-								addEntityToMiniMap(tel, getMapCoordinates((*it)->getPosition()));
-							}
-							break;
-						default:
-							//powerUp = std::make_shared<ExtraLifePowerUp>(ExtraLifePowerUp((*it)->getPosition()));
-							break;
-						}
-
-						addEntityToMiniMap(powerUp, getMapCoordinates((*it)->getPosition()));
-						//addNewItem(powerUp);
-					}
-					else
-					{
-						// Do this always?
-						getCellMiniMapObject(getMapCoordinates((*it)->getPosition())).reset();
-						getCellObject(getMapCoordinates((*it)->getPosition())).reset();
-					}
-				}
-				Level::numWalls=numWalls-1;
+				brickWallOutcomes(*it);
+				Level::numWalls -= 1;
 			}	
 			else	
 			{	
