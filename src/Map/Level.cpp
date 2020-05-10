@@ -6,7 +6,9 @@ std::vector<std::vector<Entity_ptr>> Level::miniMap;
 sf::RectangleShape Level::flooro;
 bool Level::exitHasApeared;
 bool Level::finishLevel;
-int Level::numWalls;
+int Level::numWalls= 0;
+int Level::numEnemiesLeft = 0;
+Teleporter_ptr Level::teleporter = nullptr;
 
 
 Level::Level(int dimX, int dimY,bool debug,int stage)
@@ -154,14 +156,23 @@ void Level::chechAndFixBombCollision(Bomb_ptr b)
 	getCellMiniMapObject(mapPosition) = b; //Volver a poner bomb
 }
 
+void Level::createTeleporter(Entity_ptr it) {
+	Level::exitHasApeared = true;
+	Teleporter_ptr newObject = std::make_shared<Teleporter>(Teleporter((it)->getPosition()));
+	addEntityToMiniMap(newObject, getMapCoordinates((it)->getPosition()));
+	addNewItem(newObject);
+
+	teleporter = newObject;
+	if (numEnemiesLeft < 1) {
+		teleporter->openTeleporter();
+	}
+}
+
 void Level::brickWallOutcomes(Entity_ptr it) {
 
 	// Last oportunity to get a teleporter
 	if (!Level::exitHasApeared && Level::numWalls == 1) {
-		Level::exitHasApeared = true;
-		Entity_ptr newObject = std::make_shared<Teleporter>(Teleporter((it)->getPosition()));
-		addEntityToMiniMap(newObject, getMapCoordinates((it)->getPosition()));
-		addNewItem(newObject);
+		createTeleporter(it);
 	}
 	// Russian Roullete
 	else {
@@ -210,7 +221,7 @@ void Level::brickWallOutcomes(Entity_ptr it) {
 				newObject = std::make_shared<ExtraLifePowerUp>(ExtraLifePowerUp((it)->getPosition()));
 			}
 			else if (!Level::exitHasApeared && probability < 92) {
-				newObject = std::make_shared<Teleporter>(Teleporter((it)->getPosition()));
+				createTeleporter(it);
 			}	
 
 			if (newObject != nullptr) {

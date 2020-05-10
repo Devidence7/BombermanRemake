@@ -44,13 +44,6 @@ void Teleporter::update() {
 		setTextureRect(teleporterTexture->getFrame(currentFrame, teleporterState));
 		spriteCounter = GameTime::getTimeNow();
 	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num9)) {
-		openTeleporter();
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num8)) {
-		teleporterState = TeleporterState::CLOSE;
-	}
 }
 //
 void Teleporter::onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<Entity> eCollisioner, CollisionType colT) {

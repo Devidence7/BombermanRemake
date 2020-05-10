@@ -29,7 +29,8 @@ class Level
 	static bool exitHasApeared;
 	static bool finishLevel;
 	static int numWalls;
-	Teleporter *t;
+	static int numEnemiesLeft;
+	static Teleporter_ptr teleporter;
 //	static Entity_ptr tel;
 	
 
@@ -70,6 +71,7 @@ public:
 	static bool addBomb(Player_ptr p);
 
 	static void chechAndFixBombCollision(Bomb_ptr b);
+	static void createTeleporter(Entity_ptr it);
 	static void brickWallOutcomes(Entity_ptr it);
 	static bool areBombNear(Player_ptr p, sf::Vector2i &bombPosMap, bool checkOnFeet = true);
 	static bool canTakeBomb(Player_ptr p);
