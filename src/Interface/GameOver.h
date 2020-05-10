@@ -89,7 +89,7 @@ private:
 		switch (id) {
 		case ButtonActions::RETRY:
 		game.restartGame(*window,gameDisplay);
-			gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
+			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			
 			
 			break;

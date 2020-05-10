@@ -30,39 +30,7 @@ class GameInterface {
 	int dimX = 25;
 
 public:
-	GameInterface(sf::RenderWindow& window) {
-		this->container.setSize(sf::Vector2f(window.getSize().x, window.getSize().y / 10));
-		this->container.setFillColor(sf::Color(255, 170, 0));
-		this->container.setPosition(0, 0);
-
-		containerBorder.setSize(sf::Vector2f(container.getSize().x, container.getSize().y + 3));
-		containerBorder.setFillColor(sf::Color(0, 0, 0));
-		containerBorder.setPosition(0, 0);
-
-		if (!font.loadFromFile("../textures/mainMenu/PixelEmulator.ttf")) {
-
-		}
-
-		time.setFont(font);
-		time.setString(to_string(timeLeft / 60) + ":" + to_string(timeLeft % 60));
-		time.setColor(sf::Color::White);
-		
-
-		//time.setPosition((container.getSize().x/2) - (time.getLocalBounds().width/2), (container.getSize().y/2) - (time.getLocalBounds().height / 2));
-		sf::FloatRect textRect = time.getLocalBounds();
-		time.setOrigin(textRect.left + textRect.width / 2.0f,
-			textRect.top + textRect.height / 2.0f);
-		time.setPosition(sf::Vector2f(container.getSize().x / 2.0f, container.getSize().y / 2.0f));
-
-
-		timeBox.setSize(sf::Vector2f(time.getLocalBounds().width * 1.5, time.getLocalBounds().height * 1.5));
-		timeBox.setFillColor(sf::Color(0, 0, 0));
-		timeBox.setPosition(time.getPosition().x - time.getLocalBounds().width/2 * 1.5, time.getPosition().y - time.getLocalBounds().height/2 * 1.5);
-
-		timeBoxBorder.setSize(sf::Vector2f(time.getLocalBounds().width * 1.5 + 4, time.getLocalBounds().height * 1.5 + 4));
-		timeBoxBorder.setFillColor(sf::Color(255, 0, 0));
-		timeBoxBorder.setPosition(time.getPosition().x - time.getLocalBounds().width / 2 * 1.5 - 2, time.getPosition().y - time.getLocalBounds().height / 2 * 1.5 - 2);
-	}
+	GameInterface(sf::RenderWindow& window) {}
 
 	void iniPlayers() {
 		cout << PLayers::getVectorPlayer().size() << endl;
@@ -109,6 +77,44 @@ public:
 				PLayers::getVectorPlayer()[i]->playerHead.getPosition().y + PLayers::getVectorPlayer()[i]->playerHead2.getTextureRect().height);
 		}
 	}
+
+	void createInterface(sf::RenderWindow& window){
+			this->container.setSize(sf::Vector2f(window.getSize().x, window.getSize().y / 10));
+		this->container.setFillColor(sf::Color(255, 170, 0));
+		this->container.setPosition(0, 0);
+
+		containerBorder.setSize(sf::Vector2f(container.getSize().x, container.getSize().y + 3));
+		containerBorder.setFillColor(sf::Color(0, 0, 0));
+		containerBorder.setPosition(0, 0);
+
+		if (!font.loadFromFile("../textures/mainMenu/PixelEmulator.ttf")) {
+
+		}
+
+		time.setFont(font);
+		time.setString(to_string(timeLeft / 60) + ":" + to_string(timeLeft % 60));
+		time.setColor(sf::Color::White);
+		
+
+		//time.setPosition((container.getSize().x/2) - (time.getLocalBounds().width/2), (container.getSize().y/2) - (time.getLocalBounds().height / 2));
+		sf::FloatRect textRect = time.getLocalBounds();
+		time.setOrigin(textRect.left + textRect.width / 2.0f,
+			textRect.top + textRect.height / 2.0f);
+		time.setPosition(sf::Vector2f(container.getSize().x / 2.0f, container.getSize().y / 2.0f));
+
+
+		timeBox.setSize(sf::Vector2f(time.getLocalBounds().width * 1.5, time.getLocalBounds().height * 1.5));
+		timeBox.setFillColor(sf::Color(0, 0, 0));
+		timeBox.setPosition(time.getPosition().x - time.getLocalBounds().width/2 * 1.5, time.getPosition().y - time.getLocalBounds().height/2 * 1.5);
+
+		timeBoxBorder.setSize(sf::Vector2f(time.getLocalBounds().width * 1.5 + 4, time.getLocalBounds().height * 1.5 + 4));
+		timeBoxBorder.setFillColor(sf::Color(255, 0, 0));
+		timeBoxBorder.setPosition(time.getPosition().x - time.getLocalBounds().width / 2 * 1.5 - 2, time.getPosition().y - time.getLocalBounds().height / 2 * 1.5 - 2);
+		iniPlayers();
+	}
+
+
+
 
 	void draw(GameDisplayController& gameDisplay) {
 		gameDisplay.getWindow()->setView(gameDisplay.playingGuiView);

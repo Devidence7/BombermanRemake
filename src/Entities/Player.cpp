@@ -1,6 +1,6 @@
 #include "../Map/Level.hpp"
 
-PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team) : Entity(), playerControls(pControls) {
+PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team,int posX,int posY) : Entity(), playerControls(pControls) {
 
 	team = _team;
 
@@ -39,7 +39,8 @@ PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team) : Entity(), pla
 
 	// TODO: Remove this
 	actionAvaible = ActionsAvalible::KICK_BOM;
-	move(Random::getIntNumberBetween(48,500), Random::getIntNumberBetween(48,500));
+	//move(Random::getIntNumberBetween(48,500), Random::getIntNumberBetween(48,500));
+	move(500,100);
 }
 
 int PlayerEntity::getPowerOfBombs() {

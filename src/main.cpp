@@ -71,7 +71,7 @@ int main(int argc, char* argv[]) {
 			cout<<"Nivel: "<<game.stage<<endl;
 			game.startNewGame(*gameDisplayController.getWindow(),gameDisplayController);
 			
-			gameInterface.iniPlayers();
+			gameInterface.createInterface(*gameDisplayController.getWindow());
 			ls.draw(*gameDisplayController.getWindow());
 			gameDisplayController.setGameState(GameDisplayController::GameState::PLAYING);
 			break;
