@@ -12,13 +12,15 @@ int Level::numEnemiesLeft = 0;
 Teleporter_ptr Level::teleporter = nullptr;
 
 
-Level::Level(int dimX, int dimY,bool debug,int stage)
+Level::Level(int dimX, int dimY, bool debug, int stage)
 {
-	//exit=false;
+	Level::exitHasApeared = false;
+	Level::canFinishLevel = false;
+	Level::levelFinished = false;
+	Level::numWalls = 0;
+	teleporter = nullptr;
+
 	// Reserve space for faster insert, delete of the entities
-	Level::exitHasApeared=false;
-	Level::numWalls=0;
-	Level::canFinishLevel=false;
 	entities.reserve(10000);
 	// Create map matrix:
 	EntityMap::entityMap = std::vector<std::vector<Entity_ptr>>(dimY + 2, std::vector<Entity_ptr>(dimX + 2, nullptr));
@@ -172,7 +174,7 @@ void Level::createTeleporter(Entity_ptr it) {
 void Level::brickWallOutcomes(Entity_ptr it) {
 
 	// Last oportunity to get a teleporter
-	if (!Level::exitHasApeared && Level::numWalls == 1) {
+	if (!Level::exitHasApeared && Level::numWalls == 1 || true) {
 		createTeleporter(it);
 	}
 	// Russian Roullete
@@ -833,7 +835,6 @@ void Level::reiniciar(int dimX, int dimY)
 	Level::canFinishLevel = false;
 	Level::levelFinished = false;
 	teleporter = nullptr;
-
 	miniMap.clear();
 	miniMap = std::vector<std::vector<Entity_ptr>>(dimY + 2, std::vector<Entity_ptr>(dimX + 2, nullptr));
 	for (int x = 0; x < dimX + 2; x++)
