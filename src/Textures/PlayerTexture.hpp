@@ -22,6 +22,8 @@ public:
 
 	sf::IntRect& getMoveSpriteWithBomb(LookingAt lookat, int i);
 
+	sf::IntRect& getThrowBomb(LookingAt lookat, int i);
+
 	sf::IntRect& getDeathSprite(int i);
 };
 

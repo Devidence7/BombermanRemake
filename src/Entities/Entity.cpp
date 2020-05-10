@@ -18,6 +18,17 @@ sf::FloatRect Entity::getGlobalBoundsCollisioner() const{
 	return this->sf::Sprite::getGlobalBounds();
 }
 
+sf::Vector2f Entity::getPosition() {
+	return this->sf::Sprite::getPosition();
+}
+
+void Entity::setPosition(sf::Vector2f pos) {
+	this->sf::Sprite::setPosition(pos);
+}
+
+void Entity::setPosition(float x, float y) {
+	this->sf::Sprite::setPosition(x, y);
+}
 
 sf::Vector2f Entity::getCenterPosition()
 {

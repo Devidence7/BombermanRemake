@@ -18,6 +18,8 @@ protected:
 	//sf::Vector2f size; // Size of the Entity
 	bool expiredEntity = false; // Mark the entity as expired to be delete
 
+	bool isTeleport=false;
+
 	// Can be destroyed:
 	bool isFireDestroyable = false;
 	bool fireCanGoThroght = false;
@@ -125,6 +127,9 @@ public:
 
 	virtual sf::FloatRect getGlobalBounds() const;
 	virtual sf::FloatRect getGlobalBoundsCollisioner() const;
+	virtual sf::Vector2f getPosition();
+	virtual void setPosition(sf::Vector2f pos);
+	virtual void setPosition(float x, float y);
 	// PRE: this esta en colision con eCollisioning
 	//Devuelve cuanto penetra eCollisioning en this en el eje X; Y se considera centrado 
 	float moveOnX(const std::shared_ptr<Entity> eCollisioning);

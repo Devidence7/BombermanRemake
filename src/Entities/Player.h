@@ -6,7 +6,6 @@
 #include "../Logic/Time.h"
 #include <memory>
 #include "Entity.h"
-#include "Bomb.h"
 
 using namespace std;
 
@@ -44,6 +43,9 @@ public:
 
 	bool controlsInverted = false;
 	double lastControlInvertedTime = 0;
+
+	bool bombThrowed = false;
+	double lastThrowedTime = 0;
 
 	PlayerTexture* playerTexture;
 	PlayerColor* playerColor;
@@ -114,7 +116,9 @@ public:
 
 	void invertControls();
 
-	void bombExploted(Entity_ptr b);
+	void bombExploted(std::shared_ptr<Entity> b);
+
+	std::shared_ptr<Entity> getBomb();
 
 	//void changeBombs2time();
 

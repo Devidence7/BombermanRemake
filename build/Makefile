@@ -70,8 +70,8 @@ $(bin)/Time.o: $(logicPath)/Time.cpp $(logicPath)/Time.h
 #################################
 
 
-../bin/libEntities.a: ../bin/Entity.o  ../bin/Bomb.o  ../bin/BrickWall.o ../bin/Enemy.o ../bin/Pillar.o  ../bin/PowerUp.o  ../bin/Player.o $(bin)/PlayerIA.o
-	ar rc $(bin)/libEntities.a $(bin)/Entity.o $(bin)/Bomb.o $(bin)/BrickWall.o $(bin)/Enemy.o $(bin)/Pillar.o $(bin)/PowerUp.o $(bin)/Player.o $(bin)/PlayerIA.o
+../bin/libEntities.a: ../bin/Entity.o  ../bin/Bomb.o  ../bin/BrickWall.o ../bin/Enemy.o ../bin/Pillar.o  ../bin/PowerUp.o  ../bin/Teleporter.o  ../bin/Player.o $(bin)/PlayerIA.o
+	ar rc $(bin)/libEntities.a $(bin)/Entity.o $(bin)/Bomb.o $(bin)/BrickWall.o $(bin)/Enemy.o $(bin)/Pillar.o $(bin)/PowerUp.o $(bin)/Teleporter.o $(bin)/Player.o $(bin)/PlayerIA.o
 	ranlib $(bin)/libEntities.a
 
 ../bin/Entity.o:  $(entityPath)/Entity.h $(entityPath)/Entity.cpp $(UtilsPath)/OmittedAreas.hpp
@@ -97,6 +97,9 @@ $(bin)/Time.o: $(logicPath)/Time.cpp $(logicPath)/Time.h
 
 ../bin/PowerUp.o: $(entityPath)/PowerUp.cpp $(entityPath)/PowerUp.h $(bin)/Entity.o
 	$(CC) -o $(bin)/PowerUp.o -c $(entityPath)/PowerUp.cpp  $(std) $(O) 
+
+../bin/Teleporter.o: $(entityPath)/Teleporter.cpp $(entityPath)/Teleporter.h $(bin)/Entity.o
+	$(CC) -o $(bin)/Teleporter.o -c $(entityPath)/Teleporter.cpp  $(std) $(O) 
 
 
 ##################################

@@ -16,7 +16,7 @@ void PlayerIAEntity::setCollision(std::shared_ptr<Entity> col){
 //	void realizeActions();
 
 bool PlayerIAEntity::playerActions(){
-
+	return false;
 }
 /*
 * Update player position.

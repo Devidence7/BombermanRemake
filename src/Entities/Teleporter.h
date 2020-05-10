@@ -1,5 +1,6 @@
 #pragma once
 #include "Entity.h"
+#include "Player.h"
 #include "../Textures/TextureStorage.h"
 
 class Teleporter : public Entity {
@@ -18,11 +19,13 @@ public:
 
 	TeleporterState teleporterState = TeleporterState::CLOSE;
 
+	Teleporter();
+
 	Teleporter(sf::Vector2f pos);
 
 	void update();
 
-	void onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<Entity> eCollisioner, CollisionType colT) override;
+	void onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<Entity> eCollisioner, CollisionType colT);
 
 	void openTeleporter();
 };

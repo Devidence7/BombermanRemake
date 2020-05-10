@@ -8,7 +8,10 @@
 #include "Textures/TextureStorage.h"
 #include "Interface/GameInterface.h"
 #include "Music/GameMusic.h"
-#include "Interface/GameDisplayController.h"
+///#include "Interface/GameDisplayController.h"
+
+#define MAX_NUMBER_OF_STAGES 3
+#define DEFAULT_NUM_OF_ENEMIES 7
 
 Level *level;
 
@@ -70,13 +73,13 @@ Game(){
 		GameMusic::playWorld1Music();
 
 		//	cout<<gameOptions.numPlayers<<endl;
-		int numEnemies=numEnemigos*gameOptions.difLevel*(stage/0.75);
+		int numEnemies=DEFAULT_NUM_OF_ENEMIES*gameOptions.difLevel*(stage/0.75);
 	
 		if(!debug){
 			Enemies::insertarEnemigos(dimX, dimY,numEnemies,stage);
 		}
 		//insertEnemies(7);
-		level = new Level(dimX, dimY,debug);
+		level = new Level(dimX, dimY,debug,stage);
 		//Enemies::insertarEnemigos(dimX, dimY);
 		if(debug){
 			insertPlayers(*gameDisplay.userKeyPress, 0, 2);
@@ -95,15 +98,21 @@ Game(){
 	void restartGame(sf::RenderWindow& window,GameDisplayController &gameDisplay){
 		timesUp=false;
 		deleteMap();
-		cout<<numEnemigos<<endl;
 		Enemies::insertarEnemigos(dimX, dimY,numEnemigos*gameOptions.difLevel*(stage/0.75),stage);
 		startNewGame(window,gameDisplay);
 		
 	}
 
 	void passLevel(){
-		
-		stage=stage+1;
+		if(stage<=MAX_NUMBER_OF_STAGES){
+			stage=stage+1;
+		}
+		else{
+			
+			//PANTALLA DE VICTORIA FINAL
+
+		}
+
 		
 	}
 
@@ -132,6 +141,11 @@ Game(){
 				it3->reset();
 				it3 = Enemies::getVectorEnemiesExtra().erase(it3);
 		}
+		/*auto it4 = Enemies::getVectorEnemiesExtraTel().begin();
+		while (it4 != Enemies::getVectorEnemiesExtraTel().end()) {
+				it4->reset();
+				it4 = Enemies::getVectorEnemiesExtraTel().erase(it4);
+		}*/
 
 		
 	}
@@ -248,6 +262,15 @@ Game(){
 		for (Player_ptr player : PLayers::getVectorPlayer()) {
 			w.draw(*player);
 			w.draw(player->playerUpdateColor());
+			if (player->getBomb() != nullptr) {
+				auto bombpos = player->getBomb()->getPosition();
+				auto playerPos = player->getCenterPosition();
+
+				player->getBomb()->setPosition(playerPos.x, playerPos.y - player->getTextureRect().height + 10);
+				w.draw(*player->getBomb());
+				player->getBomb()->setPosition(bombpos);
+			}
+
 #ifdef HITBOX_DEBUG_MODE
 			PlayerIA_ptr pIA;
 			if((pIA = std::dynamic_pointer_cast<PlayerIAEntity>(player)) != nullptr){
@@ -287,11 +310,12 @@ Game(){
 		return intersec;
 	}
 
-	
+
 
 	void updateEnemies() {
 		auto it = Enemies::getVectorEnemies().begin();
 		int counter = 0;
+		
 		while (it != Enemies::getVectorEnemies().end()) {
 			
 			// Update the enemies.
@@ -301,6 +325,10 @@ Game(){
 			if ((*it)->getExpiredEntity()) {
 				it->reset();
 				it = Enemies::getVectorEnemies().erase(it);
+				numEnemigos--;
+				if(numEnemigos==0){
+					//level->Level::tel.openTeleporter();
+				}
 			}
 			
 			else {
@@ -320,6 +348,7 @@ Game(){
 			if ((*it2)->getExpiredEntity()) {
 				it2->reset();
 				it2 = Enemies::getVectorEnemies().erase(it2);
+				
 			}
 			
 			else {

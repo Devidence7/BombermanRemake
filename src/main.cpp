@@ -9,7 +9,7 @@
 
 #include "Interface/GUI/GameGUI.hpp"
 #include "Interface/GUI/Theme.hpp"
-#include "Interface/GameDisplayController.h"
+//#include "Interface/GameDisplayController.h"
 #include "Interface/MainMenu.h"
 #include "Interface/OptionsMenu.h"
 #include "Interface/PauseMenu.h"
