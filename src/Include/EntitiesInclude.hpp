@@ -21,6 +21,8 @@ typedef std::shared_ptr<PlayerIAEntity> PlayerIA_ptr;
 typedef std::shared_ptr<PlayerEntity> PowerUp_ptr;
 
 typedef std::shared_ptr<BrickWall> BrickWall_ptr;
+#include "../Entities/Teleporter.h"
+typedef std::shared_ptr<Teleporter> Teleporter_ptr;
 
 class PLayers
 {

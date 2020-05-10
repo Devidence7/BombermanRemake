@@ -4,17 +4,38 @@ std::vector<Entity_ptr> Level::entities;
 std::vector<Bomb_ptr> Level::onFlightBombs;
 std::vector<std::vector<Entity_ptr>> Level::miniMap;
 sf::RectangleShape Level::flooro;
+bool Level::exitHasApeared;
+bool Level::finishLevel;
+int Level::numWalls;
 
-Level::Level(int dimX, int dimY,bool debug)
+
+Level::Level(int dimX, int dimY,bool debug,int stage)
 {
+	//exit=false;
 	// Reserve space for faster insert, delete of the entities
+	Level::exitHasApeared=false;
+	Level::numWalls=0;
+	Level::finishLevel=false;
 	entities.reserve(10000);
 	// Create map matrix:
 	EntityMap::entityMap = std::vector<std::vector<Entity_ptr>>(dimY + 2, std::vector<Entity_ptr>(dimX + 2, nullptr));
 	miniMap = std::vector<std::vector<Entity_ptr>>(dimY + 2, std::vector<Entity_ptr>(dimX + 2, nullptr));
 	// Background:
 	flooro.setSize(sf::Vector2f((dimX + 2) * sizeTextureX, (dimY + 2) * sizeTextureY));
-	flooro.setFillColor(sf::Color(0, 100, 0));
+
+	switch(stage){
+		case 1:
+			flooro.setFillColor(sf::Color(0, 100, 0));
+			break;
+		case 2:
+			flooro.setFillColor(sf::Color(0, 0, 100));
+			break;
+		case 3:
+			flooro.setFillColor(sf::Color(100, 69, 0));
+			break;
+		default:
+			break;
+	}
 
 
 
@@ -54,6 +75,7 @@ Level::Level(int dimX, int dimY,bool debug)
 					if (!intersec && !debug)
 					{
 						addWall(x, y);
+
 					}
 				}
 			}
@@ -157,65 +179,75 @@ void Level::update()
 			}
 			else if (std::dynamic_pointer_cast<BrickWall>((*it)) != nullptr)
 			{
-				if (!Random::getIntNumberBetween(0, 1))
-				{
-					int randomObject = Random::getIntNumberBetween(0, 10);
-					Entity_ptr powerUp;
-					switch (randomObject)
-					{
-					case 0:
-						powerUp = std::make_shared<MoreFirePowerUp>(MoreFirePowerUp((*it)->getPosition()));
-						break;
-					case 1:
-						powerUp = std::make_shared<LessFirePowerUp>(LessFirePowerUp((*it)->getPosition()));
-						break;
-					case 2:
-						powerUp = std::make_shared<MoreBombsPowerUp>(MoreBombsPowerUp((*it)->getPosition()));
-						break;
-					case 3:
-						powerUp = std::make_shared<LessSpeedPowerUp>(LessSpeedPowerUp((*it)->getPosition()));
-						break;
-					case 4:
-						powerUp = std::make_shared<MoreTimePowerUp>(MoreTimePowerUp((*it)->getPosition()));
-						break;
-					case 5:
-						powerUp = std::make_shared<GrabBombsPowerUp>(GrabBombsPowerUp((*it)->getPosition()));
-						break;
-					case 6:
-						powerUp = std::make_shared<KickBombsPowerUp>(KickBombsPowerUp((*it)->getPosition()));
-						break;
-					case 7:
-						powerUp = std::make_shared<DisseasePowerUp>(DisseasePowerUp((*it)->getPosition()));
-						break;
-					case 8:
-						powerUp = std::make_shared<PassBombsPowerUp>(PassBombsPowerUp((*it)->getPosition()));
-						break;
-					case 9:
-						powerUp = std::make_shared<RemoteBombPowerUp>(RemoteBombPowerUp((*it)->getPosition()));
-						break;
-					
+				if (!Level::exitHasApeared && Level::numWalls==1){
+						Level::exitHasApeared=true;
+						Entity_ptr tel=std::make_shared<Teleporter>(Teleporter((*it)->getPosition()));
+    					addEntityToMiniMap(tel, getMapCoordinates((*it)->getPosition()));
+				}
+				else{
+					if (!Random::getIntNumberBetween(0, 1)){
+						int randomObject = Random::getIntNumberBetween(0, 11);
+						Entity_ptr powerUp;
+						Entity_ptr tel;
+						switch (randomObject)
+						{
+						case 0:
+							powerUp = std::make_shared<MoreFirePowerUp>(MoreFirePowerUp((*it)->getPosition()));
+							break;
+						case 1:
+							powerUp = std::make_shared<LessFirePowerUp>(LessFirePowerUp((*it)->getPosition()));
+							break;
+						case 2:
+							powerUp = std::make_shared<MoreBombsPowerUp>(MoreBombsPowerUp((*it)->getPosition()));
+							break;
+						case 3:
+							powerUp = std::make_shared<LessSpeedPowerUp>(LessSpeedPowerUp((*it)->getPosition()));
+							break;
+						case 4:
+							powerUp = std::make_shared<MoreTimePowerUp>(MoreTimePowerUp((*it)->getPosition()));
+							break;
+						case 5:
+							powerUp = std::make_shared<GrabBombsPowerUp>(GrabBombsPowerUp((*it)->getPosition()));
+							break;
+						case 6:
+							powerUp = std::make_shared<KickBombsPowerUp>(KickBombsPowerUp((*it)->getPosition()));
+							break;
+						case 7:
+							powerUp = std::make_shared<DisseasePowerUp>(DisseasePowerUp((*it)->getPosition()));
+							break;
+						case 8:
+							powerUp = std::make_shared<PassBombsPowerUp>(PassBombsPowerUp((*it)->getPosition()));
+							break;
+						case 9:
+							powerUp = std::make_shared<RemoteBombPowerUp>(RemoteBombPowerUp((*it)->getPosition()));
+							break;
 
-					//Añadir teleporter
+						case 10:
+							if(Level::exitHasApeared==false){
+								Level::exitHasApeared=true;
+								tel=std::make_shared<Teleporter>(Teleporter((*it)->getPosition()));
+								addEntityToMiniMap(tel, getMapCoordinates((*it)->getPosition()));
+							}
+							break;
+						default:
+							//powerUp = std::make_shared<ExtraLifePowerUp>(ExtraLifePowerUp((*it)->getPosition()));
+							break;
+						}
 
-				
-				
-					default:
-						powerUp = std::make_shared<ExtraLifePowerUp>(ExtraLifePowerUp((*it)->getPosition()));
-						break;
+						addEntityToMiniMap(powerUp, getMapCoordinates((*it)->getPosition()));
+						//addNewItem(powerUp);
 					}
-
-					addEntityToMiniMap(powerUp, getMapCoordinates((*it)->getPosition()));
-					//addNewItem(powerUp);
+					else
+					{
+						// Do this always?
+						getCellMiniMapObject(getMapCoordinates((*it)->getPosition())).reset();
+						getCellObject(getMapCoordinates((*it)->getPosition())).reset();
+					}
 				}
-				else
-				{
-					// Do this always?
-					getCellMiniMapObject(getMapCoordinates((*it)->getPosition())).reset();
-					getCellObject(getMapCoordinates((*it)->getPosition())).reset();
-				}
-			}
-			else
-			{
+				Level::numWalls=numWalls-1;
+			}	
+			else	
+			{	
 				// Do this always?
 				getCellMiniMapObject(getMapCoordinates((*it)->getPosition())).reset();
 				getCellObject(getMapCoordinates((*it)->getPosition())).reset();
@@ -623,6 +655,9 @@ void Level::addWall(int x, int y)
 	Entity_ptr e = std::make_shared<BrickWall>(BrickWall(x, y));
 	addEntityToMap(e, x, y);
 	addEntityToMiniMap(e, x, y);
+	Level::numWalls=numWalls+1;
+	
+	
 }
 
 bool Level::addBomb(Player_ptr p)
@@ -826,4 +861,8 @@ bool Level::canKickBomb(Player_ptr p)
 		return true;
 	}
 	return false;
+} 
+
+void Level::enemiesDefeated(){
+	Level::finishLevel=true;
 }

@@ -50,7 +50,6 @@ public:
 	GameOptions gameOptions;
 	bool debug=false;
 	bool timesUp=false;
-	bool endOfStage=false;
 
 Game(){
 	stage=1;
@@ -80,7 +79,7 @@ Game(){
 			Enemies::insertarEnemigos(dimX, dimY,numEnemies,stage);
 		}
 		//insertEnemies(7);
-		level = new Level(dimX, dimY,debug);
+		level = new Level(dimX, dimY,debug,stage);
 		//Enemies::insertarEnemigos(dimX, dimY);
 		if(debug){
 			insertPlayers(*gameDisplay.userKeyPress, 0, 2);
