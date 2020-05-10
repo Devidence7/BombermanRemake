@@ -147,4 +147,4 @@ void generatePath(std::shared_ptr<Entity> e, std::vector<sf::Vector2i> &objetive
 sf::Vector2i selectCloseObjetive(std::shared_ptr<Entity> e, const std::vector<sf::Vector2i> &objetives);
 
 bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> & path, std::shared_ptr<Entity> e,  TypeSeekIA typeSeek, bool alternativePath = true);
-bool pathFindingBreakingWalls(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> &path, std::shared_ptr<Entity> e, TypeSeekIA typeSeek);
+bool pathFindingBreakingWalls(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> &path, std::shared_ptr<Entity> e, TypeSeekIA typeSeek, int costAddDestroy);

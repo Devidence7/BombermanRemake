@@ -1,0 +1,11 @@
+(Estado Patrullar 
+    -1 0 3 0
+)
+(Estado perseguir
+    RangoVision 8
+    costDestroyWall 8
+)
+(Estado Matar 
+    
+    
+)

@@ -63,7 +63,7 @@ Game(){
 			PLayers::addPlayer(userKeyPress.getPlayerControls(i+1),100,100);
 		}
 		for(int i = 0; i < numIAPlayer; i++){
-			PLayers::addIAPlayer(userKeyPress.getPlayerControls(i+1),100,100);
+			PLayers::addIAPlayer(userKeyPress.getPlayerControls(i+1), i, 100,100);
 		}
 	}
 

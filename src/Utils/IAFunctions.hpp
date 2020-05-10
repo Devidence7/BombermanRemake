@@ -14,6 +14,15 @@ inline bool isOnVision(std::shared_ptr<Entity> p, sf::Vector2i PointReference, i
     return RangeVision < 0 || (abs(pos.x - PointReference.x) < RangeVision && abs(pos.y - PointReference.y) < RangeVision);
 }
 
+inline bool isOnVision(sf::Vector2i pos, sf::Vector2i PointReference, int RangeVision){
+    return RangeVision < 0 || (abs(pos.x - PointReference.x) < RangeVision && abs(pos.y - PointReference.y) < RangeVision);
+}
+
+
+inline bool isOnRange(sf::Vector2i pos,sf::Vector2i objetive, int rangeBomb){
+    return abs(pos.x - objetive.x) < rangeBomb && abs(pos.y - objetive.y) < rangeBomb;
+}
+
 
 sf::Vector2i generateObjetive2Player(std::shared_ptr<Entity> p, std::shared_ptr<Entity> e,  std::vector<sf::Vector2i> &objetives);
 
@@ -21,3 +30,10 @@ void seekAnyPlayerOrRandom(list<ANode_Ptr> & movements, std::shared_ptr<Entity> 
 
 
 //#include "../Include/EntitiesInclude.hpp"
+#include "../Entities/Player.h"
+void generateOmitedZones(sf::Vector2i positionP, std::list<OmittedArea> &AreasOmited, int rangeVision);
+void selectEnemyPlayers(std::shared_ptr<Entity> IA, std::vector<sf::Vector2i> &objetives, int rangeVision);
+void tryKillAEnemy(std::shared_ptr<Entity> IA, std::list<ANode_Ptr> &movements, int rangeVision, int costDestroy);
+bool somePlayerEnemyOnVision(sf::Vector2i pos, int rangeVision, int team);
+bool somePlayerEnemyOnRange(sf::Vector2i pos, int rangeBomb, int team);
+bool canPutABombSafe(sf::Vector2i posBomb, std::shared_ptr<PlayerEntity> e, std::list<ANode_Ptr> &movements);
