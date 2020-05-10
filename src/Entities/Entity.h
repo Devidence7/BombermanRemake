@@ -163,4 +163,8 @@ public:
 	}
 	void changeBombs2time();
 
+	bool bombIsFrom(std::shared_ptr<Entity> b){
+		auto it = find (BombsAsociated.begin(), BombsAsociated.end(), 30);
+		return it != BombsAsociated.end();
+	}
 };
