@@ -60,10 +60,10 @@ Game(){
 
 	void insertPlayers(UserKeyPress &userKeyPress, int numPlayers, int numIAPlayer) {
 		for (int i = 0; i < numPlayers; i++) {
-			PLayers::addPlayer(userKeyPress.getPlayerControls(i+1));
+			PLayers::addPlayer(userKeyPress.getPlayerControls(i+1),100,100);
 		}
 		for(int i = 0; i < numIAPlayer; i++){
-			PLayers::addIAPlayer(userKeyPress.getPlayerControls(i+1), i);
+			PLayers::addIAPlayer(userKeyPress.getPlayerControls(i+1), i, 100,100);
 		}
 	}
 
@@ -97,9 +97,11 @@ Game(){
 
 	void restartGame(sf::RenderWindow& window,GameDisplayController &gameDisplay){
 		timesUp=false;
+		cout<<"Enemigos antes de reiniciar: "<<Enemies::getVectorEnemies().size()<<endl;
 		deleteMap();
-		Enemies::insertarEnemigos(dimX, dimY,numEnemigos*gameOptions.difLevel*(stage/0.75),stage);
-		startNewGame(window,gameDisplay);
+		
+		cout<<"Enemigos después de reiniciar : "<<Enemies::getVectorEnemies().size()<<endl;
+		//startNewGame(window,gameDisplay);
 		
 	}
 
@@ -131,6 +133,7 @@ Game(){
 				it->reset();
 				it = Enemies::getVectorEnemies().erase(it);
 		}
+		Enemies::getVectorEnemies().clear();
 		auto it2 =  PLayers::getVectorPlayer().begin();
 		while (it2 !=  PLayers::getVectorPlayer().end()) {
 				it2->reset();
@@ -234,6 +237,11 @@ Game(){
 
 	void update(GameDisplayController &gameDisplay) {
 		level->update();
+
+		if (level->levelFinished) {
+			gameDisplay.setGameState(GameDisplayController::VICTORY);
+		}
+
 		updatePlayers(gameDisplay);
 		updateEnemies();
 

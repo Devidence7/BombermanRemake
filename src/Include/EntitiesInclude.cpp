@@ -14,14 +14,14 @@ bool checkSomeCollisionOnVector(Entity_ptr e, std::vector<Entity_ptr> &v){
 	return collision;
 }
 
-void PLayers::addPlayer(PlayerEntity::PlayerControls& playerControls, int team) {
-	Player_ptr p = std::make_shared<PlayerEntity>(PlayerEntity(playerControls, team));
+void PLayers::addPlayer(PlayerEntity::PlayerControls& playerControls, int posX,int posY,int team) {
+	Player_ptr p = std::make_shared<PlayerEntity>(PlayerEntity(playerControls,team,posX,posY));
 	p->me = p;
 	players.push_back(p);
 }
 
-void PLayers::addIAPlayer(PlayerEntity::PlayerControls& playerControls,int team,int IA) {
-	PlayerIA_ptr p = std::make_shared<PlayerIAEntity>(PlayerIAEntity(playerControls, team,IA));
+void PLayers::addIAPlayer(PlayerEntity::PlayerControls& playerControls,int team,int IA,int posX,int posY) {
+	PlayerIA_ptr p = std::make_shared<PlayerIAEntity>(PlayerIAEntity(playerControls, team,IA,posX,posY));
 	p->me = p;
 	//TODO: Hacerlo bien
 	if(team == 0){
@@ -147,7 +147,13 @@ void Enemies::insertarEnemigos(int dimX, int dimY,int numEnemies,int stage) {
 		}
 		enemies.push_back(a[i]);
 	}
+	auto it = a.begin();
+		while (it != a.end()) {
+				it->reset();
+				it = a.erase(it);
+		}
 	a.clear();
+	
 		
 	/*Enemy_ptr e1 = std::make_shared<EnemyEntity>(Balloon());
 	Enemy_ptr e2 = std::make_shared<EnemyEntity>(Ice());

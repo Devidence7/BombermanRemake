@@ -18,10 +18,11 @@ public:
 	StateIA currentState = StateIA::NON_OBJETIVE;
 	PatrolState p;
 	int IAPlayer;
-	/*
+
+	/*,pos
 	Constructor of Entity
 	*/
-	PlayerIAEntity(PlayerControls &playerControls, int _team,int IA) : PlayerEntity(playerControls, _team){
+	PlayerIAEntity(PlayerControls &playerControls, int _team,int IA,int posX,int posY) : PlayerEntity(playerControls, _team,posX,posY){
 		colorPath = sf::Color(Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255));
 		IAPlayer=IA;
 	}

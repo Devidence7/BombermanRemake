@@ -184,6 +184,7 @@ public:
 				menuView = sf::View(visibleArea);
 				// sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
 				// window->setView(sf::View(visibleArea));
+				window->clear();
 				break;
 			}
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
