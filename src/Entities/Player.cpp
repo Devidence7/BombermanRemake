@@ -40,7 +40,7 @@ PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team,int posX,int pos
 	// TODO: Remove this
 	actionAvaible = ActionsAvalible::KICK_BOM;
 	//move(Random::getIntNumberBetween(48,500), Random::getIntNumberBetween(48,500));
-	move(500,100);
+	move(posX,posY);
 }
 
 int PlayerEntity::getPowerOfBombs() {

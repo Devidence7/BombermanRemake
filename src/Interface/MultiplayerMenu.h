@@ -138,12 +138,15 @@ private:
 			break;
 
 		case ButtonActions::PLVSIA:
+			game.gameOptions.numPlayers=1;
+			game.gameOptions.numIAPlayers=1;
 			previousMenu=MenuState::MAIN;
 			createNumPlaySelection(*window,gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			break;
 
 		case ButtonActions::PLVSPL:
+			game.gameOptions.numPlayers=2;
 			previousMenu=MenuState::MAIN;
 			createNumPlaySelection(*window,gameDisplay);
         	gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
@@ -151,23 +154,31 @@ private:
 			break;
 				
 		case ButtonActions::PL12IA:
+			game.gameOptions.numPlayers=1;
+			game.gameOptions.numIAPlayers=2;
 			previousMenu=MenuState::MAIN;
 			createNumPlaySelection(*window,gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			break;
 
         case ButtonActions::PL21IA:
+			game.gameOptions.numPlayers=2;
+			game.gameOptions.numIAPlayers=1;
 			previousMenu=MenuState::MAIN;
 			createNumPlaySelection(*window,gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			break;
 
         case ButtonActions::PL13IA:
+			game.gameOptions.numPlayers=1;
+			game.gameOptions.numIAPlayers=3;
 			previousMenu=MenuState::MAIN;
 			createNumPlaySelection(*window,gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			break;
         case ButtonActions::PL22IA:
+			game.gameOptions.numPlayers=2;
+			game.gameOptions.numIAPlayers=2;
 			previousMenu=MenuState::MAIN;
 			createNumPlaySelection(*window,gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
@@ -175,18 +186,24 @@ private:
 
 		
 		case ButtonActions::PL1VS2IA:
+			game.gameOptions.numPlayers=1;
+			game.gameOptions.numIAPlayers=2;
 			previousMenu=MenuState::MAIN;
 			createNumPlaySelection(*window,gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			break;
 
         case ButtonActions::PLVSPLIA:
+			game.gameOptions.numPlayers=1;
+			game.gameOptions.numIAPlayers=1;
 			previousMenu=MenuState::MAIN;
 			createNumPlaySelection(*window,gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			break;
 
         case ButtonActions::PL2VS1IA:
+			game.gameOptions.numPlayers=2;
+			game.gameOptions.numIAPlayers=1;
 			previousMenu=MenuState::MAIN;
 			createNumPlaySelection(*window,gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
@@ -195,22 +212,30 @@ private:
         //4 players
 
         case ButtonActions::PL1VS3IA:
+			game.gameOptions.numPlayers=1;
+			game.gameOptions.numIAPlayers=3;
 			previousMenu=MenuState::MAIN;
 			createNumPlaySelection(*window,gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			break;
         case ButtonActions::PLVSPL2IA:
+			game.gameOptions.numPlayers=2;
+			game.gameOptions.numIAPlayers=1;
 			previousMenu=MenuState::MAIN;
 			createNumPlaySelection(*window,gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			break;
 
         case ButtonActions::PL2VS2IA:
+			game.gameOptions.numPlayers=2;
+			game.gameOptions.numIAPlayers=2;
 			previousMenu=MenuState::MAIN;
 			createNumPlaySelection(*window,gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			break;
         case ButtonActions::PLIAVSPLIA:
+			game.gameOptions.numPlayers=2;
+			game.gameOptions.numIAPlayers=2;
 			previousMenu=MenuState::MAIN;
 			createNumPlaySelection(*window,gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);

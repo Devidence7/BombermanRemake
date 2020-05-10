@@ -9,6 +9,7 @@ void PlayerIAEntity::setCollision(std::shared_ptr<Entity> col){
 	if(col != nullptr){
 		OmittedAreas.push_back(OmittedArea(getMapCoordinates(col->getCenterPosition())));
 	}
+	
 }
 
 //	void realizeActions();

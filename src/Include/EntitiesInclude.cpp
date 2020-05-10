@@ -20,7 +20,7 @@ void PLayers::addPlayer(PlayerEntity::PlayerControls& playerControls, int posX,i
 	players.push_back(p);
 }
 
-void PLayers::addIAPlayer(PlayerEntity::PlayerControls& playerControls,int team,int IA,int posX,int posY) {
+void PLayers::addIAPlayer(PlayerEntity::PlayerControls& playerControls,int posX,int posY,int team,int IA) {
 	PlayerIA_ptr p = std::make_shared<PlayerIAEntity>(PlayerIAEntity(playerControls, team,IA,posX,posY));
 	p->me = p;
 	players.push_back(p);

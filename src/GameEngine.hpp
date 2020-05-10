@@ -43,6 +43,7 @@ public:
 	
 		int numPlayers;
 		double difLevel;
+		int numIAPlayers;
 		
 		
 	};
@@ -60,15 +61,42 @@ Game(){
 
 	void insertPlayers(UserKeyPress &userKeyPress, int numPlayers, int numIAPlayer) {
 		for (int i = 0; i < numPlayers; i++) {
-			if(i%2==0){
-				PLayers::addPlayer(userKeyPress.getPlayerControls(i+1),100,100);
-			}
-			else{
+			switch(i){
+				case 0:
+					PLayers::addPlayer(userKeyPress.getPlayerControls(i+1),SIZE_PILLAR,SIZE_PILLAR);
+					break;
 				
+				case 1:
+					PLayers::addPlayer(userKeyPress.getPlayerControls(i+1),SIZE_PILLAR,(dimY-1)*SIZE_PILLAR);
+					break;
+
+				default:
+					break;
 			}
+			
 		}
 		for(int i = 0; i < numIAPlayer; i++){
-			PLayers::addIAPlayer(userKeyPress.getPlayerControls(i+1),100,100);
+			switch(i){
+
+				case 0:
+					cout<<"IA 1"<<endl;
+					PLayers::addIAPlayer(userKeyPress.getPlayerControls(i+1),(dimX-1)*SIZE_PILLAR,SIZE_PILLAR);
+					
+					break;
+
+				case 1:
+					cout<<"IA 2"<<endl;
+					PLayers::addIAPlayer(userKeyPress.getPlayerControls(i+1),(dimX-1)*SIZE_PILLAR,(dimY-1)*SIZE_PILLAR);
+					break;
+
+				case 2:
+					cout<<"IA 3"<<endl;
+					PLayers::addIAPlayer(userKeyPress.getPlayerControls(i+1),SIZE_PILLAR,(dimY-1)*SIZE_PILLAR);
+					break;
+				
+				default:
+					break;
+			}
 		}
 	}
 
@@ -89,7 +117,8 @@ Game(){
 		if(debug){
 			insertPlayers(*gameDisplay.userKeyPress, 0, 2);
 		}else{
-			insertPlayers(*gameDisplay.userKeyPress, gameOptions.numPlayers, 0);
+			cout<<"Numero de IAs: "<<gameOptions.numIAPlayers<<endl;
+			insertPlayers(*gameDisplay.userKeyPress, gameOptions.numPlayers, gameOptions.numIAPlayers);
 		}
 	
 		unsigned int pixelsX = window.getSize().x;

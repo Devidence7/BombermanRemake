@@ -14,9 +14,11 @@ public:
 	/*,pos
 	Constructor of Entity
 	*/
-	PlayerIAEntity(PlayerControls &playerControls, int _team,int IA,int posX,int posY) : PlayerEntity(playerControls, _team,posX,posY){
+	PlayerIAEntity(PlayerControls &playerControls,int posX,int posY, int _team,int IA) : PlayerEntity(playerControls, _team,posX,posY){
 		colorPath = sf::Color(Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255));
 		IAPlayer=IA;
+		cout<<"POS DE LA IA: "<<posX<<" "<<posY<<endl;
+		move(posX,posY);
 	}
 
 //	sf::FloatRect getGlobalBounds() const override; Modificar??
