@@ -152,6 +152,10 @@ void Bomb::update()
 	
 	
 }
+double Bomb::getExplosionTimeLeft() {
+	return explosionTime - (GameTime::getTimeNow() - explosionCounter);
+}
+
 sf::FloatRect Bomb::getGlobalBounds() const
 {
 	sf::FloatRect dim = sf::Sprite::getGlobalBounds();

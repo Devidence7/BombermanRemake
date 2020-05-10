@@ -56,6 +56,8 @@ public:
 	void rotateBomb(double rotVel);
 	void update();
 
+	double getExplosionTimeLeft();
+
 	virtual sf::Vector2f getPosition() override;
 	virtual void setPosition(sf::Vector2f pos) override;
 	sf::Vector2f getCenterPosition() override;
