@@ -60,7 +60,12 @@ Game(){
 
 	void insertPlayers(UserKeyPress &userKeyPress, int numPlayers, int numIAPlayer) {
 		for (int i = 0; i < numPlayers; i++) {
-			PLayers::addPlayer(userKeyPress.getPlayerControls(i+1),100,100);
+			if(i%2==0){
+				PLayers::addPlayer(userKeyPress.getPlayerControls(i+1),100,100);
+			}
+			else{
+				
+			}
 		}
 		for(int i = 0; i < numIAPlayer; i++){
 			PLayers::addIAPlayer(userKeyPress.getPlayerControls(i+1),100,100);
