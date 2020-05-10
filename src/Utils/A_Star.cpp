@@ -245,7 +245,7 @@ bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector
 
 
 
-bool pathFindingBreakingWalls(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> &path, Entity_ptr e, TypeSeekIA typeSeek)
+bool pathFindingBreakingWalls(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> &path, Entity_ptr e, TypeSeekIA typeSeek, int costAddDestroy)
 {
     path.clear();
     Heap<ANode_Ptr> frontera;
@@ -277,7 +277,7 @@ bool pathFindingBreakingWalls(const sf::Vector2i &positionEnemy, const std::vect
                     ANode_Ptr newNode = std::make_shared<ANode>(ANode(nodePosition, sf::Vector2i(i, j), objetiveP, currentNode->fAcum() + 1, currentNode));
                     if (checkValidPositionOrDestroyer(nodePosition, e) && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(currentNode))
                     { //Si es una posicion valida y no se ha expandido
-                        newNode->incrementCost(8); // TODO: variable segun IA
+                        newNode->incrementCost(costAddDestroy); // TODO: variable segun IA
                         frontera.add(newNode);
                     }
                     else

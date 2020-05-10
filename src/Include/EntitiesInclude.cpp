@@ -23,6 +23,16 @@ void PLayers::addPlayer(PlayerEntity::PlayerControls& playerControls, int team) 
 void PLayers::addIAPlayer(PlayerEntity::PlayerControls& playerControls, int team) {
 	PlayerIA_ptr p = std::make_shared<PlayerIAEntity>(PlayerIAEntity(playerControls, team));
 	p->me = p;
+	//TODO: Hacerlo bien
+	if(team == 0){
+		p->setPosition(100, 100);
+		p->createStateGenerator("../src/PseudoPPDL/IA1.txt");
+	}else{
+		p->setPosition(500, 500);
+		//p->createStateGenerator("../src/PseudoPPDL/IA1.txt");
+		p->createStateGenerator("../src/PseudoPPDL/IA2.txt");
+	}
+	p->startStates();
 	players.push_back(p);
 }
 
