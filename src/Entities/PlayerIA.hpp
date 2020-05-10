@@ -54,5 +54,8 @@ public:
 	void updateState();
 	void generatePathStates();
 	bool updatePatrolState();
+	bool updateKillState();
 	bool updatePerseguirState();
+	bool updateRunawayState();
+	void putABomb();
 };

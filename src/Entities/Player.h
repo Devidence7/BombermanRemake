@@ -118,6 +118,10 @@ public:
 
 	void bombExploted(std::shared_ptr<Entity> b);
 
+	inline bool haveBombs(){
+		return this->numOfBombs > 0;
+	}
+
 	std::shared_ptr<Entity> getBomb();
 
 	//void changeBombs2time();

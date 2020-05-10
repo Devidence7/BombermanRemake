@@ -32,7 +32,6 @@ void PlayerIAEntity::drawMovements(sf::RenderWindow &w)
 		rece.setFillColor(colorPath);
 		sf::Vector2i posi = an->getPosition();
 		sf::Vector2f posf = MapCoordinates2GlobalCoorCenter(an->getPosition());
-		//std::cout << "pos " << posi.x << "( " << posf.x<< ")" << posi.y << "( " << posf.y<< ")" << std::endl;
 		posf -= sf::Vector2f(dim.width / 4, dim.height / 4);
 		rece.setPosition(posf);
 		w.draw(rece);
@@ -53,6 +52,7 @@ void PlayerIAEntity::drawMovements(sf::RenderWindow &w)
 // }
 
 void PlayerIAEntity::generatePathStates(){
+	updateState();
 	bool generatedNewObj = false;
 	switch (currentState)
 	{
@@ -61,18 +61,28 @@ void PlayerIAEntity::generatePathStates(){
 		break;
 	case StateIA::PERSEGUIR:
 		generatedNewObj = updatePerseguirState();
+		break;
+	case StateIA::KILL:
+		updateKillState();
+		break;
+	case StateIA::RUNAWAY:
+		updateRunawayState();
 	default:
 		break;
 	}
 }
 
 void PlayerIAEntity::updateMovement(){
-	
-	if(movements.size() < 1){
-		currentState = StateIA::NON_OBJETIVE;
-		currentMovement = std::make_shared<ANode>(ANode(getMapCoordinates(getCenterPosition()), sf::Vector2i(0,0), getMapCoordinates(getCenterPosition()), 0));
+
+	if(currentMovement != nullptr &&  checkArrivePosition(this->getCenterPosition(), currentMovement->getPosition(), currentMovement->getAction())){
+		currentMovement = nullptr;
 	}
-	else if (currentMovement == nullptr || checkArrivePosition(this->getCenterPosition(), currentMovement->getPosition(), currentMovement->getAction()))
+	
+	if(currentMovement == nullptr && movements.size() < 1){
+		currentState = StateIA::NON_OBJETIVE;
+		//currentMovement = std::make_shared<ANode>(ANode(getMapCoordinates(getCenterPosition()), sf::Vector2i(0,0), getMapCoordinates(getCenterPosition()), 0));
+	}
+	else if (currentMovement == nullptr)
 	{ //Si esta en posicions
 		currentMovement = movements.front();
 		movements.pop_front();
@@ -149,14 +159,64 @@ bool PlayerIAEntity::updatePerseguirState(){
 	if(!somePlayerEnemyOnRange(getMapCoordinates(getCenterPosition()), getPowerOfBombs(), team)){
 		tryKillAEnemy(me, movements, sg._PerseguirStruct.RangoVision, sg._PerseguirStruct.costDestroyWall);
 		return true;
+	// }else{
+	// 	currentState = StateIA::KILL;
 	}
+	return false;
+}
+
+bool PlayerIAEntity::updateRunawayState(){
+	if(movements.size()< 1){
+		currentState = StateIA::NON_OBJETIVE;
+	}
+}
+
+void PlayerIAEntity::putABomb(){
+	if(haveBombs() && canPutABombSafe(getMapCoordinates(getCenterPosition()),me, movements) ){
+		if (Level::addBomb(this->me))
+		{		
+			numOfBombs--;
+			currentState = StateIA::RUNAWAY;
+			this->currentMovement = nullptr;
+	}
+	}
+}
+
+
+bool PlayerIAEntity::updateKillState(){
+	//if(somePlayerEnemyOnRange(getMapCoordinates(getCenterPosition()), getPowerOfBombs(), team)){
+		movements.clear();
+		putABomb();
+	//	return true;
+	//}
 	return false;
 }
 
 /* Determina estado actual */
 void PlayerIAEntity::updateState(){
-	if(currentState == StateIA::PATROL){
-		
+	sf::Vector2i currentPosMap = getMapCoordinates(getCenterPosition());
+	OmittedAreas.clear();
+	generateOmitedZones(currentPosMap, OmittedAreas, sg._PerseguirStruct.RangoVision);
+	switch (currentState)
+	{
+	case StateIA::NON_OBJETIVE:
+		//Si tiene en rango a algun jugador
+		if(sg.havePatrolStruct){
+			currentState = StateIA::PATROL;
+		}else  if(somePlayerEnemyOnRange(currentPosMap, getPowerOfBombs(), team)){
+			currentState =  StateIA::KILL;
+		}else if(somePlayerEnemyOnVision(currentPosMap, sg._PerseguirStruct.RangoVision, team)){
+			currentState = StateIA::PERSEGUIR;
+		}
+
+		break;
+	case StateIA::PERSEGUIR:
+		if(somePlayerEnemyOnRange(currentPosMap, getPowerOfBombs(), team)){
+				currentState =  StateIA::KILL;
+		}
+		break;
+	default:
+		break;
 	}
 }
 
@@ -166,7 +226,7 @@ void PlayerIAEntity::startStates(){
 		p = sg.getPatrol(getMapCoordinates(getCenterPosition()));
 		currentObjetive = p.getObetive(getMapCoordinates(this->getCenterPosition()));
 	}else{
-		currentState = StateIA::PERSEGUIR;
+		currentState = StateIA::NON_OBJETIVE;
 	}
 }
 
@@ -180,7 +240,6 @@ bool PlayerIAEntity::updatePlayer(){
 
 	// Call animate function to change current sprite if needed.
 	animate(velocity);
-
 	// Move Entity position
 	if (!expiredEntity) {
 		move(velocity.x, velocity.y);
