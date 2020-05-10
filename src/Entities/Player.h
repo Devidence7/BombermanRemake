@@ -44,6 +44,9 @@ public:
 	bool controlsInverted = false;
 	double lastControlInvertedTime = 0;
 
+	bool bombThrowed = false;
+	double lastThrowedTime = 0;
+
 	PlayerTexture* playerTexture;
 	PlayerColor* playerColor;
 	LookingAt lastMovement;				// Save last looked direction
@@ -114,6 +117,8 @@ public:
 	void invertControls();
 
 	void bombExploted(std::shared_ptr<Entity> b);
+
+	std::shared_ptr<Entity> getBomb();
 
 	//void changeBombs2time();
 

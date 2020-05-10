@@ -38,7 +38,7 @@ PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team) : Entity(), pla
 
 
 	// TODO: Remove this
-	//actionAvaible = ActionsAvalible::KICK_BOM;
+	actionAvaible = ActionsAvalible::KICK_BOM;
 	move(Random::getIntNumberBetween(48,500), Random::getIntNumberBetween(48,500));
 }
 
@@ -73,41 +73,55 @@ int PlayerEntity::getLives() {
 void PlayerEntity::animate(sf::Vector2f velocity) {
 	// If the player has died:
 	if (!expiredEntity) {
-		if (BombTaked == nullptr) {
-			if (velocity.x == 0 && velocity.y == 0) {
-				// If there is not speed set idle sprite
-				setTextureRect(playerTexture->getIdleSprite(lastMovement));
-				playerColorEntity.setTextureRect(playerTexture->getIdleSprite(lastMovement));
+		if (!bombThrowed) {
+			if (BombTaked == nullptr) {
+				if (velocity.x == 0 && velocity.y == 0) {
+					// If there is not speed set idle sprite
+					setTextureRect(playerTexture->getIdleSprite(lastMovement));
+					playerColorEntity.setTextureRect(playerTexture->getIdleSprite(lastMovement));
+				}
+				else {
+					// If there is speed we must update animation sprite every X time
+					if (GameTime::getTimeNow() - animLastTic > frameSpeed) {
+						setTextureRect(playerTexture->getMoveSprite(lastMovement, currentFrame));
+						playerColorEntity.setTextureRect(playerTexture->getMoveSprite(lastMovement, currentFrame));
+						currentFrame = (currentFrame + 1) % walkFrames;
+						animLastTic = GameTime::getTimeNow();
+					}
+				}
 			}
 			else {
-				// If there is speed we must update animation sprite every X time
-				if (GameTime::getTimeNow() - animLastTic > frameSpeed) {
-					setTextureRect(playerTexture->getMoveSprite(lastMovement, currentFrame));
-					playerColorEntity.setTextureRect(playerTexture->getMoveSprite(lastMovement, currentFrame));
-					currentFrame = (currentFrame + 1) % walkFrames;
-					animLastTic = GameTime::getTimeNow();
+				if (velocity.x == 0 && velocity.y == 0) {
+					// If there is not speed set idle sprite
+					setTextureRect(playerTexture->getIdleSpriteWithBomb(lastMovement));
+					playerColorEntity.setTextureRect(playerTexture->getIdleSpriteWithBomb(lastMovement));
+				}
+				else {
+					// If there is speed we must update animation sprite every X time
+					if (GameTime::getTimeNow() - animLastTic > frameSpeed) {
+						setTextureRect(playerTexture->getMoveSpriteWithBomb(lastMovement, currentFrame));
+						playerColorEntity.setTextureRect(playerTexture->getMoveSpriteWithBomb(lastMovement, currentFrame));
+						currentFrame = (currentFrame + 1) % walkFrames;
+						animLastTic = GameTime::getTimeNow();
+					}
 				}
 			}
 		}
 		else {
-			if (velocity.x == 0 && velocity.y == 0) {
-				// If there is not speed set idle sprite
-				setTextureRect(playerTexture->getIdleSpriteWithBomb(lastMovement));
-				playerColorEntity.setTextureRect(playerTexture->getIdleSpriteWithBomb(lastMovement));
-			}
-			else {
-				// If there is speed we must update animation sprite every X time
-				if (GameTime::getTimeNow() - animLastTic > frameSpeed) {
-					setTextureRect(playerTexture->getMoveSpriteWithBomb(lastMovement, currentFrame));
-					playerColorEntity.setTextureRect(playerTexture->getMoveSpriteWithBomb(lastMovement, currentFrame));
-					currentFrame = (currentFrame + 1) % walkFrames;
-					animLastTic = GameTime::getTimeNow();
+			if (GameTime::getTimeNow() - lastThrowedTime > frameSpeed) {
+				setTextureRect(playerTexture->getThrowBomb(lastMovement, currentFrame));
+				playerColorEntity.setTextureRect(playerTexture->getThrowBomb(lastMovement, currentFrame));
+				lastThrowedTime = GameTime::getTimeNow();
+				currentFrame = (currentFrame + 1) % walkFrames;
+				if (currentFrame > 1) {
+					bombThrowed = false;
 				}
 			}
 		}
+			
 	}
 	else {
-		if (currentFrame == 6 && GameTime::getTimeNow() - animLastTic > frameSpeed ) {
+		if (currentFrame == 6 && GameTime::getTimeNow() - animLastTic > frameSpeed / 2 ) {
 			lives--;
 			if (lives > 0) {
 				expiredEntity = false;
@@ -175,6 +189,9 @@ void PlayerEntity::realizeActions()
 		//lanzar
 		Level::ThrowBomb(me, std::dynamic_pointer_cast<Bomb>(BombTaked));
 		BombTaked.reset();
+		bombThrowed = true;
+		lastThrowedTime = GameTime::getTimeNow();
+		currentFrame = 0;
 	}
 	else
 	{
@@ -310,6 +327,10 @@ void PlayerEntity::setJumpingBomb() {
 void PlayerEntity::invertControls() {
 	controlsInverted = true;
 	lastControlInvertedTime = GameTime::getTimeNow();
+}
+
+std::shared_ptr<Entity> PlayerEntity::getBomb() {
+	return BombTaked;
 }
 
 

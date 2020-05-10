@@ -262,6 +262,15 @@ Game(){
 		for (Player_ptr player : PLayers::getVectorPlayer()) {
 			w.draw(*player);
 			w.draw(player->playerUpdateColor());
+			if (player->getBomb() != nullptr) {
+				auto bombpos = player->getBomb()->getPosition();
+				auto playerPos = player->getCenterPosition();
+
+				player->getBomb()->setPosition(playerPos.x, playerPos.y - player->getTextureRect().height + 10);
+				w.draw(*player->getBomb());
+				player->getBomb()->setPosition(bombpos);
+			}
+
 #ifdef HITBOX_DEBUG_MODE
 			PlayerIA_ptr pIA;
 			if((pIA = std::dynamic_pointer_cast<PlayerIAEntity>(player)) != nullptr){

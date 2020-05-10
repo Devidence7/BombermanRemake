@@ -273,7 +273,7 @@ void Level::update()
 					if ((e = getCellMiniMapObject(positionMap)) == nullptr || std::dynamic_pointer_cast<PowerUp>(e) != nullptr)
 					{
 						b->rePutBomb = false;
-						addEntityToMiniMap((*it), getMapCoordinates(b->getCenterPosition()));
+						addEntityToMiniMap((*it), positionMap);
 					}
 					else
 					{
@@ -597,7 +597,6 @@ Entity_ptr &Level::getCellObject(int x, int y)
 
 Entity_ptr &Level::getCellMiniMapObject(int x, int y)
 {
-
 	if (miniMap[y][x].get() != nullptr && miniMap[y][x].get()->getExpiredEntity())
 	{
 		miniMap[y][x].reset();
@@ -777,8 +776,9 @@ void Level::ThrowBomb(Player_ptr p, Bomb_ptr b)
 	{
 		onFlightBombs.push_back(b);
 		b->setObjetive(MapCoordinates2GlobalCoorCorner(fallPosition));
-		b->setOnFlight(normalize(dirThrow));
 		b->setPosition(Level::getMapCellCorner(p->getCenterPosition()));
+		b->setOnFlight(normalize(dirThrow));
+		
 	}
 	b->player2Score = p;
 }
