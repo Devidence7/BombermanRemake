@@ -68,7 +68,8 @@ public:
 		}
 		victory.setFont(font);
 		victory.setString("RESULTADOS");
-		victory.setFillColor(sf::Color::White);
+		//victory.setFillColor(sf::Color::White);
+		victory.setColor(sf::Color::White);
 		// victory.setScale(2,2);
 		victory.setCharacterSize(72);
 
