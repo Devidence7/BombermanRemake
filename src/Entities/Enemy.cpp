@@ -180,41 +180,68 @@ Balloon::Balloon() : EnemyEntity()
 Ice::Ice() : EnemyEntity()
 {
 	enemyType = ice;
-	this->rangoVision = -1;
+	this->rangoVision = 5;
 	this->numConsecutiveMovements = 7;
-	this->typeSeek = TypeSeekIA::LONG_PATH;
+	this->typeSeek = TypeSeekIA::SECOND_BEST_PATH;
 	this->longMorePAth = 10;
 	this->typePosIA = TypePositionRelative::OBJETIVE_POSITION;
-	this->canThroughWall = true;
+	this->canThroughWall = false;
 	//move(200, 200);
 }
 
 Barrel::Barrel() : EnemyEntity()
 {
 	enemyType = barrel;
-	//move(120, 500);
+	this->rangoVision = 7;
+	this->numConsecutiveMovements = 5;
+	this->typeSeek = TypeSeekIA::LONG_PATH;
+	this->longMorePAth = 10;
+	this->typePosIA = TypePositionRelative::LOKIN_POSITION;
+	this->canThroughWall = false;
 }
 Coin::Coin() : EnemyEntity()
 {
 	enemyType = coin;
 	baseSpeed = 2;
-	//move(500, 450);
+	this->rangoVision = 10;
+	this->numConsecutiveMovements = 3;
+	this->typeSeek = TypeSeekIA::BEST_PATH;
+	this->longMorePAth = 10;
+	this->typePosIA = TypePositionRelative::OBJETIVE_POSITION;
+	this->canThroughWall = true;
 }
 
 Blob::Blob() : EnemyEntity()
 {
 	enemyType = blob;
-	//	move(400, 300);
+	baseSpeed = 0.7;
+	this->rangoVision = 5;
+	this->numConsecutiveMovements = 4;
+	this->typeSeek = TypeSeekIA::LONG_PATH;
+	this->longMorePAth = 15;
+	this->typePosIA = TypePositionRelative::NEAR_POSITION;
+	this->canThroughWall = true;
 }
 
 Ghost::Ghost() : EnemyEntity()
 {
 	enemyType = ghost;
-	//	move(200, 400);
+	this->rangoVision = 2;
+	this->numConsecutiveMovements = 7;
+	this->typeSeek = TypeSeekIA::LONG_PATH;
+	this->longMorePAth = 20;
+	this->typePosIA = TypePositionRelative::NEAR_POSITION;
+	this->canThroughWall = true;
 }
 
 Hypo::Hypo() : EnemyEntity()
 {
 	enemyType = hypo;
-	//	move(400,600);
+	baseSpeed = 1.5;
+	this->rangoVision = 8;
+	this->numConsecutiveMovements = 5;
+	this->typeSeek = TypeSeekIA::BEST_PATH;
+	this->longMorePAth = 10;
+	this->typePosIA = TypePositionRelative::OBJETIVE_POSITION;
+	this->canThroughWall = true;
 }
