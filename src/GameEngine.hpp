@@ -114,7 +114,7 @@ Game(){
 		int numEnemies=DEFAULT_NUM_OF_ENEMIES*gameOptions.difLevel+(stage/0.5);
 		cout<<"NumEnemies: "<<numEnemies<<endl;
 	
-		if(!debug){
+		if(!debug && gameOptions.historyMode){
 			Enemies::insertarEnemigos(dimX, dimY,numEnemies,stage,gameOptions.difLevel);
 		}
 		//insertEnemies(7);
@@ -181,16 +181,7 @@ Game(){
 				it2->reset();
 				it2 = PLayers::getVectorPlayer().erase(it2);
 		}
-	/*	auto it3 = Enemies::getVectorEnemiesExtra().begin();
-		while (it3 != Enemies::getVectorEnemiesExtra().end()) {
-				it3->reset();
-				it3 = Enemies::getVectorEnemiesExtra().erase(it3);
-		}*/
-		/*auto it4 = Enemies::getVectorEnemiesExtraTel().begin();
-		while (it4 != Enemies::getVectorEnemiesExtraTel().end()) {
-				it4->reset();
-				it4 = Enemies::getVectorEnemiesExtraTel().erase(it4);
-		}*/
+		PLayers::getVectorPlayer().clear();
 
 		
 	}
@@ -449,4 +440,6 @@ Game(){
 		drawEnemies(w);
 		drawPlayers(w);
 	}
+
+	
 };

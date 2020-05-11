@@ -86,6 +86,7 @@ private:
 		int id = menu->onEvent(event);
 		switch (id) {
 		case ButtonActions::STORY_MODE:
+		
 			game.gameOptions.historyMode = true;
 			game.debug = false;
 			gameDisplay.setGameState(GameDisplayController::GameState::STORY_MENU);
@@ -93,6 +94,7 @@ private:
 			break;
 		case ButtonActions::VERSUS_MODE:
 			//  game.gameOptions.numPlayers = 2;
+		
 			game.gameOptions.historyMode = false;
 			game.debug = false;
 			gameDisplay.setGameState(GameDisplayController::GameState::VS_NUMPLAYERS_MENU);
@@ -100,6 +102,7 @@ private:
 			break;
 
 		case ButtonActions::DEBUG:
+			
 			game.gameOptions.numPlayers = 1;
 			game.gameOptions.numIAPlayers = 1;
 			game.gameOptions.difLevel = 1;
