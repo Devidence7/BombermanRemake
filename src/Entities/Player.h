@@ -36,13 +36,17 @@ public:
 	double	animLastTic = 0;			// Last time frame changed
 	int	currentFrame = 0;				// Frame we are now
 	const int walkFrames = 4;			// Number of walking sprites
-	const int deathFrames = 7;			// Number of death sprites
+	const int deathFrames = 8;			// Number of death sprites
 	const double frameSpeed = 0.15;		// Time between frames
 
 	double lastMovementTime = 0;
 
 	bool controlsInverted = false;
 	double lastControlInvertedTime = 0;
+
+	bool respawning = false;
+	const double respawnTime = 5;
+	double lastRespawnTime = 0;
 
 	bool bombThrowed = false;
 	double lastThrowedTime = 0;
