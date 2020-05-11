@@ -7,6 +7,7 @@
 #include "../GameEngine.hpp"
 #include "OptionsMenu.h"
 #include "GameDisplayController.h"
+#include <map>
 
 class BattleVictoryMenu {
 	GameGUI::Menu* menu;
@@ -57,16 +58,16 @@ class BattleVictoryMenu {
 
 public:
 	BattleVictoryMenu(sf::RenderWindow& window, Game& game, GameDisplayController& gameDisplay) {
-		createFinalScoreInterface(window, game, gameDisplay);
+		createBattleVictoryMenu(window, game, gameDisplay);
 	}
 
-	void createFinalScoreInterface(sf::RenderWindow& window, Game& game, GameDisplayController& gameDisplay) {
+	void createBattleVictoryMenu(sf::RenderWindow& window, Game& game, GameDisplayController& gameDisplay) {
 		menu = new GameGUI::Menu(window);
 		if (!font.loadFromFile("../textures/mainMenu/PixelEmulator.ttf")) {
 			//cosas
 		}
 		victory.setFont(font);
-		victory.setString("PUNTUACIONES");
+		victory.setString("RESULTADOS");
 		victory.setFillColor(sf::Color::White);
 		// victory.setScale(2,2);
 		victory.setCharacterSize(72);
@@ -85,9 +86,88 @@ public:
 		background.setTextureRect({ 0, 0, (int)window.getSize().x, (int)window.getSize().y });
 
 		auto f = menu->addFormLayout();
-		int score = 0;
-		for (Player_ptr p : PLayers::getVectorPlayer()) {
-			score += p->score;
+		
+		if (game.gameOptions.numTeams == 0) {
+			std::multimap<int, std::tuple<int, string>> scores;
+			vector<Player_ptr> players = PLayers::getVectorPlayer();
+
+			int winingPlayer = 0;
+			int i = 0;
+			cout << game.gameOptions.numPlayers << endl;
+			for (; i < game.gameOptions.numPlayers; i++) {
+				std::tuple<int, string> temp = std::tuple<int, string>(i, "Jugador " + to_string(i + 1));
+				scores.insert(pair<int, std::tuple<int, string>>(players[i]->score, temp));
+				if (players[i]->lives > 0) {
+					winingPlayer = i;
+				}
+			}
+			for (; i < game.gameOptions.numIAPlayers + game.gameOptions.numPlayers; i++) {
+				std::tuple<int, string> temp = std::tuple<int, string>(i, "IA " + to_string(i + 1 - game.gameOptions.numPlayers));
+				scores.insert(pair<int, std::tuple<int, string>>(players[i]->score, temp));
+				if (players[i]->lives > 0) {
+					winingPlayer = i;
+				}
+			}
+
+			for (auto it = scores.rbegin(); it != scores.rend(); it++) {
+				if (get<0>(it->second) == winingPlayer) {
+					GameGUI::Label* l1 = new GameGUI::Label(to_string(it->first));
+					l1->setTextSize(41);
+					f->addRow(to_string(1) + ". " + get<1>(it->second), l1, -1, 45);
+				}
+			}
+
+			i = 0;
+			for (auto it = scores.rbegin(); it != scores.rend(); it++) {
+				if (get<0>(it->second) != winingPlayer) {
+					GameGUI::Label* l1 = new GameGUI::Label(to_string(it->first));
+					f->addRow(to_string(i + 2) + ". " + get<1>(it->second), l1);
+					i++;
+				}
+			}
+
+		}
+		else if (game.gameOptions.numTeams == 2) {
+			std::multimap<int, std::tuple<int, string>> scores;
+			vector<Player_ptr> players = PLayers::getVectorPlayer();
+
+			int winingTeam = 0;
+			int i = 0;
+			cout << "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW" << endl;
+			for (; i < game.gameOptions.numPlayers; i++) {
+				std::tuple<int, string> temp = std::tuple<int, string>(i, "Jugador " + to_string(i + 1));
+				scores.insert(pair<int, std::tuple<int, string>>(players[i]->score, temp));
+				if (players[i]->lives > 0) {
+					winingTeam = game.gameOptions.playersAndTeams[i];
+				}
+
+				cout << game.gameOptions.playersAndTeams[i] << endl;
+			}
+			for (; i < game.gameOptions.numIAPlayers + game.gameOptions.numPlayers; i++) {
+				std::tuple<int, string> temp = std::tuple<int, string>(i, "IA " + to_string(i + 1 - game.gameOptions.numPlayers));
+				scores.insert(pair<int, std::tuple<int, string>>(players[i]->score, temp));
+				if (players[i]->lives > 0) {
+					winingTeam = game.gameOptions.playersAndTeams[i];
+				}
+				cout << game.gameOptions.playersAndTeams[i] << endl;
+			}
+
+			for (auto it = scores.rbegin(); it != scores.rend(); it++) {
+				if (game.gameOptions.playersAndTeams[get<0>(it->second)] == winingTeam) {
+					GameGUI::Label* l1 = new GameGUI::Label(to_string(it->first));
+					l1->setTextSize(41);
+					f->addRow(to_string(1) + ". " + get<1>(it->second), l1, -1, 45);
+				}
+			}
+
+			i = 0;
+			for (auto it = scores.rbegin(); it != scores.rend(); it++) {
+				if (game.gameOptions.playersAndTeams[get<0>(it->second)] != winingTeam) {
+					GameGUI::Label* l1 = new GameGUI::Label(to_string(it->first));
+					f->addRow(to_string(2) + ". " + get<1>(it->second), l1);
+					i++;
+				}
+			}
 		}
 
 		menu->addButton("       Ir al menu principal       ", ButtonActions::GO_MAIN_MENU);
@@ -130,7 +210,7 @@ public:
 		gameDisplay.manageGameInterface(gameDisplay, std::bind(&BattleVictoryMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
 		if (gameDisplay.scoreReprocessDisplay) {
 			gameDisplay.scoreReprocessDisplay = false;
-			createFinalScoreInterface(*gameDisplay.getWindow(), game, gameDisplay);
+			createBattleVictoryMenu(*gameDisplay.getWindow(), game, gameDisplay);
 		}
 		draw(*gameDisplay.getWindow());
 	}

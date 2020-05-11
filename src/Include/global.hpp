@@ -10,11 +10,12 @@
 #define SHOOTING_DISTANCE 5
 
 struct GameOptions {
-	int numPlayers;
-	double difLevel;
-	int numIAPlayers;
-	bool historyMode;
+	int numPlayers = 0;
+	double difLevel = 1;
+	int numIAPlayers = 0;
+	bool historyMode = false;
 	int playersAndTeams[4];
+	int numTeams = 0;
 };
 
 class GlobalTime{

@@ -27,6 +27,18 @@ Widget* FormLayout::addRow(const sf::String& str, Widget* widget, int id)
 	return widget;
 }
 
+Widget* FormLayout::addRow(const sf::String& str, Widget* widget, int id, int labelSize) {
+	GameGUI::Label* label = new GameGUI::Label(str);
+	label->setTextSize(labelSize);
+	if (label->getSize().x > m_labelWidth)
+		m_labelWidth = label->getSize().x;
+	push(label);
+
+	widget->setID(id);
+	push(widget);
+	return widget;
+}
+
 void FormLayout::recomputeGeometry()
 {
 	size_t i = 0;

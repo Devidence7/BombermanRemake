@@ -143,9 +143,28 @@ int main(int argc, char* argv[]) {
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num9)) {
+			battleVictory.createBattleVictoryMenu(*gameDisplayController.getWindow(), game, gameDisplayController);
 			gameDisplayController.gameState = GameDisplayController::GameState::END_BATTLE;
 		}
 
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
+			PLayers::getVectorPlayer()[0]->setExpiredEntity();
+			PLayers::getVectorPlayer()[0]->lives = 0;
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
+			PLayers::getVectorPlayer()[1]->setExpiredEntity();
+			PLayers::getVectorPlayer()[1]->lives = 0;
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) {
+			PLayers::getVectorPlayer()[2]->setExpiredEntity();
+			PLayers::getVectorPlayer()[2]->lives = 0;
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4)) {
+			PLayers::getVectorPlayer()[3]->setExpiredEntity();
+			PLayers::getVectorPlayer()[3]->lives = 0;
+		}
+
+		
 		// Update display window window
 		gameDisplayController.getWindow()->display();
 	}

@@ -102,12 +102,12 @@ public:
 	}
 
 private:
-	void fillPlayersAndTeamsArray(Game& game, int player1, int player2, int player3, int player4) {
+	void fillPlayersAndTeamsArray(Game& game, int player1, int player2, int player3, int player4, int numTeams) {
 		game.gameOptions.playersAndTeams[0] = player1;
-		game.gameOptions.playersAndTeams[0] = player2;
-		game.gameOptions.playersAndTeams[0] = player3;
-		game.gameOptions.playersAndTeams[0] = player4;
-
+		game.gameOptions.playersAndTeams[1] = player2;
+		game.gameOptions.playersAndTeams[2] = player3;
+		game.gameOptions.playersAndTeams[3] = player4;
+		game.gameOptions.numTeams = numTeams;
 	}
 
 	void userActions(sf::Event& event, sf::RenderWindow*& window, GameDisplayController& gameDisplay, Game& game) {
@@ -138,7 +138,7 @@ private:
 		case ButtonActions::ALLVSALL:
 			previousMenu = MenuState::TYPE_OF_GAME;
 			createAllVSAllMenu(*window, gameDisplay, game.gameOptions.numPlayers);
-			fillPlayersAndTeamsArray(game, 0, 1, 2, 3);
+			fillPlayersAndTeamsArray(game, 0, 1, 2, 3, 0);
 			break;
 
 		case ButtonActions::TEAM:
@@ -200,7 +200,7 @@ private:
 			previousMenu = MenuState::MAIN;
 			createNumPlaySelection(*window, gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
-			fillPlayersAndTeamsArray(game, 0, 1, 1, 1);
+			fillPlayersAndTeamsArray(game, 0, 1, 1, 1, 2);
 			break;
 
 		case ButtonActions::PLVSPLIA:
@@ -209,7 +209,7 @@ private:
 			previousMenu = MenuState::MAIN;
 			createNumPlaySelection(*window, gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
-			fillPlayersAndTeamsArray(game, 0, 1, 1, 1);
+			fillPlayersAndTeamsArray(game, 0, 1, 1, 1, 2);
 			break;
 
 		case ButtonActions::PL2VS1IA:
@@ -218,7 +218,7 @@ private:
 			previousMenu = MenuState::MAIN;
 			createNumPlaySelection(*window, gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
-			fillPlayersAndTeamsArray(game, 0, 0, 1, 1);
+			fillPlayersAndTeamsArray(game, 0, 0, 1, 1, 2);
 			break;
 
 			//4 players
@@ -229,7 +229,7 @@ private:
 			previousMenu = MenuState::MAIN;
 			createNumPlaySelection(*window, gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
-			fillPlayersAndTeamsArray(game, 0, 1, 1, 1);
+			fillPlayersAndTeamsArray(game, 0, 1, 1, 1, 2);
 			break;
 		case ButtonActions::PLVSPL2IA:
 			game.gameOptions.numPlayers = 2;
@@ -237,7 +237,7 @@ private:
 			previousMenu = MenuState::MAIN;
 			createNumPlaySelection(*window, gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
-			fillPlayersAndTeamsArray(game, 0, 1, 1, 1);
+			fillPlayersAndTeamsArray(game, 0, 1, 1, 1, 2);
 			break;
 
 		case ButtonActions::PL2VS2IA:
@@ -246,7 +246,7 @@ private:
 			previousMenu = MenuState::MAIN;
 			createNumPlaySelection(*window, gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
-			fillPlayersAndTeamsArray(game, 0, 0, 1, 1);
+			fillPlayersAndTeamsArray(game, 0, 0, 1, 1, 2);
 			break;
 		case ButtonActions::PLIAVSPLIA:
 			game.gameOptions.numPlayers = 2;
@@ -254,7 +254,7 @@ private:
 			previousMenu = MenuState::MAIN;
 			createNumPlaySelection(*window, gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
-			fillPlayersAndTeamsArray(game, 0, 1, 0, 1);
+			fillPlayersAndTeamsArray(game, 0, 1, 0, 1, 2);
 			break;
 
 
