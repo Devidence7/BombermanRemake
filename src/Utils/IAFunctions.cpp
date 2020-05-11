@@ -446,6 +446,9 @@ bool pathFinderDestroy2Farm(const sf::Vector2i &positionEnemy, std::list<ANode_P
                 if (abs(i) != abs(j))
                 {
                     sf::Vector2i nodePosition(currentNode->xPosition() + i, currentNode->yPosition() + j);
+                    if(!Level::isValidCell(nodePosition)){
+                        continue;
+                    }
                     levelInterset = PointsDestroyMap::getIntersetZone(nodePosition);
                     interestSite = levelInterset != nullptr ? levelInterset->intersest() : 0;
                    
