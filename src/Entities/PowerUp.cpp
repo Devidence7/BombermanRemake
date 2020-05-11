@@ -27,6 +27,7 @@ void PowerUp::onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_pt
 	if (!this->expiredEntity && (pe = std::dynamic_pointer_cast<PlayerEntity>(eCollisioning)) != nullptr)
 	{
 		this->setPlayerStatus(*pe);
+		pe->incrementScore(100);
 		this->setExpiredEntity();
 	}
 }
