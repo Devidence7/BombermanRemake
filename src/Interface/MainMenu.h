@@ -23,8 +23,8 @@ class MainMenu {
 	GameGUI::Menu* menu;
 
 	enum ButtonActions {
-		SINGLEPLAYER,
-		MULTIPLAYER,
+		STORY_MODE,
+		VERSUS_MODE,
 		DEBUG,
 		OPCIONS,
 		QUIT
@@ -43,14 +43,14 @@ public:
 	void createMainMenu(sf::RenderWindow& window) {
 		texture.loadFromFile(MAIN_MENU_BACKGROUND_PATH);
 		background.setTexture(texture);
-	
+
 		float resizeVal = std::fmax((float)window.getSize().x / texture.getSize().x, (float)window.getSize().y / texture.getSize().y);
 		background.setScale(resizeVal, resizeVal);
 
 		menu = new GameGUI::Menu(window);
 
-		menu->addButton("           Modo historia            ", ButtonActions::SINGLEPLAYER);
-		menu->addButton("           Modo batalla            ", ButtonActions::MULTIPLAYER);
+		menu->addButton("           Modo historia            ", ButtonActions::STORY_MODE);
+		menu->addButton("           Modo batalla            ", ButtonActions::VERSUS_MODE);
 		menu->addButton("      Modo sin muros para Victor       ", ButtonActions::DEBUG);
 		menu->addButton("               Opciones                 ", ButtonActions::OPCIONS);
 		menu->addButton("                  Salir                    ", ButtonActions::QUIT);
@@ -72,41 +72,43 @@ public:
 	}
 
 private:
-    /**
-     * Method callback for more event managing
-     * @param event
-     * @param window
-     * @param gameDisplay
-     * @param game
-     */
-	void userActions(sf::Event& event, sf::RenderWindow* &window, GameDisplayController& gameDisplay, Game& game) {
+	/**
+	 * Method callback for more event managing
+	 * @param event
+	 * @param window
+	 * @param gameDisplay
+	 * @param game
+	 */
+	void userActions(sf::Event& event, sf::RenderWindow*& window, GameDisplayController& gameDisplay, Game& game) {
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//													BUTTON PRESSED
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		int id = menu->onEvent(event);
 		switch (id) {
-		case ButtonActions::SINGLEPLAYER:
-			game.debug=false;
+		case ButtonActions::STORY_MODE:
+			game.gameOptions.historyMode = true;
+			game.debug = false;
 			gameDisplay.setGameState(GameDisplayController::GameState::STORY_MENU);
 			//game.startNewGame(*window);
 			break;
-		case ButtonActions::MULTIPLAYER:
-		  //  game.gameOptions.numPlayers = 2;
-		  game.debug=false;
-		  gameDisplay.setGameState(GameDisplayController::GameState::VS_NUMPLAYERS_MENU);
-		
-		break;
+		case ButtonActions::VERSUS_MODE:
+			//  game.gameOptions.numPlayers = 2;
+			game.gameOptions.historyMode = false;
+			game.debug = false;
+			gameDisplay.setGameState(GameDisplayController::GameState::VS_NUMPLAYERS_MENU);
+
+			break;
 
 		case ButtonActions::DEBUG:
 			game.gameOptions.numPlayers = 1;
 			game.gameOptions.numIAPlayers = 1;
-			game.gameOptions.difLevel=1;
-			game.debug=true;
+			game.gameOptions.difLevel = 1;
+			game.debug = true;
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			//game.startNewGame(*window);
 			break;
 
-		
+
 		case ButtonActions::OPCIONS:
 			OptionsMenu::lastGameStateOptionsMenu = GameDisplayController::GameState::MAIN_MENU;
 			gameDisplay.setGameState(GameDisplayController::GameState::OPTIONS_MENU);
@@ -117,10 +119,10 @@ private:
 		}
 	}
 
-    /**
-     * Draw Main menu interface
-     * @param window
-     */
+	/**
+	 * Draw Main menu interface
+	 * @param window
+	 */
 	void draw(sf::RenderWindow& window) {
 		window.draw(background);
 		window.draw(menuBackgroundShadow2);
@@ -136,7 +138,7 @@ public:
 	 * @param gameDisplay
 	 * @param game
 	 */
-	void menuActions(GameDisplayController &gameDisplay, Game& game) {
+	void menuActions(GameDisplayController& gameDisplay, Game& game) {
 		// Manage window events and pass a callback to manage this menu buttons
 		gameDisplay.manageGameInterface(gameDisplay, std::bind(&MainMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
 		if (gameDisplay.mainMenuReprocessDisplay) {

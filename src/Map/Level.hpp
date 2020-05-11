@@ -30,6 +30,7 @@ class Level
 	static int numWalls;
 	static int numEnemiesLeft;
 	static Teleporter_ptr teleporter;
+	static GameOptions* gameOptions;
 //	static Entity_ptr tel;
 	
 	static int stage;
@@ -39,10 +40,12 @@ public:
 	static bool canFinishLevel;
 	static bool levelFinished;
 
+	Level(int dimX, int dimY, bool debug, int stage, GameOptions* gameOptions);
+
 	//Level(int dimX, int dimY);
 	static sf::Vector2i sizeLevel();
 	
-	Level(int dimX, int dimY,bool debug,int stage);
+	//Level(int dimX, int dimY,bool debug,int stage);
 	
 	static void update();
 

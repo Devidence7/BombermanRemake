@@ -39,12 +39,7 @@ private:
 	//MainMenu mainMenu;
 
 public:
-	struct GameOptions {
-		int numPlayers;
-		double difLevel;
-		int numIAPlayers;
-		bool historyMode;
-	};
+	
 	int stage;
 	GameOptions gameOptions;
 	bool debug=false;
@@ -113,7 +108,7 @@ Game(){
 			Enemies::insertarEnemigos(dimX, dimY,numEnemies,stage);
 		}
 		//insertEnemies(7);
-		level = new Level(dimX, dimY,debug,stage);
+		level = new Level(dimX, dimY, debug, stage, &gameOptions);
 		//Enemies::insertarEnemigos(dimX, dimY);
 		if(debug){
 			insertPlayers(*gameDisplay.userKeyPress, 1, 1);
