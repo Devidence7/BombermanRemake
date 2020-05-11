@@ -74,11 +74,14 @@ Level::Level(int dimX, int dimY, bool debug, int stage)
 			if (x % 2 == 1 || y % 2 == 1)
 			{
 				// Create random Bricks:
-				if ( true || !Random::getIntNumberBetween(0, 3))
+				if ( (y > 3 || x > 3 || (y != 3 && x == 2) || (x == 3 && y <= 3)) || !Random::getIntNumberBetween(0, 3))
 				{
 					bool intersec = false;
+
 					for (Enemy_ptr e : Enemies::getVectorEnemies())
+					//for (Player_ptr e : PLayers::getVectorPlayer())
 					{
+						
 						sf::Vector2i p = getMapCoordinates(e->getCenterPosition());
 						if (p.x == x && p.y == y)
 						{
