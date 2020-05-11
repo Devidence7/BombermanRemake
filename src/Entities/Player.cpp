@@ -3,7 +3,8 @@
 PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team,float posX,float posY) : Entity(), playerControls(pControls) {
 
 	team = _team;
-
+	setPosition(posX, posY);
+	respownPosition = sf::Vector2f(posX, posY);
 	lastRespawnTime = 0;
 	isFireDestroyable = true;
 	fireCanGoThroght = true;

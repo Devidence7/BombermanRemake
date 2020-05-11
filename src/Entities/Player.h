@@ -18,7 +18,7 @@ public:
 	int numOfBombs = 1;
 	int powerOfBombs = 1;
 	bool dead=false;
-
+	sf::Vector2f respownPosition;
 	// Sprites for GUI
 	sf::Sprite playerHead;
 	sf::Sprite playerHead2;
