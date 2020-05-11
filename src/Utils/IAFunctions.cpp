@@ -6,7 +6,7 @@
 //Map Intersting Destroy
 std::vector<std::vector<Interst_ptr>> PointsDestroyMap::interestingMap;
 Interst_ptr &PointsDestroyMap::getIntersetZone(sf::Vector2i pos){
-    getIntersetZone(pos.x, pos.y);
+    return getIntersetZone(pos.x, pos.y);
 }
 Interst_ptr &PointsDestroyMap::getIntersetZone(int x, int y){
     return interestingMap[y][x];

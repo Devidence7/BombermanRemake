@@ -23,8 +23,6 @@ void PLayers::addPlayer(PlayerEntity::PlayerControls& playerControls, int posX,i
 void PLayers::addIAPlayer(PlayerEntity::PlayerControls& playerControls,int posX,int posY,bool debug,int team,int IA) {
 	PlayerIA_ptr p = std::make_shared<PlayerIAEntity>(PlayerIAEntity(playerControls,posX,posY,team,IA));
 	p->me = p;
-	//TODO: Hacerlo bien
-	p->setPosition(posX, posY);
 	if(team == 0){
 		cout<<"Pos x: "<<posX<<" Pos y: "<<posY<<endl;
 		p->createStateGenerator("../src/PseudoPPDL/IA1.txt");
