@@ -59,45 +59,45 @@ Game(){
 
 	void insertPlayers(UserKeyPress &userKeyPress, int numPlayers, int numIAPlayer) {
 		for (int i = 0; i < numPlayers; i++) {
-			switch(i){
-				case 0:
-					PLayers::addPlayer(userKeyPress.getPlayerControls(i+1),SIZE_PILLAR,SIZE_PILLAR);
-					//level->checkSpawn(SIZE_PILLAR,SIZE_PILLAR);
-					break;
-				
-				case 1:
-					PLayers::addPlayer(userKeyPress.getPlayerControls(i+1),SIZE_PILLAR,(dimY-1)*SIZE_PILLAR);
-					//level->checkSpawn(SIZE_PILLAR,(dimY)*SIZE_PILLAR);
-					break;
+			switch (i) {
+			case 0:
+				PLayers::addPlayer(userKeyPress.getPlayerControls(i + 1), SIZE_PILLAR, 0);
+				level->checkSpawn(SIZE_PILLAR, 0);
+				break;
 
-				default:
-					break;
+			case 1:
+				PLayers::addPlayer(userKeyPress.getPlayerControls(i + 1), SIZE_PILLAR, (dimY - 1) * SIZE_PILLAR);
+				level->checkSpawn(SIZE_PILLAR, (dimY - 1) * SIZE_PILLAR);
+				break;
+
+			default:
+				break;
 			}
 			
 		}
-		for(int i = 0; i < numIAPlayer; i++){
-			switch(i){
+		for (int i = 0; i < numIAPlayer; i++) {
+			switch (i) {
 
-				case 0:
-					cout<<"IA 1"<<endl;
-					PLayers::addIAPlayer(userKeyPress.getPlayerControls(i+1),(dimX)*SIZE_PILLAR,SIZE_PILLAR,debug);
-					//level->checkSpawn((dimX-1)*SIZE_PILLAR,SIZE_PILLAR);
-					break;
+			case 0:
+				cout << "IA 1" << endl;
+				PLayers::addIAPlayer(userKeyPress.getPlayerControls(i + 1), (dimX+1) * SIZE_PILLAR, 0, debug);
+				level->checkSpawn((dimX) * SIZE_PILLAR, 0);
+				break;
 
-				case 1:
-					cout<<"IA 2"<<endl;
-					PLayers::addIAPlayer(userKeyPress.getPlayerControls(i+1),(dimX-1)*SIZE_PILLAR,(dimY-1)*SIZE_PILLAR,debug);
-					//level->checkSpawn((dimX-1)*SIZE_PILLAR,(dimY-1)*SIZE_PILLAR);
-					break;
+			case 1:
+				cout << "IA 2" << endl;
+				PLayers::addIAPlayer(userKeyPress.getPlayerControls(i + 1), (dimX+1) * SIZE_PILLAR, (dimY - 1)*SIZE_PILLAR, debug);
+				level->checkSpawn((dimX) * SIZE_PILLAR, (dimY - 1) * SIZE_PILLAR);
+				break;
 
-				case 2:
-					cout<<"IA 3"<<endl;
-					PLayers::addIAPlayer(userKeyPress.getPlayerControls(i+1),SIZE_PILLAR,(dimY-1)*SIZE_PILLAR,debug);
-					//level->checkSpawn(SIZE_PILLAR,(dimY-1)*SIZE_PILLAR);
-					break;
-				
-				default:
-					break;
+			case 2:
+				cout << "IA 3" << endl;
+				PLayers::addIAPlayer(userKeyPress.getPlayerControls(i + 1), SIZE_PILLAR, (dimY - 1) * SIZE_PILLAR, debug);
+				level->checkSpawn(SIZE_PILLAR, (dimY - 1) * SIZE_PILLAR);
+				break;
+
+			default:
+				break;
 			}
 		}
 	}
