@@ -42,6 +42,55 @@ void StateGenerator::generateState(ifstream &f, string estado)
             }
         }
     }
+     found = estado.find("matar");
+      if (found != std::string::npos){
+        for(int i = 0; i < 2; i++){
+            string text;
+            std::getline(f, text);
+            // boost::algorithm::to_lower(text);
+            std::transform(text.begin(), text.end(), text.begin(),
+                [](unsigned char c) { return std::tolower(c); });
+            found = text.find("imprudencia");
+            if (found != std::string::npos){
+                string val = text.substr(found + sizeof("rangovision"), text.size()) ;
+                std::cout << val << std::endl;
+                this->_KillStruct.imprudencia = stoi(val);
+            }
+            found = text.find("costdestroywall");
+            if (found != std::string::npos){
+                string val = text.substr(found + sizeof("costdestroywall"), text.size()) ;
+                std::cout << val << std::endl;
+//                this->_PerseguirStruct.costDestroyWall = val;           
+                this->_KillStruct.costDestroyWall = stoi(val);
+            }
+        }
+      }
+
+      found = estado.find("buscarpu");
+      if (found != std::string::npos){
+        for(int i = 0; i < 2; i++){
+            string text;
+            std::getline(f, text);
+            // boost::algorithm::to_lower(text);
+            std::transform(text.begin(), text.end(), text.begin(),
+                [](unsigned char c) { return std::tolower(c); });
+            found = text.find("rangovision");
+            if (found != std::string::npos){
+                string val = text.substr(found + sizeof("rangovision"), text.size()) ;
+                std::cout << val << std::endl;
+                this->_SeekPEStruct.RangoVision = stoi(val);
+            }
+
+            float buff, nerf,action;
+             f >>buff>> nerf >> action ;
+             this->_SeekPEStruct.interBuffPU = buff;
+             this->_SeekPEStruct.interNerfPU = nerf;
+             this->_SeekPEStruct.interActionPU =action;
+             this->haveSeekPEStruct = true;
+             return;
+             }
+
+      }
     
 }
 
@@ -86,3 +135,42 @@ PatrolState StateGenerator::getPatrol(sf::Vector2i pos)
 {
     return PatrolState(pos + _PatrolStruct.puntRelativoA, pos + _PatrolStruct.puntRelativoB);
 }
+/*
+PerseguirState StateGenerator::getVisionPerseguir()
+{
+    return PerseguirState(_PerseguirStruct.RangoVision);
+}
+
+PerseguirState StateGenerator::getCostDestWallPerseguir()
+{
+    return PerseguirState(pos + _PatrolStruct.puntRelativoA, pos + _PatrolStruct.puntRelativoB);
+}
+
+KillState StateGenerator::getImprudencia()
+{
+    return KillState(pos + _PatrolStruct.puntRelativoA, pos + _PatrolStruct.puntRelativoB);
+}
+
+KilllState StateGenerator::getVisionKill()
+{
+    return KillState(pos + _PatrolStruct.puntRelativoA, pos + _PatrolStruct.puntRelativoB);
+}
+SeekPEState StateGenerator::getVisionSeek()()
+{
+    return SeekPEState(pos + _PatrolStruct.puntRelativoA, pos + _PatrolStruct.puntRelativoB);
+}
+
+SeekPEState StateGenerator::getInterBuffPU()
+{
+    return SeekPEState(pos + _PatrolStruct.puntRelativoA, pos + _PatrolStruct.puntRelativoB);
+}
+SeekPEState StateGenerator::getInterNerfPU()
+{
+    return PatrolState(pos + _PatrolStruct.puntRelativoA, pos + _PatrolStruct.puntRelativoB);
+}
+SeekPEState StateGenerator::getInterActionPU()
+{
+    return PatrolState(pos + _PatrolStruct.puntRelativoA, pos + _PatrolStruct.puntRelativoB);
+}
+
+*/
