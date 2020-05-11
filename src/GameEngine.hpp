@@ -40,12 +40,10 @@ private:
 
 public:
 	struct GameOptions {
-	
 		int numPlayers;
 		double difLevel;
 		int numIAPlayers;
-		
-		
+		bool historyMode;
 	};
 	int stage;
 	GameOptions gameOptions;
