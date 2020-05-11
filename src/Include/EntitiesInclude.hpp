@@ -45,8 +45,8 @@ class Enemies{
 public:
 	static void insertarEnemigosExtraTeleport(sf::Vector2f pos, int numEnemigos);
 	//static void insertarEnemigosExtraTel(int dimX, int dimY);
-    static void insertarEnemigosExtra(int dimX, int dimY);
-    static void insertarEnemigos(int dimX, int dimY,int numEnemies,int stage);
+    static void insertarEnemigosExtra(int dimX, int dimY,int numEnemigos);
+    static void insertarEnemigos(int dimX, int dimY,int numEnemies,int stage,float dif);
     static std::vector<Enemy_ptr> &getVectorEnemies();
     static std::vector<Enemy_ptr> &getVectorEnemiesExtra();
   //  static std::vector<Enemy_ptr> &getVectorEnemiesExtraTel();

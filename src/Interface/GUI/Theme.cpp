@@ -7,7 +7,7 @@ size_t    Theme::textCharacterSize = 12;
 Theme::TextStyle Theme::label;
 Theme::TextStyle Theme::click;
 Theme::TextStyle Theme::input;
-sf::Color Theme::tickColor = sf::Color::White;
+sf::Color Theme::tickColor = sf::Color::Black;
 sf::Color Theme::arrowColor = sf::Color::White;
 sf::Color Theme::windowBgColor;
 float     Theme::borderSize = 1.f;

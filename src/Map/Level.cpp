@@ -12,20 +12,21 @@ bool Level::levelFinished = false;
 int Level::numWalls = 0;
 int Level::stage = 1;
 int Level::numEnemiesLeft = 0;
+double *gameTime;
 Teleporter_ptr Level::teleporter = nullptr;
 GameOptions* Level::gameOptions;
 
 
-Level::Level(int dimX, int dimY, bool debug, int stage, GameOptions *gameOptions) {
+Level::Level(int dimX, int dimY, bool debug, int stage,GameOptions* gameOptions) {
 	Level::exitHasApeared = false;
 	Level::canFinishLevel = false;
 	Level::levelFinished = false;
 	Level::numWalls = 0;
 	Level::teleporter = nullptr;
 	Level::gameOptions = gameOptions;
-
+	
 	Level::stage = stage;
-
+	
 	// Reserve space for faster insert, delete of the entities
 	entities.reserve(10000);
 	// Create map matrix:
@@ -174,48 +175,48 @@ void Level::brickWallOutcomes(Entity_ptr it) {
 		//cout << probability << endl;
 		if (!gameOptions->historyMode) probability /= 2;
 
-		if (probability < 0.30) {
-			probability = Random::getFloatNumberBetween(0, 92);
+		if (probability < 0.40) {
+			probability = Random::getFloatNumberBetween(0, 125);
 			Entity_ptr newObject = nullptr;
 			bool tryTeleport = false;
 
-			if (probability < 10) {
+			if (probability < 20) {
 				newObject = std::make_shared<MoreFirePowerUp>(MoreFirePowerUp((it)->getPosition()));
 			}
-			else if (probability < 20) {
+			else if (probability < 30) {
 				newObject = std::make_shared<LessFirePowerUp>(LessFirePowerUp((it)->getPosition()));
 			}
-			else if (probability < 30) {
+			else if (probability < 50) {
 				newObject = std::make_shared<MoreBombsPowerUp>(MoreBombsPowerUp((it)->getPosition()));
 			}
-			else if (probability < 40) {
+			else if (probability < 65) {
 				newObject = std::make_shared<MoreSpeedPowerUp>(MoreSpeedPowerUp((it)->getPosition()));
 			}
-			else if (probability < 50) {
+			else if (probability < 75) {
 				newObject = std::make_shared<LessSpeedPowerUp>(LessSpeedPowerUp((it)->getPosition()));
 			}
-			else if (gameOptions->historyMode && probability < 55) {
+			else if (gameOptions->historyMode && probability < 85) {
 				newObject = std::make_shared<MoreTimePowerUp>(MoreTimePowerUp((it)->getPosition()));
 			}
-			else if (probability < 60) {
+			else if (probability < 90) {
 				newObject = std::make_shared<GrabBombsPowerUp>(GrabBombsPowerUp((it)->getPosition()));
 			}
-			else if (probability < 65) {
+			else if (probability < 95) {
 				newObject = std::make_shared<KickBombsPowerUp>(KickBombsPowerUp((it)->getPosition()));
 			}
-			else if (probability < 75) {
+			else if (probability < 105) {
 				newObject = std::make_shared<DisseasePowerUp>(DisseasePowerUp((it)->getPosition()));
 			}
-			else if (probability < 80) {
+			else if (probability < 110) {
 				newObject = std::make_shared<PassBombsPowerUp>(PassBombsPowerUp((it)->getPosition()));
 			}
-			else if (probability < 85) {
+			else if (probability < 115) {
 				newObject = std::make_shared<RemoteBombPowerUp>(RemoteBombPowerUp((it)->getPosition()));
 			}
-			else if (gameOptions->historyMode && probability < 87) {
+			else if (gameOptions->historyMode && probability < 120) {
 				newObject = std::make_shared<ExtraLifePowerUp>(ExtraLifePowerUp((it)->getPosition()));
 			}
-			else if (gameOptions->historyMode && !Level::exitHasApeared && probability < 92) {
+			else if (gameOptions->historyMode && !Level::exitHasApeared && probability < 125) {
 				createTeleporter(it);
 				tryTeleport = true;
 			}
@@ -865,3 +866,6 @@ void Level::checkSpawn(int posX, int posY) {
 	Level::deleteWall(pos);
 }
 
+void Level::updateTime(){
+	*gameTime=*gameTime+30;
+}

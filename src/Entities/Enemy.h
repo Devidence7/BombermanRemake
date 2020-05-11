@@ -29,6 +29,8 @@ private:
 
 	double lastMovementTime = 0;
 
+	
+
 	protected:
 
 

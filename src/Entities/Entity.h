@@ -34,8 +34,10 @@ protected:
 	bool canThroughWall = false; //puede atravesar paredes
 	bool canThroughBomb = false; //puede atravesar bombas
 
+
+
 	ActionsAvalible actionAvaible = ActionsAvalible::NONE_ACTION;
-	int score = 0;
+
 	std::list<std::shared_ptr<Entity>> BombsAsociated;
 	std::shared_ptr<Entity> BombTaked = nullptr;
 
@@ -43,6 +45,7 @@ protected:
 
 
 public:
+	int score = 0;
 	int rangoVision = 0; // Rango de celdas cuadrada que puede ver al jugador
 	sf::Vector2i siteRespectPlayer; // Sitio respecto jugador a donde ira a buscar un camino si existe
 	int numConsecutiveMovements = 5;
@@ -53,6 +56,7 @@ public:
 	std::list<OmittedArea> OmittedAreas;
 	std::list<sf::Vector2i> dangerZoner;
 	int team = 0;
+	int scoreValue=0;
 
 	ActionsAvalible getActionsAvaliable();
 

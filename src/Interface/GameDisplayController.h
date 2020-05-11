@@ -36,7 +36,8 @@ public:
 		VS_NUMPLAYERS_MENU,
 		DIFFICULTY,
 		LOADING,
-		VICTORY
+		VICTORY,
+		FINAL_SCORE
 		//RESTART
     };
 
@@ -50,6 +51,8 @@ public:
 	bool optionsMenuReprocessDisplay = false;
 	bool pauseMenuReprocessDisplay = false;
 	bool gameOverReprocessDisplay = false;
+	bool victoryReprocessDisplay = false;
+	bool scoreReprocessDisplay = false;
 	bool multiplayerReprocessDisplay = false;
 	bool storyReprocessDisplay = false;
 
@@ -69,10 +72,10 @@ public:
 
 		// Create the main window
 		if (fullScreen) {
-			window = new sf::RenderWindow(sf::VideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height), "Bombermenaman", sf::Style::Fullscreen); // , sf::Style::Titlebar | sf::Style::Close | sf::Style::Fullscreen
+			window = new sf::RenderWindow(sf::VideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height), "Bomberman", sf::Style::Fullscreen); // , sf::Style::Titlebar | sf::Style::Close | sf::Style::Fullscreen
 		}
 		else {
-			window = new sf::RenderWindow(sf::VideoMode(windowWidth, windowHeight), "Bombermenaman");
+			window = new sf::RenderWindow(sf::VideoMode(windowWidth, windowHeight), "Bomberman");
 		}
 		
 		window->setFramerateLimit(FPSs);
@@ -95,6 +98,9 @@ public:
 		GameGUI::Theme::click.textColor = sf::Color::Black;
 		GameGUI::Theme::click.textColorHover = sf::Color::Red;
 		GameGUI::Theme::click.textColorFocus = sf::Color::Red;
+		GameGUI::Theme::input.textColor = sf::Color::Black;
+		GameGUI::Theme::input.textColorHover = sf::Color::Black;
+		GameGUI::Theme::input.textColorFocus = sf::Color::Black;
 		GameGUI::Theme::PADDING = 10.f;
 	}
 

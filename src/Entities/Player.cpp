@@ -45,7 +45,10 @@ int PlayerEntity::getPowerOfBombs() {
 }
 
 void PlayerEntity::setExpiredEntity() {
-	//return;
+	if (GameTime::getTimeNow() - lastInvencibleTime < invencibleTime) {
+		return;
+	}
+	//
 	if (!expiredEntity) {
 		this->BombTaked = nullptr;
 		expiredEntity = true;
@@ -155,6 +158,7 @@ void PlayerEntity::animate(sf::Vector2f velocity,int posX,int posY) {
 		else if (GameTime::getTimeNow() - lastRespawnTime > respawnTime) {
 			expiredEntity = false;
 			respawning = false;
+			lastInvencibleTime = GameTime::getTimeNow();
 			setPosition(initialPos);
 		}
 	}
@@ -224,7 +228,7 @@ void PlayerEntity::realizeActions()
 bool PlayerEntity::playerActions() {
 	bool playerBOMB = sf::Keyboard::isKeyPressed(playerControls.UseBomb);
 	bool actionButton = sf::Keyboard::isKeyPressed(playerControls.MakeAction);
-
+if(!respawning){
 	if (!playerBOMB)
 	{
 		isBombKeyPresed = false;
@@ -249,6 +253,7 @@ bool PlayerEntity::playerActions() {
 	}
 
 	return isBombKeyPresed;
+}
 }
 
 

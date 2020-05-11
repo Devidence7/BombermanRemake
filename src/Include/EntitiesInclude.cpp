@@ -97,7 +97,7 @@ std::vector<Enemy_ptr> Enemies::enemiesExtra;
 
 
 void Enemies::insertarEnemigosExtraTeleport(sf::Vector2f pos, int numEnemigos = 3) {
-	for (int i = 0; i < 7; i++) {
+	for (int i = 0; i < numEnemigos; i++) {
 		auto a = std::make_shared<EnemyEntity>(Coin());
 		a->setPosition(pos);
 		a->me = a;
@@ -106,16 +106,12 @@ void Enemies::insertarEnemigosExtraTeleport(sf::Vector2f pos, int numEnemigos = 
 	}
 }
 
-void Enemies::insertarEnemigosExtra(int dimX, int dimY){
-	std::vector<Enemy_ptr> a(7);
-	int x, y;
-	for(int i=0;i<7;i++){
-		a[i] = std::make_shared<EnemyEntity>(Coin());
-		enemiesExtra.push_back(a[i]);
-	}
-	
-	for (Enemy_ptr e : enemiesExtra) {
-		int x, y;
+void Enemies::insertarEnemigosExtra(int dimX, int dimY,int numEnemigos=5){
+	int x; 
+	int y;
+	for (int i = 0; i < numEnemigos; i++) {
+		auto a = std::make_shared<EnemyEntity>(Coin());
+			
 		do {
 			x = Random::getIntNumberBetween(0, dimX / 2);
 
@@ -124,20 +120,34 @@ void Enemies::insertarEnemigosExtra(int dimX, int dimY){
 			y = Random::getIntNumberBetween(0, dimY / 2);
 		} while (y < 3);
 		//e->setPosition(sf::Vector2f((x * 2 + 1) * SIZE_PILLAR - 3, (y * 2 + 1) * SIZE_PILLAR - 3));
-		e->setPosition(MapCoordinates2GlobalCoorCorner(x*2+1, y*2+1));
-		e->me=e;
-		e->startMovement();
+		a->setPosition(MapCoordinates2GlobalCoorCorner(x*2+1, y*2+1));
+		a->me = a;
+		a->startMovement();
+		enemies.push_back(a);
 	}
 
 }
 
 
 
-void Enemies::insertarEnemigos(int dimX, int dimY,int numEnemies,int stage) {
+void Enemies::insertarEnemigos(int dimX, int dimY,int numEnemies,int stage,float dif) {
 	std::vector<Enemy_ptr> a(numEnemies);
 	int enemyType;
+	
+
 	for (int i=0;i<numEnemies;i++){
-		enemyType=Random::getIntNumberBetween(1,7);
+		float probability;// = Random::getFloatNumberBetween(0, 1);
+		/*probability=probability/(stage+dif);
+		cout<<"STAGEDIF: "<<stage*dif<<endl;
+		cout<<"PROBABILIDAD: "<<probability<<endl;*/
+		//cout << probability << endl;
+
+		//if (probability < 0.30) {
+			probability = Random::getFloatNumberBetween(0,20);
+			probability=probability*stage*dif;
+			cout<<"PROBABIITY "<<probability<<endl;
+		//
+	/*	enemyType=Random::getIntNumberBetween(1,7);
 		enemyType=(enemyType%(stage*2))+1;
 		switch(enemyType){
 			case 1:
@@ -163,7 +173,32 @@ void Enemies::insertarEnemigos(int dimX, int dimY,int numEnemies,int stage) {
 				break;
 			default:
 				break;
-		}
+		}*/
+
+			if (probability < 25) {
+				a[i]=std::make_shared<EnemyEntity>(Balloon());
+				
+			}
+			else if (probability < 35) {
+				a[i]=std::make_shared<EnemyEntity>(Ice());
+				
+			}
+			else if (probability < 45) {
+				a[i]=std::make_shared<EnemyEntity>(Barrel());
+				
+			}
+			else if (probability < 55) {
+				a[i]=std::make_shared<EnemyEntity>(Blob());
+			}
+			else if (probability < 70) {
+				a[i]=std::make_shared<EnemyEntity>(Ghost());
+			}
+			else if (probability < 85) {
+				a[i]=std::make_shared<EnemyEntity>(Hypo());
+			}
+			else{
+				a[i]=std::make_shared<EnemyEntity>(Coin());
+			}
 		enemies.push_back(a[i]);
 	}
 	auto it = a.begin();

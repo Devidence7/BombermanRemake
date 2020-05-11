@@ -5,6 +5,7 @@ BrickWall::BrickWall(int &xloc, int &yloc, int stage) : Entity()
 {
 	isFireDestroyable = true;
 	this->stage = stage;
+	scoreValue=10;
 
 	// Set coordinates:
 	setPosition(xloc * SIZE_PILLAR, yloc * SIZE_PILLAR);

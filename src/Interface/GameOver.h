@@ -12,7 +12,7 @@ class GameOver {
 	GameGUI::Menu* menu;
 	GameDisplayController::GameState lastGameState;
 	bool EsqPressed = false;
-    sf::Font font;
+	sf::Font font;
 
 	enum ButtonActions {
 		RETRY,
@@ -21,7 +21,7 @@ class GameOver {
 	};
 
 	sf::Texture texture;
-    sf::Text game_over;
+	sf::Text game_over;
 	sf::Sprite background;
 	sf::RectangleShape menuBackground;
 	sf::RectangleShape menuBackgroundShadow;
@@ -33,12 +33,9 @@ class GameOver {
 
 	void createBackgroundMenu(sf::RenderWindow& window) {
 		menu->setPosition(sf::Vector2f((int)window.getSize().x / 2 - (int)menu->getSize().x / 2, (int)window.getSize().y / 2 - (int)menu->getSize().y / 2));
-        if(!font.loadFromFile("../textures/mainMenu/OpenSans-Bold.ttf")){
-            //cosas
-        }
-        
-        
-        float menuBackgroundPadding = 50;
+
+
+		float menuBackgroundPadding = 50;
 		menuBackground.setSize(sf::Vector2f(menu->getSize().x + 2 * menuBackgroundPadding, menu->getSize().y + 2 * menuBackgroundPadding));
 		menuBackground.setPosition(menu->getPosition().x - menuBackgroundPadding, menu->getPosition().y - menuBackgroundPadding);
 		menuBackground.setFillColor(sf::Color(255, 255, 153, 200));
@@ -59,7 +56,9 @@ class GameOver {
 public:
 	GameOver(sf::RenderWindow& window) {
 		menu = new GameGUI::Menu(window);
-    
+		if (!font.loadFromFile("../textures/mainMenu/PixelEmulator.ttf")) {
+			//cosas
+		}
 
 		texture.loadFromFile("../textures/interface/Background_orange_squares.png");
 		texture.setRepeated(true);
@@ -68,19 +67,25 @@ public:
 		background.setScale(sf::Vector2f(2, 2));
 		background.setTextureRect({ 0, 0, (int)window.getSize().x, (int)window.getSize().y });
 
-       
+
 		menu->addButton("                Reintentar               ", ButtonActions::RETRY);
 		menu->addButton("        Ir al menu principal       ", ButtonActions::GO_MAIN_MENU);
 		menu->addButton("                    Salir                    ", ButtonActions::QUIT);
 
 		createBackgroundMenu(window);
 
-         game_over.setFont(font);
-        game_over.setString("    GAME OVER    ");
-        game_over.setPosition(sf::Vector2f((int)window.getSize().x / 2 - (int)menu->getSize().x / 2, ((int)window.getSize().y / 2 - (int)menu->getSize().y / 2)-150));
-        //game_over.setFillColor(sf::Color::White);
-        game_over.setColor(sf::Color::White);
-        game_over.setScale(2,2);
+		game_over.setFont(font);
+		game_over.setString("    GAME OVER    ");
+		game_over.setPosition(sf::Vector2f((int)window.getSize().x / 2 - (int)menu->getSize().x / 2, ((int)window.getSize().y / 2 - (int)menu->getSize().y / 2) - 150));
+		//game_over.setFillColor(sf::Color::White);
+		game_over.setColor(sf::Color::White);
+		//game_over.setScale(2, 2);
+		game_over.setCharacterSize(72);
+
+		sf::FloatRect textRect = game_over.getLocalBounds();
+		game_over.setOrigin(textRect.left + textRect.width / 2.0f,
+			textRect.top + textRect.height / 2.0f);
+		game_over.setPosition(sf::Vector2f(window.getSize().x / 2.0f, window.getSize().y / 4.0f));
 	}
 
 private:
@@ -88,18 +93,18 @@ private:
 		int id = menu->onEvent(event);
 		switch (id) {
 		case ButtonActions::RETRY:
-		game.restartGame(*window,gameDisplay);
+			game.restartGame(*window, gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
-			
-			
+
+
 			break;
-				
+
 		case ButtonActions::GO_MAIN_MENU:
-		game.timesUp=false;
-		game.deleteMap();
+			game.timesUp = false;
+			game.deleteMap();
 			gameDisplay.setGameState(GameDisplayController::GameState::MAIN_MENU);
 			break;
-				
+
 		case ButtonActions::QUIT:
 			window->close();
 			break;
@@ -108,7 +113,7 @@ private:
 
 	void draw(sf::RenderWindow& window) {
 		window.draw(background);
-        window.draw(game_over);
+		window.draw(game_over);
 		window.draw(menuBackgroundShadow2);
 		window.draw(menuBackgroundShadow1);
 		window.draw(menuBackgroundShadow);

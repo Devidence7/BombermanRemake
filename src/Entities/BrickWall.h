@@ -17,6 +17,7 @@ public:
 	int spriteFrames = 7;
 
 	double expiredTime = 0.6;
+	
 
 	bool isDestroyed = false;
 	

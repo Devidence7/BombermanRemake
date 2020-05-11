@@ -14,13 +14,13 @@ InputBox::InputBox(float width) : m_box(Box::Type::Input), m_cursor_pos(0), m_ma
 	m_text.setFont(Theme::getFont());
 	m_text.setPosition(offset, offset);
 	///m_text.setFillColor(Theme::input.textColor);
-	//m_text.setFillColor(Theme::input.textColor);
+	//m_text.setColor(Theme::input.textColor);
 	m_text.setCharacterSize(Theme::textCharacterSize);
 
 	// Build cursor
 	m_cursor.setPosition(offset, offset);
 	m_cursor.setSize(sf::Vector2f(1.f, Theme::getLineSpacing()));
-	//m_text.setFillColor(Theme::input.textColor);
+	//m_text.setColor(Theme::input.textColor);
 	//m_text.setFillColor(Theme::input.textColor);
 	setCursorPosition(0);
 

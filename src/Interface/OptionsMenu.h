@@ -4,7 +4,6 @@
 #include "GUI/GameGUI.hpp"
 #include "../Music/GameMusic.h"
 #include "../GameEngine.hpp"
-#include "OptionsMenu.h"
 #include "GameDisplayController.h"
 
 

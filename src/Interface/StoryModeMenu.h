@@ -93,7 +93,7 @@ private:
 
 		case ButtonActions::EASYLEVEL:
 
-            game.gameOptions.difLevel=1;
+            game.gameOptions.difLevel=1.25;
 			previousMenu=MenuState::MAIN;
 				createNumPlayersMenu(*window);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);

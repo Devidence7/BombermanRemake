@@ -182,12 +182,14 @@ sf::FloatRect EnemyEntity::getGlobalBounds() const
 Balloon::Balloon() : EnemyEntity()
 {
 	enemyType = balloon;
+	scoreValue=100;
 	//move(500, 100);
 }
 
 Ice::Ice() : EnemyEntity()
 {
 	enemyType = ice;
+	scoreValue=150;
 	this->rangoVision = 5;
 	this->numConsecutiveMovements = 7;
 	this->typeSeek = TypeSeekIA::SECOND_BEST_PATH;
@@ -200,6 +202,7 @@ Ice::Ice() : EnemyEntity()
 Barrel::Barrel() : EnemyEntity()
 {
 	enemyType = barrel;
+	scoreValue=200;
 	this->rangoVision = 7;
 	this->numConsecutiveMovements = 5;
 	this->typeSeek = TypeSeekIA::LONG_PATH;
@@ -210,7 +213,8 @@ Barrel::Barrel() : EnemyEntity()
 Coin::Coin() : EnemyEntity()
 {
 	enemyType = coin;
-	baseSpeed = 2;
+	scoreValue=400;
+	baseSpeed = 1.5;
 	this->rangoVision = 10;
 	this->numConsecutiveMovements = 3;
 	this->typeSeek = TypeSeekIA::BEST_PATH;
@@ -221,6 +225,7 @@ Coin::Coin() : EnemyEntity()
 
 Blob::Blob() : EnemyEntity()
 {
+	scoreValue=250;
 	enemyType = blob;
 	baseSpeed = 0.7;
 	this->rangoVision = 5;
@@ -233,6 +238,7 @@ Blob::Blob() : EnemyEntity()
 
 Ghost::Ghost() : EnemyEntity()
 {
+	scoreValue=300;
 	enemyType = ghost;
 	this->rangoVision = 2;
 	this->numConsecutiveMovements = 7;
@@ -244,8 +250,9 @@ Ghost::Ghost() : EnemyEntity()
 
 Hypo::Hypo() : EnemyEntity()
 {
+	scoreValue=350;
 	enemyType = hypo;
-	baseSpeed = 1.5;
+	baseSpeed = 1.25;
 	this->rangoVision = 8;
 	this->numConsecutiveMovements = 5;
 	this->typeSeek = TypeSeekIA::BEST_PATH;
