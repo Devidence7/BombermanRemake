@@ -151,7 +151,7 @@ public:
 	}
 
     void updateLevel(Game &game){
-        
+		level.setString("NIVEL " + to_string(game.stage) + ": Completado");
     }
 };
 

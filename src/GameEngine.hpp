@@ -46,7 +46,7 @@ public:
 	bool timesUp=false;
 
 Game(){
-	stage=3;
+	stage=1;
 }
 	int gameTime(){
 		return timeLeft;
@@ -114,6 +114,7 @@ Game(){
 		if(debug){
 			insertPlayers(*gameDisplay.userKeyPress, 1, 1);
 		}else{
+			cout << "Numero de Players: " << gameOptions.numPlayers << endl;
 			cout<<"Numero de IAs: "<<gameOptions.numIAPlayers<<endl;
 			insertPlayers(*gameDisplay.userKeyPress, gameOptions.numPlayers, gameOptions.numIAPlayers);
 		}
@@ -295,7 +296,12 @@ Game(){
 		level->update();
 
 		if (level->levelFinished) {
-			gameDisplay.setGameState(GameDisplayController::VICTORY);
+			if (stage < 3) {
+				gameDisplay.setGameState(GameDisplayController::VICTORY);
+			}
+			else {
+				gameDisplay.setGameState(GameDisplayController::FINAL_SCORE);
+			}
 		}
 
 		updatePlayers(gameDisplay);

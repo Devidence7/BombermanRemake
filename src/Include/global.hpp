@@ -9,10 +9,10 @@
 #define SHOOTING_DISTANCE 5
 
 struct GameOptions {
-	int numPlayers;
-	double difLevel;
-	int numIAPlayers;
-	bool historyMode;
+	int numPlayers = 0;
+	double difLevel = 0;
+	int numIAPlayers = 0;
+	bool historyMode = false;
 };
 
 enum LookingAt
