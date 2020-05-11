@@ -82,7 +82,7 @@ public:
 	/*
 	Animate Entity by changing the actual sprite.
 	*/
-	void animate(sf::Vector2f velocity);
+	void animate(sf::Vector2f velocity,int posX,int posY);
 
 	sf::FloatRect getGlobalBounds() const override;
 
@@ -110,7 +110,7 @@ public:
 	/*
 	 * Update player position.
 	 */
-	virtual bool updatePlayer();
+	virtual bool updatePlayer(int posX,int posY);
 
 	void setJumpingBomb();
 

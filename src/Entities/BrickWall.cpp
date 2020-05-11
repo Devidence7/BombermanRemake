@@ -56,3 +56,8 @@ void BrickWall::setExpiredEntity()
 	spriteLastFrameTime = GameTime::getTimeNow();
 	isDestroyed = true;
 }
+
+void BrickWall::deleteWall()
+{
+	expiredEntity=true;
+}

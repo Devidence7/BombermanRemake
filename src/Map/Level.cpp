@@ -74,7 +74,7 @@ Level::Level(int dimX, int dimY, bool debug, int stage)
 			if (x % 2 == 1 || y % 2 == 1)
 			{
 				// Create random Bricks:
-				if ((y > 3 || x > 3 || (y != 3 && x == 2) || (x == 3 && y <= 3)) && !Random::getIntNumberBetween(0, 3))
+				if ( true || !Random::getIntNumberBetween(0, 3))
 				{
 					bool intersec = false;
 					for (Enemy_ptr e : Enemies::getVectorEnemies())
@@ -939,5 +939,44 @@ void Level::newEnemiesAppear() {
 	if (teleporter != nullptr) {
 		teleporter->closeTeleporter();
 	}
+}
+
+void Level::checkSpawn(int posX,int posY) {
+	sf::Vector2i pos=getMapCoordinates(posX+SIZE_PILLAR,posY+SIZE_PILLAR);
+	Entity_ptr e=getCellMiniMapObject(pos);
+	BrickWall_ptr b;
+	if((b=std::dynamic_pointer_cast<BrickWall>(e)) != nullptr){
+		b->deleteWall();
+		e.reset();
+		
+		numWalls--;
+		cout<<"MURO ENCONTRADO"<<endl;
+	}
+	pos=getMapCoordinates(posX-SIZE_PILLAR,posY+SIZE_PILLAR);
+	e=getCellMiniMapObject(pos);
+	if((b=std::dynamic_pointer_cast<BrickWall>(e)) != nullptr){
+		b->deleteWall();
+		e.reset();
+
+		numWalls--;
+		cout<<"MURO ENCONTRADO"<<endl;
+	}
+	pos=getMapCoordinates(posX,posY+SIZE_PILLAR+SIZE_PILLAR);
+	e=getCellMiniMapObject(pos);
+	if((b=std::dynamic_pointer_cast<BrickWall>(e)) != nullptr){
+		b->deleteWall();
+		e.reset();
+		numWalls--;
+		cout<<"MURO ENCONTRADO"<<endl;
+	}
+	pos=getMapCoordinates(posX,posY-SIZE_PILLAR+SIZE_PILLAR);
+	e=getCellMiniMapObject(pos);
+	if((b=std::dynamic_pointer_cast<BrickWall>(e)) != nullptr){
+		b->deleteWall();
+		e.reset();
+		numWalls--;
+		cout<<"MURO ENCONTRADO"<<endl;
+	}
+	
 }
 

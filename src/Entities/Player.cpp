@@ -39,9 +39,11 @@ PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team,int posX,int pos
 
 	// TODO: Remove this
 	actionAvaible = ActionsAvalible::KICK_BOM;
-	//move(Random::getIntNumberBetween(48,500), Random::getIntNumberBetween(48,500));
-	//move(posX,posY);
-	move(48,48);
+	move(posX,posY);
+
+	
+
+
 }
 
 int PlayerEntity::getPowerOfBombs() {
@@ -72,7 +74,7 @@ int PlayerEntity::getLives() {
 /*
 	Animate Entity by changing the actual sprite.
 	*/
-void PlayerEntity::animate(sf::Vector2f velocity) {
+void PlayerEntity::animate(sf::Vector2f velocity,int posX,int posY) {
 	// If the player has died:
 	if (!expiredEntity) {
 		if (!bombThrowed) {
@@ -127,7 +129,7 @@ void PlayerEntity::animate(sf::Vector2f velocity) {
 			lives--;
 			if (lives > 0) {
 				expiredEntity = false;
-				setPosition(100, 100);
+				setPosition(posX, posY);
 
 			}
 			else {
@@ -252,7 +254,7 @@ bool PlayerEntity::playerActions() {
 /*
 	 * Update player position.
 	 */
-bool PlayerEntity::updatePlayer() {
+bool PlayerEntity::updatePlayer(int posX,int posY) {
 
 	// Player movement
 	bool playerRight = (sf::Keyboard::isKeyPressed(playerControls.goRight));
@@ -307,7 +309,7 @@ bool PlayerEntity::updatePlayer() {
 	}
 
 	// Call animate function to change current sprite if needed.
-	animate(velocity);
+	animate(velocity,posX,posY);
 
 	// Move Entity position
 	if (!expiredEntity) {

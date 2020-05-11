@@ -34,7 +34,12 @@ void PLayers::addIAPlayer(PlayerEntity::PlayerControls& playerControls,int posX,
 		}
 		p->createStateGenerator("../src/PseudoPPDL/IA1.txt");
 	}else{
-		p->setPosition(posX, posY);
+		if(!debug){
+			p->setPosition(posX, posY);
+		}
+		else{
+			p->setPosition(100,100);
+		}
 		//p->createStateGenerator("../src/PseudoPPDL/IA1.txt");
 		p->createStateGenerator("../src/PseudoPPDL/IA2.txt");
 	}
