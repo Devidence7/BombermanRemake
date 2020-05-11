@@ -133,11 +133,24 @@ void Enemies::insertarEnemigosExtra(int dimX, int dimY){
 
 
 
-void Enemies::insertarEnemigos(int dimX, int dimY,int numEnemies,int stage) {
+void Enemies::insertarEnemigos(int dimX, int dimY,int numEnemies,int stage,float dif) {
 	std::vector<Enemy_ptr> a(numEnemies);
 	int enemyType;
+	
+
 	for (int i=0;i<numEnemies;i++){
-		enemyType=Random::getIntNumberBetween(1,7);
+		float probability;// = Random::getFloatNumberBetween(0, 1);
+		/*probability=probability/(stage+dif);
+		cout<<"STAGEDIF: "<<stage*dif<<endl;
+		cout<<"PROBABILIDAD: "<<probability<<endl;*/
+		//cout << probability << endl;
+
+		//if (probability < 0.30) {
+			probability = Random::getFloatNumberBetween(0,20);
+			probability=probability*stage*dif;
+			cout<<"PROBABIITY "<<probability<<endl;
+		//
+	/*	enemyType=Random::getIntNumberBetween(1,7);
 		enemyType=(enemyType%(stage*2))+1;
 		switch(enemyType){
 			case 1:
@@ -163,7 +176,32 @@ void Enemies::insertarEnemigos(int dimX, int dimY,int numEnemies,int stage) {
 				break;
 			default:
 				break;
-		}
+		}*/
+
+			if (probability < 25) {
+				a[i]=std::make_shared<EnemyEntity>(Balloon());
+				
+			}
+			else if (probability < 35) {
+				a[i]=std::make_shared<EnemyEntity>(Ice());
+				
+			}
+			else if (probability < 45) {
+				a[i]=std::make_shared<EnemyEntity>(Barrel());
+				
+			}
+			else if (probability < 55) {
+				a[i]=std::make_shared<EnemyEntity>(Blob());
+			}
+			else if (probability < 70) {
+				a[i]=std::make_shared<EnemyEntity>(Ghost());
+			}
+			else if (probability < 85) {
+				a[i]=std::make_shared<EnemyEntity>(Hypo());
+			}
+			else{
+				a[i]=std::make_shared<EnemyEntity>(Coin());
+			}
 		enemies.push_back(a[i]);
 	}
 	auto it = a.begin();

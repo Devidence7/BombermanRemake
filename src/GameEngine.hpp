@@ -11,7 +11,7 @@
 ///#include "Interface/GameDisplayController.h"
 
 #define MAX_NUMBER_OF_STAGES 3
-#define DEFAULT_NUM_OF_ENEMIES 7
+#define DEFAULT_NUM_OF_ENEMIES 10
 
 Level *level;
 
@@ -35,7 +35,7 @@ private:
 	
 	// Initialize textures
 	TextureStorage textureStorage;
-	int numEnemigos=7;
+	int numEnemigos;
 	//MainMenu mainMenu;
 
 public:
@@ -46,7 +46,7 @@ public:
 	bool timesUp=false;
 
 Game(){
-	stage=1;
+	stage=3;
 }
 	int gameTime(){
 		return timeLeft;
@@ -102,10 +102,11 @@ Game(){
 		GameTime::startGameTime();
 
 		//	cout<<gameOptions.numPlayers<<endl;
-		int numEnemies=DEFAULT_NUM_OF_ENEMIES*gameOptions.difLevel*(stage/0.75);
+		int numEnemies=DEFAULT_NUM_OF_ENEMIES*gameOptions.difLevel+(stage/0.5);
+		cout<<"NumEnemies: "<<numEnemies<<endl;
 	
 		if(!debug){
-			Enemies::insertarEnemigos(dimX, dimY,numEnemies,stage);
+			Enemies::insertarEnemigos(dimX, dimY,numEnemies,stage,gameOptions.difLevel);
 		}
 		//insertEnemies(7);
 		level = new Level(dimX, dimY, debug, stage, &gameOptions);
@@ -151,7 +152,7 @@ Game(){
 	void newStage(sf::RenderWindow& window,GameDisplayController &gameDisplay){
 		deleteMap();
 		stage++;
-		Enemies::insertarEnemigos(dimX, dimY,numEnemigos*gameOptions.difLevel*(stage/0.75),stage);
+		Enemies::insertarEnemigos(dimX, dimY,DEFAULT_NUM_OF_ENEMIES*gameOptions.difLevel+(stage/0.25),stage,gameOptions.difLevel);
 		startNewGame(window,gameDisplay);
 		
 	}

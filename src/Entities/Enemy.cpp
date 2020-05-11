@@ -202,7 +202,7 @@ Barrel::Barrel() : EnemyEntity()
 Coin::Coin() : EnemyEntity()
 {
 	enemyType = coin;
-	baseSpeed = 2;
+	baseSpeed = 1.5;
 	this->rangoVision = 10;
 	this->numConsecutiveMovements = 3;
 	this->typeSeek = TypeSeekIA::BEST_PATH;
@@ -237,7 +237,7 @@ Ghost::Ghost() : EnemyEntity()
 Hypo::Hypo() : EnemyEntity()
 {
 	enemyType = hypo;
-	baseSpeed = 1.5;
+	baseSpeed = 1.25;
 	this->rangoVision = 8;
 	this->numConsecutiveMovements = 5;
 	this->typeSeek = TypeSeekIA::BEST_PATH;
