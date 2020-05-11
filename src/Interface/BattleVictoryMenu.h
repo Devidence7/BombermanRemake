@@ -95,14 +95,14 @@ public:
 			int i = 0;
 			cout << game.gameOptions.numPlayers << endl;
 			for (; i < game.gameOptions.numPlayers; i++) {
-				std::tuple<int, string> temp = std::tuple<int, string>(i, "Jugador " + to_string(i + 1));
+				std::tuple<int, string> temp = std::tuple<int, string>(i, "Jugador " + to_string(i + 1) + "     ");
 				scores.insert(pair<int, std::tuple<int, string>>(players[i]->score, temp));
 				if (players[i]->lives > 0) {
 					winingPlayer = i;
 				}
 			}
 			for (; i < game.gameOptions.numIAPlayers + game.gameOptions.numPlayers; i++) {
-				std::tuple<int, string> temp = std::tuple<int, string>(i, "IA " + to_string(i + 1 - game.gameOptions.numPlayers));
+				std::tuple<int, string> temp = std::tuple<int, string>(i, "IA " + to_string(i + 1 - game.gameOptions.numPlayers) + "          ");
 				scores.insert(pair<int, std::tuple<int, string>>(players[i]->score, temp));
 				if (players[i]->lives > 0) {
 					winingPlayer = i;
@@ -117,6 +117,10 @@ public:
 				}
 			}
 
+			GameGUI::Label* l = new GameGUI::Label(" ");
+			l->setTextSize(41);
+			f->addRow(" ", l, -1, 41);
+
 			i = 0;
 			for (auto it = scores.rbegin(); it != scores.rend(); it++) {
 				if (get<0>(it->second) != winingPlayer) {
@@ -127,29 +131,25 @@ public:
 			}
 
 		}
-		else if (game.gameOptions.numTeams == 2) {
+		else {
 			std::multimap<int, std::tuple<int, string>> scores;
 			vector<Player_ptr> players = PLayers::getVectorPlayer();
 
 			int winingTeam = 0;
 			int i = 0;
-			cout << "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW" << endl;
 			for (; i < game.gameOptions.numPlayers; i++) {
-				std::tuple<int, string> temp = std::tuple<int, string>(i, "Jugador " + to_string(i + 1));
+				std::tuple<int, string> temp = std::tuple<int, string>(i, "Jugador " + to_string(i + 1) + "     ");
 				scores.insert(pair<int, std::tuple<int, string>>(players[i]->score, temp));
 				if (players[i]->lives > 0) {
 					winingTeam = game.gameOptions.playersAndTeams[i];
 				}
-
-				cout << game.gameOptions.playersAndTeams[i] << endl;
 			}
 			for (; i < game.gameOptions.numIAPlayers + game.gameOptions.numPlayers; i++) {
-				std::tuple<int, string> temp = std::tuple<int, string>(i, "IA " + to_string(i + 1 - game.gameOptions.numPlayers));
+				std::tuple<int, string> temp = std::tuple<int, string>(i, "IA " + to_string(i + 1 - game.gameOptions.numPlayers) + "          ");
 				scores.insert(pair<int, std::tuple<int, string>>(players[i]->score, temp));
 				if (players[i]->lives > 0) {
 					winingTeam = game.gameOptions.playersAndTeams[i];
 				}
-				cout << game.gameOptions.playersAndTeams[i] << endl;
 			}
 
 			for (auto it = scores.rbegin(); it != scores.rend(); it++) {
@@ -159,6 +159,10 @@ public:
 					f->addRow(to_string(1) + ". " + get<1>(it->second), l1, -1, 45);
 				}
 			}
+
+			GameGUI::Label* l = new GameGUI::Label(" ");
+			l->setTextSize(41);
+			f->addRow(" ", l, -1, 41);
 
 			i = 0;
 			for (auto it = scores.rbegin(); it != scores.rend(); it++) {
@@ -208,8 +212,8 @@ public:
 	void menuActions(GameDisplayController& gameDisplay, Game& game) {
 		// Manage window events and pass a callback to manage this menu buttons
 		gameDisplay.manageGameInterface(gameDisplay, std::bind(&BattleVictoryMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
-		if (gameDisplay.scoreReprocessDisplay) {
-			gameDisplay.scoreReprocessDisplay = false;
+		if (gameDisplay.endBattleReprocessDisplay) {
+			gameDisplay.endBattleReprocessDisplay = false;
 			createBattleVictoryMenu(*gameDisplay.getWindow(), game, gameDisplay);
 		}
 		draw(*gameDisplay.getWindow());

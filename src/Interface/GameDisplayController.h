@@ -56,6 +56,7 @@ public:
 	bool scoreReprocessDisplay = false;
 	bool multiplayerReprocessDisplay = false;
 	bool storyReprocessDisplay = false;
+	bool endBattleReprocessDisplay = false;
 
 	
 	/**
@@ -148,6 +149,9 @@ public:
 		gameOverReprocessDisplay=true;
 		multiplayerReprocessDisplay = true;
 		storyReprocessDisplay = true;
+		scoreReprocessDisplay = true;
+		victoryReprocessDisplay = true;
+		endBattleReprocessDisplay = true;
 	}
 
 	void updateCamera() {
