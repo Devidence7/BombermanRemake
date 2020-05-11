@@ -36,10 +36,10 @@ PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team,float posX,float
 	playerHead2.setTexture(playerTexture->getTexture());
 	playerHead2.setTextureRect(sf::IntRect(sf::Vector2i(9, 0), sf::Vector2i(39, 39)));
 
-	setPosition(posX,posY);
-	if (posX > 150){
+	if (posX > 150) {
 		posX -= 48;
 	}
+	setPosition(posX,posY);
 	initialPos = sf::Vector2f(posX, posY);
 }
 

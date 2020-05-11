@@ -55,18 +55,17 @@ Game(){
 
 	void insertPlayers(UserKeyPress &userKeyPress, int numPlayers, int numIAPlayer) {
 		int numPlayersInserter = 0;
-		int teams[4];
 
 		for (int i = 0; i < numPlayers; i++) {
 			switch (i) {
 			case 0:
-				PLayers::addPlayer(userKeyPress.getPlayerControls(i + 1), SIZE_PILLAR, 0, teams[numPlayersInserter]);
+				PLayers::addPlayer(userKeyPress.getPlayerControls(i + 1), SIZE_PILLAR, 0, gameOptions.playersAndTeams[numPlayersInserter]);
 				level->checkSpawn(SIZE_PILLAR, 0);
 				numPlayersInserter++;
 				break;
 
 			case 1:
-				PLayers::addPlayer(userKeyPress.getPlayerControls(i + 1), SIZE_PILLAR, (dimY - 1) * SIZE_PILLAR, teams[numPlayersInserter]);
+				PLayers::addPlayer(userKeyPress.getPlayerControls(i + 1), SIZE_PILLAR, (dimY - 1) * SIZE_PILLAR, gameOptions.playersAndTeams[numPlayersInserter]);
 				level->checkSpawn(SIZE_PILLAR, (dimY - 1) * SIZE_PILLAR);
 				numPlayersInserter++;
 				break;
@@ -81,21 +80,21 @@ Game(){
 
 			case 0:
 				cout << "IA 1" << endl;
-				PLayers::addIAPlayer(userKeyPress.getPlayerControls(i + 1), (dimX+1) * SIZE_PILLAR, 0, debug, teams[numPlayersInserter]);
+				PLayers::addIAPlayer(userKeyPress.getPlayerControls(i + 1), (dimX+1) * SIZE_PILLAR, 0, debug, gameOptions.playersAndTeams[numPlayersInserter]);
 				level->checkSpawn((dimX) * SIZE_PILLAR, 0);
 				numPlayersInserter++;
 				break;
 
 			case 1:
 				cout << "IA 2" << endl;
-				PLayers::addIAPlayer(userKeyPress.getPlayerControls(i + 1), (dimX+1) * SIZE_PILLAR, (dimY - 1)*SIZE_PILLAR, debug, teams[numPlayersInserter]);
+				PLayers::addIAPlayer(userKeyPress.getPlayerControls(i + 1), (dimX+1) * SIZE_PILLAR, (dimY - 1)*SIZE_PILLAR, debug, gameOptions.playersAndTeams[numPlayersInserter]);
 				level->checkSpawn((dimX) * SIZE_PILLAR, (dimY - 1) * SIZE_PILLAR);
 				numPlayersInserter++;
 				break;
 
 			case 2:
 				cout << "IA 3" << endl;
-				PLayers::addIAPlayer(userKeyPress.getPlayerControls(i + 1), SIZE_PILLAR, (dimY - 1) * SIZE_PILLAR, debug, teams[numPlayersInserter]);
+				PLayers::addIAPlayer(userKeyPress.getPlayerControls(i + 1), SIZE_PILLAR, (dimY - 1) * SIZE_PILLAR, debug, gameOptions.playersAndTeams[numPlayersInserter]);
 				level->checkSpawn(SIZE_PILLAR, (dimY - 1) * SIZE_PILLAR);
 				numPlayersInserter++;
 				break;
