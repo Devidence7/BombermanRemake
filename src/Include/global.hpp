@@ -14,19 +14,14 @@ struct GameOptions {
 	double difLevel;
 	int numIAPlayers;
 	bool historyMode;
-	
-	
+	int playersAndTeams[4];
 };
 
 class GlobalTime{
 public:
 static double totalTime;
 static double timeLeft;
-
 };
-
-
-
 
 enum LookingAt
 {

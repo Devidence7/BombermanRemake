@@ -21,6 +21,7 @@
 #include "Interface/VictoryScreen.h"
 #include "Interface/UserKeyPress.h"
 #include "Interface/FinalScoreInterface.h"
+#include "Interface/BattleVictoryMenu.h"
 
 
 int main(int argc, char* argv[]) {
@@ -52,6 +53,7 @@ int main(int argc, char* argv[]) {
 	GameInterface gameInterface(*gameDisplayController.getWindow());
 	VictoryScreen victory(*gameDisplayController.getWindow(),game);
 	FinalScoreInterface finalScore(*gameDisplayController.getWindow(),game, gameDisplayController);
+	BattleVictoryMenu battleVictory(*gameDisplayController.getWindow(), game, gameDisplayController);
 
 	// Start game loop
 	while (gameDisplayController.windowOpen()) {
@@ -113,6 +115,11 @@ int main(int argc, char* argv[]) {
 			finalScore.menuActions(gameDisplayController, game);
 			break;
 
+		case GameDisplayController::GameState::END_BATTLE:
+			gameDisplayController.getWindow()->setView(gameDisplayController.menuView);
+			battleVictory.menuActions(gameDisplayController, game);
+			break;
+
 
 		case GameDisplayController::GameState::PLAYING:
 
@@ -133,6 +140,10 @@ int main(int argc, char* argv[]) {
 
 			// Manage pause menu when playing
 			pauseMenu.checkUserPauseActions(gameDisplayController);
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num9)) {
+			gameDisplayController.gameState = GameDisplayController::GameState::END_BATTLE;
 		}
 
 		// Update display window window
