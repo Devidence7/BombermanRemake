@@ -37,7 +37,7 @@ void PowerUp::setPlayerStatus(PlayerEntity &pe)
 }
 
 
-MoreFirePowerUp::MoreFirePowerUp(sf::Vector2f pos) : PowerUp()
+MoreFirePowerUp::MoreFirePowerUp(sf::Vector2f pos) : BuffPoweUp()
 {
 	powerUpType = moreFire;
 
@@ -55,7 +55,7 @@ void MoreFirePowerUp::setPlayerStatus(PlayerEntity &pe)
 
 
 
-LessFirePowerUp::LessFirePowerUp(sf::Vector2f pos) : PowerUp()
+LessFirePowerUp::LessFirePowerUp(sf::Vector2f pos) : NerfPoweUp()
 {
 	powerUpType = lessFire;
 
@@ -73,7 +73,7 @@ void LessFirePowerUp::setPlayerStatus(PlayerEntity& pe) {
 }
 
 
-MoreSpeedPowerUp::MoreSpeedPowerUp(sf::Vector2f pos) : PowerUp()
+MoreSpeedPowerUp::MoreSpeedPowerUp(sf::Vector2f pos) : BuffPoweUp()
 {
 	powerUpType = moreSpeed;
 
@@ -91,7 +91,7 @@ void MoreSpeedPowerUp::setPlayerStatus(PlayerEntity &pe)
 
 
 
-LessSpeedPowerUp::LessSpeedPowerUp(sf::Vector2f pos) : PowerUp() {
+LessSpeedPowerUp::LessSpeedPowerUp(sf::Vector2f pos) : NerfPoweUp() {
 	powerUpType = lessSpeed;
 
 	// Set position
@@ -109,7 +109,7 @@ void LessSpeedPowerUp::setPlayerStatus(PlayerEntity& pe) {
 
 
 
-MoreBombsPowerUp::MoreBombsPowerUp(sf::Vector2f pos) : PowerUp()
+MoreBombsPowerUp::MoreBombsPowerUp(sf::Vector2f pos) : BuffPoweUp()
 {
 	powerUpType = moreBombs;
 
@@ -126,7 +126,7 @@ void MoreBombsPowerUp::setPlayerStatus(PlayerEntity &pe)
 }
 
 
-MoreTimePowerUp::MoreTimePowerUp(sf::Vector2f pos) : PowerUp() {
+MoreTimePowerUp::MoreTimePowerUp(sf::Vector2f pos) : BuffPoweUp() {
 	powerUpType = moreTime;
 
 	// Set position
@@ -142,7 +142,7 @@ void MoreTimePowerUp::setPlayerStatus(PlayerEntity& pe) {
 
 
 
-GrabBombsPowerUp::GrabBombsPowerUp(sf::Vector2f pos) : PowerUp() {
+GrabBombsPowerUp::GrabBombsPowerUp(sf::Vector2f pos) : ActionPoweUp() {
 	powerUpType = grabBombs;
 
 	// Set position
@@ -157,7 +157,7 @@ void GrabBombsPowerUp::setPlayerStatus(PlayerEntity& pe) {
 }
 
 
-KickBombsPowerUp::KickBombsPowerUp(sf::Vector2f pos) : PowerUp() {
+KickBombsPowerUp::KickBombsPowerUp(sf::Vector2f pos) : ActionPoweUp() {
 	powerUpType = kickBombs;
 	
 	// Set position
@@ -172,7 +172,7 @@ void KickBombsPowerUp::setPlayerStatus(PlayerEntity& pe) {
 }
 
 
-ExtraLifePowerUp::ExtraLifePowerUp(sf::Vector2f pos) : PowerUp() {
+ExtraLifePowerUp::ExtraLifePowerUp(sf::Vector2f pos) : BuffPoweUp() {
 	powerUpType = extraLife;
 
 	// Set position
@@ -187,7 +187,7 @@ void ExtraLifePowerUp::setPlayerStatus(PlayerEntity& pe) {
 }
 
 
-PassBombsPowerUp::PassBombsPowerUp(sf::Vector2f pos) : PowerUp() {
+PassBombsPowerUp::PassBombsPowerUp(sf::Vector2f pos) : ActionPoweUp() {
 	powerUpType = passBombs;
 
 	// Set position
@@ -203,7 +203,7 @@ void PassBombsPowerUp::setPlayerStatus(PlayerEntity& pe) {
 
 
 
-DisseasePowerUp::DisseasePowerUp(sf::Vector2f pos) : PowerUp() {
+DisseasePowerUp::DisseasePowerUp(sf::Vector2f pos) : NerfPoweUp() {
 	powerUpType = dissease;
 
 	// Set position
@@ -219,7 +219,7 @@ void DisseasePowerUp::setPlayerStatus(PlayerEntity& pe) {
 
 
 
-RemoteBombPowerUp::RemoteBombPowerUp(sf::Vector2f pos) : PowerUp() {
+RemoteBombPowerUp::RemoteBombPowerUp(sf::Vector2f pos) : ActionPoweUp() {
 	powerUpType = remoteBombs;
 
 	// Set position

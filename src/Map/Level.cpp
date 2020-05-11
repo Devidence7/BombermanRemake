@@ -4,20 +4,23 @@ std::vector<Entity_ptr> Level::entities;
 std::vector<Bomb_ptr> Level::onFlightBombs;
 std::vector<std::vector<Entity_ptr>> Level::miniMap;
 sf::RectangleShape Level::flooro;
-bool Level::exitHasApeared;
-bool Level::finishLevel;
+bool Level::exitHasApeared = false;
+bool Level::canFinishLevel = false;
+bool Level::levelFinished = false;
 int Level::numWalls= 0;
 int Level::numEnemiesLeft = 0;
 Teleporter_ptr Level::teleporter = nullptr;
 
 
-Level::Level(int dimX, int dimY,bool debug,int stage)
+Level::Level(int dimX, int dimY, bool debug, int stage)
 {
-	//exit=false;
+	Level::exitHasApeared = false;
+	Level::canFinishLevel = false;
+	Level::levelFinished = false;
+	Level::numWalls = 0;
+	teleporter = nullptr;
+
 	// Reserve space for faster insert, delete of the entities
-	Level::exitHasApeared=false;
-	Level::numWalls=0;
-	Level::finishLevel=false;
 	entities.reserve(10000);
 	// Create map matrix:
 	EntityMap::entityMap = std::vector<std::vector<Entity_ptr>>(dimY + 2, std::vector<Entity_ptr>(dimX + 2, nullptr));
@@ -163,7 +166,7 @@ void Level::createTeleporter(Entity_ptr it) {
 	addNewItem(newObject);
 
 	teleporter = newObject;
-	if (numEnemiesLeft < 1) {
+	if (canFinishLevel) {
 		teleporter->openTeleporter();
 	}
 }
@@ -183,6 +186,7 @@ void Level::brickWallOutcomes(Entity_ptr it) {
 			probability = Random::getFloatNumberBetween(0, 92);
 			cout << probability << endl;
 			Entity_ptr newObject = nullptr;
+			bool tryTeleport = false;
 
 			if (probability < 10) {
 				newObject = std::make_shared<MoreFirePowerUp>(MoreFirePowerUp((it)->getPosition()));
@@ -222,13 +226,14 @@ void Level::brickWallOutcomes(Entity_ptr it) {
 			}
 			else if (!Level::exitHasApeared && probability < 92) {
 				createTeleporter(it);
+				tryTeleport = true;
 			}	
 
 			if (newObject != nullptr) {
 				addEntityToMiniMap(newObject, getMapCoordinates((it)->getPosition()));
 				addNewItem(newObject);
 			}
-			else {
+			else if (!tryTeleport) {
 				// Do this always?
 				getCellMiniMapObject(getMapCoordinates((it)->getPosition())).reset();
 				getCellObject(getMapCoordinates((it)->getPosition())).reset();
@@ -325,6 +330,21 @@ void Level::update()
 			counter++;
 		}
 	}
+
+	if (teleporter != nullptr) {
+		cout << Enemies::getVectorEnemies().size() << endl;
+		if (Enemies::getVectorEnemies().size() < 1) {
+			enemiesDefeated();
+		}
+		else {
+			newEnemiesAppear();
+		}
+
+		if (teleporter->playerCross) {
+			levelFinished = true;
+		}
+	}
+
 }
 
 /*
@@ -811,6 +831,10 @@ void Level::ThrowBomb(Player_ptr p, Bomb_ptr b)
 
 void Level::reiniciar(int dimX, int dimY)
 {
+	Level::exitHasApeared = false;
+	Level::canFinishLevel = false;
+	Level::levelFinished = false;
+	teleporter = nullptr;
 	miniMap.clear();
 	miniMap = std::vector<std::vector<Entity_ptr>>(dimY + 2, std::vector<Entity_ptr>(dimX + 2, nullptr));
 	for (int x = 0; x < dimX + 2; x++)
@@ -889,5 +913,18 @@ bool Level::canKickBomb(Player_ptr p)
 } 
 
 void Level::enemiesDefeated(){
-	Level::finishLevel=true;
+	Level::canFinishLevel=true;
+
+	if (teleporter != nullptr){
+		teleporter->openTeleporter();
+	}
 }
+
+void Level::newEnemiesAppear() {
+	Level::canFinishLevel = false;
+
+	if (teleporter != nullptr) {
+		teleporter->closeTeleporter();
+	}
+}
+

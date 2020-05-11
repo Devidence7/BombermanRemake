@@ -1,6 +1,6 @@
 build=.
 CC=g++
-O=-O3
+O=-g
 PATH := $(PATH):../bin/
 libsSFML=-lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio 
 fileSystem=-lstdc++fs
@@ -20,13 +20,14 @@ MusicPath=$(src)/Music
 LevelPath=$(src)/Map
 
 UtilsPath=$(src)/Utils
+PseudoPPDLPath=$(src)/PseudoPPDL
 
 libs=-L$(bin) -lEntities -lTextures -lGui
 libEntities=-L$(bin) -lEntities 
 
-bomberman: $(src)/main.cpp $(src)/Include/global.hpp $(bin)/Level.o $(src)/GameEngine.hpp $(bin)/libEntities.a $(bin)/libGui.a $(bin)/libTextures.a $(bin)/Random.o $(bin)/Time.o  $(src)/Include/EntitiesInclude.cpp $(bin)/IAFunctions.o $(bin)/A_Star.o
+bomberman: $(src)/main.cpp $(src)/Include/global.hpp $(bin)/Level.o $(src)/GameEngine.hpp $(bin)/libEntities.a $(bin)/libGui.a $(bin)/libTextures.a $(bin)/Random.o $(bin)/Time.o  $(src)/Include/EntitiesInclude.cpp $(bin)/IAFunctions.o $(bin)/A_Star.o $(bin)/ParserPPDL.o
 	$(CC) -o bomberman  $(src)/main.cpp $(src)/Include/EntitiesInclude.cpp  $(MusicPath)/GameMusic.cpp $(MusicPath)/GameSounds.cpp  \
-		$(bin)/Level.o $(bin)/Random.o $(bin)/Time.o  $(bin)/IAFunctions.o $(bin)/A_Star.o \
+		$(bin)/Level.o $(bin)/Random.o $(bin)/Time.o  $(bin)/IAFunctions.o $(bin)/A_Star.o $(bin)/ParserPPDL.o\
 		$(bin)/Arrow.o $(bin)/Box.o $(bin)/Cross.o $(UtilsInzPath)/ItemBox.hpp \
 		$(bin)/FormLayout.o $(bin)/HorizontalBoxLayout.o $(bin)/Layout.o $(bin)/Menu.o $(bin)/VerticalBoxLayout.o \
 		$(libs) \
@@ -35,6 +36,8 @@ bomberman: $(src)/main.cpp $(src)/Include/global.hpp $(bin)/Level.o $(src)/GameE
 GameEngine.o: $(src)/GameEngine.cpp $(src)/GameEngine.hpp
 	$(CC) -c $(src)/GameEngine.cpp -o $(build)/GameEngine.o $(std)
 
+$(bin)/ParserPPDL.o: $(PseudoPPDLPath)/ParserPPDL.cpp $(PseudoPPDLPath)/ParserPPDL.hpp
+	$(CC) -o $(bin)/ParserPPDL.o -c $(PseudoPPDLPath)/ParserPPDL.cpp $(std) $(O)
 
 $(bin)/Level.o: $(LevelPath)/Level.cpp $(LevelPath)/Level.hpp
 	$(CC) -c $(LevelPath)/Level.cpp -o $(bin)/Level.o $(std) $(O)

@@ -67,21 +67,24 @@ int main(int argc, char* argv[]) {
 			break;
 
 		case GameDisplayController::GameState::LOADING:
+			gameDisplayController.getWindow()->setView(gameDisplayController.menuView);
 			//Mostrar pantalla de carga
 			cout<<"Nivel: "<<game.stage<<endl;
 			game.startNewGame(*gameDisplayController.getWindow(),gameDisplayController);
 			
 			gameInterface.createInterface(*gameDisplayController.getWindow());
-			ls.draw(*gameDisplayController.getWindow());
+			
 			gameDisplayController.setGameState(GameDisplayController::GameState::PLAYING);
 			break;
 		
 		case GameDisplayController::GameState::VS_NUMPLAYERS_MENU:
+			gameDisplayController.getWindow()->setView(gameDisplayController.menuView);
 			multiplayerMenu.menuActions(gameDisplayController, game);
 			break;
 
 		
 		case GameDisplayController::GameState::STORY_MENU:
+			gameDisplayController.getWindow()->setView(gameDisplayController.menuView);
 			storyModeMenu.menuActions(gameDisplayController, game);
 			break;
 

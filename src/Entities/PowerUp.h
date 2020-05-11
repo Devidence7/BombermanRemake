@@ -23,63 +23,82 @@ public:
 	virtual void setPlayerStatus(PlayerEntity &pe);
 };
 
-class MoreFirePowerUp : public PowerUp {
+
+class ActionPoweUp : public PowerUp{
+	public:
+	virtual void setPlayerStatus(PlayerEntity& pe) = 0;
+};
+
+class BuffPoweUp : public PowerUp{
+	public:
+	virtual void setPlayerStatus(PlayerEntity& pe) = 0;
+};
+
+class NerfPoweUp : public PowerUp{
+	public:
+	virtual void setPlayerStatus(PlayerEntity& pe) = 0;
+};
+
+
+class MoreFirePowerUp : public BuffPoweUp {
 public:
 	MoreFirePowerUp(sf::Vector2f pos);
 	void setPlayerStatus(PlayerEntity& pe);
 	
 };
 
-class LessFirePowerUp : public PowerUp {
+class LessFirePowerUp : public NerfPoweUp {
 public:
 	LessFirePowerUp(sf::Vector2f pos);
 	void setPlayerStatus(PlayerEntity& pe);
 	
 };
 
-class MoreSpeedPowerUp : public PowerUp {
+class MoreSpeedPowerUp : public BuffPoweUp {
 public:
 	MoreSpeedPowerUp(sf::Vector2f pos);
 	void setPlayerStatus(PlayerEntity& pe);
 	
 };
 
-class LessSpeedPowerUp : public PowerUp {
+class LessSpeedPowerUp : public NerfPoweUp {
 public:
 	LessSpeedPowerUp(sf::Vector2f pos);
 	void setPlayerStatus(PlayerEntity& pe);
 	
 };
 
-class MoreBombsPowerUp : public PowerUp {
+class MoreBombsPowerUp : public BuffPoweUp {
 public:
 	MoreBombsPowerUp(sf::Vector2f pos);
 	void setPlayerStatus(PlayerEntity& pe);
 	
 };
 
-class MoreTimePowerUp : public PowerUp {
+
+
+class MoreTimePowerUp : public BuffPoweUp {
 public:
 	MoreTimePowerUp(sf::Vector2f pos);
 	void setPlayerStatus(PlayerEntity& pe);
 	
 };
 
-class GrabBombsPowerUp : public PowerUp {
+class GrabBombsPowerUp : public ActionPoweUp {
 public:
 	GrabBombsPowerUp(sf::Vector2f pos);
 	void setPlayerStatus(PlayerEntity& pe);
 	
 };
 
-class KickBombsPowerUp : public PowerUp {
+class KickBombsPowerUp : public ActionPoweUp {
 public:
 	KickBombsPowerUp(sf::Vector2f pos);
 	void setPlayerStatus(PlayerEntity& pe);
 	
 };
 
-class ExtraLifePowerUp : public PowerUp {
+class ExtraLifePowerUp : public BuffPoweUp {
 public:
 	ExtraLifePowerUp(sf::Vector2f pos);
 	void setPlayerStatus(PlayerEntity& pe);
@@ -87,19 +106,19 @@ public:
 };
 
 // Dizzyness
-class DisseasePowerUp : public PowerUp {
+class DisseasePowerUp : public NerfPoweUp {
 public:
 	DisseasePowerUp(sf::Vector2f pos);
 	void setPlayerStatus(PlayerEntity& pe);
 };
 
-class PassBombsPowerUp : public PowerUp {
+class PassBombsPowerUp : public ActionPoweUp {
 public:
 	PassBombsPowerUp(sf::Vector2f pos);
 	void setPlayerStatus(PlayerEntity& pe);
 };
 
-class RemoteBombPowerUp : public PowerUp {
+class RemoteBombPowerUp : public ActionPoweUp {
 public:
 	RemoteBombPowerUp(sf::Vector2f pos);
 	void setPlayerStatus(PlayerEntity& pe);

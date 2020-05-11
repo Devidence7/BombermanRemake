@@ -80,18 +80,18 @@ Game(){
 
 				case 0:
 					cout<<"IA 1"<<endl;
-					PLayers::addIAPlayer(userKeyPress.getPlayerControls(i+1),(dimX-1)*SIZE_PILLAR,SIZE_PILLAR);
+					PLayers::addIAPlayer(userKeyPress.getPlayerControls(i+1),(dimX-2)*SIZE_PILLAR,SIZE_PILLAR);
 					
 					break;
 
 				case 1:
 					cout<<"IA 2"<<endl;
-					PLayers::addIAPlayer(userKeyPress.getPlayerControls(i+1),(dimX-1)*SIZE_PILLAR,(dimY-1)*SIZE_PILLAR);
+					PLayers::addIAPlayer(userKeyPress.getPlayerControls(i+1),(dimX-2)*SIZE_PILLAR,(dimY-2)*SIZE_PILLAR);
 					break;
 
 				case 2:
 					cout<<"IA 3"<<endl;
-					PLayers::addIAPlayer(userKeyPress.getPlayerControls(i+1),SIZE_PILLAR,(dimY-1)*SIZE_PILLAR);
+					PLayers::addIAPlayer(userKeyPress.getPlayerControls(i+1),SIZE_PILLAR,(dimY-2)*SIZE_PILLAR);
 					break;
 				
 				default:
@@ -271,6 +271,11 @@ Game(){
 
 	void update(GameDisplayController &gameDisplay) {
 		level->update();
+
+		if (level->levelFinished) {
+			gameDisplay.setGameState(GameDisplayController::VICTORY);
+		}
+
 		updatePlayers(gameDisplay);
 		updateEnemies();
 

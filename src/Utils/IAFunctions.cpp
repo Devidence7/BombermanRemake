@@ -1,6 +1,7 @@
 #include "IAFunctions.hpp"
 #include "../Map/Level.hpp"
 #include "../Include/EntitiesInclude.hpp"
+#include "../PseudoPPDL/Estados.hpp"
 
 sf::Vector2i generateObjetive2Player(Entity_ptr p, Entity_ptr e, std::vector<sf::Vector2i> &objetives)
 {
@@ -87,12 +88,22 @@ void generateOmitedZoneByBomb(sf::Vector2i bombPosition, std::list<OmittedArea> 
     //Añadir posicion de bomba?? no debería ser necesario por imposibilidad de llegar
 }
 
-void generateOmitedZones(std::list<OmittedArea> &AreasOmited)
+void generateOmitedZones(sf::Vector2i positionP, std::list<OmittedArea> &AreasOmited, int rangeVision)
 {
     sf::Vector2i sizeLevel = Level::sizeLevel();
-    for (int x = 0; x < sizeLevel.x; x++)
+    int rangeVisionX = positionP.x + rangeVision + 1;
+    int rangeVisionY = positionP.y + rangeVision + 1;
+    int byX = positionP.x;
+    int byY = positionP.y;
+    if(rangeVision < 0){
+        rangeVisionX = sizeLevel.x;
+        rangeVisionY = sizeLevel.y;
+        byX = 0;
+        byY = 0;
+    }
+    for (int x = byX; x < rangeVisionX; x++)
     {
-        for (int y = 0; y < sizeLevel.y; y++)
+        for (int y = byY; y < rangeVisionY; y++)
         {
             Entity_ptr e = Level::getCellMiniMapObject(x, y);
             if (std::dynamic_pointer_cast<Bomb>(e) != nullptr)
@@ -101,6 +112,10 @@ void generateOmitedZones(std::list<OmittedArea> &AreasOmited)
             }
         }
     }
+}
+
+void createStateMap(Entity_ptr e){
+    
 }
 
 //TODO: Criterios de seleccion?
@@ -126,34 +141,83 @@ sf::Vector2i seekPowerUp(list<ANode_Ptr> &movements, Entity_ptr e)
     }
 }
 
-void seekEnemyPlayersPath(Entity_ptr IA, std::vector<sf::Vector2i> &objetives)
+void selectEnemyPlayers(Entity_ptr IA, std::vector<sf::Vector2i> &objetives, int rangeVision)
 {
 
     for (Player_ptr p : PLayers::getVectorPlayer())
     {
-        if (IA->team != p->team && isOnVision(p, getMapCoordinates(IA->getCenterPosition()), IA->rangoVision))
+        if (IA->team != p->team && isOnVision(p, getMapCoordinates(IA->getCenterPosition()), rangeVision))
         {
             objetives.push_back(getMapCoordinates(p->getCenterPosition()));
         }
     }
 }
 
-void tryKillAEnemy(Entity_ptr IA)
+
+void tryKillAEnemy(Entity_ptr IA, std::list<ANode_Ptr> &movements, int rangeVision, int costDestroy)
 {
     std::vector<sf::Vector2i> objetives;
-    seekEnemyPlayersPath(IA, objetives);
+    selectEnemyPlayers(IA, objetives, rangeVision);
+    if(objetives.size() < 0){
+        //No hacer nada
+    }else{
+        if(pathFindingBreakingWalls(getMapCoordinates(IA->getCenterPosition()), objetives, movements, IA, TypeSeekIA::BEST_PATH, costDestroy)){
+            
+        }
+    }
 }
+
+bool somePlayerEnemyOnVision(sf::Vector2i pos, int rangeVision, int team){
+   bool onRange = false;
+    for(Player_ptr p : PLayers::getVectorPlayer()){
+        if(p->team != team){
+            onRange = isOnVision(pos, getMapCoordinates(p->getCenterPosition()), rangeVision);
+            if(onRange){break;}
+        }
+    }
+    return onRange;
+}
+
+bool somePlayerEnemyOnRange(sf::Vector2i pos, int rangeBomb, int team){
+    bool onRange = false;
+    for(Player_ptr p : PLayers::getVectorPlayer()){
+        if(p->team != team){
+            onRange = isOnRange(pos, getMapCoordinates(p->getCenterPosition()), rangeBomb);
+            if(onRange){break;}
+        }
+    }
+    return onRange;
+}
+
+// //Patrol
+// void Patrol(Entity_ptr e, sf::Vector2i relativeObjetive1, sf::Vector2i relativeObjetive2){
+//     PlayerIA_ptr pIA = std::dynamic_pointer_cast<PlayerIAEntity>(e);
+//     if(pIA != nullptr){
+//         sf::Vector2i cPos = getMapCoordinates(pIA->getCenterPosition());
+//         PatrolState pat(cPos + relativeObjetive1, cPos + relativeObjetive2 );
+//     }
+// }
+
 
 //Matar
 
 //  selectObjetive(x)
 // PRE: onVision(x)
+// B: --
 // Add: selected(x)
 
 //GoToObjetive(x)
 // Pre: selected(x)
-// Add: onRange()
+// B: -- 
+// Add: onRange(x)
 
+
+
+//IR a poner bomba 1
+// -- onRange(x) ^ haveBomb(IA)
+
+//IR a poner bomba 2
+// -- onRange(x) ^ haveBomb(IA) ^ isBestPosition(x)
 
 
 //Poner bomba
@@ -186,3 +250,11 @@ bool canPutABombSafe(sf::Vector2i posBomb, Player_ptr e, std::list<ANode_Ptr> &m
     }
     return false;
 }
+
+
+
+//Go To Objetive
+// GoToObjetive(x, y)
+// Pre: onVision(y) ^ existPath(x, y) ^ onPostion(IA, x) ^ ¬onPosition(IA, y)
+// B: onPosition(IA, x)
+// A: onPosition(IA, y)

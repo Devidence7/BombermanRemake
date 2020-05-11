@@ -1,5 +1,7 @@
 #include "../Map/Level.hpp"
 #include "../Include/EntitiesInclude.hpp"
+#include "../PseudoPPDL/Estados.hpp"
+#include "../Utils/IAFunctions.hpp"
 
 //	sf::FloatRect getGlobalBounds() const override; Modificar??
 
@@ -31,7 +33,6 @@ void PlayerIAEntity::drawMovements(sf::RenderWindow &w)
 		rece.setFillColor(colorPath);
 		sf::Vector2i posi = an->getPosition();
 		sf::Vector2f posf = MapCoordinates2GlobalCoorCenter(an->getPosition());
-		//std::cout << "pos " << posi.x << "( " << posf.x<< ")" << posi.y << "( " << posf.y<< ")" << std::endl;
 		posf -= sf::Vector2f(dim.width / 4, dim.height / 4);
 		rece.setPosition(posf);
 		w.draw(rece);
@@ -39,32 +40,51 @@ void PlayerIAEntity::drawMovements(sf::RenderWindow &w)
 }
 
 
-void PlayerIAEntity::generateMovements(){
-	sf::Vector2i objetive(1, 1);
-	sf::Vector2f nextPosition = MapCoordinates2GlobalCoorCenter(objetive);
-	sf::Vector2f currentPosition = getCenterPosition();
-	std::vector<sf::Vector2i> ob;
-	ob.push_back(objetive);
-	if(!pathFinding(getMapCoordinates(getCenterPosition()), ob, movements, me, TypeSeekIA::BEST_PATH, false)){
-		velocity = sf::Vector2f(0,0);
-		movements.clear();
-		currentMovement = std::make_shared<ANode>(ANode(objetive, sf::Vector2i(0,0), objetive, 0));
-		movements.push_back(currentMovement);
+// void PlayerIAEntity::generateMovements(){
+
+// 	std::vector<sf::Vector2i> ob;
+// 	ob.push_back(currentObjetive);
+// 	if(!pathFinding(getMapCoordinates(getCenterPosition()), ob, movements, me, TypeSeekIA::BEST_PATH, false)){
+// 		velocity = sf::Vector2f(0,0);
+// 		movements.clear();
+// 		currentMovement = std::make_shared<ANode>(ANode(getMapCoordinates(getCenterPosition()), sf::Vector2i(0,0), getMapCoordinates(getCenterPosition()), 0));
+// 		movements.push_back(currentMovement);
+// 	}
+// }
+
+void PlayerIAEntity::generatePathStates(){
+	updateState();
+	bool generatedNewObj = false;
+	switch (currentState)
+	{
+	case StateIA::PATROL:
+		generatedNewObj = updatePatrolState();
+		break;
+	case StateIA::PERSEGUIR:
+		generatedNewObj = updatePerseguirState();
+		break;
+	case StateIA::KILL:
+		updateKillState();
+		break;
+	case StateIA::RUNAWAY:
+		updateRunawayState();
+	default:
+		break;
 	}
 }
+
 void PlayerIAEntity::updateMovement(){
-	
-	if(movements.size() < 1){
-		generateMovements();
-		currentMovement = movements.front();
-		movements.pop_front();
+
+	if(currentMovement != nullptr &&  checkArrivePosition(this->getCenterPosition(), currentMovement->getPosition(), currentMovement->getAction())){
+		currentMovement = nullptr;
 	}
-	else if (checkArrivePosition(this->getCenterPosition(), currentMovement->getPosition(), currentMovement->getAction()))
+	
+	if(currentMovement == nullptr && movements.size() < 1){
+		currentState = StateIA::NON_OBJETIVE;
+		//currentMovement = std::make_shared<ANode>(ANode(getMapCoordinates(getCenterPosition()), sf::Vector2i(0,0), getMapCoordinates(getCenterPosition()), 0));
+	}
+	else if (currentMovement == nullptr)
 	{ //Si esta en posicions
-		if (movements.size() < 1 || numMovenet < 1)
-		{
-			this->generateMovements();
-		}
 		currentMovement = movements.front();
 		movements.pop_front();
 		numMovenet --;
@@ -72,10 +92,13 @@ void PlayerIAEntity::updateMovement(){
 }
 
 bool PlayerIAEntity::updateVelocity(){
-	sf::Vector2f nextPosition = MapCoordinates2GlobalCoorCenter(currentMovement->getPosition());
-	sf::Vector2f currentPosition = getCenterPosition();
 	velocity.x = 0;
 	velocity.y = 0;
+	if(currentMovement == nullptr){
+		return false;
+	}
+	sf::Vector2f nextPosition = MapCoordinates2GlobalCoorCenter(currentMovement->getPosition());
+	sf::Vector2f currentPosition = getCenterPosition();
 	sf::Vector2f dir = nextPosition - currentPosition;
 	double moveTime = 0;
 	if (lastMovementTime) {
@@ -98,22 +121,6 @@ bool PlayerIAEntity::updateVelocity(){
 
 	velocity.x *=  baseSpeed * speedBoost * moveTime;
 	velocity.y *=  baseSpeed * speedBoost * moveTime;
-
-
-	return false;
-}
-
-bool PlayerIAEntity::updatePlayer(){
-	updateMovement();
-
-	updateVelocity();
-
-	// If bomberman has dizzy debuff
-	/*if (controlsInverted) {
-		velocity = -velocity;
-	}*/
-
-	// Look dir whit velocity
 	if (velocity.x != 0) {
 		if (velocity.x > 0) {
 			lastMovement = LookingAt::right;
@@ -131,9 +138,110 @@ bool PlayerIAEntity::updatePlayer(){
 		}
 	}
 
+}
+
+void PlayerIAEntity::seekAndDestroyEnemy(){
+	
+}
+
+
+bool PlayerIAEntity::updatePatrolState(){
+	if(isOn(this->getCenterPosition(), MapCoordinates2GlobalCoorCenter(currentObjetive)) || movements.size() < 1){
+		currentObjetive = p.getObetive(getMapCoordinates(this->getCenterPosition()));
+		std::vector<sf::Vector2i> ob;
+		ob.push_back(currentObjetive);
+		pathFinding(getMapCoordinates(getCenterPosition()), ob, movements, me, TypeSeekIA::BEST_PATH, false);
+		return true;
+	}
+	return false;
+}
+
+bool PlayerIAEntity::updatePerseguirState(){
+	if(!somePlayerEnemyOnRange(getMapCoordinates(getCenterPosition()), getPowerOfBombs(), team)){
+		tryKillAEnemy(me, movements, sg._PerseguirStruct.RangoVision, sg._PerseguirStruct.costDestroyWall);
+		return true;
+	// }else{
+	// 	currentState = StateIA::KILL;
+	}
+	return false;
+}
+
+bool PlayerIAEntity::updateRunawayState(){
+	if(movements.size()< 1){
+		currentState = StateIA::NON_OBJETIVE;
+	}
+	return false;
+}
+
+void PlayerIAEntity::putABomb(){
+	if(haveBombs() && canPutABombSafe(getMapCoordinates(getCenterPosition()),me, movements) ){
+		if (Level::addBomb(this->me))
+		{		
+			numOfBombs--;
+			currentState = StateIA::RUNAWAY;
+			this->currentMovement = nullptr;
+	}
+	}
+}
+
+
+bool PlayerIAEntity::updateKillState(){
+	//if(somePlayerEnemyOnRange(getMapCoordinates(getCenterPosition()), getPowerOfBombs(), team)){
+		movements.clear();
+		putABomb();
+	//	return true;
+	//}
+	return false;
+}
+
+/* Determina estado actual */
+void PlayerIAEntity::updateState(){
+	sf::Vector2i currentPosMap = getMapCoordinates(getCenterPosition());
+	OmittedAreas.clear();
+	generateOmitedZones(currentPosMap, OmittedAreas, sg._PerseguirStruct.RangoVision);
+	switch (currentState)
+	{
+	case StateIA::NON_OBJETIVE:
+		//Si tiene en rango a algun jugador
+		if(sg.havePatrolStruct){
+			currentState = StateIA::PATROL;
+		}else  if(somePlayerEnemyOnRange(currentPosMap, getPowerOfBombs(), team)){
+			currentState =  StateIA::KILL;
+		}else if(somePlayerEnemyOnVision(currentPosMap, sg._PerseguirStruct.RangoVision, team)){
+			currentState = StateIA::PERSEGUIR;
+		}
+
+		break;
+	case StateIA::PERSEGUIR:
+		if(somePlayerEnemyOnRange(currentPosMap, getPowerOfBombs(), team)){
+				currentState =  StateIA::KILL;
+		}
+		break;
+	default:
+		break;
+	}
+}
+
+void PlayerIAEntity::startStates(){
+	if(this->sg.havePatrolStruct){
+		currentState = StateIA::PATROL;
+		p = sg.getPatrol(getMapCoordinates(getCenterPosition()));
+		currentObjetive = p.getObetive(getMapCoordinates(this->getCenterPosition()));
+	}else{
+		currentState = StateIA::NON_OBJETIVE;
+	}
+}
+
+
+bool PlayerIAEntity::updatePlayer(){
+	generatePathStates();
+	
+	updateMovement();
+
+	updateVelocity();
+
 	// Call animate function to change current sprite if needed.
 	animate(velocity);
-
 	// Move Entity position
 	if (!expiredEntity) {
 		move(velocity.x, velocity.y);
@@ -141,7 +249,12 @@ bool PlayerIAEntity::updatePlayer(){
 			BombTaked->setPosition(Level::getMapCellCorner(this->getCenterPosition()));
 		}
 	}
-
 	return false;
-
 }
+
+
+
+//Upadate
+// -> Upadte State (nuevo estado/continuar estado)
+// -> generar camino
+// -> generar movimiento

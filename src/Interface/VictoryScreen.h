@@ -33,10 +33,8 @@ class VictoryScreen {
 	GameGUI::Slider* musicSlider;
 
 	void createBackgroundMenu(sf::RenderWindow& window) {
-	//	menu->setPosition(sf::Vector2f((int)window.getSize().x / 2 - (int)menu->getSize().x / 2, (int)window.getSize().y / 2 - (int)menu->getSize().y / 2));
-        if(!font.loadFromFile("../textures/mainMenu/OpenSans-Bold.ttf")){
-            //cosas
-        }
+		menu->setPosition(sf::Vector2f((int)window.getSize().x / 2 - (int)menu->getSize().x / 2, (int)window.getSize().y / 2 - (int)menu->getSize().y / 2));
+        
         
         
         float menuBackgroundPadding = 50;
@@ -59,38 +57,53 @@ class VictoryScreen {
 
 public:
 	VictoryScreen(sf::RenderWindow& window,Game &game) {
+		createVictoryScreen(window, game);
+	}
+
+	void createVictoryScreen(sf::RenderWindow& window, Game& game) {
 		menu = new GameGUI::Menu(window);
+		if (!font.loadFromFile("../textures/mainMenu/PixelEmulator.ttf")) {
+			//cosas
+		}
+		victory.setFont(font);
+		victory.setString("    VICTORIA    ");
+		victory.setColor(sf::Color::White);
+		// victory.setScale(2,2);
+		victory.setCharacterSize(72);
 
-        victory.setFont(font);
-        victory.setString("    VICTORIA    ");
-        victory.setPosition(sf::Vector2f(window.getSize().x / 2-(window.getSize().x/9),window.getSize().y / 2-(window.getSize().y/9)-150));
-        victory.setColor(sf::Color::White);
-        victory.setScale(2,2);
+		sf::FloatRect textRect = victory.getLocalBounds();
+		victory.setOrigin(textRect.left + textRect.width / 2.0f,
+			textRect.top + textRect.height / 2.0f);
+		victory.setPosition(sf::Vector2f(window.getSize().x / 2.0f, window.getSize().y / 4.0f));
 
-        level.setFont(font);
-        level.setColor(sf::Color::White);
-        level.setString("NIVEL " + to_string(game.stage)+": Completado");
-        level.setPosition(sf::Vector2f(window.getSize().x / 2-(window.getSize().x/9) ,victory.getPosition().y+150));
-        level.setScale(1.5,1.5);
-    
+
+		level.setFont(font);
+		level.setColor(sf::Color::White);
+		level.setString("NIVEL " + to_string(game.stage) + ": Completado");
+		// level.setScale(1.5,1.5);
+		level.setCharacterSize(48);
+
+		textRect = level.getLocalBounds();
+		level.setOrigin(textRect.left + textRect.width / 2.0f,
+			textRect.top + textRect.height / 2.0f);
+		level.setPosition(sf::Vector2f(window.getSize().x / 2.0f, window.getSize().y / 4.0f * 3));
+
 
 		texture.loadFromFile("../textures/interface/Background_orange_squares.png");
 		texture.setRepeated(true);
-        background.setColor(sf::Color(0, 0, 0, 5));
+		background.setColor(sf::Color(0, 255, 153, 5));
 		background.setTexture(texture);
 		background.setScale(sf::Vector2f(2, 2));
 		background.setTextureRect({ 0, 0, (int)window.getSize().x, (int)window.getSize().y });
 
-        menu->setPosition(sf::Vector2f(level.getPosition().x-50,level.getPosition().y+150));
 
-       
 		menu->addButton("                Continuar               ", ButtonActions::CONTINUE);
-		menu->addButton("           Ir al menu principal       ", ButtonActions::GO_MAIN_MENU);
+		menu->addButton("       Ir al menu principal       ", ButtonActions::GO_MAIN_MENU);
 		menu->addButton("                   Salir                    ", ButtonActions::QUIT);
 
 		createBackgroundMenu(window);
 
-        
+
 	}
 
 private:
@@ -134,7 +147,8 @@ public:
 		gameDisplay.manageGameInterface(gameDisplay, std::bind(&VictoryScreen::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
 		if (gameDisplay.gameOverReprocessDisplay) {
 			gameDisplay.gameOverReprocessDisplay = false;
-			createBackgroundMenu(*gameDisplay.getWindow());
+			delete(menu);
+			createVictoryScreen(*gameDisplay.getWindow(), game);
 		}
 		draw(*gameDisplay.getWindow());
 	}
