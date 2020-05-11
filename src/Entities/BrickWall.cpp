@@ -1,9 +1,10 @@
 #include "../Include/EntitiesInclude.hpp"
 
 
-BrickWall::BrickWall(int &xloc, int &yloc) : Entity()
+BrickWall::BrickWall(int &xloc, int &yloc, int stage) : Entity()
 {
 	isFireDestroyable = true;
+	this->stage = stage;
 
 	// Set coordinates:
 	setPosition(xloc * SIZE_PILLAR, yloc * SIZE_PILLAR);
@@ -11,7 +12,7 @@ BrickWall::BrickWall(int &xloc, int &yloc) : Entity()
 	// Texture Controller
 	wallTexture = &TextureStorage::getlevel1WallTexture();
 	// Set starting sprite
-	setTextureRect(wallTexture->getDefaultIntRect());
+	setTextureRect(wallTexture->getRectWall(1, stage));
 	// Set sprite Sheet texture
 	setTexture(wallTexture->getTexture());
 }
@@ -26,7 +27,7 @@ void BrickWall::update()
 		else if (GameTime::getTimeNow() - spriteLastFrameTime > spriteSpeed) {
 			spriteLastFrameTime = GameTime::getTimeNow();
 			currentFrame = (currentFrame + 1) % spriteFrames;
-			setTextureRect(wallTexture->getRectWall(currentFrame));
+			setTextureRect(wallTexture->getRectWall(currentFrame, stage));
 		}	
 	}
 }

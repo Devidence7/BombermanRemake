@@ -109,7 +109,7 @@ int main(int argc, char* argv[]) {
 		case GameDisplayController::GameState::PLAYING:
 
 			// Clear screen from previous drawings
-			gameDisplayController.getWindow()->clear();
+			gameDisplayController.getWindow()->clear(sf::Color(0, 102, 128));
 		
 			game.update(gameDisplayController);
 		
