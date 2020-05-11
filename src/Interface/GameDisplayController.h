@@ -36,7 +36,8 @@ public:
 		VS_NUMPLAYERS_MENU,
 		DIFFICULTY,
 		LOADING,
-		VICTORY
+		VICTORY,
+		FINAL_SCORE
 		//RESTART
     };
 
@@ -50,6 +51,8 @@ public:
 	bool optionsMenuReprocessDisplay = false;
 	bool pauseMenuReprocessDisplay = false;
 	bool gameOverReprocessDisplay = false;
+	bool victoryReprocessDisplay = false;
+	bool scoreReprocessDisplay = false;
 	bool multiplayerReprocessDisplay = false;
 	bool storyReprocessDisplay = false;
 
@@ -95,6 +98,9 @@ public:
 		GameGUI::Theme::click.textColor = sf::Color::Black;
 		GameGUI::Theme::click.textColorHover = sf::Color::Red;
 		GameGUI::Theme::click.textColorFocus = sf::Color::Red;
+		GameGUI::Theme::input.textColor = sf::Color::Black;
+		GameGUI::Theme::input.textColorHover = sf::Color::Black;
+		GameGUI::Theme::input.textColorFocus = sf::Color::Black;
 		GameGUI::Theme::PADDING = 10.f;
 	}
 

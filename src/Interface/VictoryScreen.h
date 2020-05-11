@@ -35,8 +35,6 @@ class VictoryScreen {
 	void createBackgroundMenu(sf::RenderWindow& window) {
 		menu->setPosition(sf::Vector2f((int)window.getSize().x / 2 - (int)menu->getSize().x / 2, (int)window.getSize().y / 2 - (int)menu->getSize().y / 2));
         
-        
-        
         float menuBackgroundPadding = 50;
 		menuBackground.setSize(sf::Vector2f(menu->getSize().x + 2 * menuBackgroundPadding, menu->getSize().y + 2 * menuBackgroundPadding));
 		menuBackground.setPosition(menu->getPosition().x - menuBackgroundPadding, menu->getPosition().y - menuBackgroundPadding);
@@ -67,7 +65,7 @@ public:
 		}
 		victory.setFont(font);
 		victory.setString("    VICTORIA    ");
-		victory.setColor(sf::Color::White);
+		victory.setFillColor(sf::Color::White);
 		// victory.setScale(2,2);
 		victory.setCharacterSize(72);
 
@@ -78,7 +76,7 @@ public:
 
 
 		level.setFont(font);
-		level.setColor(sf::Color::White);
+		level.setFillColor(sf::Color::White);
 		level.setString("NIVEL " + to_string(game.stage) + ": Completado");
 		// level.setScale(1.5,1.5);
 		level.setCharacterSize(48);
@@ -145,15 +143,15 @@ public:
 	void menuActions(GameDisplayController& gameDisplay, Game &game) {
 		// Manage window events and pass a callback to manage this menu buttons
 		gameDisplay.manageGameInterface(gameDisplay, std::bind(&VictoryScreen::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
-		if (gameDisplay.gameOverReprocessDisplay) {
-			gameDisplay.gameOverReprocessDisplay = false;
+		if (gameDisplay.victoryReprocessDisplay) {
+			gameDisplay.victoryReprocessDisplay = false;
 			createVictoryScreen(*gameDisplay.getWindow(), game);
 		}
 		draw(*gameDisplay.getWindow());
 	}
 
     void updateLevel(Game &game){
-        level.setString("NIVEL " + to_string(game.stage)+": Completado");
+        
     }
 };
 
