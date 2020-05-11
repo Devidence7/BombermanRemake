@@ -27,6 +27,7 @@ public:
 	bool isBombKeyPresed = false;
 	bool isActionKeyPresed = false;
 
+	sf::Vector2f initialPos;
 
 	std::shared_ptr<PlayerEntity> me;
 
@@ -36,13 +37,17 @@ public:
 	double	animLastTic = 0;			// Last time frame changed
 	int	currentFrame = 0;				// Frame we are now
 	const int walkFrames = 4;			// Number of walking sprites
-	const int deathFrames = 7;			// Number of death sprites
+	const int deathFrames = 8;			// Number of death sprites
 	const double frameSpeed = 0.15;		// Time between frames
 
 	double lastMovementTime = 0;
 
 	bool controlsInverted = false;
 	double lastControlInvertedTime = 0;
+
+	bool respawning = false;
+	const double respawnTime = 5;
+	double lastRespawnTime = 0;
 
 	bool bombThrowed = false;
 	double lastThrowedTime = 0;
@@ -82,7 +87,7 @@ public:
 	/*
 	Animate Entity by changing the actual sprite.
 	*/
-	void animate(sf::Vector2f velocity);
+	void animate(sf::Vector2f velocity,int posX,int posY);
 
 	sf::FloatRect getGlobalBounds() const override;
 
@@ -110,7 +115,7 @@ public:
 	/*
 	 * Update player position.
 	 */
-	virtual bool updatePlayer();
+	virtual bool updatePlayer(int posX,int posY);
 
 	void setJumpingBomb();
 

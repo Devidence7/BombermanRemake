@@ -8,6 +8,13 @@
 
 #define SHOOTING_DISTANCE 5
 
+struct GameOptions {
+	int numPlayers;
+	double difLevel;
+	int numIAPlayers;
+	bool historyMode;
+};
+
 enum LookingAt
 {
 	down = 0,

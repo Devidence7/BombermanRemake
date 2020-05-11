@@ -4,10 +4,10 @@ PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team,int posX,int pos
 
 	team = _team;
 
+	lastRespawnTime = 0;
 	isFireDestroyable = true;
 	fireCanGoThroght = true;
 	collisioner = false;
-	dead=false;
 	animLastTic = GameTime::getTimeNow();
 	lastMovementTime = GameTime::getTimeNow();
 	baseSpeed = 2.5;
@@ -36,12 +36,8 @@ PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team,int posX,int pos
 	playerHead2.setTextureRect(sf::IntRect(sf::Vector2i(9, 0), sf::Vector2i(39, 39)));
 
 
-
-	// TODO: Remove this
-	actionAvaible = ActionsAvalible::KICK_BOM;
-	//move(Random::getIntNumberBetween(48,500), Random::getIntNumberBetween(48,500));
-	//move(posX,posY);
-	move(48,48);
+	initialPos = sf::Vector2f(posX, posY);
+	move(posX,posY);
 }
 
 int PlayerEntity::getPowerOfBombs() {
@@ -72,7 +68,7 @@ int PlayerEntity::getLives() {
 /*
 	Animate Entity by changing the actual sprite.
 	*/
-void PlayerEntity::animate(sf::Vector2f velocity) {
+void PlayerEntity::animate(sf::Vector2f velocity,int posX,int posY) {
 	// If the player has died:
 	if (!expiredEntity) {
 		if (!bombThrowed) {
@@ -123,36 +119,43 @@ void PlayerEntity::animate(sf::Vector2f velocity) {
 			
 	}
 	else {
-		if (currentFrame == 6 && GameTime::getTimeNow() - animLastTic > frameSpeed / 2 ) {
-			lives--;
-			if (lives > 0) {
-				expiredEntity = false;
-				setPosition(100, 100);
+		if (!respawning) {
+			if (GameTime::getTimeNow() - animLastTic > frameSpeed) {
+				if (currentFrame == 7) {
+					currentFrame = 0;
+					lives--;
+					if (lives > 0) {
+						lastRespawnTime = GameTime::getTimeNow();
+						respawning = true;
+					}
+					else {
+						lives = 0;
+						dead = true;
+						// setExpiredEntity();
+						//dead=true;
+					}
 
+					/*else{
+						gameDisplay.setGameState(GameDisplayController::GameState::GAME_OVER);
+					}*/
+					//Else mostrar fin de partida
+					/*else{}
+						expiredEntity = false;
+					setPosition(100, 100);*/
+				}
+				else {
+					setTextureRect(playerTexture->getDeathSprite(currentFrame));
+					playerColorEntity.setTextureRect(playerTexture->getDeathSprite(currentFrame));
+					currentFrame = (currentFrame + 1) % deathFrames;
+					animLastTic = GameTime::getTimeNow();
+				}
 			}
-			else {
-				lives = 0;
-				dead=true;
-				setExpiredEntity();
-				//dead=true;
-			}
-			
-		
-	
-			/*else{
-				gameDisplay.setGameState(GameDisplayController::GameState::GAME_OVER);
-			}*/
-			//Else mostrar fin de partida
-			/*else{}
-				expiredEntity = false;
-			setPosition(100, 100);*/
 		}
-
-		if (GameTime::getTimeNow() - animLastTic > frameSpeed && !dead) {
-			setTextureRect(playerTexture->getDeathSprite(currentFrame));
-			playerColorEntity.setTextureRect(playerTexture->getDeathSprite(currentFrame));
-			currentFrame = (currentFrame + 1) % deathFrames;
-			animLastTic = GameTime::getTimeNow();
+	
+		else if (GameTime::getTimeNow() - lastRespawnTime > respawnTime) {
+			expiredEntity = false;
+			respawning = false;
+			setPosition(initialPos);
 		}
 	}
 
@@ -252,7 +255,7 @@ bool PlayerEntity::playerActions() {
 /*
 	 * Update player position.
 	 */
-bool PlayerEntity::updatePlayer() {
+bool PlayerEntity::updatePlayer(int posX,int posY) {
 
 	// Player movement
 	bool playerRight = (sf::Keyboard::isKeyPressed(playerControls.goRight));
@@ -307,7 +310,7 @@ bool PlayerEntity::updatePlayer() {
 	}
 
 	// Call animate function to change current sprite if needed.
-	animate(velocity);
+	animate(velocity,posX,posY);
 
 	// Move Entity position
 	if (!expiredEntity) {

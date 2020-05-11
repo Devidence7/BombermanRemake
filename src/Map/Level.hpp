@@ -30,6 +30,7 @@ class Level
 	static int numWalls;
 	static int numEnemiesLeft;
 	static Teleporter_ptr teleporter;
+	static GameOptions* gameOptions;
 //	static Entity_ptr tel;
 	
 	static int stage;
@@ -39,10 +40,12 @@ public:
 	static bool canFinishLevel;
 	static bool levelFinished;
 
+	Level(int dimX, int dimY, bool debug, int stage, GameOptions* gameOptions);
+
 	//Level(int dimX, int dimY);
 	static sf::Vector2i sizeLevel();
 	
-	Level(int dimX, int dimY,bool debug,int stage);
+	//Level(int dimX, int dimY,bool debug,int stage);
 	
 	static void update();
 
@@ -85,4 +88,6 @@ public:
 	static bool isValidCell(sf::Vector2i v); 
 	static void enemiesDefeated();
 	static void newEnemiesAppear();
+	static void deleteWall(sf::Vector2i pos);
+	static void checkSpawn(int posX,int posY);
 };

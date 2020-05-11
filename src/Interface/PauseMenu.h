@@ -64,7 +64,7 @@ public:
 		background.setTextureRect({ window.getPosition().x, window.getPosition().y, (int)window.getSize().x, (int)window.getSize().y });
 
 		menu->addButton("                Reanudar                ", ButtonActions::RESUME);
-		menu->addButton("                 Guardar                 ", ButtonActions::SAVE);
+		// menu->addButton("                 Guardar                 ", ButtonActions::SAVE);
 		menu->addButton("                 Opciones                 ", ButtonActions::OPTIONS);
 		menu->addButton("        Ir al menu principal       ", ButtonActions::GO_MAIN_MENU);
 		menu->addButton("                    Salir                    ", ButtonActions::QUIT);

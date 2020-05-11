@@ -233,7 +233,7 @@ void PlayerIAEntity::startStates(){
 }
 
 
-bool PlayerIAEntity::updatePlayer(){
+bool PlayerIAEntity::updatePlayer(int posX,int posY){
 	generatePathStates();
 	
 	updateMovement();
@@ -241,7 +241,7 @@ bool PlayerIAEntity::updatePlayer(){
 	updateVelocity();
 
 	// Call animate function to change current sprite if needed.
-	animate(velocity);
+	animate(velocity,posX,posY);
 	// Move Entity position
 	if (!expiredEntity) {
 		move(velocity.x, velocity.y);
