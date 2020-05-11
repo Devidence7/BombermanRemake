@@ -140,7 +140,7 @@ void EnemyEntity::setCollision(std::shared_ptr<Entity> col){
 
 void EnemyEntity::onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<Entity> eCollisioner, CollisionType colT)
 {
-	if (std::dynamic_pointer_cast<PlayerEntity>(eCollisioning))
+	if (std::dynamic_pointer_cast<PlayerEntity>(eCollisioning) && !dyingEntity)
 	{
 		eCollisioning->setExpiredEntity();
 	}
