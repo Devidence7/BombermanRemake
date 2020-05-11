@@ -277,12 +277,12 @@ sf::Vector2i seekPowerUp(list<ANode_Ptr> &movements, Entity_ptr e)
 
 void selectEnemyPlayers(Entity_ptr IA, std::vector<sf::Vector2i> &objetives, int rangeVision)
 {
-
-    for (Player_ptr p : PLayers::getVectorPlayer())
-    {
-        if (IA->team != p->team && isOnVision(p, getMapCoordinates(IA->getCenterPosition()), rangeVision))
-        {
-            objetives.push_back(getMapCoordinates(p->getCenterPosition()));
+    sf::Vector2i positionIA = IA->getEntityMapCoordinates();
+    for(Player_ptr p : PLayers::getVectorPlayer()){
+        if(p->team != IA->team){
+            if(isOnVision(positionIA, p->getEntityMapCoordinates(), rangeVision)){
+                objetives.push_back(p->getEntityMapCoordinates());
+            }
         }
     }
 }
@@ -413,9 +413,102 @@ void ss(sf::Vector2i p ){
     
 }
 
-bool pathFinderFarm(Entity_ptr _ia, const std::vector<sf::Vector2i> &objetives, std::list<Action_ptr> &actions, TypeSeekIA typeSeek, int costAddDestroy){
+bool pathFinderDestroy2Farm(const sf::Vector2i &positionEnemy, std::list<ANode_Ptr> &path, Entity_ptr e, int costAddDestroy)
+{
+    PlayerIA_ptr IA =  std::dynamic_pointer_cast<PlayerIAEntity>(e);
+    path.clear();
+    Heap<ANode_Ptr> frontera;
+    std::map<vec2i, ANode_Ptr> expanded;
+    std::map<vec2i, int> objetivesFound;
+
+    bool haveInterset = IA->getIntersetDestroyWalls() > 0;
     
+    ANode_Ptr lastBest;
+    Interst_ptr levelInterset = PointsDestroyMap::getIntersetZone(positionEnemy);
+    int interestSite = levelInterset != nullptr ? levelInterset->intersest() : 0;
+    int bestfounds = interestSite;
+    ANode_Ptr currentNode = std::make_shared<ANode>(ANode(positionEnemy, 0, interestSite ,nullptr));
+    if(interestSite == 3){
+        path.push_back(currentNode);
+        return true;
+    }
+
+    bool found = false;
+    while (!found)
+    {
+
+        expanded[vec2i(currentNode->getPosition())] = currentNode;
+        //expandir nodos
+        for (int i = -1; i < 2; i++)
+        {
+            for (int j = -1; j < 2; j++)
+            {
+                if (abs(i) != abs(j))
+                {
+                    sf::Vector2i nodePosition(currentNode->xPosition() + i, currentNode->yPosition() + j);
+                    if(!Level::isValidCell(nodePosition)){
+                        continue;
+                    }
+                    levelInterset = PointsDestroyMap::getIntersetZone(nodePosition);
+                    interestSite = levelInterset != nullptr ? levelInterset->intersest() : 0;
+                   
+                    ANode_Ptr newNode = std::make_shared<ANode>(ANode(nodePosition, currentNode->fAcum() + 1, interestSite ,currentNode));
+                    if (interestSite && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(newNode))
+                    { //Si es una posicion valida y no se ha expandido
+                        newNode->incrementCost(costAddDestroy); // TODO: variable segun IA
+                        frontera.add(newNode);
+                         if( bestfounds < interestSite){
+                            bestfounds = interestSite;
+                            lastBest = newNode;
+                        }
+                    }
+                    else
+                    {
+                        newNode = nullptr;
+                    }
+                }
+            }
+        }
+        //Extraer nodo
+        if (frontera.isEmpty())
+        {
+            break;
+        }
+        currentNode = frontera.pop();
+
+        //currentNode = *
+        if (currentNode->isObjetive())
+        {
+            lastBest = currentNode;
+            found =  true; 
+            break;
+        }
+    }
+
+    std::list<ANode_Ptr> list_actions;
+    //Si no se ha encontrado -> seleccionar aleatorio
+    if (!found && lastBest == nullptr)
+    {
+        return false;
+    }
+    while (lastBest != nullptr)
+    {
+        if (lastBest->getParent() != nullptr)
+        {
+            list_actions.push_back(lastBest);
+        }
+        lastBest = lastBest->getParent();
+    }
+
+    while (!list_actions.empty())
+    {
+        ANode_Ptr e = list_actions.back();
+        path.push_back(e);
+        list_actions.pop_back();
+    }
+    return found;
 }
+
 
 
 bool pathFinderActions( Entity_ptr _ia, const std::vector<sf::Vector2i> &objetives, std::list<Action_ptr> &actions, TypeSeekIA typeSeek, int costAddDestroy){

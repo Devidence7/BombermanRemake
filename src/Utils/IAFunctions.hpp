@@ -40,6 +40,7 @@ bool somePlayerEnemyOnVision(sf::Vector2i pos, int rangeVision, int team);
 bool somePlayerEnemyOnRange(sf::Vector2i pos, int rangeBomb, int team);
 bool canPutABombSafe(sf::Vector2i posBomb, std::shared_ptr<PlayerEntity> e, std::list<ANode_Ptr> &movements);
 Interst_ptr generateIntersetPointDestroyer(sf::Vector2i posPossibleBom);
+bool pathFinderDestroy2Farm(const sf::Vector2i &positionEnemy, std::list<ANode_Ptr> &path, std::shared_ptr<Entity>  e, int costAddDestroy);
 
 #include "OmittedAreas.hpp"
 

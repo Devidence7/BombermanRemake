@@ -168,7 +168,7 @@ bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector
                     sf::Vector2i nodePosition(currentNode->xPosition() + i, currentNode->yPosition() + j);
                     sf::Vector2i objetiveP = selectCloseObjetive(positionEnemy, objetives);
                     ANode_Ptr newNode = std::make_shared<ANode>(ANode(nodePosition, sf::Vector2i(i, j), objetiveP, currentNode->fAcum() + 1, currentNode));
-                    if (checkValidPosition(nodePosition, e) && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(currentNode))
+                    if (checkValidPosition(nodePosition, e) && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(newNode))
                     { //Si es una posicion valida y no se ha expandido
                         frontera.add(newNode);
                     }
@@ -275,7 +275,7 @@ bool pathFindingBreakingWalls(const sf::Vector2i &positionEnemy, const std::vect
                     sf::Vector2i nodePosition(currentNode->xPosition() + i, currentNode->yPosition() + j);
                     sf::Vector2i objetiveP = selectCloseObjetive(positionEnemy, objetives);
                     ANode_Ptr newNode = std::make_shared<ANode>(ANode(nodePosition, sf::Vector2i(i, j), objetiveP, currentNode->fAcum() + 1, currentNode));
-                    if (checkValidPositionOrDestroyer(nodePosition, e) && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(currentNode))
+                    if (checkValidPositionOrDestroyer(nodePosition, e) && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(newNode))
                     { //Si es una posicion valida y no se ha expandido
                         newNode->incrementCost(costAddDestroy); // TODO: variable segun IA
                         frontera.add(newNode);

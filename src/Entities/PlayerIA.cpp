@@ -160,8 +160,7 @@ bool PlayerIAEntity::updatePerseguirState(){
 	if(!somePlayerEnemyOnRange(getMapCoordinates(getCenterPosition()), getPowerOfBombs(), team)){
 		tryKillAEnemy(me, movements, sg._PerseguirStruct.RangoVision, sg._PerseguirStruct.costDestroyWall);
 		return true;
-	// }else{
-	// 	currentState = StateIA::KILL;
+		
 	}
 	return false;
 }
@@ -194,11 +193,38 @@ bool PlayerIAEntity::updateKillState(){
 	return false;
 }
 
+void PlayerIAEntity::decildetState(){
+	std::list<ANode_Ptr> movementes2Players;
+	std::list<ANode_Ptr> movementes2Farm;
+	std::vector<sf::Vector2i> objetivePlayers;
+	float pointKill = 0;
+	float pointFarm = 0;
+	if(!!somePlayerEnemyOnRange(getMapCoordinates(getCenterPosition()), getPowerOfBombs(), team)){
+		selectEnemyPlayers(me, objetivePlayers, this->sg._PerseguirStruct.RangoVision);
+		if(pathFinding(this->getEntityMapCoordinates() , objetivePlayers, movementes2Players, me, TypeSeekIA::BEST_PATH, false)){
+			pointKill = movementes2Players.back()->costNode();
+		}
+	}	
+	if(pathFinderDestroy2Farm(this->getEntityMapCoordinates(), movementes2Farm, me, 0)){
+		pointFarm = movementes2Farm.back()->costNode() * getIntersetDestroyWalls() + 0.1;
+	}
+
+	if(pointKill < pointFarm){
+		movements = movementes2Players;
+		this->currentState = StateIA::PERSEGUIR;	
+	}else{
+		movements = movementes2Farm;
+		this->currentState = StateIA::FARM;	
+	}
+	
+}
+
 /* Determina estado actual */
 void PlayerIAEntity::updateState(){
 	sf::Vector2i currentPosMap = getMapCoordinates(getCenterPosition());
-	OmittedAreas.clear();
-	generateOmitedZones(currentPosMap, OmittedAreas, sg._PerseguirStruct.RangoVision);
+	//OmittedAreas.clear();
+	//generateOmitedZones(currentPosMap, OmittedAreas, sg._PerseguirStruct.RangoVision);
+	
 	switch (currentState)
 	{
 	case StateIA::NON_OBJETIVE:
@@ -207,8 +233,8 @@ void PlayerIAEntity::updateState(){
 			currentState = StateIA::PATROL;
 		}else  if(somePlayerEnemyOnRange(currentPosMap, getPowerOfBombs(), team)){
 			currentState =  StateIA::KILL;
-		}else if(somePlayerEnemyOnVision(currentPosMap, sg._PerseguirStruct.RangoVision, team)){
-			currentState = StateIA::PERSEGUIR;
+		}else {
+			decildetState();
 		}
 
 		break;
@@ -220,6 +246,7 @@ void PlayerIAEntity::updateState(){
 	default:
 		break;
 	}
+	OmittedAreas.clear();
 }
 
 void PlayerIAEntity::startStates(){

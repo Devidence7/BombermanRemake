@@ -68,9 +68,16 @@ class ANode
     float f, h;
 
 public:
+    int numOfWalls = 0;
     ANode(){
         direction_to_arrive = sf::Vector2i(0,0);
     }
+    ANode(const sf::Vector2i cp, float fAcum, int _numOfWalss ,std::shared_ptr<ANode> p = nullptr)
+        : currentPostion(cp), f(fAcum), parent(p), numOfWalls(_numOfWalss)
+    {
+        h =  1 - _numOfWalss/3;
+    }
+
     ANode(const sf::Vector2i cp, sf::Vector2i dir, const sf::Vector2i objetive, float fAcum, std::shared_ptr<ANode> p = nullptr)
         : currentPostion(cp), direction_to_arrive(dir), f(fAcum), parent(p)
     {

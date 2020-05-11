@@ -8,6 +8,7 @@
 #include "Textures/TextureStorage.h"
 #include "Interface/GameInterface.h"
 #include "Music/GameMusic.h"
+#include "Utils/IAFunctions.hpp"
 ///#include "Interface/GameDisplayController.h"
 
 #define MAX_NUMBER_OF_STAGES 3
@@ -118,6 +119,7 @@ Game(){
 		}
 		//insertEnemies(7);
 		level = new Level(dimX, dimY, debug, stage, &gameOptions);
+		PointsDestroyMap::resetMap();
 		//Enemies::insertarEnemigos(dimX, dimY);
 		if(debug){
 			insertPlayers(*gameDisplay.userKeyPress, 1, 1);
@@ -301,6 +303,7 @@ Game(){
 	}
 
 	void update(GameDisplayController &gameDisplay) {
+		PointsDestroyMap::updateMap();
 		level->update();
 
 		if (level->levelFinished) {

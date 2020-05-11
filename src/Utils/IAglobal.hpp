@@ -7,7 +7,8 @@ enum StateIA{
     KILL = 2,
     CATCH_PU = 3,
     PERSEGUIR = 4,
-    RUNAWAY = 5
+    RUNAWAY = 5,
+    FARM = 6
 };
 
 

@@ -61,7 +61,7 @@ public:
 	bool updatePerseguirState();
 	bool updateRunawayState();
 	void putABomb();
-
+	void decildetState();
 
 	float getIntersetActionPU(){
 		return sg.intersetACtionPU;
