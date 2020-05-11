@@ -62,7 +62,7 @@ void seekAnyPlayerOrRandom(list<ANode_Ptr> &movements, Entity_ptr e, TypeSeekIA 
         for (Player_ptr p : PLayers::getVectorPlayer())
         {
             //if is in range
-            if (isOnVision(p, mapPosition, e->rangoVision))
+            if (!p->dead && !p->respawning && isOnVision(p, mapPosition, e->rangoVision))
             {
                 generateObjetive2Player(p, e, objetives);
             }

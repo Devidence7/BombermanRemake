@@ -20,6 +20,7 @@
 #include "Interface/LoadingScreen.h"
 #include "Interface/VictoryScreen.h"
 #include "Interface/UserKeyPress.h"
+#include "Interface/FinalScoreInterface.h"
 
 
 int main(int argc, char* argv[]) {
@@ -50,6 +51,7 @@ int main(int argc, char* argv[]) {
 	DifficultyMenu difficultyMenu(*gameDisplayController.getWindow());
 	GameInterface gameInterface(*gameDisplayController.getWindow());
 	VictoryScreen victory(*gameDisplayController.getWindow(),game);
+	FinalScoreInterface finalScore(*gameDisplayController.getWindow(),game, gameDisplayController);
 
 	// Start game loop
 	while (gameDisplayController.windowOpen()) {
@@ -106,6 +108,11 @@ int main(int argc, char* argv[]) {
 			gameOverMenu.menuActions(gameDisplayController, game);
 			break;
 
+		case GameDisplayController::GameState::FINAL_SCORE:
+			gameDisplayController.getWindow()->setView(gameDisplayController.menuView);
+			finalScore.menuActions(gameDisplayController, game);
+			break;
+
 
 		case GameDisplayController::GameState::PLAYING:
 
@@ -127,8 +134,6 @@ int main(int argc, char* argv[]) {
 			// Manage pause menu when playing
 			pauseMenu.checkUserPauseActions(gameDisplayController);
 		}
-
-
 
 		// Update display window window
 		gameDisplayController.getWindow()->display();

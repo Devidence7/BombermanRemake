@@ -1,7 +1,7 @@
 #include "../Include/EntitiesInclude.hpp"
 #include "../Utils/IAFunctions.hpp"
 #include "../Music/GameSounds.h"
-
+#include "../GameMaths/GeometryMaths.hpp"
 EnemyEntity::EnemyEntity() : Entity()
 {
 	isFireDestroyable = true;
@@ -107,8 +107,16 @@ void EnemyEntity::updateVelocity()
 		volatile int x = 0;
 	}
 
-	velocity.x = baseSpeed * currentMovement->getAction().x ;//* moveTime;
-	velocity.y = baseSpeed * currentMovement->getAction().y ;//* moveTime;
+	sf::Vector2i dir = currentMovement->getPosition();
+	dir = dir - getEntityMapCoordinates();
+	if(abs(dir.x) > abs(dir.y)){
+		dir.y = 0;
+	}else{
+		dir.x = 0;
+	}
+	sf::Vector2f n= normalize(dir);
+	velocity.x = baseSpeed *currentMovement->getAction().x ;//* moveTime;
+	velocity.y = baseSpeed *currentMovement->getAction().y ;//* moveTime;
 	//std::cout << "Vel: " << velocity.x << " " << velocity.y << std::endl;
 
 	move(velocity.x, velocity.y);
@@ -132,7 +140,7 @@ void EnemyEntity::setCollision(std::shared_ptr<Entity> col){
 
 void EnemyEntity::onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<Entity> eCollisioner, CollisionType colT)
 {
-	if (std::dynamic_pointer_cast<PlayerEntity>(eCollisioning))
+	if (std::dynamic_pointer_cast<PlayerEntity>(eCollisioning) && !dyingEntity)
 	{
 		eCollisioning->setExpiredEntity();
 	}
