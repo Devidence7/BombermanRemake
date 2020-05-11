@@ -26,7 +26,6 @@ public:
 		colorPath = sf::Color(Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255));
 		IAPlayer=IA;
 		cout<<"POS DE LA IA: "<<posX<<" "<<posY<<endl;
-		move(posX,posY);
 	}
 
 	void createStateGenerator(string path){
