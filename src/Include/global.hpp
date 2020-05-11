@@ -95,7 +95,7 @@ enum TypeSeekIA
 };
 
 const int TOTAL_ENEMY_FRAMES = 13;
-const int THRESHOLD_CENTER_CELL = 2;
+const int THRESHOLD_CENTER_CELL = 5;
 // Debug features:
 #define HITBOX_DEBUG_MODE true;
 
