@@ -137,7 +137,7 @@ MoreTimePowerUp::MoreTimePowerUp(sf::Vector2f pos) : BuffPoweUp() {
 }
 
 void MoreTimePowerUp::setPlayerStatus(PlayerEntity& pe) {
-	timeLeft+=30;
+	GlobalTime::timeLeft+=30;
 }
 
 

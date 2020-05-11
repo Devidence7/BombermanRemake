@@ -25,8 +25,8 @@ PseudoPPDLPath=$(src)/PseudoPPDL
 libs=-L$(bin) -lEntities -lTextures -lGui
 libEntities=-L$(bin) -lEntities 
 
-bomberman: $(src)/main.cpp $(src)/Include/global.hpp $(bin)/Level.o $(src)/GameEngine.hpp $(bin)/libEntities.a $(bin)/libGui.a $(bin)/libTextures.a $(bin)/Random.o $(bin)/Time.o  $(src)/Include/EntitiesInclude.cpp $(bin)/IAFunctions.o $(bin)/A_Star.o $(bin)/ParserPPDL.o
-	$(CC) -o bomberman  $(src)/main.cpp $(src)/Include/EntitiesInclude.cpp  $(MusicPath)/GameMusic.cpp $(MusicPath)/GameSounds.cpp  \
+bomberman: $(src)/main.cpp $(src)/Include/global.hpp $(src)/Include/global.cpp $(bin)/Level.o $(src)/GameEngine.hpp $(bin)/libEntities.a $(bin)/libGui.a $(bin)/libTextures.a $(bin)/Random.o $(bin)/Time.o  $(src)/Include/EntitiesInclude.cpp $(bin)/IAFunctions.o $(bin)/A_Star.o $(bin)/ParserPPDL.o
+	$(CC) -o bomberman  $(src)/main.cpp $(src)/Include/EntitiesInclude.cpp  $(MusicPath)/GameMusic.cpp $(MusicPath)/GameSounds.cpp  $(src)/Include/global.cpp \
 		$(bin)/Level.o $(bin)/Random.o $(bin)/Time.o  $(bin)/IAFunctions.o $(bin)/A_Star.o $(bin)/ParserPPDL.o\
 		$(bin)/Arrow.o $(bin)/Box.o $(bin)/Cross.o $(UtilsInzPath)/ItemBox.hpp \
 		$(bin)/FormLayout.o $(bin)/HorizontalBoxLayout.o $(bin)/Layout.o $(bin)/Menu.o $(bin)/VerticalBoxLayout.o \
@@ -47,6 +47,8 @@ $(bin)/IAFunctions.o: $(UtilsPath)/IAFunctions.cpp $(UtilsPath)/IAFunctions.hpp
 
 $(bin)/A_Star.o:$(UtilsPath)/A_Star.hpp $(UtilsPath)/A_Star.cpp
 	$(CC) -c $(UtilsPath)/A_Star.cpp -o $(bin)/A_Star.o $(std) $(O)
+
+
 
 clear: 
 	rm bomberman || true

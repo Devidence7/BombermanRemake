@@ -192,7 +192,9 @@ Ice::Ice() : EnemyEntity()
 	scoreValue=150;
 	this->rangoVision = 5;
 	this->numConsecutiveMovements = 7;
-	this->typeSeek = TypeSeekIA::SECOND_BEST_PATH;
+	//this->typeSeek = TypeSeekIA::SECOND_BEST_PATH;
+	this->typeSeek = TypeSeekIA::LONG_PATH;
+
 	this->longMorePAth = 10;
 	this->typePosIA = TypePositionRelative::OBJETIVE_POSITION;
 	this->canThroughWall = false;

@@ -1,4 +1,5 @@
 #pragma once
+#include <SFML/Graphics.hpp>
 
 #define sizeTextureX 48
 #define sizeTextureY 48
@@ -16,9 +17,13 @@ struct GameOptions {
 	
 	
 };
-double totalTime=299;
-double timeLeft=totalTime;
 
+class GlobalTime{
+public:
+static double totalTime;
+static double timeLeft;
+
+};
 
 
 

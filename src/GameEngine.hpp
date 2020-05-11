@@ -49,7 +49,7 @@ Game(){
 	stage=1;
 }
 	int gameTime(){
-		return timeLeft;
+		return GlobalTime::timeLeft;
 	}
 
 	void insertPlayers(UserKeyPress &userKeyPress, int numPlayers, int numIAPlayer) {
@@ -319,8 +319,8 @@ Game(){
 		//Update camera:
 		moveCamera(gameDisplay);
 		
-		timeLeft = totalTime -GameTime::getTimeNow();;
-		if (timeLeft <= 0 && !timesUp) {
+		GlobalTime::timeLeft = GlobalTime::totalTime -GameTime::getTimeNow();;
+		if (GlobalTime::timeLeft <= 0 && !timesUp) {
 			timesUp=true;
 			//gameDisplay.setGameState(GameDisplayController::GameState::VICTORY);
 			Enemies::insertarEnemigosExtra(dimX,dimY,5);
