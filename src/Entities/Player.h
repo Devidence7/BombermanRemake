@@ -48,6 +48,8 @@ public:
 	bool respawning = false;
 	const double respawnTime = 5;
 	double lastRespawnTime = 0;
+	double lastInvencibleTime = 0;
+	const double invencibleTime = 5;
 
 	bool bombThrowed = false;
 	double lastThrowedTime = 0;
