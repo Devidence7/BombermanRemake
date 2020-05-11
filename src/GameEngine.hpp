@@ -229,7 +229,7 @@ Game(){
 
 			level->checkAndFixCollisions(player);
 			if (colissionWithEnemies(player)) {
-				player->setExpiredEntity();
+				//player->setExpiredEntity();
 			}	
 			
 			ply++;
@@ -390,6 +390,9 @@ Game(){
 		bool intersec = false;
 		for (Enemy_ptr e : Enemies::getVectorEnemies()) {
 			intersec = intersec || (e->CanHurtPlayer() && e->collision(*eCol));
+			if(intersec){
+				e->onCollission(e, eCol, CollisionType::NONE);
+			} 
 		}
 		return intersec;
 	}
