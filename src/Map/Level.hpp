@@ -85,5 +85,6 @@ public:
 	static bool isValidCell(sf::Vector2i v); 
 	static void enemiesDefeated();
 	static void newEnemiesAppear();
+	static void deleteWall(sf::Vector2i pos);
 	static void checkSpawn(int posX,int posY);
 };
