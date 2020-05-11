@@ -16,11 +16,17 @@ using namespace std;
 
 class StateGenerator
 {
-
+public:
     bool canActivatePatrol = false;
     bool canActivateKill = false;
     bool canActivateSeekPE = false;
     int RangeVision = 0;
+    float intersetBuffPU = 0;
+    float intersetNerfPU = 0;
+    float intersetACtionPU = 0;
+    float bonusDestroyWalls = 0;
+    float imprudencia = 0;
+
 
     struct PatrolStruct
     {
@@ -51,7 +57,6 @@ class StateGenerator
         sf::Vector2i puntRelativoB;
     };
 
-public:
     PatrolStruct _PatrolStruct;
     bool havePatrolStruct = false;
     KillStruct _KillStruct;

@@ -39,3 +39,17 @@ void tryKillAEnemy(std::shared_ptr<Entity> IA, std::list<ANode_Ptr> &movements, 
 bool somePlayerEnemyOnVision(sf::Vector2i pos, int rangeVision, int team);
 bool somePlayerEnemyOnRange(sf::Vector2i pos, int rangeBomb, int team);
 bool canPutABombSafe(sf::Vector2i posBomb, std::shared_ptr<PlayerEntity> e, std::list<ANode_Ptr> &movements);
+Interst_ptr generateIntersetPointDestroyer(sf::Vector2i posPossibleBom);
+
+#include "OmittedAreas.hpp"
+
+
+class PointsDestroyMap{
+    static std::vector<std::vector<Interst_ptr>> interestingMap;
+    
+    public:
+    static Interst_ptr &getIntersetZone(sf::Vector2i pos);
+    static Interst_ptr &getIntersetZone(int x, int y);
+    static void updateMap();
+    static void resetMap();
+};

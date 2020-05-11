@@ -3,6 +3,51 @@
 #include "../Include/EntitiesInclude.hpp"
 #include "../PseudoPPDL/Estados.hpp"
 
+//Map Intersting Destroy
+std::vector<std::vector<Interst_ptr>> PointsDestroyMap::interestingMap;
+Interst_ptr &PointsDestroyMap::getIntersetZone(sf::Vector2i pos){
+    getIntersetZone(pos.x, pos.y);
+}
+Interst_ptr &PointsDestroyMap::getIntersetZone(int x, int y){
+    return interestingMap[y][x];
+}
+
+
+void PointsDestroyMap::resetMap(){
+    for(std::vector<Interst_ptr> inter : interestingMap){
+        for(Interst_ptr i : inter){
+            i = nullptr;
+        }
+        inter.clear();
+    }
+    interestingMap.clear();
+    sf::Vector2i sLevel =  Level::sizeLevel();
+    interestingMap = std::vector<std::vector<Interst_ptr>>(sLevel.y, std::vector<Interst_ptr>(sLevel.x, nullptr));
+}
+
+void PointsDestroyMap::updateMap(){
+    resetMap();
+    sf::Vector2i sLevel =  Level::sizeLevel();
+    for(std::vector<Interst_ptr> inter : interestingMap){
+
+    }
+    for(int x = 0; x < sLevel.x; x++){
+        for(int y = 0; y < sLevel.y; y++){
+            Entity_ptr e = Level::getCellMiniMapObject(x,y);
+            if(e == nullptr || std::dynamic_pointer_cast<PowerUp>(e) != nullptr){
+                getIntersetZone(x,y) = generateIntersetPointDestroyer(sf::Vector2i(x,y));
+            }else{
+                getIntersetZone(x,y) = nullptr;
+            }
+        }
+    }
+}
+
+
+/************************
+ * 
+ * IA
+ ************************/ 
 
 inline void createRangeVision(sf::Vector2i &from, sf::Vector2i &to, sf::Vector2i position, int rangeVision){
         to = Level::sizeLevel() - sf::Vector2i(1,1);
@@ -86,6 +131,10 @@ void seekAnyPlayerOrRandom(list<ANode_Ptr> &movements, Entity_ptr e, TypeSeekIA 
  * 
  ******************************/
 
+
+//////////////////////////////////
+////  Interst/Omited Zones   /////
+//////////////////////////////////
 void generateOmitedZoneByBomb(sf::Vector2i bombPosition, std::list<OmittedArea> &AreasOmited)
 {
     //TODO: Posiblidad de cruz más grande?
@@ -122,7 +171,49 @@ void generateOmitedZones(sf::Vector2i positionP, std::list<OmittedArea> &AreasOm
 
 
 
-void seekBetterListPos2DestroyWalls(sf::Vector2i positionCenter, int range, std::list<sf::Vector2i> &positions ){
+Interst_ptr generateIntersetPowerUps(Entity_ptr e, PlayerIA_ptr p){
+    if(std::dynamic_pointer_cast<BuffPoweUp>(e) != nullptr){
+        return std::make_shared<IntersetArea>(e->getEntityMapCoordinates(),p->getIntersetBuffPE());
+    }
+    if(std::dynamic_pointer_cast<NerfPoweUp>(e) != nullptr){
+        return std::make_shared<IntersetArea>(e->getEntityMapCoordinates(),p->getIntersetNerfPU() );
+    }
+    if(std::dynamic_pointer_cast<BuffPoweUp>(e) != nullptr){
+        return std::make_shared<IntersetArea>(e->getEntityMapCoordinates(),p->getIntersetActionPU());
+    }
+}
+
+
+Interst_ptr generateIntersetPointDestroyer(sf::Vector2i posPossibleBom){
+    sf::Vector2i sLevel = Level::sizeLevel();
+    Entity_ptr m;
+    int sum = 0;
+    if( !(posPossibleBom.x > -1 && posPossibleBom.y > -1 && posPossibleBom.x < sLevel.x && posPossibleBom.y < sLevel.y) ){
+        return nullptr;
+    }
+    
+    if(posPossibleBom.x > 0 && posPossibleBom.y > 0 ){
+        m = Level::getCellMiniMapObject(posPossibleBom.x-1,posPossibleBom.y -1);
+        if(m != nullptr && std::dynamic_pointer_cast<BrickWall>(m) != nullptr){sum++;}
+    }
+    if(posPossibleBom.x > 0 && posPossibleBom.y < sLevel.y - 1 ){
+        m = Level::getCellMiniMapObject(posPossibleBom.x-1,posPossibleBom.y + 1);
+        if(m != nullptr && std::dynamic_pointer_cast<BrickWall>(m) != nullptr){sum++;}
+    }
+
+    if(posPossibleBom.x < sLevel.x -1 && posPossibleBom.y > 0 ){
+        m = Level::getCellMiniMapObject(posPossibleBom.x-1, posPossibleBom.y -1);
+        if(m != nullptr && std::dynamic_pointer_cast<BrickWall>(m) != nullptr){sum++;}
+    }
+
+    if(posPossibleBom.x < sLevel.x && posPossibleBom.y > sLevel.y ){
+        m = Level::getCellMiniMapObject(posPossibleBom.x + 1,posPossibleBom.y  +1);
+        if(m != nullptr && std::dynamic_pointer_cast<BrickWall>(m) != nullptr){sum++;}
+    }
+    return std::make_shared<IntersetArea>(IntersetArea(posPossibleBom, sum));
+}
+
+/* void seekBetterListPos2DestroyWalls(sf::Vector2i positionCenter, int range, std::list<sf::Vector2i> &positions, PlayerIA_ptr p ){
     sf::Vector2i by;
     sf::Vector2i to;
     createRangeVision(by, to, positionCenter, range);
@@ -130,26 +221,20 @@ void seekBetterListPos2DestroyWalls(sf::Vector2i positionCenter, int range, std:
     int bestN = 0;
     for(int x = by.x + 1; x < to.x - 1; x++){
         for(int y = by.y + 1; y < to.y - 1; y++){
-            int sum = 0;
-            Entity_ptr m = Level::getCellMiniMapObject(x-1,y -1);
-            if(m != nullptr && std::dynamic_pointer_cast<BrickWall>(m) != nullptr){sum++;}
-            m = Level::getCellMiniMapObject(x - 1, y +1);
-            if(m != nullptr && std::dynamic_pointer_cast<BrickWall>(m) != nullptr){sum++;}
-            m = Level::getCellMiniMapObject(x +1, y + 1 );
-            if(m != nullptr && std::dynamic_pointer_cast<BrickWall>(m) != nullptr){sum++;}
-            m = Level::getCellMiniMapObject(x +1, y + 1);
-            if(m != nullptr && std::dynamic_pointer_cast<BrickWall>(m) != nullptr){sum++;}
-            if(sum > bestN){    //Si es 4 -> no existe camino!
+            Interst_ptr interset = generateIntersetPointDestroyer(sf::Vector2i(x,y), p);
+            
+            if(interset->intersest() > bestN){    //Si es 4 -> no existe camino!
                 positions.clear();
-                bestN = sum;
+                bestN = interset->intersest();
             }
-            if(sum == bestN){
+            if(interset->intersest() == bestN){
                 positions.push_back(sf::Vector2i(x,y));
             }
         }
     }
 
-}
+} */
+
 
 void createStateMap(Entity_ptr e, int rangeVision,std::list<Entity_ptr>& stateMap){
     sf::Vector2i position = e->getEntityMapCoordinates();
@@ -307,3 +392,98 @@ bool canPutABombSafe(sf::Vector2i posBomb, Player_ptr e, std::list<ANode_Ptr> &m
 // Pre: onVision(y) ^ existPath(x, y) ^ onPostion(IA, x) ^ ¬onPosition(IA, y)
 // B: onPosition(IA, x)
 // A: onPosition(IA, y)
+
+
+
+#include "Action.hpp"
+
+
+void ss(sf::Vector2i p ){
+    bool valid = Level::isValidCell(p);
+    if(!valid){
+        return;
+    }
+    Entity_ptr e = Level::getCellMiniMapObject(p);
+    Interst_ptr inetersDest = PointsDestroyMap::getIntersetZone(p);
+    float intDestroy = 0;
+    if(inetersDest != nullptr){intDestroy = inetersDest->intersest();}
+    if(std::dynamic_pointer_cast<BuffPoweUp>(e)){
+        
+    }
+    
+}
+
+bool pathFinderFarm(Entity_ptr _ia, const std::vector<sf::Vector2i> &objetives, std::list<Action_ptr> &actions, TypeSeekIA typeSeek, int costAddDestroy){
+    
+}
+
+
+bool pathFinderActions( Entity_ptr _ia, const std::vector<sf::Vector2i> &objetives, std::list<Action_ptr> &actions, TypeSeekIA typeSeek, int costAddDestroy){
+    sf::Vector2i postionIA = _ia->getEntityMapCoordinates();
+    PlayerIA_ptr IA = std::dynamic_pointer_cast<PlayerIAEntity>(_ia);
+    actions.clear();
+    Heap<NodeAction_ptr> frontera;
+    std::map<vec2i, NodeAction_ptr> expanded;
+    std::map<vec2i, int> objetivesFound;
+    for(sf::Vector2i o: objetives){
+        objetivesFound[vec2i(o)] = 0;
+    }
+    sf::Vector2i objetive = selectCloseObjetive(postionIA, objetives);
+    
+    int bestfounds = 0;
+    NodeAction_ptr lastBest;
+    NodeAction_ptr currentNode = std::make_shared<NodeAction>(NodeAction(postionIA, objetive, 0.0f));
+
+    bool found = false;
+    while (!found)
+    {
+
+        expanded[vec2i(currentNode->getPosition())] = currentNode;
+        //expandir nodos
+        for (int i = -1; i < 2; i++)
+        {
+            for (int j = -1; j < 2; j++)
+            {
+                if (abs(i) != abs(j))
+                {
+                    sf::Vector2i nodePosition(currentNode->xPosition() + i, currentNode->yPosition() + j);
+                    sf::Vector2i objetiveP = selectCloseObjetive(postionIA, objetives);
+                    NodeAction_ptr newNode = std::make_shared<NodeAction>(NodeAction(nodePosition, objetiveP, currentNode->fAcum() + 1, currentNode));
+                    if (checkValidPositionOrDestroyer(nodePosition, _ia) && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(currentNode))
+                    { //Si es una posicion valida y no se ha expandido
+                        newNode->incrementCost(costAddDestroy); // TODO: variable segun IA
+                        frontera.add(newNode);
+                    }
+                    else
+                    {
+                        newNode = nullptr;
+                    }
+                }
+            }
+        }
+        //Extraer nodo
+        if (frontera.isEmpty())
+        {
+            break;
+        }
+        currentNode = frontera.pop();
+
+        //currentNode = *
+        if (currentNode->isObjetive())
+        {
+            lastBest = currentNode;
+            sf::Vector2i posObjetiv =  currentNode->getPosition();
+            vec2i pOb = vec2i(posObjetiv);
+            objetivesFound[pOb]++;
+            found = typeSeek == TypeSeekIA::BEST_PATH || (objetivesFound[pOb] > 0 && typeSeek == TypeSeekIA::SECOND_BEST_PATH) || (typeSeek == TypeSeekIA::LONG_PATH && int(manhattan(posObjetiv, postionIA) * 1.5) <= currentNode->costNode());
+          //  std::cout << "Coste camino" << currentNode->costNode() << "\n";
+            bestfounds++;
+            if(frontera.isEmpty()){
+                break;
+            }
+            if(!found){
+                currentNode = frontera.pop();
+            }
+        }
+    }
+}

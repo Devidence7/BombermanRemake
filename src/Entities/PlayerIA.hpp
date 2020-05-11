@@ -61,4 +61,19 @@ public:
 	bool updatePerseguirState();
 	bool updateRunawayState();
 	void putABomb();
+
+
+	float getIntersetActionPU(){
+		return sg.intersetACtionPU;
+	}
+	float getIntersetNerfPU(){
+		return sg.intersetNerfPU;
+	}
+	float getIntersetBuffPE(){
+		return sg.intersetBuffPU;
+	}
+
+	float getIntersetDestroyWalls(){
+		return sg.bonusDestroyWalls;
+	}
 };

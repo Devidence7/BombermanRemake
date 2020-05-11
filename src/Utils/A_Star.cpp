@@ -350,3 +350,4 @@ bool pathFindingBreakingWalls(const sf::Vector2i &positionEnemy, const std::vect
 
     return found;
 }
+
