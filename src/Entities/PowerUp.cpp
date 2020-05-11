@@ -6,7 +6,7 @@ PowerUp::PowerUp() : Entity()
 	isFireDestroyable = true;
 	fireCanGoThroght = true;
 	collisioner = false;
-
+	scoreValue=50;
 	spriteCounter = 0;
 	spriteSpeed = 15;
 	actualFrame = 0;
@@ -128,7 +128,7 @@ void MoreBombsPowerUp::setPlayerStatus(PlayerEntity &pe)
 
 MoreTimePowerUp::MoreTimePowerUp(sf::Vector2f pos) : BuffPoweUp() {
 	powerUpType = moreTime;
-
+	
 	// Set position
 	setPosition(pos);
 
@@ -137,7 +137,7 @@ MoreTimePowerUp::MoreTimePowerUp(sf::Vector2f pos) : BuffPoweUp() {
 }
 
 void MoreTimePowerUp::setPlayerStatus(PlayerEntity& pe) {
-	
+	timeLeft+=30;
 }
 
 

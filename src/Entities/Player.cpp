@@ -228,7 +228,7 @@ void PlayerEntity::realizeActions()
 bool PlayerEntity::playerActions() {
 	bool playerBOMB = sf::Keyboard::isKeyPressed(playerControls.UseBomb);
 	bool actionButton = sf::Keyboard::isKeyPressed(playerControls.MakeAction);
-
+if(!respawning){
 	if (!playerBOMB)
 	{
 		isBombKeyPresed = false;
@@ -253,6 +253,7 @@ bool PlayerEntity::playerActions() {
 	}
 
 	return isBombKeyPresed;
+}
 }
 
 

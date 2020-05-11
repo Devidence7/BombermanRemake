@@ -65,7 +65,7 @@ public:
 		}
 		victory.setFont(font);
 		victory.setString("    VICTORIA    ");
-		victory.setFillColor(sf::Color::White);
+		victory.setColor(sf::Color::White);
 		// victory.setScale(2,2);
 		victory.setCharacterSize(72);
 
@@ -76,7 +76,7 @@ public:
 
 
 		level.setFont(font);
-		level.setFillColor(sf::Color::White);
+		level.setColor(sf::Color::White);
 		level.setString("NIVEL " + to_string(game.stage) + ": Completado");
 		// level.setScale(1.5,1.5);
 		level.setCharacterSize(48);

@@ -30,8 +30,8 @@ private:
 	int dimY = 15;
 	int dimX = 25;
 	
-	int timeLeft = 299;
-	int timeToShow;
+	/*double timeLeft = 299;
+	double timeToShow=timeLeft;*/
 	
 	// Initialize textures
 	TextureStorage textureStorage;
@@ -46,7 +46,7 @@ public:
 	bool timesUp=false;
 
 Game(){
-	stage=3;
+	stage=1;
 }
 	int gameTime(){
 		return timeLeft;
@@ -170,11 +170,11 @@ Game(){
 				it2->reset();
 				it2 = PLayers::getVectorPlayer().erase(it2);
 		}
-		auto it3 = Enemies::getVectorEnemiesExtra().begin();
+	/*	auto it3 = Enemies::getVectorEnemiesExtra().begin();
 		while (it3 != Enemies::getVectorEnemiesExtra().end()) {
 				it3->reset();
 				it3 = Enemies::getVectorEnemiesExtra().erase(it3);
-		}
+		}*/
 		/*auto it4 = Enemies::getVectorEnemiesExtraTel().begin();
 		while (it4 != Enemies::getVectorEnemiesExtraTel().end()) {
 				it4->reset();
@@ -313,11 +313,11 @@ Game(){
 		//Update camera:
 		moveCamera(gameDisplay);
 		
-		timeToShow = timeLeft -GameTime::getTimeNow();;
-		if (timeToShow <= 0 && !timesUp) {
+		timeLeft = totalTime -GameTime::getTimeNow();;
+		if (timeLeft <= 0 && !timesUp) {
 			timesUp=true;
 			//gameDisplay.setGameState(GameDisplayController::GameState::VICTORY);
-			Enemies::insertarEnemigosExtra(dimX,dimY);
+			Enemies::insertarEnemigosExtra(dimX,dimY,5);
 		}
 	}
 

@@ -97,7 +97,7 @@ std::vector<Enemy_ptr> Enemies::enemiesExtra;
 
 
 void Enemies::insertarEnemigosExtraTeleport(sf::Vector2f pos, int numEnemigos = 3) {
-	for (int i = 0; i < 7; i++) {
+	for (int i = 0; i < numEnemigos; i++) {
 		auto a = std::make_shared<EnemyEntity>(Coin());
 		a->setPosition(pos);
 		a->me = a;
@@ -106,16 +106,12 @@ void Enemies::insertarEnemigosExtraTeleport(sf::Vector2f pos, int numEnemigos = 
 	}
 }
 
-void Enemies::insertarEnemigosExtra(int dimX, int dimY){
-	std::vector<Enemy_ptr> a(7);
-	int x, y;
-	for(int i=0;i<7;i++){
-		a[i] = std::make_shared<EnemyEntity>(Coin());
-		enemiesExtra.push_back(a[i]);
-	}
-	
-	for (Enemy_ptr e : enemiesExtra) {
-		int x, y;
+void Enemies::insertarEnemigosExtra(int dimX, int dimY,int numEnemigos=5){
+	int x; 
+	int y;
+	for (int i = 0; i < numEnemigos; i++) {
+		auto a = std::make_shared<EnemyEntity>(Coin());
+			
 		do {
 			x = Random::getIntNumberBetween(0, dimX / 2);
 
@@ -124,9 +120,10 @@ void Enemies::insertarEnemigosExtra(int dimX, int dimY){
 			y = Random::getIntNumberBetween(0, dimY / 2);
 		} while (y < 3);
 		//e->setPosition(sf::Vector2f((x * 2 + 1) * SIZE_PILLAR - 3, (y * 2 + 1) * SIZE_PILLAR - 3));
-		e->setPosition(MapCoordinates2GlobalCoorCorner(x*2+1, y*2+1));
-		e->me=e;
-		e->startMovement();
+		a->setPosition(MapCoordinates2GlobalCoorCorner(x*2+1, y*2+1));
+		a->me = a;
+		a->startMovement();
+		enemies.push_back(a);
 	}
 
 }

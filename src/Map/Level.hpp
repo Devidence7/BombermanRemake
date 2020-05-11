@@ -76,7 +76,6 @@ public:
 	static void addPillar(int x, int y);
 	static void addWall(int x, int y);
 	static bool addBomb(Player_ptr p);
-
 	static void chechAndFixBombCollision(Bomb_ptr b);
 	static void createTeleporter(Entity_ptr it);
 	static void brickWallOutcomes(Entity_ptr it);
@@ -90,4 +89,5 @@ public:
 	static void newEnemiesAppear();
 	static void deleteWall(sf::Vector2i pos);
 	static void checkSpawn(int posX,int posY);
+	static void updateTime();
 };

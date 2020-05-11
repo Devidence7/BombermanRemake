@@ -12,20 +12,21 @@ bool Level::levelFinished = false;
 int Level::numWalls = 0;
 int Level::stage = 1;
 int Level::numEnemiesLeft = 0;
+double *gameTime;
 Teleporter_ptr Level::teleporter = nullptr;
 GameOptions* Level::gameOptions;
 
 
-Level::Level(int dimX, int dimY, bool debug, int stage, GameOptions *gameOptions) {
+Level::Level(int dimX, int dimY, bool debug, int stage,GameOptions* gameOptions) {
 	Level::exitHasApeared = false;
 	Level::canFinishLevel = false;
 	Level::levelFinished = false;
 	Level::numWalls = 0;
 	Level::teleporter = nullptr;
 	Level::gameOptions = gameOptions;
-
+	
 	Level::stage = stage;
-
+	
 	// Reserve space for faster insert, delete of the entities
 	entities.reserve(10000);
 	// Create map matrix:
@@ -865,3 +866,6 @@ void Level::checkSpawn(int posX, int posY) {
 	Level::deleteWall(pos);
 }
 
+void Level::updateTime(){
+	*gameTime=*gameTime+30;
+}

@@ -34,6 +34,8 @@ protected:
 	bool canThroughWall = false; //puede atravesar paredes
 	bool canThroughBomb = false; //puede atravesar bombas
 
+
+
 	ActionsAvalible actionAvaible = ActionsAvalible::NONE_ACTION;
 
 	std::list<std::shared_ptr<Entity>> BombsAsociated;
@@ -54,6 +56,7 @@ public:
 	std::list<OmittedArea> OmittedAreas;
 	std::list<sf::Vector2i> dangerZoner;
 	int team = 0;
+	int scoreValue=0;
 
 	ActionsAvalible getActionsAvaliable();
 

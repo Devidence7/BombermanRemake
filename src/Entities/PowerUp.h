@@ -4,6 +4,7 @@
 #include "../Textures/PowerUpTexture.h"
 #include "../Textures/TextureStorage.h"
 
+
 class PowerUp : public Entity {
 public:
 	PowerUpTexture* powerUpTexture;
@@ -21,6 +22,8 @@ public:
 	void onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<Entity> eCollisioner, CollisionType colT) override;
 
 	virtual void setPlayerStatus(PlayerEntity &pe);
+
+
 };
 
 
