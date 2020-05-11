@@ -25,7 +25,7 @@ void PLayers::addIAPlayer(PlayerEntity::PlayerControls& playerControls,int team,
 	p->me = p;
 	//TODO: Hacerlo bien
 	if(team == 0){
-		p->setPosition(100, 100);
+		p->setPosition(500, 500);
 		p->createStateGenerator("../src/PseudoPPDL/IA1.txt");
 	}else{
 		p->setPosition(500, 500);

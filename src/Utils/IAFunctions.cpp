@@ -3,6 +3,20 @@
 #include "../Include/EntitiesInclude.hpp"
 #include "../PseudoPPDL/Estados.hpp"
 
+
+inline void createRangeVision(sf::Vector2i &from, sf::Vector2i &to, sf::Vector2i position, int rangeVision){
+        to = Level::sizeLevel() - sf::Vector2i(1,1);
+        from = sf::Vector2i(1,1); //ignorar bordes
+    if(rangeVision > -1){
+        sf::Vector2i aux = position - sf::Vector2i(rangeVision, rangeVision);
+        from.x = max(from.x, aux.x);
+        from.y = max(from.y, aux.y);
+        aux = position + sf::Vector2i(rangeVision, rangeVision);
+        to.x = min(to.x, aux.x);
+        to.y = min(to.y, aux.y);
+    }
+}
+
 sf::Vector2i generateObjetive2Player(Entity_ptr p, Entity_ptr e, std::vector<sf::Vector2i> &objetives)
 {
     sf::Vector2f posPlayer = p->getCenterPosition();
@@ -90,20 +104,12 @@ void generateOmitedZoneByBomb(sf::Vector2i bombPosition, std::list<OmittedArea> 
 
 void generateOmitedZones(sf::Vector2i positionP, std::list<OmittedArea> &AreasOmited, int rangeVision)
 {
-    sf::Vector2i sizeLevel = Level::sizeLevel();
-    int rangeVisionX = positionP.x + rangeVision + 1;
-    int rangeVisionY = positionP.y + rangeVision + 1;
-    int byX = positionP.x;
-    int byY = positionP.y;
-    if(rangeVision < 0){
-        rangeVisionX = sizeLevel.x;
-        rangeVisionY = sizeLevel.y;
-        byX = 0;
-        byY = 0;
-    }
-    for (int x = byX; x < rangeVisionX; x++)
+    sf::Vector2i by;
+    sf::Vector2i to;
+    createRangeVision(by, to, positionP, rangeVision);
+    for (int x = by.x; x < to.x; x++)
     {
-        for (int y = byY; y < rangeVisionY; y++)
+        for (int y = by.y; y < to.y; y++)
         {
             Entity_ptr e = Level::getCellMiniMapObject(x, y);
             if (std::dynamic_pointer_cast<Bomb>(e) != nullptr)
@@ -114,8 +120,51 @@ void generateOmitedZones(sf::Vector2i positionP, std::list<OmittedArea> &AreasOm
     }
 }
 
-void createStateMap(Entity_ptr e){
-    
+
+
+void seekBetterListPos2DestroyWalls(sf::Vector2i positionCenter, int range, std::list<sf::Vector2i> &positions ){
+    sf::Vector2i by;
+    sf::Vector2i to;
+    createRangeVision(by, to, positionCenter, range);
+
+    int bestN = 0;
+    for(int x = by.x + 1; x < to.x - 1; x++){
+        for(int y = by.y + 1; y < to.y - 1; y++){
+            int sum = 0;
+            Entity_ptr m = Level::getCellMiniMapObject(x-1,y -1);
+            if(m != nullptr && std::dynamic_pointer_cast<BrickWall>(m) != nullptr){sum++;}
+            m = Level::getCellMiniMapObject(x - 1, y +1);
+            if(m != nullptr && std::dynamic_pointer_cast<BrickWall>(m) != nullptr){sum++;}
+            m = Level::getCellMiniMapObject(x +1, y + 1 );
+            if(m != nullptr && std::dynamic_pointer_cast<BrickWall>(m) != nullptr){sum++;}
+            m = Level::getCellMiniMapObject(x +1, y + 1);
+            if(m != nullptr && std::dynamic_pointer_cast<BrickWall>(m) != nullptr){sum++;}
+            if(sum > bestN){    //Si es 4 -> no existe camino!
+                positions.clear();
+                bestN = sum;
+            }
+            if(sum == bestN){
+                positions.push_back(sf::Vector2i(x,y));
+            }
+        }
+    }
+
+}
+
+void createStateMap(Entity_ptr e, int rangeVision,std::list<Entity_ptr>& stateMap){
+    sf::Vector2i position = e->getEntityMapCoordinates();
+    sf::Vector2i by;
+    sf::Vector2i to;
+    createRangeVision(by, to, position, e->rangoVision);
+
+    for(int x = by.x; x < to.x; x++){
+        for(int y = by.y; y < to.y; y++){
+            Entity_ptr m = Level::getCellMiniMapObject(x,y);
+            if(m != nullptr && std::dynamic_pointer_cast<Pillar>(m) == nullptr && std::dynamic_pointer_cast<BrickWall>(m) == nullptr){
+                stateMap.push_back(m);
+            }
+        }
+    }
 }
 
 //TODO: Criterios de seleccion?

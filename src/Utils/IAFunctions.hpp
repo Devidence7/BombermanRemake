@@ -28,6 +28,8 @@ sf::Vector2i generateObjetive2Player(std::shared_ptr<Entity> p, std::shared_ptr<
 
 void seekAnyPlayerOrRandom(list<ANode_Ptr> & movements, std::shared_ptr<Entity> e,  TypeSeekIA typeSeek);
 
+inline void createRangeVision(sf::Vector2i &from, sf::Vector2i &to, sf::Vector2i position, int rangeVision);
+
 
 //#include "../Include/EntitiesInclude.hpp"
 #include "../Entities/Player.h"
