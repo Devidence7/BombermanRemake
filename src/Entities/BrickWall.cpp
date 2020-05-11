@@ -59,5 +59,6 @@ void BrickWall::setExpiredEntity()
 
 void BrickWall::deleteWall()
 {
+	setTextureRect(sf::IntRect(0,0,0,0));
 	expiredEntity=true;
 }

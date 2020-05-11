@@ -50,7 +50,7 @@ void StateGenerator::readIA(string path)
     ifstream fileIA(path);
     if (!fileIA.is_open())
     {
-        throw FileIADoesntExist("La IA " + path + " no existe");
+        //throw FileIADoesntExist("La IA " + path + " no existe");
     }
     string line;
     std::getline(fileIA, line);
