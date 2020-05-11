@@ -37,7 +37,8 @@ public:
 		DIFFICULTY,
 		LOADING,
 		VICTORY,
-		FINAL_SCORE
+		FINAL_SCORE,
+		END_BATTLE
 		//RESTART
     };
 
