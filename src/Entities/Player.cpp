@@ -36,14 +36,8 @@ PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team,int posX,int pos
 	playerHead2.setTextureRect(sf::IntRect(sf::Vector2i(9, 0), sf::Vector2i(39, 39)));
 
 
-
-	// TODO: Remove this
-	actionAvaible = ActionsAvalible::KICK_BOM;
+	initialPos = sf::Vector2f(posX, posY);
 	move(posX,posY);
-
-	
-
-
 }
 
 int PlayerEntity::getPowerOfBombs() {
@@ -161,7 +155,7 @@ void PlayerEntity::animate(sf::Vector2f velocity,int posX,int posY) {
 		else if (GameTime::getTimeNow() - lastRespawnTime > respawnTime) {
 			expiredEntity = false;
 			respawning = false;
-			setPosition(48, 48);
+			setPosition(initialPos);
 		}
 	}
 

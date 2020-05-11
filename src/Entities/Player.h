@@ -27,6 +27,7 @@ public:
 	bool isBombKeyPresed = false;
 	bool isActionKeyPresed = false;
 
+	sf::Vector2f initialPos;
 
 	std::shared_ptr<PlayerEntity> me;
 

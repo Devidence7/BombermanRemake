@@ -13,14 +13,16 @@ int Level::numWalls = 0;
 int Level::stage = 1;
 int Level::numEnemiesLeft = 0;
 Teleporter_ptr Level::teleporter = nullptr;
+GameOptions* Level::gameOptions;
 
 
-Level::Level(int dimX, int dimY, bool debug, int stage) {
+Level::Level(int dimX, int dimY, bool debug, int stage, GameOptions *gameOptions) {
 	Level::exitHasApeared = false;
 	Level::canFinishLevel = false;
 	Level::levelFinished = false;
 	Level::numWalls = 0;
-	teleporter = nullptr;
+	Level::teleporter = nullptr;
+	Level::gameOptions = gameOptions;
 
 	Level::stage = stage;
 
@@ -68,7 +70,7 @@ Level::Level(int dimX, int dimY, bool debug, int stage) {
 		for (int y = 1; y < dimY + 1; y++) {
 			if (x % 2 == 1 || y % 2 == 1) {
 				// Create random Bricks:
-				if (true || !Random::getIntNumberBetween(0, 3)) {
+				if (!Random::getIntNumberBetween(0, 3)) {
 					bool intersec = false;
 					for (Enemy_ptr e : Enemies::getVectorEnemies()) {
 						sf::Vector2i p = getMapCoordinates(e->getCenterPosition());
@@ -163,17 +165,17 @@ void Level::createTeleporter(Entity_ptr it) {
 void Level::brickWallOutcomes(Entity_ptr it) {
 
 	// Last oportunity to get a teleporter
-	if (!Level::exitHasApeared && Level::numWalls == 1) {
+	if (gameOptions->historyMode && !Level::exitHasApeared && Level::numWalls == 1) {
 		createTeleporter(it);
 	}
 	// Russian Roullete
 	else {
 		float probability = Random::getFloatNumberBetween(0, 1);
-		cout << probability << endl;
-		if (probability < 0.30) {
+		//cout << probability << endl;
+		if (!gameOptions->historyMode) probability /= 2;
 
+		if (probability < 0.30) {
 			probability = Random::getFloatNumberBetween(0, 92);
-			cout << probability << endl;
 			Entity_ptr newObject = nullptr;
 			bool tryTeleport = false;
 
@@ -192,7 +194,7 @@ void Level::brickWallOutcomes(Entity_ptr it) {
 			else if (probability < 50) {
 				newObject = std::make_shared<LessSpeedPowerUp>(LessSpeedPowerUp((it)->getPosition()));
 			}
-			else if (probability < 55) {
+			else if (gameOptions->historyMode && probability < 55) {
 				newObject = std::make_shared<MoreTimePowerUp>(MoreTimePowerUp((it)->getPosition()));
 			}
 			else if (probability < 60) {
@@ -210,10 +212,10 @@ void Level::brickWallOutcomes(Entity_ptr it) {
 			else if (probability < 85) {
 				newObject = std::make_shared<RemoteBombPowerUp>(RemoteBombPowerUp((it)->getPosition()));
 			}
-			else if (probability < 87) {
+			else if (gameOptions->historyMode && probability < 87) {
 				newObject = std::make_shared<ExtraLifePowerUp>(ExtraLifePowerUp((it)->getPosition()));
 			}
-			else if (!Level::exitHasApeared && probability < 92) {
+			else if (gameOptions->historyMode && !Level::exitHasApeared && probability < 92) {
 				createTeleporter(it);
 				tryTeleport = true;
 			}
