@@ -307,7 +307,7 @@ public:
 	void saveProperties() {
 		gameProperties.at("volume.master") = to_string(GameMusic::getMasterVolume());
 		gameProperties.at("volume.music") = to_string(GameMusic::getVolume()); 
-		gameProperties.at("volume.sound") = to_string(GameMusic::getVolume());
+		gameProperties.at("volume.sound") = to_string(GameSounds::getVolume());
 
 		gameProperties.at("fps") = to_string(FPSs);
 		gameProperties.at("fullscreen") = to_string((int)fullScreen);

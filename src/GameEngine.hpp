@@ -40,12 +40,10 @@ private:
 
 public:
 	struct GameOptions {
-	
 		int numPlayers;
 		double difLevel;
 		int numIAPlayers;
-		
-		
+		bool historyMode;
 	};
 	int stage;
 	GameOptions gameOptions;
@@ -330,8 +328,12 @@ Game(){
 	void drawPlayers(sf::RenderWindow& w) {
 
 		for (Player_ptr player : PLayers::getVectorPlayer()) {
-			w.draw(*player);
-			w.draw(player->playerUpdateColor());
+			if (!player->dead && !player->respawning) {
+				w.draw(*player);
+				w.draw(player->playerUpdateColor());
+			}
+
+			
 			if (player->getBomb() != nullptr) {
 				auto bombpos = player->getBomb()->getPosition();
 				auto playerPos = player->getCenterPosition();

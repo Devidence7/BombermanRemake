@@ -4,10 +4,10 @@ PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team,int posX,int pos
 
 	team = _team;
 
+	lastRespawnTime = 0;
 	isFireDestroyable = true;
 	fireCanGoThroght = true;
 	collisioner = false;
-	dead=false;
 	animLastTic = GameTime::getTimeNow();
 	lastMovementTime = GameTime::getTimeNow();
 	baseSpeed = 2.5;
@@ -125,36 +125,43 @@ void PlayerEntity::animate(sf::Vector2f velocity,int posX,int posY) {
 			
 	}
 	else {
-		if (currentFrame == 6 && GameTime::getTimeNow() - animLastTic > frameSpeed / 2 ) {
-			lives--;
-			if (lives > 0) {
-				expiredEntity = false;
-				setPosition(posX, posY);
+		if (!respawning) {
+			if (GameTime::getTimeNow() - animLastTic > frameSpeed) {
+				if (currentFrame == 7) {
+					currentFrame = 0;
+					lives--;
+					if (lives > 0) {
+						lastRespawnTime = GameTime::getTimeNow();
+						respawning = true;
+					}
+					else {
+						lives = 0;
+						dead = true;
+						// setExpiredEntity();
+						//dead=true;
+					}
 
+					/*else{
+						gameDisplay.setGameState(GameDisplayController::GameState::GAME_OVER);
+					}*/
+					//Else mostrar fin de partida
+					/*else{}
+						expiredEntity = false;
+					setPosition(100, 100);*/
+				}
+				else {
+					setTextureRect(playerTexture->getDeathSprite(currentFrame));
+					playerColorEntity.setTextureRect(playerTexture->getDeathSprite(currentFrame));
+					currentFrame = (currentFrame + 1) % deathFrames;
+					animLastTic = GameTime::getTimeNow();
+				}
 			}
-			else {
-				lives = 0;
-				dead=true;
-				setExpiredEntity();
-				//dead=true;
-			}
-			
-		
-	
-			/*else{
-				gameDisplay.setGameState(GameDisplayController::GameState::GAME_OVER);
-			}*/
-			//Else mostrar fin de partida
-			/*else{}
-				expiredEntity = false;
-			setPosition(100, 100);*/
 		}
-
-		if (GameTime::getTimeNow() - animLastTic > frameSpeed && !dead) {
-			setTextureRect(playerTexture->getDeathSprite(currentFrame));
-			playerColorEntity.setTextureRect(playerTexture->getDeathSprite(currentFrame));
-			currentFrame = (currentFrame + 1) % deathFrames;
-			animLastTic = GameTime::getTimeNow();
+	
+		else if (GameTime::getTimeNow() - lastRespawnTime > respawnTime) {
+			expiredEntity = false;
+			respawning = false;
+			setPosition(48, 48);
 		}
 	}
 
