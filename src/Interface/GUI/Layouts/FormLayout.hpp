@@ -18,6 +18,8 @@ public:
 	// widget: widget to be added
 	Widget* addRow(const sf::String& label, Widget* widget, int id = -1);
 
+	Widget* addRow(const sf::String& str, Widget* widget, int id, int labelSize);
+
 private:
  	// Update the bounds of this Widget according to the widgets inside of it.
 	void recomputeGeometry() override;

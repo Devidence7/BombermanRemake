@@ -1,6 +1,6 @@
 #include "../Map/Level.hpp"
 
-PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team,int posX,int posY) : Entity(), playerControls(pControls) {
+PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team,float posX,float posY) : Entity(), playerControls(pControls) {
 
 	team = _team;
 
@@ -35,9 +35,11 @@ PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team,int posX,int pos
 	playerHead2.setTexture(playerTexture->getTexture());
 	playerHead2.setTextureRect(sf::IntRect(sf::Vector2i(9, 0), sf::Vector2i(39, 39)));
 
-
+	setPosition(posX,posY);
+	if (posX > 150){
+		posX -= 48;
+	}
 	initialPos = sf::Vector2f(posX, posY);
-	move(posX,posY);
 }
 
 int PlayerEntity::getPowerOfBombs() {

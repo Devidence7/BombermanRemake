@@ -122,7 +122,7 @@ public:
 		}
 		victory.setFont(font);
 		victory.setString("PUNTUACIONES");
-		victory.setColor(sf::Color::White);
+		victory.setFillColor(sf::Color::White);
 		// victory.setScale(2,2);
 		victory.setCharacterSize(72);
 
