@@ -13,9 +13,10 @@ struct GameOptions {
 	double difLevel;
 	int numIAPlayers;
 	bool historyMode;
-	double totalTime=299;
+	
 	
 };
+double totalTime=299;
 double timeLeft=totalTime;
 
 

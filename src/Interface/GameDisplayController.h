@@ -72,10 +72,10 @@ public:
 
 		// Create the main window
 		if (fullScreen) {
-			window = new sf::RenderWindow(sf::VideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height), "Bombermenaman", sf::Style::Fullscreen); // , sf::Style::Titlebar | sf::Style::Close | sf::Style::Fullscreen
+			window = new sf::RenderWindow(sf::VideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height), "Bomberman", sf::Style::Fullscreen); // , sf::Style::Titlebar | sf::Style::Close | sf::Style::Fullscreen
 		}
 		else {
-			window = new sf::RenderWindow(sf::VideoMode(windowWidth, windowHeight), "Bombermenaman");
+			window = new sf::RenderWindow(sf::VideoMode(windowWidth, windowHeight), "Bomberman");
 		}
 		
 		window->setFramerateLimit(FPSs);
