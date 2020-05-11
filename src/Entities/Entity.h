@@ -163,6 +163,10 @@ public:
 	}
 	void changeBombs2time();
 
+	sf::Vector2i getEntityMapCoordinates(){
+		return getMapCoordinates(getCenterPosition());
+	}
+
 	bool bombIsFrom(std::shared_ptr<Entity> b){
 		auto it = find (BombsAsociated.begin(), BombsAsociated.end(), b);
 		if(it != BombsAsociated.end()){

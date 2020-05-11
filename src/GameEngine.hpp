@@ -69,6 +69,14 @@ Game(){
 				case 1:
 					PLayers::addPlayer(userKeyPress.getPlayerControls(i+1),SIZE_PILLAR,(dimY-1)*SIZE_PILLAR);
 					break;
+				
+				case 2:
+					PLayers::addPlayer(userKeyPress.getPlayerControls(i+1),(dimX-1)*SIZE_PILLAR,SIZE_PILLAR);
+					break;
+				
+				case 3:
+					PLayers::addPlayer(userKeyPress.getPlayerControls(i+1),(dimX-1)*SIZE_PILLAR,(dimY-1)*SIZE_PILLAR);
+					break;
 
 				default:
 					break;
@@ -80,18 +88,18 @@ Game(){
 
 				case 0:
 					cout<<"IA 1"<<endl;
-					PLayers::addIAPlayer(userKeyPress.getPlayerControls(i+1),(dimX-2)*SIZE_PILLAR,SIZE_PILLAR);
+					PLayers::addIAPlayer(userKeyPress.getPlayerControls(i+1),(dimX-1)*SIZE_PILLAR,SIZE_PILLAR,debug);
 					
 					break;
 
 				case 1:
 					cout<<"IA 2"<<endl;
-					PLayers::addIAPlayer(userKeyPress.getPlayerControls(i+1),(dimX-2)*SIZE_PILLAR,(dimY-2)*SIZE_PILLAR);
+					PLayers::addIAPlayer(userKeyPress.getPlayerControls(i+1),(dimX-1)*SIZE_PILLAR,(dimY-1)*SIZE_PILLAR,debug);
 					break;
 
 				case 2:
 					cout<<"IA 3"<<endl;
-					PLayers::addIAPlayer(userKeyPress.getPlayerControls(i+1),SIZE_PILLAR,(dimY-2)*SIZE_PILLAR);
+					PLayers::addIAPlayer(userKeyPress.getPlayerControls(i+1),SIZE_PILLAR,(dimY-1)*SIZE_PILLAR,debug);
 					break;
 				
 				default:
@@ -115,7 +123,7 @@ Game(){
 		level = new Level(dimX, dimY,debug,stage);
 		//Enemies::insertarEnemigos(dimX, dimY);
 		if(debug){
-			insertPlayers(*gameDisplay.userKeyPress, 0, 2);
+			insertPlayers(*gameDisplay.userKeyPress, 1, 1);
 		}else{
 			cout<<"Numero de IAs: "<<gameOptions.numIAPlayers<<endl;
 			insertPlayers(*gameDisplay.userKeyPress, gameOptions.numPlayers, gameOptions.numIAPlayers);

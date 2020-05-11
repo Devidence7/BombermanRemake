@@ -31,7 +31,7 @@ class PLayers
 
 public:
     static void addPlayer(PlayerEntity::PlayerControls &playerControls, int posX,int posY,int team = 0);
-    static void addIAPlayer(PlayerEntity::PlayerControls &playerControls,int posX,int posY,int team = 0, int IA=0);
+    static void addIAPlayer(PlayerEntity::PlayerControls &playerControls,int posX,int posY,bool debug,int team = 0, int IA=0);
     static std::vector<Player_ptr> &getVectorPlayer();
     static bool cehckSomeCollision(Entity_ptr e);
 };
@@ -43,7 +43,8 @@ class Enemies{
    
 
 public:
-    //static void insertarEnemigosExtraTel(int dimX, int dimY);
+	static void insertarEnemigosExtraTeleport(sf::Vector2f pos, int numEnemigos);
+	//static void insertarEnemigosExtraTel(int dimX, int dimY);
     static void insertarEnemigosExtra(int dimX, int dimY);
     static void insertarEnemigos(int dimX, int dimY,int numEnemies,int stage);
     static std::vector<Enemy_ptr> &getVectorEnemies();

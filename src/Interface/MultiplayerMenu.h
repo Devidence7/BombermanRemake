@@ -194,7 +194,7 @@ private:
 			break;
 
         case ButtonActions::PLVSPLIA:
-			game.gameOptions.numPlayers=1;
+			game.gameOptions.numPlayers=2;
 			game.gameOptions.numIAPlayers=1;
 			previousMenu=MenuState::MAIN;
 			createNumPlaySelection(*window,gameDisplay);
@@ -349,7 +349,6 @@ private:
 
         case 4:
         menu->addButton("           	1 Jugador Vs  3 IA                ", ButtonActions::PL1VS3IA);
-		menu->addButton("          	 1 Jugadores Vs 2 Jugadores 1 IA                 ", ButtonActions::PLVSPL2IA);
         menu->addButton("          	    2 Jugadores Vs 2 IA                ", ButtonActions::PL2VS2IA);
 		menu->addButton("             Jugador IA  Vs Jugador IA                 ", ButtonActions::PLIAVSPLIA);
 		hboxQuit->addButton("Atras", ButtonActions::BACK);

@@ -98,7 +98,8 @@ private:
 		break;
 
 		case ButtonActions::DEBUG:
-			game.gameOptions.numPlayers = 2;
+			game.gameOptions.numPlayers = 1;
+			game.gameOptions.numIAPlayers = 1;
 			game.gameOptions.difLevel=1;
 			game.debug=true;
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);

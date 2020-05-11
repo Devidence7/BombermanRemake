@@ -20,13 +20,18 @@ void PLayers::addPlayer(PlayerEntity::PlayerControls& playerControls, int posX,i
 	players.push_back(p);
 }
 
-void PLayers::addIAPlayer(PlayerEntity::PlayerControls& playerControls,int posX,int posY,int team,int IA) {
+void PLayers::addIAPlayer(PlayerEntity::PlayerControls& playerControls,int posX,int posY,bool debug,int team,int IA) {
 	PlayerIA_ptr p = std::make_shared<PlayerIAEntity>(PlayerIAEntity(playerControls,posX,posY,team,IA));
 	p->me = p;
 	//TODO: Hacerlo bien
 	if(team == 0){
 		cout<<"Pos x: "<<posX<<" Pos y: "<<posY<<endl;
-		p->setPosition(posX,posY);
+		if(!debug){
+			p->setPosition(posX,posY);
+		}
+		else{
+			p->setPosition(100,100);
+		}
 		p->createStateGenerator("../src/PseudoPPDL/IA1.txt");
 	}else{
 		p->setPosition(posX, posY);
@@ -86,7 +91,15 @@ std::vector<Enemy_ptr> Enemies::enemiesExtra;
 	}*/
 
 
-
+void Enemies::insertarEnemigosExtraTeleport(sf::Vector2f pos, int numEnemigos = 3) {
+	for (int i = 0; i < 7; i++) {
+		auto a = std::make_shared<EnemyEntity>(Coin());
+		a->setPosition(pos);
+		a->me = a;
+		a->startMovement();
+		enemies.push_back(a);
+	}
+}
 
 void Enemies::insertarEnemigosExtra(int dimX, int dimY){
 	std::vector<Enemy_ptr> a(7);
@@ -111,7 +124,7 @@ void Enemies::insertarEnemigosExtra(int dimX, int dimY){
 		e->startMovement();
 	}
 
-	}
+}
 
 
 
