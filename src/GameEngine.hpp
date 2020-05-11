@@ -111,7 +111,6 @@ Game(){
 	void startNewGame(sf::RenderWindow& window, GameDisplayController &gameDisplay){
 		// Restart time parameters
 		GameTime::startGameTime();
-		GameMusic::playWorld1Music();
 
 		//	cout<<gameOptions.numPlayers<<endl;
 		int numEnemies=DEFAULT_NUM_OF_ENEMIES*gameOptions.difLevel*(stage/0.75);

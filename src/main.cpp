@@ -39,6 +39,7 @@ int main(int argc, char* argv[]) {
 
 	// Play Title music
 	GameMusic::playTitleMusic();
+	GameSounds::inicializeSounds();
 
 	MainMenu gameMainMenu(*gameDisplayController.getWindow());
 	OptionsMenu optionsMenu(*gameDisplayController.getWindow());

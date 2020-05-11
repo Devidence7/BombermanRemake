@@ -60,11 +60,11 @@ public:
 	}
 
 	static void playWorld2Music() {
-		insertMusicTrack("../music/Music/World 2.flac");
+		insertMusicTrack("../music/Music/World 2.wav");
 	}
 
 	static void playWorld3Music() {
-		insertMusicTrack("../music/Music/World 3.flac");
+		insertMusicTrack("../music/Music/World 3.wav");
 	}
 
 };

@@ -1,4 +1,6 @@
 #include "Level.hpp"
+#include "../Music/GameMusic.h"
+#include "../Music/GameSounds.h"
 
 std::vector<Entity_ptr> Level::entities;
 std::vector<Bomb_ptr> Level::onFlightBombs;
@@ -33,12 +35,15 @@ Level::Level(int dimX, int dimY, bool debug, int stage)
 
 	switch(stage){
 		case 1:
+			GameMusic::playWorld1Music();
 			flooro.setFillColor(sf::Color(0, 102, 10));
 			break;
 		case 2:
+			GameMusic::playWorld2Music();
 			flooro.setFillColor(sf::Color(34, 0, 102));
 			break;
 		case 3:
+			GameMusic::playWorld3Music();
 			flooro.setFillColor(sf::Color(102, 0, 128));
 			break;
 		default:
@@ -168,6 +173,7 @@ void Level::createTeleporter(Entity_ptr it) {
 	Teleporter_ptr newObject = std::make_shared<Teleporter>(Teleporter((it)->getPosition()));
 	addEntityToMiniMap(newObject, getMapCoordinates((it)->getPosition()));
 	addNewItem(newObject);
+	GameSounds::teleportAppear();
 
 	teleporter = newObject;
 	if (canFinishLevel) {

@@ -1,5 +1,6 @@
 #include "../Include/EntitiesInclude.hpp"
 #include "../Utils/IAFunctions.hpp"
+#include "../Music/GameSounds.h"
 
 EnemyEntity::EnemyEntity() : Entity()
 {
@@ -118,6 +119,7 @@ void EnemyEntity::setExpiredEntity()
 	spriteStartTime = GameTime::getTimeNow();
 	spriteLastFrameTime = GameTime::getTimeNow();
 	dyingEntity = true;
+	GameSounds::playEnemyDied();
 	//velocity = sf::Vector2f(0, 0);
 }
 

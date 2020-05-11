@@ -1,5 +1,6 @@
 #include "Teleporter.h"
 #include "../Logic/Time.h"
+#include "../Music/GameSounds.h"
 
 
 //Teleporter::Teleporter() : Entity() {
@@ -51,6 +52,7 @@ void Teleporter::onCollission(std::shared_ptr<Entity> eCollisioning, std::shared
 	if (!this->expiredEntity && (pe = std::dynamic_pointer_cast<PlayerEntity>(eCollisioning)) != nullptr){
 		if(teleporterState == OPEN){
 			playerCross = true;
+			GameSounds::teleportEnter();
 			//GameDisplayController::displayController->setGameState(GameDisplayController::GameState::VICTORY);
 			// gameDisplay.setGameState(GameDisplayController::GameState::VICTORY);
 		}
