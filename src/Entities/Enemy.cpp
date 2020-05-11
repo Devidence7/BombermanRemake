@@ -195,6 +195,7 @@ Barrel::Barrel() : EnemyEntity()
 Coin::Coin() : EnemyEntity()
 {
 	enemyType = coin;
+	baseSpeed = 2;
 	//move(500, 450);
 }
 

@@ -55,7 +55,6 @@ void Teleporter::onCollission(std::shared_ptr<Entity> eCollisioning, std::shared
 			// gameDisplay.setGameState(GameDisplayController::GameState::VICTORY);
 		}
 	}
-//	}
 }
 
 void Teleporter::openTeleporter() {

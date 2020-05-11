@@ -261,7 +261,7 @@ void Level::update()
 	while (it != entities.end())
 	{
 		sf::FloatRect beginRect = (*it)->getGlobalBoundsCollisioner();
-		sf::Vector2f begintPos = (*it)->getCenterPosition();
+		sf::Vector2f begintPos = (*it)->getPosition();
 		// Update the entities.
 		(*it)->update();
 		if ((*it)->getExpiredEntity())
@@ -396,6 +396,10 @@ bool Level::createFire(int type, int posX, int posY, Player_ptr p)
 {
 	// Get the object in cell
 	Entity_ptr e = getCellMiniMapObject(getMapCoordinates(posX, posY));
+
+	if (std::dynamic_pointer_cast<Teleporter>(e) != nullptr) {
+		Enemies::insertarEnemigosExtraTeleport(e->getPosition(), 3);
+	}
 
 	if (e && e->getIsFireDestroyable() && !e->getFireCanGoThroght())
 	{

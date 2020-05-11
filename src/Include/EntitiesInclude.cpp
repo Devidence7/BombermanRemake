@@ -85,7 +85,15 @@ std::vector<Enemy_ptr> Enemies::enemiesExtra;
 	}*/
 
 
-
+void Enemies::insertarEnemigosExtraTeleport(sf::Vector2f pos, int numEnemigos = 3) {
+	for (int i = 0; i < 7; i++) {
+		auto a = std::make_shared<EnemyEntity>(Coin());
+		a->setPosition(pos);
+		a->me = a;
+		a->startMovement();
+		enemies.push_back(a);
+	}
+}
 
 void Enemies::insertarEnemigosExtra(int dimX, int dimY){
 	std::vector<Enemy_ptr> a(7);
@@ -110,7 +118,7 @@ void Enemies::insertarEnemigosExtra(int dimX, int dimY){
 		e->startMovement();
 	}
 
-	}
+}
 
 
 
