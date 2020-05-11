@@ -45,16 +45,19 @@ public:
     {
     public:
         float bootsPatrol = 0;
-        sf::Vector2i puntRelativoA;
-        sf::Vector2i puntRelativoB;
+        float imprudencia = 0;
+        int costDestroyWall = 0;
     };
 
     struct SeekPEStruct
     {
     public:
         float bootsPatrol = 0;
-        sf::Vector2i puntRelativoA;
-        sf::Vector2i puntRelativoB;
+        int RangoVision = 0;
+        float interBuffPU = 0;
+        float interNerfPU = 0;
+        float interActionPU = 0;
+
     };
 
     PatrolStruct _PatrolStruct;
@@ -67,6 +70,19 @@ public:
     bool havePerseguirStruct = false;
 
     PatrolState getPatrol(sf::Vector2i pos);
+   /* PerseguirState getVisionPerseguir();
+    PerseguirState getCostDestWallPerseguir();
+    KillState getImprudencia();
+    KillState getVisionKill();
+    SeekPEState getVisionSeek();
+    SeekPEState getInterBuffPU();
+    SeekPEState getInterActionPU();*/
+    
+
+
+
+    
+   // PerseguirState get
     void generateState(ifstream &f, string estado);
     void readIA(string path);
 };

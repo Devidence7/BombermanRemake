@@ -28,7 +28,7 @@ void PLayers::addIAPlayer(PlayerEntity::PlayerControls& playerControls,int posX,
 		p->createStateGenerator("../src/PseudoPPDL/IA1.txt");
 	}else{
 		//p->createStateGenerator("../src/PseudoPPDL/IA1.txt");
-		p->createStateGenerator("../src/PseudoPPDL/IA2.txt");
+		p->createStateGenerator("../src/PseudoPPDL/IA1.txt");
 	}
 	p->startStates();
 	players.push_back(p);

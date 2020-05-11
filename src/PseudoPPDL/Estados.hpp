@@ -26,6 +26,70 @@ class PatrolState{
 
 };
 
+class PerseguirState{
+    public:
+      int rangeVision ;
+      int costDestWall;
+
+    PerseguirState(){}
+    PerseguirState(int rangoVision,int costDestroyWall): rangeVision(rangoVision),costDestWall(costDestroyWall){}
+
+    int getVisionPerseguir(){
+        return rangeVision;
+    }
+
+    int getCostDestWallPerseguir(){
+        return costDestWall;
+    }
+
+};
+
+class KillState{
+    public:
+      float imprudencia ;
+      int costDestWall ;
+
+    KillState(){}
+    KillState(float imp,int costDestroyWall): imprudencia(imp),costDestWall(costDestroyWall){}
+
+    float getImprudencia(){
+        return imprudencia;
+    }
+
+    int getCostDestWallKill(){
+        return costDestWall;
+    }
+
+};
+
+
+class SeekPEState{
+    public:
+        int RangoVision ;
+        float interBuffPU ;
+        float interNerfPU ;
+        float interActionPU ;
+
+    SeekPEState(){}
+    SeekPEState(int rangeVision,float buff,float nerf,float action): RangoVision(rangeVision),interBuffPU(buff),interNerfPU(nerf),interActionPU(action){}
+
+     int getVisionSeek(){
+        return RangoVision;
+    }
+
+    float getInterBuffPU(){
+        return interBuffPU;
+    }
+
+    float getInterNerfPU(){
+        return interNerfPU;
+    }
+    
+    float getInterActionPU(){
+        return interActionPU;
+    }
+    
+};
 
 
 
