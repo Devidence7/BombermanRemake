@@ -245,7 +245,6 @@ void PlayerIAEntity::decildetState(){
 	selectPowerUpsObjetive(me, objetivesPE, this->sg._SeekPEStruct.RangoVision);
 	if(objetivesPE.size() > 0){
 		if(pathFindingGoWithCare(this->getEntityMapCoordinates(), objetivesPE , movementes2PE, me, 0)){
-			std::cout << "encontrado PU "<< sg._SeekPEStruct.bootsSeek <<  " \n";
 			pointGoToPU = 1/movementes2PE.back()->costNode() * sg._SeekPEStruct.bootsSeek;
 		}
 	}
