@@ -25,7 +25,8 @@ void PLayers::addIAPlayer(PlayerEntity::PlayerControls& playerControls,int posX,
 	p->me = p;
 	if(team == 0){
 		cout<<"Pos x: "<<posX<<" Pos y: "<<posY<<endl;
-		p->createStateGenerator("../src/PseudoPPDL/IA1.txt");
+		//p->createStateGenerator("../src/PseudoPPDL/IA1.txt");
+		p->createStateGenerator("../src/PseudoPPDL/IA2.txt");
 	}else{
 		//p->createStateGenerator("../src/PseudoPPDL/IA1.txt");
 		p->createStateGenerator("../src/PseudoPPDL/IA1.txt");

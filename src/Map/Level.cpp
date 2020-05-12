@@ -378,12 +378,14 @@ bool Level::createFire(int type, int posX, int posY, Player_ptr p) {
 		addEntity(e);
 		//TODO Asignar puntaciones
 		if (std::dynamic_pointer_cast<EnemyEntity>(e) != nullptr) {
-			p->incrementScore(100);
+			p->incrementScore(e->scoreValue);
 		}
 		else if (std::dynamic_pointer_cast<Player_ptr>(e) != nullptr) {
-			p->incrementScore(100);
+			p->incrementScore(e->scoreValue);
 		}
-		p->incrementScore(50);
+		else {
+			p->incrementScore(50);
+		}
 	}
 
 	if (!e || e->getFireCanGoThroght()) {
