@@ -85,6 +85,8 @@ public:
 
 	Entity& getPlayerColorEntity();
 
+	void changeColor(sf::Color newColor);
+
 	int getLives();
 
 	inline void addLife(int numLives){
