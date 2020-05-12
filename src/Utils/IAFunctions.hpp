@@ -51,6 +51,8 @@ class PointsDestroyMap{
     public:
     static Interst_ptr &getIntersetZone(sf::Vector2i pos);
     static Interst_ptr &getIntersetZone(int x, int y);
+    static Interst_ptr &addInterset(sf::Vector2i pos, Interst_ptr in);    
+    static void addInterset(int x, int y, Interst_ptr in);
     static void updateMap();
     static void resetMap();
 };

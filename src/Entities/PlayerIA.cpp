@@ -209,7 +209,7 @@ void PlayerIAEntity::decildetState(){
 		pointFarm = movementes2Farm.back()->costNode() * getIntersetDestroyWalls() + 0.1;
 	}
 
-	if(pointKill < pointFarm){
+	if(pointKill > 0 && pointKill < pointFarm){
 		movements = movementes2Players;
 		this->currentState = StateIA::PERSEGUIR;	
 	}else{
@@ -241,6 +241,10 @@ void PlayerIAEntity::updateState(){
 	case StateIA::PERSEGUIR:
 		if(somePlayerEnemyOnRange(currentPosMap, getPowerOfBombs(), team)){
 				currentState =  StateIA::KILL;
+		}
+	case  StateIA::FARM:
+		if(movements.size() < 1 && currentMovement == nullptr){
+			putABomb();
 		}
 		break;
 	default:
