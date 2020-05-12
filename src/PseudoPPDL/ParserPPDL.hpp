@@ -47,6 +47,7 @@ public:
         float bootsPatrol = 0;
         float imprudencia = 0;
         int costDestroyWall = 0;
+        int ansiansDeKill = 0;
     };
 
     struct SeekPEStruct
