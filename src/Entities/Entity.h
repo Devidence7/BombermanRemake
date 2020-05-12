@@ -162,7 +162,7 @@ public:
 		return actionAvaible;
 	}
 
-	void AssignBomb(std::shared_ptr<Entity> b){
+	virtual void AssignBomb(std::shared_ptr<Entity> b){
 		BombsAsociated.push_back(b);
 	}
 	void changeBombs2time();

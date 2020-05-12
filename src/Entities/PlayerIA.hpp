@@ -11,6 +11,7 @@ class PlayerIAEntity : public PlayerEntity
 {
 	sf::Color colorPath;
 public:
+	
 	ANode_Ptr currentMovement;
 	std::list<ANode_Ptr> movements;
 	sf::Vector2i currentObjetive;
@@ -28,6 +29,7 @@ public:
 		colorPath = sf::Color(Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255));
 		IAPlayer=IA;
 		cout<<"POS DE LA IA: "<<posX<<" "<<posY<<endl;
+		actionAvaible = ActionsAvalible::REMOTE_BOMB;
 	}
 
 	void createStateGenerator(string path){
@@ -52,7 +54,10 @@ public:
 
 
 	////////IA FUNCTION
-
+	void AssignBomb(std::shared_ptr<Entity> b) override{
+		std::cout << "Bomba Asignada\n";
+		BombsAsociated.push_back(b);
+	}
 	void startStates();
 	void seekAndDestroyEnemy();
 	void updateState();
@@ -63,6 +68,7 @@ public:
 	bool updateRunawayState();
 	void putABomb();
 	void decildetState();
+	void checkExploteRemote();
 
 	float getIntersetActionPU(){
 		return sg._SeekPEStruct.interActionPU;

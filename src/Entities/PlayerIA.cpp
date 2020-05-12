@@ -313,9 +313,16 @@ void PlayerIAEntity::startStates(){
 	// }
 }
 
-
+void PlayerIAEntity::checkExploteRemote(){
+	if(this->actionAvaible == ActionsAvalible::REMOTE_BOMB && this->BombsAsociated.size() > 0){
+		if(!isOnRangeExplosion(BombsAsociated.front()->getEntityMapCoordinates(), getCenterPosition(), getGlobalBounds() ,getPowerOfBombs())){
+			BombsAsociated.front()->setExpiredEntity();
+		}
+	}
+}
 bool PlayerIAEntity::updatePlayer(){
 
+	checkExploteRemote();
 	generatePathStates();
 	
 	updateMovement();
