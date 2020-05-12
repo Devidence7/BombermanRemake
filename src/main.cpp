@@ -77,7 +77,7 @@ int main(int argc, char* argv[]) {
 			cout<<"Nivel: "<<game.stage<<endl;
 			game.startNewGame(*gameDisplayController.getWindow(),gameDisplayController);
 			
-			gameInterface.createInterface(*gameDisplayController.getWindow());
+			gameInterface.createInterface(*gameDisplayController.getWindow(), gameDisplayController, game);
 			
 			gameDisplayController.setGameState(GameDisplayController::GameState::PLAYING);
 			break;
@@ -136,7 +136,7 @@ int main(int argc, char* argv[]) {
 
 			gameInterface.update();
 
-			gameInterface.draw(gameDisplayController);
+			gameInterface.draw(gameDisplayController, game);
 
 			// Manage pause menu when playing
 			pauseMenu.checkUserPauseActions(gameDisplayController);
