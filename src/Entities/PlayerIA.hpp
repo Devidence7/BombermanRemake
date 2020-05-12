@@ -78,7 +78,7 @@ public:
 		return sg.bonusDestroyWalls;
 	}
 
-	bool avanza(double scoreCamino,float prudencia){
-		return ((scoreCamino/prudencia)>prob);
+	bool avanzaAtravesDelFuego(double scoreCamino){
+		return ((scoreCamino/sg.imprudencia)>prob);
 	}
 };

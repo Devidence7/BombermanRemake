@@ -150,11 +150,9 @@ bool checkValidPositionWithImprudence(const sf::Vector2i &v, std::shared_ptr<Ent
         if(e->OmittedAreas.size() > 0){
             for(OmittedArea oa : e->OmittedAreas){
                 if(oa == v){
-                    if(abs(CostPath - oa.TimeAp()) == 0){
+                    if(abs(CostPath - oa.TimeAp()) == 0 || p->avanzaAtravesDelFuego(abs(CostPath - oa.TimeAp()))){
                         valid = false;
                         break;
-                    }else{
-                        incrementCost = (-abs(CostPath - oa.TimeAp()) + p->sg.imprudencia);
                     }
                 }
             }
@@ -214,6 +212,7 @@ Interst_ptr generateIntersetPowerUps(Entity_ptr e, PlayerIA_ptr p){
     if(std::dynamic_pointer_cast<BuffPoweUp>(e) != nullptr){
         return std::make_shared<IntersetArea>(e->getEntityMapCoordinates(),p->getIntersetActionPU());
     }
+    return nullptr;
 }
 
 
@@ -394,6 +393,8 @@ bool somePlayerEnemyOnRange(sf::Vector2i pos, int rangeBomb, int team){
 // Pre: on(e, posBomb) ^ validPosition(x) ^ canPutABombSafe(e) ^ haveBombs(e)
 // Post: RunAway(IA)
 
+
+
 bool canPutABombSafe(sf::Vector2i posBomb, Player_ptr e, std::list<ANode_Ptr> &movements)
 {
     int range = e->getPowerOfBombs();
@@ -419,7 +420,6 @@ bool canPutABombSafe(sf::Vector2i posBomb, Player_ptr e, std::list<ANode_Ptr> &m
             }
         }
     }
-    std::cout << "entre " << posBomb.x - (range + 2) << " " << posBomb.y - (range + 2) << " a " << posBomb.x + (range + 2) << " " << posBomb.y + (range + 2) << " validos " << objetives.size()<< "\n";
     if(objetives.size() < 1){
         return false;
     }
@@ -625,4 +625,98 @@ bool pathFinderActions( Entity_ptr _ia, const std::vector<sf::Vector2i> &objetiv
             }
         }
     }
+}
+
+bool pathFindingGoWithCare(const sf::Vector2i &positionEnemy, std::list<ANode_Ptr> &path, Entity_ptr e, int costAddDestroy)
+{
+    
+    PlayerIA_ptr IA =  std::dynamic_pointer_cast<PlayerIAEntity>(e);
+    path.clear();
+    Heap<ANode_Ptr> frontera;
+    std::map<vec2i, ANode_Ptr> expanded;
+    std::map<vec2i, int> objetivesFound;
+
+    bool haveInterset = IA->getIntersetDestroyWalls() > 0;
+    
+    ANode_Ptr lastBest;
+    Interst_ptr levelInterset;
+    int interestSite = levelInterset != nullptr ? levelInterset->intersest() : 0;
+    int bestfounds = interestSite;
+    ANode_Ptr currentNode = std::make_shared<ANode>(ANode(positionEnemy, 0, interestSite ,nullptr));
+    if(interestSite == 3){
+        path.push_back(currentNode);
+        return true;
+    }
+
+    bool found = false;
+    while (!found)
+    {
+
+        expanded[vec2i(currentNode->getPosition())] = currentNode;
+        //expandir nodos
+        for (int i = -1; i < 2; i++)
+        {
+            for (int j = -1; j < 2; j++)
+            {
+                if (abs(i) != abs(j))
+                {
+                    sf::Vector2i nodePosition(currentNode->xPosition() + i, currentNode->yPosition() + j);
+                    if(!Level::isValidCell(nodePosition)){
+                        continue;
+                    }
+                    ANode_Ptr newNode = std::make_shared<ANode>(ANode(nodePosition, currentNode->fAcum() + 1, interestSite ,currentNode));
+                    int incrementCost = 0;
+                    if (checkValidPositionWithImprudence(nodePosition, e, newNode->costNode(), incrementCost) && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(newNode))
+                    { //Si es una posicion valida y no se ha expandido
+                        levelInterset = generateIntersetPowerUps(Level::getCellMiniMapObject(nodePosition), IA);
+                        if(levelInterset != nullptr){
+                            newNode->incrementCost(levelInterset->intersest()); // TODO: variable segun IA
+                        }
+                        frontera.add(newNode);
+                    }
+                    else
+                    {
+                        newNode = nullptr;
+                    }
+                }
+            }
+        }
+        //Extraer nodo
+        if (frontera.isEmpty())
+        {
+            break;
+        }
+        currentNode = frontera.pop();
+
+        //currentNode = *
+        if (currentNode->isObjetive())
+        {
+            lastBest = currentNode;
+            found =  true; 
+        }
+    }
+
+    std::list<ANode_Ptr> list_actions;
+    //Si no se ha encontrado -> seleccionar aleatorio
+    if (!found && lastBest == nullptr)
+    {
+        return false;
+    }
+    found = lastBest != nullptr;
+    while (lastBest != nullptr)
+    {
+        if (lastBest->getParent() != nullptr)
+        {
+            list_actions.push_back(lastBest);
+        }
+        lastBest = lastBest->getParent();
+    }
+
+    while (!list_actions.empty())
+    {
+        ANode_Ptr e = list_actions.back();
+        path.push_back(e);
+        list_actions.pop_back();
+    }
+    return found;
 }

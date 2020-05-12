@@ -48,6 +48,7 @@ class KillState{
     public:
       float imprudencia ;
       int costDestWall ;
+      float agresivity;
 
     KillState(){}
     KillState(float imp,int costDestroyWall): imprudencia(imp),costDestWall(costDestroyWall){}

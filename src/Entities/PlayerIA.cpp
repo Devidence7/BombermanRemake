@@ -11,9 +11,15 @@ void PlayerIAEntity::setCollision(std::shared_ptr<Entity> col){
 	if(col != nullptr){
 		OmittedAreas.push_back(OmittedArea(getMapCoordinates(col->getCenterPosition())));
 	}
-	movements.clear();
-	currentMovement = nullptr;
-	decildetState();
+	
+	if(std::dynamic_pointer_cast<Bomb>(col) != nullptr){
+		currentState = RUNAWAY;
+		canPutABombSafe(getMapCoordinates(getCenterPosition()),me, movements);
+	}else{
+		movements.clear();
+		currentMovement = nullptr;
+		decildetState();
+	}
 	
 }
 
@@ -22,6 +28,7 @@ void PlayerIAEntity::setCollision(std::shared_ptr<Entity> col){
 bool PlayerIAEntity::playerActions(){
 	return false;
 }
+
 /*
 * Update player position.
 */
@@ -220,15 +227,15 @@ void PlayerIAEntity::decildetState(){
 	float pointFarm = 0;
 	if(!!somePlayerEnemyOnRange(getMapCoordinates(getCenterPosition()), getPowerOfBombs(), team)){
 		selectEnemyPlayers(me, objetivePlayers, this->sg._PerseguirStruct.RangoVision);
-		if(pathFinding(this->getEntityMapCoordinates() , objetivePlayers, movementes2Players, me, TypeSeekIA::BEST_PATH, false)){
-			pointKill = movementes2Players.back()->costNode();
+		if(pathFindingGoWithCare(this->getEntityMapCoordinates(), movementes2Players, me, 0)){
+			pointKill = 1/movementes2Players.back()->costNode() * sg._KillStruct.ansiansDeKill;
 		}
 	}	
 	if(pathFinderDestroy2Farm(this->getEntityMapCoordinates(), movementes2Farm, me, 0)){
-		pointFarm = movementes2Farm.back()->costNode() * getIntersetDestroyWalls();
+		pointFarm = 1/movementes2Farm.back()->costNode() * getIntersetDestroyWalls();
 	}
-
-	if(pointKill < pointFarm){
+	std::cout << "Points " << pointKill << " " << pointFarm << "\n"; 
+	if(pointKill > 0 && pointKill < pointFarm){
 		movements = movementes2Players;
 		this->currentState = StateIA::PERSEGUIR;	
 	}else{
@@ -248,9 +255,9 @@ void PlayerIAEntity::updateState(){
 	{
 	case StateIA::NON_OBJETIVE:
 		//Si tiene en rango a algun jugador
-		if(sg.havePatrolStruct){
+		/* if(sg.havePatrolStruct){
 			currentState = StateIA::PATROL;
-		}else  if(somePlayerEnemyOnRange(currentPosMap, getPowerOfBombs(), team)){
+		}else   */if(somePlayerEnemyOnRange(currentPosMap, getPowerOfBombs(), team)){
 			currentState =  StateIA::KILL;
 		}else {
 			decildetState();
@@ -283,13 +290,10 @@ void PlayerIAEntity::startStates(){
 
 
 bool PlayerIAEntity::updatePlayer(){
-	if(moduleVector(lastPositionKnowed - getCenterPosition()) > 20){
-		std::cout << "Posicion idea mal\n";
-	}
+
 	generatePathStates();
 	
 	updateMovement();
-	cout<<"velocity Enemigo: "<<velocity.x<<" "<<velocity.y<<endl;
 	updateVelocity();
 	// Call animate function to change current sprite if needed.
 	animate(velocity);
