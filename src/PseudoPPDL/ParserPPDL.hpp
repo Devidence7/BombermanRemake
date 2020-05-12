@@ -25,7 +25,7 @@ public:
     float intersetNerfPU = 0;
     float intersetACtionPU = 0;
     float bonusDestroyWalls = 0;
-    float imprudencia = 0;
+    float imprudencia=0;
 
 
     struct PatrolStruct
