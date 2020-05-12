@@ -49,7 +49,7 @@ public:
 	bool samePlay = false;
 
 Game(){
-	stage=1;
+	stage=3;
 }
 	int gameTime(){
 		return GlobalTime::timeLeft;
@@ -172,7 +172,7 @@ Game(){
 	void newStage(sf::RenderWindow& window,GameDisplayController &gameDisplay){
 		deleteMap();
 		stage++;
-		Enemies::insertarEnemigos(dimX, dimY,DEFAULT_NUM_OF_ENEMIES*gameOptions.difLevel+(stage/0.25),stage,gameOptions.difLevel);
+		Enemies::insertarEnemigos(dimX, dimY,DEFAULT_NUM_OF_ENEMIES*gameOptions.difLevel+(stage/0.5),stage,gameOptions.difLevel);
 		startNewGame(window,gameDisplay);
 		
 	}

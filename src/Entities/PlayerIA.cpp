@@ -279,7 +279,7 @@ void PlayerIAEntity::startStates(){
 }
 
 
-bool PlayerIAEntity::updatePlayer(int posX,int posY){
+bool PlayerIAEntity::updatePlayer(){
 	if(moduleVector(lastPositionKnowed - getCenterPosition()) > 20){
 		std::cout << "Posicion idea mal\n";
 	}
