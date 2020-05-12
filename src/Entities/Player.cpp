@@ -67,6 +67,12 @@ inline Entity& PlayerEntity::getPlayerColorEntity() {
 	return playerColorEntity;
 }
 
+void PlayerEntity::changeColor(sf::Color newColor) {
+	playerColorColor = newColor;
+	playerColorEntity.setColor(sf::Color(playerColorColor.r, playerColorColor.g, playerColorColor.b, 225));
+	playerHead.setColor(sf::Color(playerColorColor.r, playerColorColor.g, playerColorColor.b, 225));
+}
+
 
 int PlayerEntity::getLives() {
 	return lives;

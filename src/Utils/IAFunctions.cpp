@@ -376,7 +376,7 @@ bool somePlayerEnemyOnRange(sf::Vector2i pos, int rangeBomb, int team){
 bool canPutABombSafe(sf::Vector2i posBomb, Player_ptr e, std::list<ANode_Ptr> &movements)
 {
     int range = e->getPowerOfBombs();
-    std::cout << "pos bomb " << posBomb.x << " " << posBomb.y;
+    //std::cout << "pos bomb " << posBomb.x << " " << posBomb.y;
     std::vector<sf::Vector2i> objetives;
     for (int i = -(range + 2); i <= range + 2; i++)
     {
@@ -384,20 +384,21 @@ bool canPutABombSafe(sf::Vector2i posBomb, Player_ptr e, std::list<ANode_Ptr> &m
         {
             if(i != 0 && j != 0){
                 sf::Vector2i pos =  posBomb + sf::Vector2i(i,j);
-                std:: cout << " Los 2 distintos ";
+                //std:: cout << " Los 2 distintos ";
                 if(checkValidPosition(pos, e)){
                     objetives.push_back(pos);
-                    std:: cout << " Y añadidos\n";
+                  //  std:: cout << " Y añadidos\n";
                 }
-            }else if((j == 0  &&  abs(i) > range) || abs(j) > range){
+            }else if((j == 0  &&  abs(i) > range ) || ( i == 0 && abs(j) > range)){
                 sf::Vector2i pos =  posBomb + sf::Vector2i(i,j);
-                std::cout << "pos Fire " << pos.x << " " << pos.y << "\n";
+                //std::cout << "pos Fire " << pos.x << " " << pos.y << "\n";
                 if(Level::isValidCell(pos) && (Level::getCellMiniMapObject(pos) == nullptr || !Level::getCellMiniMapObject(pos)->isColliderWith(e))){
                     objetives.push_back(pos);
                 }
             }
         }
     }
+    std::cout << "entre " << posBomb.x - (range + 2) << " " << posBomb.y - (range + 2) << " a " << posBomb.x + (range + 2) << " " << posBomb.y + (range + 2) << " validos " << objetives.size()<< "\n";
     if(objetives.size() < 1){
         return false;
     }
@@ -564,7 +565,7 @@ bool pathFinderActions( Entity_ptr _ia, const std::vector<sf::Vector2i> &objetiv
                 if (abs(i) != abs(j))
                 {
                     sf::Vector2i nodePosition(currentNode->xPosition() + i, currentNode->yPosition() + j);
-                    sf::Vector2i objetiveP = selectCloseObjetive(postionIA, objetives);
+                    sf::Vector2i objetiveP = selectCloseObjetive(nodePosition, objetives);
                     NodeAction_ptr newNode = std::make_shared<NodeAction>(NodeAction(nodePosition, objetiveP, currentNode->fAcum() + 1, currentNode));
                     if (checkValidPositionOrDestroyer(nodePosition, _ia) && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(currentNode))
                     { //Si es una posicion valida y no se ha expandido

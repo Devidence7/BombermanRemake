@@ -61,7 +61,21 @@ inline bool checkValidPositionOrDestroyer(const sf::Vector2i &v, std::shared_ptr
     return valid;
 }
 
-
+sf::Vector2i selectFarObjetive(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives)
+{
+    sf::Vector2i objetive;
+    int lowManhattan = 0;
+    for (sf::Vector2i e : objetives)
+    {
+        int m;
+        if ((m = manhattan(positionEnemy, e)) > lowManhattan)
+        {
+            lowManhattan = m;
+            objetive = e;
+        }
+    }
+    return objetive;
+}
 sf::Vector2i selectCloseObjetive(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives)
 {
     sf::Vector2i objetive;
@@ -187,7 +201,7 @@ bool pathFinding(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector
                 if (abs(i) != abs(j))
                 {
                     sf::Vector2i nodePosition(currentNode->xPosition() + i, currentNode->yPosition() + j);
-                    sf::Vector2i objetiveP = selectCloseObjetive(positionEnemy, objetives);
+                    sf::Vector2i objetiveP = selectCloseObjetive(nodePosition, objetives);
                     ANode_Ptr newNode = std::make_shared<ANode>(ANode(nodePosition, sf::Vector2i(i, j), objetiveP, currentNode->fAcum() + 1, currentNode));
                     if (checkValidPosition(nodePosition, e) && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(newNode))
                     { //Si es una posicion valida y no se ha expandido
@@ -294,7 +308,7 @@ bool pathFindingBreakingWalls(const sf::Vector2i &positionEnemy, const std::vect
                 if (abs(i) != abs(j))
                 {
                     sf::Vector2i nodePosition(currentNode->xPosition() + i, currentNode->yPosition() + j);
-                    sf::Vector2i objetiveP = selectCloseObjetive(positionEnemy, objetives);
+                    sf::Vector2i objetiveP = selectCloseObjetive(nodePosition, objetives);
                     ANode_Ptr newNode = std::make_shared<ANode>(ANode(nodePosition, sf::Vector2i(i, j), objetiveP, currentNode->fAcum() + 1, currentNode));
                     if (checkValidPositionOrDestroyer(nodePosition, e) && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(newNode))
                     { //Si es una posicion valida y no se ha expandido
