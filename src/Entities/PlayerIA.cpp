@@ -224,18 +224,23 @@ void PlayerIAEntity::decildetState(){
 	std::list<ANode_Ptr> movementes2Farm;
 	std::vector<sf::Vector2i> objetivePlayers;
 	float pointKill = 0;
+	float pointFollow = 0;
 	float pointFarm = 0;
-	if(!!somePlayerEnemyOnRange(getMapCoordinates(getCenterPosition()), getPowerOfBombs(), team)){
-		selectEnemyPlayers(me, objetivePlayers, this->sg._PerseguirStruct.RangoVision);
+	if(somePlayerEnemyOnRange(getMapCoordinates(getCenterPosition()), getPowerOfBombs(), team)){
+		pointKill = 5;
+	}
+	selectEnemyPlayers(me, objetivePlayers, this->sg._PerseguirStruct.RangoVision);
+	if(objetivePlayers.size() > 0){
 		if(pathFindingGoWithCare(this->getEntityMapCoordinates(), movementes2Players, me, 0)){
-			pointKill = 1/movementes2Players.back()->costNode() * sg._KillStruct.ansiansDeKill;
+			pointFollow = 1/movementes2Players.back()->costNode() * sg._KillStruct.ansiansDeKill;
 		}
-	}	
+	}
+		
 	if(pathFinderDestroy2Farm(this->getEntityMapCoordinates(), movementes2Farm, me, 0)){
 		pointFarm = 1/movementes2Farm.back()->costNode() * getIntersetDestroyWalls();
 	}
 	std::cout << "Points " << pointKill << " " << pointFarm << "\n"; 
-	if(pointKill > 0 && pointKill < pointFarm){
+	if(pointFollow > 0 && pointFollow < pointFarm){
 		movements = movementes2Players;
 		this->currentState = StateIA::PERSEGUIR;	
 	}else{

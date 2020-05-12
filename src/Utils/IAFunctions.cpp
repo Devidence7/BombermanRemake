@@ -313,6 +313,7 @@ sf::Vector2i seekPowerUp(list<ANode_Ptr> &movements, Entity_ptr e)
 void selectEnemyPlayers(Entity_ptr IA, std::vector<sf::Vector2i> &objetives, int rangeVision)
 {
     sf::Vector2i positionIA = IA->getEntityMapCoordinates();
+    int i = 0;
     for(Player_ptr p : PLayers::getVectorPlayer()){
         if(p->team != IA->team){
             if(isOnVision(positionIA, p->getEntityMapCoordinates(), rangeVision)){
