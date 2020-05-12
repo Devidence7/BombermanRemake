@@ -12,6 +12,7 @@ PowerUp::PowerUp() : Entity()
 	actualFrame = 0;
 	spriteFrames = 3;
 	explosionCounter = 0;
+	creationTime = GameTime::getTimeNow();
 
 	// Texture Controller:
 	powerUpTexture = &TextureStorage::getPowerUpTexture();
@@ -19,7 +20,24 @@ PowerUp::PowerUp() : Entity()
 	setTexture(powerUpTexture->getTexture());
 }
 
-void PowerUp::update() {}
+void PowerUp::update() {
+	if (GameTime::getTimeNow() - creationTime > powerUpLiveTime) {
+		setExpiredEntity();
+	}
+
+	if (GameTime::getTimeNow() - creationTime > powerUpLiveTime * 3 / 4) {
+		if (GameTime::getTimeNow() - lastTransparentTime > 0.2){
+			if (transparent) {
+				setColor(sf::Color(255, 255, 255, 255));
+			}
+			else {
+				setColor(sf::Color(255, 255, 255, 100));
+			}
+			transparent = !transparent;
+			lastTransparentTime = GameTime::getTimeNow();
+		}
+	}
+}
 
 void PowerUp::onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<Entity> eCollisioner, CollisionType colT)
 {

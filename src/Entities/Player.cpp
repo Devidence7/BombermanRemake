@@ -176,7 +176,7 @@ void PlayerEntity::animate(sf::Vector2f velocity,int posX,int posY) {
 					playerColorEntity.setColor(sf::Color(playerColorColor.r, playerColorColor.g, playerColorColor.b, 225));
 				}
 				else {
-					setColor(sf::Color(255,255,255,120));
+					setColor(sf::Color(255,255,255,80));
 					playerColorEntity.setColor(sf::Color(playerColorColor.r, playerColorColor.g, playerColorColor.b, 120));
 				}
 				lastTransparentTime = GameTime::getTimeNow();
