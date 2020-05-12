@@ -83,6 +83,13 @@ void StateGenerator::generateState(ifstream &f, string estado)
             // boost::algorithm::to_lower(text);
             std::transform(text.begin(), text.end(), text.begin(),
                 [](unsigned char c) { return std::tolower(c); });
+            found = text.find("interesGen");
+            if (found != std::string::npos){
+                string val = text.substr(found + sizeof("interesGen"), text.size()) ;
+                std::cout << "interesGen"<<val << std::endl;
+                this->_SeekPEStruct.bootsSeek = stoi(val);
+            }
+
             found = text.find("rangovision");
             if (found != std::string::npos){
                 string val = text.substr(found + sizeof("rangovision"), text.size()) ;
