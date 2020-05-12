@@ -44,7 +44,7 @@ void StateGenerator::generateState(ifstream &f, string estado)
     }
      found = estado.find("matar");
       if (found != std::string::npos){
-        for(int i = 0; i < 2; i++){
+        for(int i = 0; i < 3; i++){
             string text;
             std::getline(f, text);
             // boost::algorithm::to_lower(text);
@@ -63,12 +63,20 @@ void StateGenerator::generateState(ifstream &f, string estado)
 //                this->_PerseguirStruct.costDestroyWall = val;           
                 this->_KillStruct.costDestroyWall = stoi(val);
             }
+
+            found = text.find("agresivity");
+            if (found != std::string::npos){
+                string val = text.substr(found + sizeof("agresivity"), text.size()) ;
+                std::cout << "matar "<<val << std::endl; 
+//                this->_PerseguirStruct.costDestroyWall = val;           
+                this->_KillStruct.agresivity = stoi(val);
+            }
         }
       }
 
       found = estado.find("buscarpu");
       if (found != std::string::npos){
-        for(int i = 0; i < 2; i++){
+        
             string text;
             std::getline(f, text);
             // boost::algorithm::to_lower(text);
@@ -89,7 +97,7 @@ void StateGenerator::generateState(ifstream &f, string estado)
              this->_SeekPEStruct.interActionPU =action;
              this->haveSeekPEStruct = true;
              return;
-             }
+             
 
       }
     
