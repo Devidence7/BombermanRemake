@@ -75,7 +75,6 @@ Game(){
 				PLayers::addPlayer(userKeyPress.getPlayerControls(i + 1), SIZE_PILLAR, 0, gameOptions.playersAndTeams[numPlayersInserter]);
 				level->checkSpawn(SIZE_PILLAR, 0);
 				numPlayersInserter++;
-				cout << "HHHEEEEEYYYY" << gameOptions.player1ColorPick << endl;
 				PLayers::getVectorPlayer()[0]->changeColor(gameOptions.colorList[gameOptions.player1ColorPick]);
 				break;
 

@@ -253,7 +253,7 @@ private:
 		case ButtonActions::MAP_1:
 			previousMenu = MenuState::PICK_MAP;
 			createNumPlaySelection(*window, gameDisplay);
-			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			gameDisplay.setGameState(GameDisplayController::GameState::PICK_COLOR);
 			game.gameOptions.selectedStage = 1;
 			break;
 
@@ -261,7 +261,7 @@ private:
 		case ButtonActions::MAP_2:
 			previousMenu = MenuState::PICK_MAP;
 			createNumPlaySelection(*window, gameDisplay);
-			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			gameDisplay.setGameState(GameDisplayController::GameState::PICK_COLOR);
 			game.gameOptions.selectedStage = 2;
 			break;
 
@@ -269,7 +269,7 @@ private:
 		case ButtonActions::MAP_3:
 			previousMenu = MenuState::PICK_MAP;
 			createNumPlaySelection(*window, gameDisplay);
-			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			gameDisplay.setGameState(GameDisplayController::GameState::PICK_COLOR);
 			game.gameOptions.selectedStage = 3;
 			break;
 
