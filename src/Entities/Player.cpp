@@ -1,9 +1,8 @@
 #include "../Map/Level.hpp"
 
-PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team,float posX,float posY) : Entity(), playerControls(pControls) {
+PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team, float posX,float posY) : Entity(), playerControls(pControls) {
 
 	team = _team;
-	setPosition(posX, posY);
 	respownPosition = sf::Vector2f(posX, posY);
 	lastRespawnTime = 0;
 	isFireDestroyable = true;
@@ -14,6 +13,7 @@ PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team,float posX,float
 	baseSpeed = 2.5;
 	lastMovement = LookingAt::down;
 	lives = 3;
+	scoreValue = 150;
 	// Texture Controller
 	playerTexture = &TextureStorage::getPlayerTexture();
 	// Set starting sprite
@@ -26,18 +26,18 @@ PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team,float posX,float
 	playerColorEntity.setTextureRect(playerColor->getDefaultIntRect());
 	// Set sprite Sheet texture
 	playerColorEntity.setTexture(playerColor->getTexture());
-	sf::Color tempColor = sf::Color(Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255), 225);
-	playerColorEntity.setColor(tempColor);
+	playerColorColor = sf::Color(Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255), 225);
+	playerColorEntity.setColor(playerColorColor);
 
 	playerHead.setTexture(playerColor->getTexture());
-	playerHead.setColor(tempColor);
+	playerHead.setColor(playerColorColor);
 	playerHead.setTextureRect(sf::IntRect(sf::Vector2i(9, 0), sf::Vector2i(39, 39)));
 
 	playerHead2.setTexture(playerTexture->getTexture());
 	playerHead2.setTextureRect(sf::IntRect(sf::Vector2i(9, 0), sf::Vector2i(39, 39)));
 
 	if (posX > 150) {
-		posX -= 48;
+		posX -= 50;
 	}
 	setPosition(posX,posY);
 	initialPos = sf::Vector2f(posX, posY);
@@ -162,9 +162,35 @@ void PlayerEntity::animate(sf::Vector2f velocity,int posX,int posY) {
 			expiredEntity = false;
 			respawning = false;
 			lastInvencibleTime = GameTime::getTimeNow();
+			isInvicible = true;
 			setPosition(initialPos);
 		}
 	}
+
+	if (isInvicible) {
+		if (GameTime::getTimeNow() - lastInvencibleTime < invencibleTime) {
+			if (GameTime::getTimeNow() - lastTransparentTime > 0.25) {
+				transparent = !transparent;
+				if (transparent) {
+					setColor(sf::Color(255, 255, 255, 255));
+					playerColorEntity.setColor(sf::Color(playerColorColor.r, playerColorColor.g, playerColorColor.b, 225));
+				}
+				else {
+					setColor(sf::Color(255,255,255,120));
+					playerColorEntity.setColor(sf::Color(playerColorColor.r, playerColorColor.g, playerColorColor.b, 120));
+				}
+				lastTransparentTime = GameTime::getTimeNow();
+			}
+			
+		}
+		else {
+			isInvicible = false;
+			transparent = false;
+			setColor(sf::Color(255, 255, 255, 255));
+			playerColorEntity.setColor(sf::Color(playerColorColor.r, playerColorColor.g, playerColorColor.b, 225));
+		}
+	}
+	
 
 
 	if (controlsInverted) {

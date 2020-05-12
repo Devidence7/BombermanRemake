@@ -115,8 +115,8 @@ void EnemyEntity::updateVelocity()
 		dir.x = 0;
 	}
 	sf::Vector2f n= normalize(dir);
-	velocity.x = baseSpeed *currentMovement->getAction().x ;//* moveTime;
-	velocity.y = baseSpeed *currentMovement->getAction().y ;//* moveTime;
+	velocity.x = baseSpeed *currentMovement->getAction().x * moveTime;
+	velocity.y = baseSpeed *currentMovement->getAction().y * moveTime;
 	//std::cout << "Vel: " << velocity.x << " " << velocity.y << std::endl;
 
 	move(velocity.x, velocity.y);
@@ -124,6 +124,10 @@ void EnemyEntity::updateVelocity()
 
 void EnemyEntity::setExpiredEntity()
 {
+	if (GameTime::getTimeNow() - lastInvencibleTime < invencibleTime) {
+		return;
+	}
+
 	spriteStartTime = GameTime::getTimeNow();
 	spriteLastFrameTime = GameTime::getTimeNow();
 	dyingEntity = true;
@@ -177,6 +181,10 @@ sf::FloatRect EnemyEntity::getGlobalBounds() const
 {
 	sf::FloatRect dim = sf::Sprite::getGlobalBounds();
 	return sf::FloatRect(dim.left, dim.top + 9, dim.width - 6, dim.height - 6);
+}
+
+void EnemyEntity::setInvencible1sec() {
+	lastInvencibleTime = GameTime::getTimeNow();
 }
 
 Balloon::Balloon() : EnemyEntity()

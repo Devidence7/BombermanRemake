@@ -29,6 +29,9 @@ private:
 
 	double lastMovementTime = 0;
 
+	double lastInvencibleTime = 0;
+	const double invencibleTime = 1;
+
 	
 
 	protected:
@@ -61,6 +64,8 @@ public:
 	void update() override;
 
 	sf::FloatRect getGlobalBounds() const override;
+
+	void setInvencible1sec();
 
 	
 
