@@ -146,7 +146,7 @@ void seekAnyPlayerOrRandom(list<ANode_Ptr> &movements, Entity_ptr e, TypeSeekIA 
 //////////////////////////////////
 ////  Interst/Omited Zones   /////
 //////////////////////////////////
-void generateOmitedZoneByBomb(sf::Vector2i bombPosition, std::list<OmittedArea> &AreasOmited)
+void generateOmitedZoneByBomb(sf::Vector2i bombPosition, std::list<OmittedArea> &AreasOmited, float timeBomb)
 {
     //TODO: Posiblidad de cruz más grande?
     for (int i = -1; i < 2; i++)
@@ -155,7 +155,8 @@ void generateOmitedZoneByBomb(sf::Vector2i bombPosition, std::list<OmittedArea> 
         {
             if (i != j)
             {
-                AreasOmited.push_back(bombPosition + sf::Vector2i(i, j));
+                OmittedArea o(bombPosition + sf::Vector2i(i, j), timeBomb);
+                AreasOmited.push_back(o);
             }
         }
     }
@@ -171,10 +172,10 @@ void generateOmitedZones(sf::Vector2i positionP, std::list<OmittedArea> &AreasOm
     {
         for (int y = by.y; y < to.y; y++)
         {
-            Entity_ptr e = Level::getCellMiniMapObject(x, y);
-            if (std::dynamic_pointer_cast<Bomb>(e) != nullptr)
+            Bomb_ptr b = std::dynamic_pointer_cast<Bomb>(Level::getCellMiniMapObject(x, y));
+            if ( b != nullptr)
             {
-                generateOmitedZoneByBomb(sf::Vector2i(x, y), AreasOmited);
+                generateOmitedZoneByBomb(sf::Vector2i(x, y), AreasOmited, b->getExplosionTimeLeft());
             }
         }
     }
@@ -375,14 +376,23 @@ bool somePlayerEnemyOnRange(sf::Vector2i pos, int rangeBomb, int team){
 bool canPutABombSafe(sf::Vector2i posBomb, Player_ptr e, std::list<ANode_Ptr> &movements)
 {
     int range = e->getPowerOfBombs();
+    std::cout << "pos bomb " << posBomb.x << " " << posBomb.y;
     std::vector<sf::Vector2i> objetives;
-    for (int i = -(range + 1); i <= range + 1; i++)
+    for (int i = -(range + 2); i <= range + 2; i++)
     {
-        for (int j = -(range + 1); j <= range + 1; j++)
+        for (int j = -(range + 2); j <= range + 2; j++)
         {
-            if(abs(i) > range || abs(i) > range || i != 0 || j != 0){
+            if(i != 0 && j != 0){
                 sf::Vector2i pos =  posBomb + sf::Vector2i(i,j);
+                std:: cout << " Los 2 distintos ";
                 if(checkValidPosition(pos, e)){
+                    objetives.push_back(pos);
+                    std:: cout << " Y añadidos\n";
+                }
+            }else if((j == 0  &&  abs(i) > range) || abs(j) > range){
+                sf::Vector2i pos =  posBomb + sf::Vector2i(i,j);
+                std::cout << "pos Fire " << pos.x << " " << pos.y << "\n";
+                if(Level::isValidCell(pos) && (Level::getCellMiniMapObject(pos) == nullptr || !Level::getCellMiniMapObject(pos)->isColliderWith(e))){
                     objetives.push_back(pos);
                 }
             }
@@ -429,7 +439,6 @@ void ss(sf::Vector2i p ){
 
 bool pathFinderDestroy2Farm(const sf::Vector2i &positionEnemy, std::list<ANode_Ptr> &path, Entity_ptr e, int costAddDestroy)
 {
-    std::cout << "Buscando paredes\n";
     PlayerIA_ptr IA =  std::dynamic_pointer_cast<PlayerIAEntity>(e);
     path.clear();
     Heap<ANode_Ptr> frontera;
@@ -466,14 +475,13 @@ bool pathFinderDestroy2Farm(const sf::Vector2i &positionEnemy, std::list<ANode_P
                     }
                     levelInterset = PointsDestroyMap::getIntersetZone(nodePosition);
                     interestSite = levelInterset != nullptr ? levelInterset->intersest() : 0;
-                    if(interestSite > 0)
-                    std::cout << "inter " << interestSite << "\n";
                     ANode_Ptr newNode = std::make_shared<ANode>(ANode(nodePosition, currentNode->fAcum() + 1, interestSite ,currentNode));
-                    if (checkValidPosition(nodePosition, e) && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(newNode))
+                    int incrementCost = 0;
+                    if (checkValidPositionWithImprudence(nodePosition, e, newNode->costNode(), incrementCost) && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(newNode))
                     { //Si es una posicion valida y no se ha expandido
-                        newNode->incrementCost(costAddDestroy); // TODO: variable segun IA
+                        newNode->incrementCost(incrementCost); // TODO: variable segun IA
                         frontera.add(newNode);
-                         if( bestfounds < interestSite){
+                        if( bestfounds < interestSite){
                             bestfounds = interestSite;
                             lastBest = newNode;
                         }
@@ -522,7 +530,6 @@ bool pathFinderDestroy2Farm(const sf::Vector2i &positionEnemy, std::list<ANode_P
         path.push_back(e);
         list_actions.pop_back();
     }
-    std::cout << "POS BEST" << path.back()->getPosition().x << " " <<path.back()->getPosition().y << " Int " << path.back()->numOfWalls << "\n";
     return found;
 }
 

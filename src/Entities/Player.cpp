@@ -163,6 +163,7 @@ void PlayerEntity::animate(sf::Vector2f velocity,int posX,int posY) {
 			respawning = false;
 			lastInvencibleTime = GameTime::getTimeNow();
 			isInvicible = true;
+			std::cout << "Respouning\n";
 			setPosition(initialPos);
 		}
 	}

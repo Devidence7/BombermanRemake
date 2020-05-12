@@ -33,6 +33,7 @@ inline void createRangeVision(sf::Vector2i &from, sf::Vector2i &to, sf::Vector2i
 
 //#include "../Include/EntitiesInclude.hpp"
 #include "../Entities/Player.h"
+void generateOmitedZoneByBomb(sf::Vector2i bombPosition, std::list<OmittedArea> &AreasOmited, float timeBomb);
 void generateOmitedZones(sf::Vector2i positionP, std::list<OmittedArea> &AreasOmited, int rangeVision);
 void selectEnemyPlayers(std::shared_ptr<Entity> IA, std::vector<sf::Vector2i> &objetives, int rangeVision);
 void tryKillAEnemy(std::shared_ptr<Entity> IA, std::list<ANode_Ptr> &movements, int rangeVision, int costDestroy);

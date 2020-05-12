@@ -16,6 +16,7 @@ public:
 	sf::Vector2i currentObjetive;
 	StateGenerator sg;
 	StateIA currentState = StateIA::NON_OBJETIVE;
+	sf::Vector2f lastPositionKnowed;
 	PatrolState p;
 	int IAPlayer;
 

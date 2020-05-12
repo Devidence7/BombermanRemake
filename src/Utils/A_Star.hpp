@@ -146,6 +146,7 @@ typedef std::shared_ptr<ANode> ANode_Ptr;
 inline bool checkObjetive(const sf::Vector2i &currentP, const sf::Vector2i &objetivePosition);
 #include "../Entities/Entity.h"
 bool checkValidPosition(const sf::Vector2i &v, std::shared_ptr<Entity> e);
+bool checkValidPositionWithImprudence(const sf::Vector2i &v, std::shared_ptr<Entity> e,int CostPath, int & incrementCost);
 bool checkValidPositionOrDestroyer(const sf::Vector2i &v, std::shared_ptr<Entity> e);
 
 ANode_Ptr generateRandomMovement(std::shared_ptr<Entity> e,  sf::Vector2i fromPosition);
