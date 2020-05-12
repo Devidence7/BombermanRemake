@@ -12,6 +12,7 @@
 )
 
 (Estado buscarpu
+    interesGen 4
     RangoVision 8
         1 2 2
 )
