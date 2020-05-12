@@ -191,22 +191,22 @@ Game(){
 		for (Player_ptr player : PLayers::getVectorPlayer()) {
 			switch(ply){
 				case 1:
-					player->updatePlayer(SIZE_PILLAR,SIZE_PILLAR);
+					player->updatePlayer();
 				
 					break;
 				
 				case 2:
-					player->updatePlayer(SIZE_PILLAR,(dimY-1)*SIZE_PILLAR);
+					player->updatePlayer();
 					//level->checkSpawn(SIZE_PILLAR,(dimY-1)*SIZE_PILLAR);
 					break;
 
 				case 3:
-					player->updatePlayer((dimX-1)*SIZE_PILLAR,SIZE_PILLAR);
+					player->updatePlayer();
 					//level->checkSpawn((dimX-1)*SIZE_PILLAR,SIZE_PILLAR);
 					break;
 
 				case 4:
-					player->updatePlayer((dimX-1)*SIZE_PILLAR,(dimY-1)*SIZE_PILLAR);
+					player->updatePlayer();
 					//level->checkSpawn((dimX-1)*SIZE_PILLAR,(dimY-1)*SIZE_PILLAR);
 					break;
 				

@@ -44,7 +44,7 @@ public:
 	/*
 	 * Update player position.
 	 */
-	bool updatePlayer(int posX,int posY) override;
+	bool updatePlayer() override;
 
 //	void invertControls(); ??
 
