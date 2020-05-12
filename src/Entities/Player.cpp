@@ -1,9 +1,8 @@
 #include "../Map/Level.hpp"
 
-PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team,float posX,float posY) : Entity(), playerControls(pControls) {
+PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team, float posX,float posY) : Entity(), playerControls(pControls) {
 
 	team = _team;
-	setPosition(posX, posY);
 	respownPosition = sf::Vector2f(posX, posY);
 	lastRespawnTime = 0;
 	isFireDestroyable = true;
@@ -14,6 +13,7 @@ PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team,float posX,float
 	baseSpeed = 2.5;
 	lastMovement = LookingAt::down;
 	lives = 3;
+	scoreValue = 150;
 	// Texture Controller
 	playerTexture = &TextureStorage::getPlayerTexture();
 	// Set starting sprite
@@ -37,7 +37,7 @@ PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team,float posX,float
 	playerHead2.setTextureRect(sf::IntRect(sf::Vector2i(9, 0), sf::Vector2i(39, 39)));
 
 	if (posX > 150) {
-		posX -= 48;
+		posX -= 50;
 	}
 	setPosition(posX,posY);
 	initialPos = sf::Vector2f(posX, posY);
