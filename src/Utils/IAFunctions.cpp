@@ -37,16 +37,18 @@ void PointsDestroyMap::resetMap(){
 void PointsDestroyMap::updateMap(){
     resetMap();
     sf::Vector2i sLevel =  Level::sizeLevel();
-    for(std::vector<Interst_ptr> inter : interestingMap){
-
-    }
     for(int x = 0; x < sLevel.x; x++){
         for(int y = 0; y < sLevel.y; y++){
             Entity_ptr e = Level::getCellMiniMapObject(x,y);
             if(e == nullptr || std::dynamic_pointer_cast<PowerUp>(e) != nullptr){
-                addInterset(x,y, generateIntersetPointDestroyer(sf::Vector2i(x,y)));
+                Interst_ptr i = generateIntersetPointDestroyer(sf::Vector2i(x,y)); 
+                if(i->intersest() > 0){
+                    addInterset(x,y, i);
+                }else{
+                    addInterset(x,y, nullptr);
+                }
             }else{
-                getIntersetZone(x,y) = nullptr;
+                addInterset(x,y, nullptr);
             }
         }
     }
@@ -201,22 +203,25 @@ Interst_ptr generateIntersetPointDestroyer(sf::Vector2i posPossibleBom){
         return nullptr;
     }
     
-    if(posPossibleBom.x > 0 && posPossibleBom.y > 0 ){
-        m = Level::getCellMiniMapObject(posPossibleBom.x-1,posPossibleBom.y -1);
+    ///Oeste
+    if(posPossibleBom.x > 0){
+        m = Level::getCellMiniMapObject(posPossibleBom.x-1, posPossibleBom.y);
         if(m != nullptr && std::dynamic_pointer_cast<BrickWall>(m) != nullptr){sum++;}
     }
-    if(posPossibleBom.x > 0 && posPossibleBom.y < sLevel.y - 1 ){
-        m = Level::getCellMiniMapObject(posPossibleBom.x-1,posPossibleBom.y + 1);
-        if(m != nullptr && std::dynamic_pointer_cast<BrickWall>(m) != nullptr){sum++;}
-    }
-
-    if(posPossibleBom.x < sLevel.x -1 && posPossibleBom.y > 0 ){
-        m = Level::getCellMiniMapObject(posPossibleBom.x-1, posPossibleBom.y -1);
+    ///Norte
+    if(posPossibleBom.y > 0  ){
+        m = Level::getCellMiniMapObject(posPossibleBom.x, posPossibleBom.y - 1);
         if(m != nullptr && std::dynamic_pointer_cast<BrickWall>(m) != nullptr){sum++;}
     }
 
-    if(posPossibleBom.x < sLevel.x && posPossibleBom.y > sLevel.y ){
-        m = Level::getCellMiniMapObject(posPossibleBom.x + 1,posPossibleBom.y  +1);
+    ///Este
+    if(posPossibleBom.x < sLevel.x -1 ){
+        m = Level::getCellMiniMapObject(posPossibleBom.x + 1, posPossibleBom.y);
+        if(m != nullptr && std::dynamic_pointer_cast<BrickWall>(m) != nullptr){sum++;}
+    }
+    //Norte
+    if(posPossibleBom.y < sLevel.y -1 ){
+        m = Level::getCellMiniMapObject(posPossibleBom.x ,posPossibleBom.y  + 1);
         if(m != nullptr && std::dynamic_pointer_cast<BrickWall>(m) != nullptr){sum++;}
     }
     return std::make_shared<IntersetArea>(IntersetArea(posPossibleBom, sum));
@@ -424,6 +429,7 @@ void ss(sf::Vector2i p ){
 
 bool pathFinderDestroy2Farm(const sf::Vector2i &positionEnemy, std::list<ANode_Ptr> &path, Entity_ptr e, int costAddDestroy)
 {
+    std::cout << "Buscando paredes\n";
     PlayerIA_ptr IA =  std::dynamic_pointer_cast<PlayerIAEntity>(e);
     path.clear();
     Heap<ANode_Ptr> frontera;
@@ -460,9 +466,10 @@ bool pathFinderDestroy2Farm(const sf::Vector2i &positionEnemy, std::list<ANode_P
                     }
                     levelInterset = PointsDestroyMap::getIntersetZone(nodePosition);
                     interestSite = levelInterset != nullptr ? levelInterset->intersest() : 0;
-                   
+                    if(interestSite > 0)
+                    std::cout << "inter " << interestSite << "\n";
                     ANode_Ptr newNode = std::make_shared<ANode>(ANode(nodePosition, currentNode->fAcum() + 1, interestSite ,currentNode));
-                    if (levelInterset && checkValidPosition(nodePosition, e) && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(newNode))
+                    if (checkValidPosition(nodePosition, e) && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(newNode))
                     { //Si es una posicion valida y no se ha expandido
                         newNode->incrementCost(costAddDestroy); // TODO: variable segun IA
                         frontera.add(newNode);
@@ -515,6 +522,7 @@ bool pathFinderDestroy2Farm(const sf::Vector2i &positionEnemy, std::list<ANode_P
         path.push_back(e);
         list_actions.pop_back();
     }
+    std::cout << "POS BEST" << path.back()->getPosition().x << " " <<path.back()->getPosition().y << " Int " << path.back()->numOfWalls << "\n";
     return found;
 }
 

@@ -80,7 +80,7 @@ void PlayerIAEntity::updateMovement(){
 	}
 	
 	if(currentMovement == nullptr && movements.size() < 1){
-		currentState = StateIA::NON_OBJETIVE;
+		//currentState = StateIA::NON_OBJETIVE;
 		//currentMovement = std::make_shared<ANode>(ANode(getMapCoordinates(getCenterPosition()), sf::Vector2i(0,0), getMapCoordinates(getCenterPosition()), 0));
 	}
 	else if (currentMovement == nullptr)
