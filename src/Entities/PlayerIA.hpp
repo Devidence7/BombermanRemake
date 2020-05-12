@@ -29,7 +29,6 @@ public:
 		colorPath = sf::Color(Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255));
 		IAPlayer=IA;
 		cout<<"POS DE LA IA: "<<posX<<" "<<posY<<endl;
-		actionAvaible = ActionsAvalible::REMOTE_BOMB;
 	}
 
 	void createStateGenerator(string path){
@@ -55,7 +54,6 @@ public:
 
 	////////IA FUNCTION
 	void AssignBomb(std::shared_ptr<Entity> b) override{
-		std::cout << "Bomba Asignada\n";
 		BombsAsociated.push_back(b);
 	}
 	void startStates();

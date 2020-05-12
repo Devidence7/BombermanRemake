@@ -1,4 +1,0 @@
-(Estado perseguir
-    RangoVision -1
-    costDestroyWall 8
-)
