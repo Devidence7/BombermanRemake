@@ -115,8 +115,8 @@ void EnemyEntity::updateVelocity()
 		dir.x = 0;
 	}
 	sf::Vector2f n= normalize(dir);
-	velocity.x = baseSpeed *currentMovement->getAction().x ;//* moveTime;
-	velocity.y = baseSpeed *currentMovement->getAction().y ;//* moveTime;
+	velocity.x = baseSpeed *currentMovement->getAction().x * moveTime;
+	velocity.y = baseSpeed *currentMovement->getAction().y * moveTime;
 	//std::cout << "Vel: " << velocity.x << " " << velocity.y << std::endl;
 
 	move(velocity.x, velocity.y);
