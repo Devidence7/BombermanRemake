@@ -341,7 +341,7 @@ void Level::draw(sf::RenderWindow& w) {
 	// Draw the entities
 	for (std::vector<Entity_ptr>& v : miniMap) {
 		for (Entity_ptr e : v) {
-			if (e != nullptr) {
+			if (e != nullptr && !e->getExpiredEntity()) {
 				w.draw(*e);
 #ifdef HITBOX_DEBUG_MODE
 				e->drawEntityHitbox(w);
