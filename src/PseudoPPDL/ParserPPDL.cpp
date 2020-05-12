@@ -62,6 +62,7 @@ void StateGenerator::generateState(ifstream &f, string estado)
                 std::cout << "matar "<<val << std::endl; 
 //                this->_PerseguirStruct.costDestroyWall = val;           
                 this->_KillStruct.costDestroyWall = stoi(val);
+                bonusDestroyWalls=stoi(val);
             }
 
             found = text.find("agresivity");
@@ -69,7 +70,7 @@ void StateGenerator::generateState(ifstream &f, string estado)
                 string val = text.substr(found + sizeof("agresivity"), text.size()) ;
                 std::cout << "matar "<<val << std::endl; 
 //                this->_PerseguirStruct.costDestroyWall = val;           
-                this->_KillStruct.agresivity = stoi(val);
+                this->_KillStruct.ansiansDeKill = stoi(val);
             }
         }
       }
