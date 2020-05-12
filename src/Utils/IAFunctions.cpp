@@ -8,6 +8,15 @@ std::vector<std::vector<Interst_ptr>> PointsDestroyMap::interestingMap;
 Interst_ptr &PointsDestroyMap::getIntersetZone(sf::Vector2i pos){
     return getIntersetZone(pos.x, pos.y);
 }
+
+Interst_ptr &PointsDestroyMap::addInterset(sf::Vector2i pos, Interst_ptr in){
+    addInterset(pos.x, pos.y, in);
+}
+
+void PointsDestroyMap::addInterset(int x, int y, Interst_ptr in){
+    interestingMap[y][x] = in;
+
+}
 Interst_ptr &PointsDestroyMap::getIntersetZone(int x, int y){
     return interestingMap[y][x];
 }
@@ -35,7 +44,7 @@ void PointsDestroyMap::updateMap(){
         for(int y = 0; y < sLevel.y; y++){
             Entity_ptr e = Level::getCellMiniMapObject(x,y);
             if(e == nullptr || std::dynamic_pointer_cast<PowerUp>(e) != nullptr){
-                getIntersetZone(x,y) = generateIntersetPointDestroyer(sf::Vector2i(x,y));
+                addInterset(x,y, generateIntersetPointDestroyer(sf::Vector2i(x,y)));
             }else{
                 getIntersetZone(x,y) = nullptr;
             }
@@ -453,7 +462,7 @@ bool pathFinderDestroy2Farm(const sf::Vector2i &positionEnemy, std::list<ANode_P
                     interestSite = levelInterset != nullptr ? levelInterset->intersest() : 0;
                    
                     ANode_Ptr newNode = std::make_shared<ANode>(ANode(nodePosition, currentNode->fAcum() + 1, interestSite ,currentNode));
-                    if (interestSite && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(newNode))
+                    if (levelInterset && checkValidPosition(nodePosition, e) && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(newNode))
                     { //Si es una posicion valida y no se ha expandido
                         newNode->incrementCost(costAddDestroy); // TODO: variable segun IA
                         frontera.add(newNode);
@@ -481,7 +490,6 @@ bool pathFinderDestroy2Farm(const sf::Vector2i &positionEnemy, std::list<ANode_P
         {
             lastBest = currentNode;
             found =  true; 
-            break;
         }
     }
 
@@ -491,6 +499,7 @@ bool pathFinderDestroy2Farm(const sf::Vector2i &positionEnemy, std::list<ANode_P
     {
         return false;
     }
+    found = lastBest != nullptr;
     while (lastBest != nullptr)
     {
         if (lastBest->getParent() != nullptr)
