@@ -81,7 +81,7 @@ sf::Vector2i generateObjetive2Player(Entity_ptr p, Entity_ptr e, std::vector<sf:
     {
     case TypePositionRelative::OBJETIVE_POSITION:
         objetives.push_back(posMapNeeded);
-        std::cout << posMapNeeded.x << " " << posMapNeeded.y << "\n";
+        //std::cout << posMapNeeded.x << " " << posMapNeeded.y << "\n";
         break;
     case TypePositionRelative::NEAR_POSITION:
         for (int i = -1; i < 2; i++)

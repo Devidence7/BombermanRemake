@@ -251,12 +251,17 @@ void PlayerIAEntity::decildetState(){
 	}
 
 	std::cout << "Points " << pointKill << " " << pointFarm << "\n"; 
-	if(pointFollow > 0 && pointFollow < pointFarm){
+	if(pointFollow > 0 && pointFollow < pointFarm && pointFollow < pointKill && pointFollow < pointGoToPU){
 		movements = movementes2Players;
 		this->currentState = StateIA::PERSEGUIR;	
-	}else{
+	}else if(pointFarm > 0 && pointFarm < pointKill &&  pointFarm < pointGoToPU){
 		movements = movementes2Farm;
 		this->currentState = StateIA::FARM;	
+	}else if(pointKill > 0 &&  pointKill < pointGoToPU){
+		this->currentState = StateIA::KILL;	
+	}else{
+		this->currentState = StateIA::CATCH_PU;	
+		movements = movementes2PE;
 	}
 	
 }
@@ -287,6 +292,11 @@ void PlayerIAEntity::updateState(){
 	case  StateIA::FARM:
 		if(movements.size() < 1 && currentMovement == nullptr){
 			putABomb();
+		}
+		break;
+	case StateIA::CATCH_PU:
+		if((movements.size() < 1 && currentMovement == nullptr) || (movements.size() > 1 && std::dynamic_pointer_cast<PowerUp>(Level::getCellMiniMapObject(movements.back()->getPosition())) != nullptr)){
+			currentState = StateIA::NON_OBJETIVE;
 		}
 		break;
 	default:
