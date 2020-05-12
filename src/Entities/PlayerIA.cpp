@@ -222,16 +222,20 @@ bool PlayerIAEntity::updateKillState(){
 void PlayerIAEntity::decildetState(){
 	std::list<ANode_Ptr> movementes2Players;
 	std::list<ANode_Ptr> movementes2Farm;
+	std::list<ANode_Ptr> movementes2PE;
 	std::vector<sf::Vector2i> objetivePlayers;
+	std::vector<sf::Vector2i> objetivesPE;
 	float pointKill = 0;
 	float pointFollow = 0;
 	float pointFarm = 0;
+	float pointGoToPU = 0;
 	if(somePlayerEnemyOnRange(getMapCoordinates(getCenterPosition()), getPowerOfBombs(), team)){
-		pointKill = 5;
+		pointKill = sg._KillStruct.ansiansDeKill * 3;
 	}
 	selectEnemyPlayers(me, objetivePlayers, this->sg._PerseguirStruct.RangoVision);
+	std::cout << "Num Enemies " << objetivePlayers.size() << "\n";
 	if(objetivePlayers.size() > 0){
-		if(pathFindingGoWithCare(this->getEntityMapCoordinates(), movementes2Players, me, 0)){
+		if(pathFindingGoWithCare(this->getEntityMapCoordinates(), objetivePlayers , movementes2Players, me, 0)){
 			pointFollow = 1/movementes2Players.back()->costNode() * sg._KillStruct.ansiansDeKill;
 		}
 	}
@@ -239,6 +243,13 @@ void PlayerIAEntity::decildetState(){
 	if(pathFinderDestroy2Farm(this->getEntityMapCoordinates(), movementes2Farm, me, 0)){
 		pointFarm = 1/movementes2Farm.back()->costNode() * getIntersetDestroyWalls();
 	}
+	selectPowerUpsObjetive(me, objetivesPE, this->sg._SeekPEStruct.RangoVision);
+	if(objetivesPE.size() > 0){
+		if(pathFindingGoWithCare(this->getEntityMapCoordinates(), objetivesPE , movementes2PE, me, 0)){
+			pointGoToPU = 1/movementes2PE.back()->costNode() * sg._SeekPEStruct.bootsSeek;
+		}
+	}
+
 	std::cout << "Points " << pointKill << " " << pointFarm << "\n"; 
 	if(pointFollow > 0 && pointFollow < pointFarm){
 		movements = movementes2Players;

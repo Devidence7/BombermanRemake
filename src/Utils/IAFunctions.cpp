@@ -323,6 +323,20 @@ void selectEnemyPlayers(Entity_ptr IA, std::vector<sf::Vector2i> &objetives, int
     }
 }
 
+void selectPowerUpsObjetive(Entity_ptr IA, std::vector<sf::Vector2i> &objetives, int rangeVision){
+    sf::Vector2i from;
+    sf::Vector2i to;
+    createRangeVision(from, to, IA->getEntityMapCoordinates(), rangeVision);
+    for(int x = from.x; x < to.x; x++){
+        for(int y = from.y; y < to.y; y++){
+            PowerUp_ptr pu = std::dynamic_pointer_cast<PowerUp>(Level::getCellMiniMapObject(x,y));
+            if(pu != nullptr){
+                objetives.push_back(pu->getEntityMapCoordinates());
+            }
+        }
+    }
+}
+
 
 void tryKillAEnemy(Entity_ptr IA, std::list<ANode_Ptr> &movements, int rangeVision, int costDestroy)
 {
@@ -331,7 +345,7 @@ void tryKillAEnemy(Entity_ptr IA, std::list<ANode_Ptr> &movements, int rangeVisi
     if(objetives.size() < 0){
         //No hacer nada
     }else{
-        if(pathFindingBreakingWalls(getMapCoordinates(IA->getCenterPosition()), objetives, movements, IA, TypeSeekIA::BEST_PATH, costDestroy)){
+        if(pathFindingGoWithCare(getMapCoordinates(IA->getCenterPosition()), objetives, movements, IA,0)){
             
         }
     }
@@ -628,7 +642,7 @@ bool pathFinderActions( Entity_ptr _ia, const std::vector<sf::Vector2i> &objetiv
     }
 }
 
-bool pathFindingGoWithCare(const sf::Vector2i &positionEnemy, std::list<ANode_Ptr> &path, Entity_ptr e, int costAddDestroy)
+bool pathFindingGoWithCare(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> &path, Entity_ptr e, int costAddDestroy)
 {
     
     PlayerIA_ptr IA =  std::dynamic_pointer_cast<PlayerIAEntity>(e);
@@ -643,11 +657,8 @@ bool pathFindingGoWithCare(const sf::Vector2i &positionEnemy, std::list<ANode_Pt
     Interst_ptr levelInterset;
     int interestSite = levelInterset != nullptr ? levelInterset->intersest() : 0;
     int bestfounds = interestSite;
-    ANode_Ptr currentNode = std::make_shared<ANode>(ANode(positionEnemy, 0, interestSite ,nullptr));
-    if(interestSite == 3){
-        path.push_back(currentNode);
-        return true;
-    }
+    sf::Vector2i objetiveP = selectCloseObjetive(positionEnemy, objetives);
+    ANode_Ptr currentNode = std::make_shared<ANode>(ANode(positionEnemy, sf::Vector2i(0, 0), objetiveP, 0));
 
     bool found = false;
     while (!found)
@@ -665,7 +676,8 @@ bool pathFindingGoWithCare(const sf::Vector2i &positionEnemy, std::list<ANode_Pt
                     if(!Level::isValidCell(nodePosition)){
                         continue;
                     }
-                    ANode_Ptr newNode = std::make_shared<ANode>(ANode(nodePosition, currentNode->fAcum() + 1, interestSite ,currentNode));
+                    sf::Vector2i objetiveP = selectCloseObjetive(nodePosition, objetives);
+                    ANode_Ptr newNode = std::make_shared<ANode>(ANode(nodePosition, sf::Vector2i(i, j), objetiveP, currentNode->fAcum() + 1, currentNode));//std::make_shared<ANode>(ANode(nodePosition, currentNode->fAcum() + 1, interestSite ,currentNode));
                     int incrementCost = 0;
                     if (checkValidPositionWithImprudence(nodePosition, e, newNode->costNode(), incrementCost) && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(newNode))
                     { //Si es una posicion valida y no se ha expandido
