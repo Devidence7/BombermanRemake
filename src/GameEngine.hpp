@@ -234,7 +234,6 @@ Game(){
 		double moveTime = GameTime::getTimeNow() - lastCameraMovedTime;
 		
 		moveTime = fmax(fmin(moveTime, 1), 0);
-		cout << moveTime << endl;
 		moveTime *= 60;
 
 		if (PLayers::getVectorPlayer().size() == 1) {
