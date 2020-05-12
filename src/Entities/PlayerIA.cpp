@@ -107,9 +107,10 @@ bool PlayerIAEntity::updateVelocity(){
 	}
 	sf::Vector2f nextPosition = MapCoordinates2GlobalCoorCenter(currentMovement->getPosition());
 	sf::Vector2f currentPosition = getCenterPosition();
+	
 	sf::Vector2f dir = nextPosition - currentPosition;
 	velocity = normalize(dir);
-
+	
 	if(abs(dir.x) < 1 && abs(dir.y) < 1){
 		velocity.x = 0;		
 		velocity.y = 0;		
@@ -126,9 +127,11 @@ bool PlayerIAEntity::updateVelocity(){
 		velocity.y = 0;
 		velocity.x = velocity.x/abs(velocity.x);
 	}
+	
 
 	velocity.x *=  baseSpeed * speedBoost * moveTime;
 	velocity.y *=  baseSpeed * speedBoost * moveTime;
+	
 	if (velocity.x != 0) {
 		if (velocity.x > 0) {
 			lastMovement = LookingAt::right;
@@ -279,18 +282,18 @@ void PlayerIAEntity::startStates(){
 }
 
 
-bool PlayerIAEntity::updatePlayer(int posX,int posY){
+bool PlayerIAEntity::updatePlayer(){
 	if(moduleVector(lastPositionKnowed - getCenterPosition()) > 20){
-		std::cout << "Posicion idea a tomar por culo\n";
+		std::cout << "Posicion idea mal\n";
 	}
 	generatePathStates();
 	
 	updateMovement();
-
+	cout<<"velocity Enemigo: "<<velocity.x<<" "<<velocity.y<<endl;
 	updateVelocity();
-
 	// Call animate function to change current sprite if needed.
-	animate(velocity,posX,posY);
+	animate(velocity);
+	//cout<<"velocity Enemigo: "<<velocity.x<<" "<<velocity.y<<endl;
 	// Move Entity position
 	if (!expiredEntity) {
 		move(velocity.x, velocity.y);
@@ -302,7 +305,7 @@ bool PlayerIAEntity::updatePlayer(int posX,int posY){
 	return false;
 }
 
-
+bool 
 
 //Upadate
 // -> Upadte State (nuevo estado/continuar estado)

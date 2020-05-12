@@ -41,6 +41,7 @@ PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team, float posX,floa
 	}
 	setPosition(posX,posY);
 	initialPos = sf::Vector2f(posX, posY);
+	cout<<"INITIAL POS X "<<posX<<" INITIAL POS Y "<<posY<<endl;
 }
 
 int PlayerEntity::getPowerOfBombs() {
@@ -80,7 +81,7 @@ int PlayerEntity::getLives() {
 /*
 	Animate Entity by changing the actual sprite.
 	*/
-void PlayerEntity::animate(sf::Vector2f velocity,int posX,int posY) {
+void PlayerEntity::animate(sf::Vector2f velocity) {
 	// If the player has died:
 	if (!expiredEntity) {
 		if (!bombThrowed) {
@@ -171,6 +172,7 @@ void PlayerEntity::animate(sf::Vector2f velocity,int posX,int posY) {
 			isInvicible = true;
 			std::cout << "Respouning\n";
 			setPosition(initialPos);
+			//cout<<"INITIAL POS X "<<initialPos.x<<" INITIAL POS Y "<<initialPos.y<<endl;
 		}
 	}
 
@@ -296,7 +298,7 @@ if(!respawning){
 /*
 	 * Update player position.
 	 */
-bool PlayerEntity::updatePlayer(int posX,int posY) {
+bool PlayerEntity::updatePlayer() {
 
 	// Player movement
 	bool playerRight = (sf::Keyboard::isKeyPressed(playerControls.goRight));
@@ -307,6 +309,7 @@ bool PlayerEntity::updatePlayer(int posX,int posY) {
 	double moveTime = 0;
 	if (lastMovementTime) {
 		moveTime = (GameTime::getTimeNow() - lastMovementTime) * 60;
+	
 	}
 	lastMovementTime = GameTime::getTimeNow();
 
@@ -351,7 +354,8 @@ bool PlayerEntity::updatePlayer(int posX,int posY) {
 	}
 
 	// Call animate function to change current sprite if needed.
-	animate(velocity,posX,posY);
+	animate(velocity);
+	//cout<<"velocity Normal: "<<velocity.x<<" "<<velocity.y<<endl;
 
 	// Move Entity position
 	if (!expiredEntity) {

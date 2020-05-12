@@ -96,7 +96,7 @@ private:
             game.gameOptions.difLevel=1.25;
 			previousMenu=MenuState::MAIN;
 				createNumPlayersMenu(*window);
-			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			gameDisplay.setGameState(GameDisplayController::GameState::PICK_COLOR);
 			break;
 
 		case ButtonActions::NORMALLEVEL:
@@ -104,7 +104,7 @@ private:
 			previousMenu=MenuState::MAIN;
 				createNumPlayersMenu(*window);
 			createNumPlayersMenu(*window);
-        	gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+        	gameDisplay.setGameState(GameDisplayController::GameState::PICK_COLOR);
 					
 			break;
 				
@@ -113,7 +113,7 @@ private:
 			previousMenu=MenuState::MAIN;
 				createNumPlayersMenu(*window);
 			//OptionsMenu::lastGameStateOptionsMenu = GameDisplayController::GameState::MULTIPLAYER_MENU;
-			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			gameDisplay.setGameState(GameDisplayController::GameState::PICK_COLOR);
 			break;
 		
 

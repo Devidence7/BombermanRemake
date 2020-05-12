@@ -19,6 +19,7 @@ public:
 	sf::Vector2f lastPositionKnowed;
 	PatrolState p;
 	int IAPlayer;
+	const double prob=0.5;
 
 	/*,pos
 	Constructor of Entity
@@ -45,7 +46,7 @@ public:
 	/*
 	 * Update player position.
 	 */
-	bool updatePlayer(int posX,int posY) override;
+	bool updatePlayer() override;
 
 //	void invertControls(); ??
 
@@ -75,5 +76,9 @@ public:
 
 	float getIntersetDestroyWalls(){
 		return sg.bonusDestroyWalls;
+	}
+
+	bool avanza(double scoreCamino,float prudencia){
+		return ((scoreCamino/prudencia)>prob);
 	}
 };

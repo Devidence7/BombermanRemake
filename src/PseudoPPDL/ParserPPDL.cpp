@@ -30,13 +30,13 @@ void StateGenerator::generateState(ifstream &f, string estado)
             found = text.find("rangovision");
             if (found != std::string::npos){
                 string val = text.substr(found + sizeof("rangovision"), text.size()) ;
-                std::cout << val << std::endl;
+                std::cout <<"rangovision "<< val << std::endl;
                 this->_PerseguirStruct.RangoVision = stoi(val);
             }
             found = text.find("costdestroywall");
             if (found != std::string::npos){
                 string val = text.substr(found + sizeof("costdestroywall"), text.size()) ;
-                std::cout << val << std::endl;
+                std::cout <<"costdestroywall "<< val << std::endl;
 //                this->_PerseguirStruct.costDestroyWall = val;           
                 this->_PerseguirStruct.costDestroyWall = stoi(val);
             }
@@ -53,13 +53,13 @@ void StateGenerator::generateState(ifstream &f, string estado)
             found = text.find("imprudencia");
             if (found != std::string::npos){
                 string val = text.substr(found + sizeof("rangovision"), text.size()) ;
-                std::cout << val << std::endl;
+                std::cout <<"matar"<< val << std::endl;
                 this->_KillStruct.imprudencia = stoi(val);
             }
             found = text.find("costdestroywall");
             if (found != std::string::npos){
                 string val = text.substr(found + sizeof("costdestroywall"), text.size()) ;
-                std::cout << val << std::endl;
+                std::cout << "matar "<<val << std::endl; 
 //                this->_PerseguirStruct.costDestroyWall = val;           
                 this->_KillStruct.costDestroyWall = stoi(val);
             }
@@ -77,12 +77,13 @@ void StateGenerator::generateState(ifstream &f, string estado)
             found = text.find("rangovision");
             if (found != std::string::npos){
                 string val = text.substr(found + sizeof("rangovision"), text.size()) ;
-                std::cout << val << std::endl;
+                std::cout << "rangovision"<<val << std::endl;
                 this->_SeekPEStruct.RangoVision = stoi(val);
             }
 
             float buff, nerf,action;
              f >>buff>> nerf >> action ;
+             cout<<buff<<" "<<nerf<<" "<<action<<endl; 
              this->_SeekPEStruct.interBuffPU = buff;
              this->_SeekPEStruct.interNerfPU = nerf;
              this->_SeekPEStruct.interActionPU =action;
@@ -138,12 +139,12 @@ PatrolState StateGenerator::getPatrol(sf::Vector2i pos)
 /*
 PerseguirState StateGenerator::getVisionPerseguir()
 {
-    return PerseguirState(_PerseguirStruct.RangoVision);
+    return _PerseguirStruct.RangoVision;
 }
 
 PerseguirState StateGenerator::getCostDestWallPerseguir()
 {
-    return PerseguirState(pos + _PatrolStruct.puntRelativoA, pos + _PatrolStruct.puntRelativoB);
+    return PerseguirState(pos + _PerseguirStruct.puntRelativoA, pos + _PatrolStruct.puntRelativoB);
 }
 
 KillState StateGenerator::getImprudencia()
@@ -172,5 +173,4 @@ SeekPEState StateGenerator::getInterActionPU()
 {
     return PatrolState(pos + _PatrolStruct.puntRelativoA, pos + _PatrolStruct.puntRelativoB);
 }
-
 */

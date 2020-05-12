@@ -75,7 +75,6 @@ Game(){
 				PLayers::addPlayer(userKeyPress.getPlayerControls(i + 1), SIZE_PILLAR, 0, gameOptions.playersAndTeams[numPlayersInserter]);
 				level->checkSpawn(SIZE_PILLAR, 0);
 				numPlayersInserter++;
-				cout << "HHHEEEEEYYYY" << gameOptions.player1ColorPick << endl;
 				PLayers::getVectorPlayer()[0]->changeColor(gameOptions.colorList[gameOptions.player1ColorPick]);
 				break;
 
@@ -189,7 +188,7 @@ Game(){
 	void newStage(sf::RenderWindow& window,GameDisplayController &gameDisplay){
 		deleteMap();
 		stage++;
-		Enemies::insertarEnemigos(dimX, dimY,DEFAULT_NUM_OF_ENEMIES*gameOptions.difLevel+(stage/0.25),stage,gameOptions.difLevel);
+		Enemies::insertarEnemigos(dimX, dimY,DEFAULT_NUM_OF_ENEMIES*gameOptions.difLevel+(stage/0.5),stage,gameOptions.difLevel);
 		startNewGame(window,gameDisplay);
 		
 	}
@@ -217,22 +216,22 @@ Game(){
 		for (Player_ptr player : PLayers::getVectorPlayer()) {
 			switch(ply){
 				case 1:
-					player->updatePlayer(SIZE_PILLAR,SIZE_PILLAR);
+					player->updatePlayer();
 				
 					break;
 				
 				case 2:
-					player->updatePlayer(SIZE_PILLAR,(dimY-1)*SIZE_PILLAR);
+					player->updatePlayer();
 					//level->checkSpawn(SIZE_PILLAR,(dimY-1)*SIZE_PILLAR);
 					break;
 
 				case 3:
-					player->updatePlayer((dimX-1)*SIZE_PILLAR,SIZE_PILLAR);
+					player->updatePlayer();
 					//level->checkSpawn((dimX-1)*SIZE_PILLAR,SIZE_PILLAR);
 					break;
 
 				case 4:
-					player->updatePlayer((dimX-1)*SIZE_PILLAR,(dimY-1)*SIZE_PILLAR);
+					player->updatePlayer();
 					//level->checkSpawn((dimX-1)*SIZE_PILLAR,(dimY-1)*SIZE_PILLAR);
 					break;
 				

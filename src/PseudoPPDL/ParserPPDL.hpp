@@ -70,13 +70,13 @@ public:
     bool havePerseguirStruct = false;
 
     PatrolState getPatrol(sf::Vector2i pos);
-   /* PerseguirState getVisionPerseguir();
+    PerseguirState getVisionPerseguir();
     PerseguirState getCostDestWallPerseguir();
     KillState getImprudencia();
     KillState getVisionKill();
     SeekPEState getVisionSeek();
     SeekPEState getInterBuffPU();
-    SeekPEState getInterActionPU();*/
+    SeekPEState getInterActionPU();
     
 
 
