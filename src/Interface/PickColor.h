@@ -14,11 +14,10 @@ class PickColorMenu {
 	bool EsqPressed = false;
 
 	enum ButtonActions {
-		RESUME,
-		SAVE,
-		OPTIONS,
-		GO_MAIN_MENU,
-		QUIT
+		COLOR_1,
+		COLOR_2,
+		CONTINUE,
+		GO_MAIN_MENU
 	};
 
 	sf::Texture texture;
@@ -28,11 +27,26 @@ class PickColorMenu {
 	sf::RectangleShape menuBackgroundShadow1;
 	sf::RectangleShape menuBackgroundShadow2;
 
-	GameGUI::Slider* masterVolumenSlider;
-	GameGUI::Slider* musicSlider;
+	GameGUI::Slider* color1;
+	GameGUI::Slider* color2;
+
+	PlayerTexture* playerTexture;
+	PlayerColor* playerColor;
+
+	sf::Sprite playerHeadColor1;
+	sf::Sprite playerHead1;
+
+	sf::Sprite playerHeadColor2;
+	sf::Sprite playerHead2;
 
 	void createBackgroundMenu(sf::RenderWindow& window) {
 		menu->setPosition(sf::Vector2f((int)window.getSize().x / 2 - (int)menu->getSize().x / 2, (int)window.getSize().y / 2 - (int)menu->getSize().y / 2));
+
+		playerHeadColor1.setPosition(sf::Vector2f(menu->getPosition().x + 90, menu->getPosition().y+80));
+		playerHead1.setPosition(sf::Vector2f(menu->getPosition().x + 90, menu->getPosition().y+80));
+
+		playerHeadColor2.setPosition(sf::Vector2f(menu->getPosition().x + 340, menu->getPosition().y +80));
+		playerHead2.setPosition(sf::Vector2f(menu->getPosition().x + 340, menu->getPosition().y+80));
 
 		float menuBackgroundPadding = 50;
 		menuBackground.setSize(sf::Vector2f(menu->getSize().x + 2 * menuBackgroundPadding, menu->getSize().y + 2 * menuBackgroundPadding));
@@ -63,11 +77,51 @@ public:
 		background.setScale(sf::Vector2f(2, 2));
 		background.setTextureRect({ window.getPosition().x, window.getPosition().y, (int)window.getSize().x, (int)window.getSize().y });
 
-		menu->addButton("                Reanudar                ", ButtonActions::RESUME);
-		// menu->addButton("                 Guardar                 ", ButtonActions::SAVE);
-		menu->addButton("                 Opciones                 ", ButtonActions::OPTIONS);
-		menu->addButton("        Ir al menu principal       ", ButtonActions::GO_MAIN_MENU);
-		menu->addButton("                    Atras                    ", ButtonActions::QUIT);
+		GameGUI::HorizontalBoxLayout* hbox = menu->addHorizontalBoxLayout();
+		GameGUI::VerticalBoxLayout* vbox1 = hbox->addVerticalBoxLayout();
+		GameGUI::VerticalBoxLayout* vbox2 = hbox->addVerticalBoxLayout();
+
+		PlayerTexture *playerTexture = &TextureStorage::getPlayerTexture();
+		PlayerColor *playerColor = &TextureStorage::getPlayerColor();
+
+		playerHeadColor1.setTexture(playerColor->getTexture());
+		playerHeadColor1.setTextureRect(sf::IntRect(sf::Vector2i(9, 0), sf::Vector2i(39, 72)));
+		playerHeadColor1.setColor(game.gameOptions.colorList[game.gameOptions.player1ColorPick]);
+
+		playerHead1.setTexture(playerTexture->getTexture());
+		playerHead1.setTextureRect(sf::IntRect(sf::Vector2i(9, 0), sf::Vector2i(39, 72)));
+
+		playerHeadColor2.setTexture(playerColor->getTexture());
+		playerHeadColor2.setTextureRect(sf::IntRect(sf::Vector2i(9, 0), sf::Vector2i(39, 72)));
+		playerHeadColor2.setColor(game.gameOptions.colorList[game.gameOptions.player2ColorPick]);
+
+		playerHead2.setTexture(playerTexture->getTexture());
+		playerHead2.setTextureRect(sf::IntRect(sf::Vector2i(9, 0), sf::Vector2i(39, 72)));
+
+		vbox1->add(new Label("   Player 1"));
+		vbox1->add(new Label(""));
+		vbox1->add(new Label(""));
+		vbox1->add(new Label(""));
+		vbox1->add(new Label(""));
+		vbox1->add(new Label("                      "));
+		color1 = new Slider();
+		color1->setValue(game.gameOptions.player1ColorPick * 10);
+		vbox1->add(color1, ButtonActions::COLOR_1);
+
+		vbox2->add(new Label("   Player 2"));
+		vbox2->add(new Label(""));
+		vbox2->add(new Label(""));
+		vbox2->add(new Label(""));
+		vbox2->add(new Label(""));
+		vbox2->add(new Label(""));
+
+		color2 = new Slider();
+		color2->setValue(game.gameOptions.player2ColorPick * 10);
+		vbox2->add(color2, ButtonActions::COLOR_2);
+
+
+		menu->addButton("             Continuar            ", ButtonActions::CONTINUE);
+		menu->addButton("                Atras                ", ButtonActions::GO_MAIN_MENU);
 
 		createBackgroundMenu(window);
 	}
@@ -76,30 +130,27 @@ private:
 	void userActions(sf::Event& event, sf::RenderWindow*& window, GameDisplayController& gameDisplay, Game& game) {
 		int id = menu->onEvent(event);
 		switch (id) {
-		case ButtonActions::RESUME:
-			gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
-			GameTime::resumeGameTime();
-			break;
+		case ButtonActions::COLOR_1: {
+			int val = color1->getValue() / 10;
+			game.gameOptions.player1ColorPick = val;
+			playerHeadColor1.setColor(game.gameOptions.colorList[game.gameOptions.player1ColorPick]);
+			break; }
 
-		case ButtonActions::SAVE:
-					
+		case ButtonActions::COLOR_2:{
+			int val = color2->getValue() / 10;
+			game.gameOptions.player2ColorPick = val;
+			playerHeadColor2.setColor(game.gameOptions.colorList[game.gameOptions.player2ColorPick]);
 			break;
+		}
 				
-		case ButtonActions::OPTIONS:
-			OptionsMenu::lastGameStateOptionsMenu = GameDisplayController::GameState::PAUSE_MENU;
-			gameDisplay.setGameState(GameDisplayController::GameState::OPTIONS_MENU);
+		case ButtonActions::CONTINUE:
+			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			break;
 				
 		case ButtonActions::GO_MAIN_MENU:
-			game.timesUp=false;
-			game.deleteMap();
 			gameDisplay.setGameState(GameDisplayController::GameState::MAIN_MENU);
-			GameMusic::playTitleMusic();
 			break;
 				
-		case ButtonActions::QUIT:
-			window->close();
-			break;
 		default:
 			break;
 		}
@@ -112,6 +163,11 @@ private:
 		window.draw(menuBackgroundShadow1);
 		window.draw(menuBackgroundShadow);
 		window.draw(menuBackground);
+
+		window.draw(playerHead1);
+		window.draw(playerHeadColor1);
+		window.draw(playerHead2);
+		window.draw(playerHeadColor2);
 
 		window.draw(*menu);
 	}
