@@ -165,20 +165,17 @@ bool checkValidPositionWithImprudence(const sf::Vector2i &v, std::shared_ptr<Ent
 //////////////////////////////////
 ////  Interst/Omited Zones   /////
 //////////////////////////////////
-void generateOmitedZoneByBomb(sf::Vector2i bombPosition, std::list<OmittedArea> &AreasOmited, float timeBomb)
+void generateOmitedZoneByBomb(sf::Vector2i bombPosition, std::list<OmittedArea> &AreasOmited, float timeBomb, int powerBomb)
 {
     //TODO: Posiblidad de cruz más grande?
-    for (int i = -1; i < 2; i++)
-    {
-        for (int j = -1; j < 2; j++)
-        {
-            if (i != j)
-            {
-                OmittedArea o(bombPosition + sf::Vector2i(i, j), timeBomb);
-                AreasOmited.push_back(o);
-            }
-        }
+    for(int i = -powerBomb; i <= powerBomb; i++){
+        OmittedArea o1(bombPosition + sf::Vector2i(i, 0), timeBomb);
+        OmittedArea o2(bombPosition + sf::Vector2i(0, i), timeBomb);
+        AreasOmited.push_back(o1);
+        AreasOmited.push_back(o2);
+
     }
+
     //Añadir posicion de bomba?? no debería ser necesario por imposibilidad de llegar
 }
 
@@ -194,7 +191,7 @@ void generateOmitedZones(sf::Vector2i positionP, std::list<OmittedArea> &AreasOm
             Bomb_ptr b = std::dynamic_pointer_cast<Bomb>(Level::getCellMiniMapObject(x, y));
             if ( b != nullptr)
             {
-                generateOmitedZoneByBomb(sf::Vector2i(x, y), AreasOmited, b->getExplosionTimeLeft());
+                generateOmitedZoneByBomb(sf::Vector2i(x, y), AreasOmited, b->getExplosionTimeLeft(), b->bombPower);
             }
         }
     }
@@ -315,7 +312,7 @@ void selectEnemyPlayers(Entity_ptr IA, std::vector<sf::Vector2i> &objetives, int
     sf::Vector2i positionIA = IA->getEntityMapCoordinates();
     int i = 0;
     for(Player_ptr p : PLayers::getVectorPlayer()){
-        if(p->team != IA->team){
+        if(p->team != IA->team && !p->respawning && !p->dead){
             if(isOnVision(positionIA, p->getEntityMapCoordinates(), rangeVision)){
                 objetives.push_back(p->getEntityMapCoordinates());
             }
@@ -354,7 +351,7 @@ void tryKillAEnemy(Entity_ptr IA, std::list<ANode_Ptr> &movements, int rangeVisi
 bool somePlayerEnemyOnVision(sf::Vector2i pos, int rangeVision, int team){
    bool onRange = false;
     for(Player_ptr p : PLayers::getVectorPlayer()){
-        if(p->team != team){
+        if(p->team != team && !p->respawning && !p->dead){
             onRange = isOnVision(pos, getMapCoordinates(p->getCenterPosition()), rangeVision);
             if(onRange){break;}
         }
@@ -365,7 +362,7 @@ bool somePlayerEnemyOnVision(sf::Vector2i pos, int rangeVision, int team){
 bool somePlayerEnemyOnRange(sf::Vector2i pos, int rangeBomb, int team){
     bool onRange = false;
     for(Player_ptr p : PLayers::getVectorPlayer()){
-        if(p->team != team){
+        if(p->team != team && !p->respawning && !p->dead){
             onRange = isOnRange(pos, getMapCoordinates(p->getCenterPosition()), rangeBomb);
             if(onRange){break;}
         }

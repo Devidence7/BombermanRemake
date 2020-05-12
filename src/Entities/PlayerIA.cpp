@@ -304,13 +304,13 @@ void PlayerIAEntity::updateState(){
 }
 
 void PlayerIAEntity::startStates(){
-	if(this->sg.havePatrolStruct){
-		currentState = StateIA::PATROL;
-		p = sg.getPatrol(getMapCoordinates(getCenterPosition()));
-		currentObjetive = p.getObetive(getMapCoordinates(this->getCenterPosition()));
-	}else{
+	// if(this->sg.havePatrolStruct){
+	// 	currentState = StateIA::PATROL;
+	// 	p = sg.getPatrol(getMapCoordinates(getCenterPosition()));
+	// 	currentObjetive = p.getObetive(getMapCoordinates(this->getCenterPosition()));
+	// }else{
 		currentState = StateIA::NON_OBJETIVE;
-	}
+	// }
 }
 
 
