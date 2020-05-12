@@ -154,6 +154,7 @@ private:
 		case ButtonActions::PLVSIA:
 			game.gameOptions.numPlayers = 1;
 			game.gameOptions.numIAPlayers = 1;
+			fillPlayersAndTeamsArray(game, 0, 1, 2, 3, 0);
 			previousMenu = MenuState::MAIN;
 			pickMap(*window, gameDisplay);
 			break;
@@ -161,6 +162,7 @@ private:
 		case ButtonActions::PLVSPL:
 			game.gameOptions.numPlayers = 2;
 			game.gameOptions.numIAPlayers = 0;
+			fillPlayersAndTeamsArray(game, 0, 1, 2, 3, 0);
 			previousMenu = MenuState::MAIN;
 			pickMap(*window, gameDisplay);
 
@@ -169,6 +171,7 @@ private:
 		case ButtonActions::PL12IA:
 			game.gameOptions.numPlayers = 1;
 			game.gameOptions.numIAPlayers = 2;
+			fillPlayersAndTeamsArray(game, 0, 1, 2, 3, 3);
 			previousMenu = MenuState::MAIN;
 			pickMap(*window, gameDisplay);
 			break;
@@ -176,6 +179,7 @@ private:
 		case ButtonActions::PL21IA:
 			game.gameOptions.numPlayers = 2;
 			game.gameOptions.numIAPlayers = 1;
+			fillPlayersAndTeamsArray(game, 0, 1, 2, 3, 3);
 			previousMenu = MenuState::MAIN;
 			pickMap(*window, gameDisplay);
 			break;
@@ -184,11 +188,13 @@ private:
 			game.gameOptions.numPlayers = 1;
 			game.gameOptions.numIAPlayers = 3;
 			previousMenu = MenuState::MAIN;
+			fillPlayersAndTeamsArray(game, 0, 1, 2, 3, 4);
 			pickMap(*window, gameDisplay);
 			break;
 		case ButtonActions::PL22IA:
 			game.gameOptions.numPlayers = 2;
 			game.gameOptions.numIAPlayers = 2;
+			fillPlayersAndTeamsArray(game, 0, 1, 2, 3, 4);
 			previousMenu = MenuState::MAIN;
 			pickMap(*window, gameDisplay);
 			break;
