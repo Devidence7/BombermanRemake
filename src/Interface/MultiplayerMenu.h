@@ -156,6 +156,7 @@ private:
 
 		case ButtonActions::PLVSPL:
 			game.gameOptions.numPlayers = 2;
+			game.gameOptions.numIAPlayers = 0;
 			previousMenu = MenuState::MAIN;
 			createNumPlaySelection(*window, gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
