@@ -24,6 +24,8 @@ inline bool isOnRange(sf::Vector2i pos,sf::Vector2i objetive, int rangeBomb){
 }
 
 
+
+
 sf::Vector2i generateObjetive2Player(std::shared_ptr<Entity> p, std::shared_ptr<Entity> e,  std::vector<sf::Vector2i> &objetives);
 
 void seekAnyPlayerOrRandom(list<ANode_Ptr> & movements, std::shared_ptr<Entity> e,  TypeSeekIA typeSeek);
@@ -33,6 +35,7 @@ inline void createRangeVision(sf::Vector2i &from, sf::Vector2i &to, sf::Vector2i
 
 //#include "../Include/EntitiesInclude.hpp"
 #include "../Entities/Player.h"
+bool checkValidPositionWithImprudence(const sf::Vector2i &v, std::shared_ptr<Entity> e,int CostPath, int & incrementCost);
 void generateOmitedZoneByBomb(sf::Vector2i bombPosition, std::list<OmittedArea> &AreasOmited, float timeBomb);
 void generateOmitedZones(sf::Vector2i positionP, std::list<OmittedArea> &AreasOmited, int rangeVision);
 void selectEnemyPlayers(std::shared_ptr<Entity> IA, std::vector<sf::Vector2i> &objetives, int rangeVision);

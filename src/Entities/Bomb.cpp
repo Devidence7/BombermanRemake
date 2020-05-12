@@ -31,6 +31,7 @@ void Bomb::setExpiredEntity()
 }
 
 bool Bomb::isColliderWith(Entity_ptr eCollisioning){
+
 	return !eCollisioning->CanThroughBomb();
 }	
 

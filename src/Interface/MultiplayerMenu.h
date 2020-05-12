@@ -254,6 +254,7 @@ private:
 			previousMenu = MenuState::PICK_MAP;
 			createNumPlaySelection(*window, gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::PICK_COLOR);
+			gameDisplay.notifyChangeDisplay();
 			game.gameOptions.selectedStage = 1;
 			break;
 
@@ -262,6 +263,7 @@ private:
 			previousMenu = MenuState::PICK_MAP;
 			createNumPlaySelection(*window, gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::PICK_COLOR);
+			gameDisplay.notifyChangeDisplay();
 			game.gameOptions.selectedStage = 2;
 			break;
 
@@ -270,6 +272,7 @@ private:
 			previousMenu = MenuState::PICK_MAP;
 			createNumPlaySelection(*window, gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::PICK_COLOR);
+			gameDisplay.notifyChangeDisplay();
 			game.gameOptions.selectedStage = 3;
 			break;
 

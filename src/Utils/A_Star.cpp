@@ -23,26 +23,7 @@ bool checkValidPosition(const sf::Vector2i &v, Entity_ptr e)
     }
     return valid;
 }
-bool checkValidPositionWithImprudence(const sf::Vector2i &v, std::shared_ptr<Entity> e, int CostPath, int & incrementCost){
-    PlayerIA_ptr p = std::dynamic_pointer_cast<PlayerIAEntity>(e);
-    bool valid = (EntityMap::isValidCell(v) && (EntityMap::getCellEntMapObject(v) == nullptr || !EntityMap::getCellEntMapObject(v)->isColliderWith(e)));
-    if(valid){
-        //Verficar si es un area omitida
-        if(e->OmittedAreas.size() > 0){
-            for(OmittedArea oa : e->OmittedAreas){
-                if(oa == v){
-                    if(abs(CostPath - oa.TimeAp()) == 0){
-                        valid = false;
-                        break;
-                    }else{
-                        incrementCost = (-abs(CostPath - oa.TimeAp()) + p->sg.imprudencia);
-                    }
-                }
-            }
-        }
-    }
-    return valid;
-}
+
 
 
 inline bool checkValidPositionOrDestroyer(const sf::Vector2i &v, std::shared_ptr<Entity> e){
