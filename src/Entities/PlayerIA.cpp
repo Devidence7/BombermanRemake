@@ -11,6 +11,9 @@ void PlayerIAEntity::setCollision(std::shared_ptr<Entity> col){
 	if(col != nullptr){
 		OmittedAreas.push_back(OmittedArea(getMapCoordinates(col->getCenterPosition())));
 	}
+	movements.clear();
+	currentMovement = nullptr;
+	decildetState();
 	
 }
 
@@ -219,10 +222,10 @@ void PlayerIAEntity::decildetState(){
 		}
 	}	
 	if(pathFinderDestroy2Farm(this->getEntityMapCoordinates(), movementes2Farm, me, 0)){
-		pointFarm = movementes2Farm.back()->costNode() * getIntersetDestroyWalls() + 0.1;
+		pointFarm = movementes2Farm.back()->costNode() * getIntersetDestroyWalls();
 	}
 
-	if(pointKill > 0 && pointKill < pointFarm){
+	if(pointKill < pointFarm){
 		movements = movementes2Players;
 		this->currentState = StateIA::PERSEGUIR;	
 	}else{
