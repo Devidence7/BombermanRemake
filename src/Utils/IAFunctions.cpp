@@ -150,11 +150,9 @@ bool checkValidPositionWithImprudence(const sf::Vector2i &v, std::shared_ptr<Ent
         if(e->OmittedAreas.size() > 0){
             for(OmittedArea oa : e->OmittedAreas){
                 if(oa == v){
-                    if(abs(CostPath - oa.TimeAp()) == 0){
+                    if(abs(CostPath - oa.TimeAp()) == 0 || p->avanzaAtravesDelFuego(abs(CostPath - oa.TimeAp()))){
                         valid = false;
                         break;
-                    }else{
-                        incrementCost = (-abs(CostPath - oa.TimeAp()) + p->sg.imprudencia);
                     }
                 }
             }
@@ -394,6 +392,8 @@ bool somePlayerEnemyOnRange(sf::Vector2i pos, int rangeBomb, int team){
 // Pre: on(e, posBomb) ^ validPosition(x) ^ canPutABombSafe(e) ^ haveBombs(e)
 // Post: RunAway(IA)
 
+
+
 bool canPutABombSafe(sf::Vector2i posBomb, Player_ptr e, std::list<ANode_Ptr> &movements)
 {
     int range = e->getPowerOfBombs();
@@ -419,7 +419,6 @@ bool canPutABombSafe(sf::Vector2i posBomb, Player_ptr e, std::list<ANode_Ptr> &m
             }
         }
     }
-    std::cout << "entre " << posBomb.x - (range + 2) << " " << posBomb.y - (range + 2) << " a " << posBomb.x + (range + 2) << " " << posBomb.y + (range + 2) << " validos " << objetives.size()<< "\n";
     if(objetives.size() < 1){
         return false;
     }
