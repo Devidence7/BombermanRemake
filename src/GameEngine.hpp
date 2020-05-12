@@ -3,10 +3,9 @@
 
 #include "Include/global.hpp"
 #include "Include/EntitiesInclude.hpp"
-
+#include "Interface/GameDisplayController.h"
 #include "Map/Level.hpp"
 #include "Textures/TextureStorage.h"
-#include "Interface/GameInterface.h"
 #include "Music/GameMusic.h"
 #include "Utils/IAFunctions.hpp"
 ///#include "Interface/GameDisplayController.h"

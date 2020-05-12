@@ -8,6 +8,7 @@
 #include "../GameEngine.hpp"
 #include "OptionsMenu.h"
 #include "GameDisplayController.h"
+#include "InterfacePaths.h"
 
 
 using namespace GameGUI;
@@ -86,7 +87,7 @@ private:
 		int id = menu->onEvent(event);
 		switch (id) {
 		case ButtonActions::STORY_MODE:
-		
+			game.gameOptions.numIAPlayers = 0;
 			game.gameOptions.historyMode = true;
 			game.debug = false;
 			gameDisplay.setGameState(GameDisplayController::GameState::STORY_MENU);
@@ -95,6 +96,7 @@ private:
 		case ButtonActions::VERSUS_MODE:
 			//  game.gameOptions.numPlayers = 2;
 		
+			game.gameOptions.numIAPlayers = 0;
 			game.gameOptions.historyMode = false;
 			game.debug = false;
 			gameDisplay.setGameState(GameDisplayController::GameState::VS_NUMPLAYERS_MENU);
