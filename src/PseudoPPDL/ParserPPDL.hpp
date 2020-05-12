@@ -53,7 +53,8 @@ public:
     struct SeekPEStruct
     {
     public:
-        float bootsPatrol = 0;
+
+        float bootsSeek = 0;
         int RangoVision = 0;
         float interBuffPU = 0;
         float interNerfPU = 0;
