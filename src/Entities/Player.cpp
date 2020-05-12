@@ -26,11 +26,11 @@ PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team, float posX,floa
 	playerColorEntity.setTextureRect(playerColor->getDefaultIntRect());
 	// Set sprite Sheet texture
 	playerColorEntity.setTexture(playerColor->getTexture());
-	sf::Color tempColor = sf::Color(Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255), 225);
-	playerColorEntity.setColor(tempColor);
+	playerColorColor = sf::Color(Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255), 225);
+	playerColorEntity.setColor(playerColorColor);
 
 	playerHead.setTexture(playerColor->getTexture());
-	playerHead.setColor(tempColor);
+	playerHead.setColor(playerColorColor);
 	playerHead.setTextureRect(sf::IntRect(sf::Vector2i(9, 0), sf::Vector2i(39, 39)));
 
 	playerHead2.setTexture(playerTexture->getTexture());
@@ -162,9 +162,35 @@ void PlayerEntity::animate(sf::Vector2f velocity,int posX,int posY) {
 			expiredEntity = false;
 			respawning = false;
 			lastInvencibleTime = GameTime::getTimeNow();
+			isInvicible = true;
 			setPosition(initialPos);
 		}
 	}
+
+	if (isInvicible) {
+		if (GameTime::getTimeNow() - lastInvencibleTime < invencibleTime) {
+			if (GameTime::getTimeNow() - lastTransparentTime > 0.25) {
+				transparent = !transparent;
+				if (transparent) {
+					setColor(sf::Color(255, 255, 255, 255));
+					playerColorEntity.setColor(sf::Color(playerColorColor.r, playerColorColor.g, playerColorColor.b, 225));
+				}
+				else {
+					setColor(sf::Color(255,255,255,80));
+					playerColorEntity.setColor(sf::Color(playerColorColor.r, playerColorColor.g, playerColorColor.b, 120));
+				}
+				lastTransparentTime = GameTime::getTimeNow();
+			}
+			
+		}
+		else {
+			isInvicible = false;
+			transparent = false;
+			setColor(sf::Color(255, 255, 255, 255));
+			playerColorEntity.setColor(sf::Color(playerColorColor.r, playerColorColor.g, playerColorColor.b, 225));
+		}
+	}
+	
 
 
 	if (controlsInverted) {

@@ -50,6 +50,11 @@ public:
 	double lastRespawnTime = 0;
 	double lastInvencibleTime = 0;
 	const double invencibleTime = 5;
+	bool isInvicible = true;
+	bool transparent = false;
+	double lastTransparentTime = 0;
+
+	sf::Color playerColorColor;
 
 	bool bombThrowed = false;
 	double lastThrowedTime = 0;

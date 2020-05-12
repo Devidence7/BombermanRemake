@@ -13,6 +13,10 @@ public:
 	int spriteSpeed;
 	int actualFrame;
 	int spriteFrames;
+	double powerUpLiveTime = 20;
+	double creationTime;
+	bool transparent = false;
+	double lastTransparentTime = 0;
 
 	int explosionCounter;
 	PowerUp();

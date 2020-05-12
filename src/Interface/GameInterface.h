@@ -24,8 +24,8 @@ class GameInterface {
 	sf::RectangleShape timeBoxBorder;
 	sf::Text time;
 
-	int timeAMostrar;
-	int timeLeft = 299;
+/*	int timeAMostrar;
+	int timeLeft = 299;*/
 	int dimY = 15;
 	int dimX = 25;
 
@@ -58,7 +58,7 @@ public:
 
 			lives[i].setFont(font);
 			// lives[i].setFillColor(sf::Color::White);
-			lives[i].setFillColor(sf::Color::White);
+			lives[i].setColor(sf::Color::White);
 			lives[i].setString("X" + to_string(PLayers::getVectorPlayer()[i]->getLives()));
 			// lives[i].setPosition(PLayers::getVectorPlayer()[i]->playerHead2.getPosition().x + 35, PLayers::getVectorPlayer()[i]->playerHead2.getPosition().y + 7.5);
 			// lives[i].setScale(0.5, 0.5);
@@ -92,8 +92,10 @@ public:
 		}
 
 		time.setFont(font);
-		time.setString(to_string(timeLeft / 60) + ":" + to_string(timeLeft % 60));
-		time.setFillColor(sf::Color::White);
+		int timeToShow=GlobalTime::timeLeft;
+		time.setString(to_string(timeToShow / 60) + ":" + to_string(timeToShow % 60));
+		//time.setFillColor(sf::Color::White);
+		time.setColor(sf::Color::White);
 
 
 		//time.setPosition((container.getSize().x/2) - (time.getLocalBounds().width/2), (container.getSize().y/2) - (time.getLocalBounds().height / 2));
@@ -163,12 +165,13 @@ public:
 			i++;
 		}
 
-		timeAMostrar = timeLeft - GameTime::getTimeNow();
-		if (timeLeft < 0) {
-			timeAMostrar = 0;
+		GlobalTime::timeLeft = GlobalTime::totalTime - GameTime::getTimeNow();
+		if (GlobalTime::timeLeft < 0) {
+			GlobalTime::timeLeft = 0;
 		}
-		string seconds =  timeAMostrar % 60 > 9 ? to_string(timeAMostrar % 60) : "0" + to_string(timeAMostrar % 60);
-		time.setString(to_string(timeAMostrar / 60) + ":" + seconds);
+		int timeToShow=GlobalTime::timeLeft;
+		string seconds =  timeToShow % 60 > 9 ? to_string(timeToShow % 60) : "0" + to_string(timeToShow % 60);
+		time.setString(to_string(timeToShow / 60) + ":" + seconds);
 	}
 
 
