@@ -148,6 +148,7 @@ inline bool checkObjetive(const sf::Vector2i &currentP, const sf::Vector2i &obje
 bool checkValidPosition(const sf::Vector2i &v, std::shared_ptr<Entity> e);
 bool checkValidPositionWithImprudence(const sf::Vector2i &v, std::shared_ptr<Entity> e,int CostPath, int & incrementCost);
 bool checkValidPositionOrDestroyer(const sf::Vector2i &v, std::shared_ptr<Entity> e);
+sf::Vector2i selectFarObjetive(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives);
 
 ANode_Ptr generateRandomMovement(std::shared_ptr<Entity> e,  sf::Vector2i fromPosition);
 void generateRandomPath(sf::Vector2i position, std::list<ANode_Ptr> & path, std::shared_ptr<Entity> e);
