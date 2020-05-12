@@ -65,13 +65,13 @@ public:
 	void decildetState();
 
 	float getIntersetActionPU(){
-		return sg.intersetACtionPU;
+		return sg._SeekPEStruct.interActionPU;
 	}
 	float getIntersetNerfPU(){
-		return sg.intersetNerfPU;
+		return sg._SeekPEStruct.interNerfPU;
 	}
 	float getIntersetBuffPE(){
-		return sg.intersetBuffPU;
+		return sg._SeekPEStruct.interBuffPU;
 	}
 
 	float getIntersetDestroyWalls(){

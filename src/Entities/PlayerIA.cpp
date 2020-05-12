@@ -233,7 +233,6 @@ void PlayerIAEntity::decildetState(){
 		pointKill = sg._KillStruct.ansiansDeKill * 3;
 	}
 	selectEnemyPlayers(me, objetivePlayers, this->sg._PerseguirStruct.RangoVision);
-	std::cout << "Num Enemies " << objetivePlayers.size() << "\n";
 	if(objetivePlayers.size() > 0){
 		if(pathFindingGoWithCare(this->getEntityMapCoordinates(), objetivePlayers , movementes2Players, me, 0)){
 			pointFollow = 1/movementes2Players.back()->costNode() * sg._KillStruct.ansiansDeKill;
@@ -246,18 +245,19 @@ void PlayerIAEntity::decildetState(){
 	selectPowerUpsObjetive(me, objetivesPE, this->sg._SeekPEStruct.RangoVision);
 	if(objetivesPE.size() > 0){
 		if(pathFindingGoWithCare(this->getEntityMapCoordinates(), objetivesPE , movementes2PE, me, 0)){
+			std::cout << "encontrado PU "<< sg._SeekPEStruct.bootsSeek <<  " \n";
 			pointGoToPU = 1/movementes2PE.back()->costNode() * sg._SeekPEStruct.bootsSeek;
 		}
 	}
 
-	std::cout << "Points " << pointKill << " " << pointFarm << "\n"; 
-	if(pointFollow > 0 && pointFollow < pointFarm && pointFollow < pointKill && pointFollow < pointGoToPU){
+	//std::cout << "Points K " << pointKill << " - Farm "  << pointFarm << " - GPU " << pointGoToPU << " - Follow " << pointFollow  <<"\n"; 
+	if(pointFollow > 0 && (pointFollow < pointFarm || pointFarm == 0) && (pointFollow < pointKill || pointKill==0) && (pointFollow < pointGoToPU || pointGoToPU == 0)){
 		movements = movementes2Players;
 		this->currentState = StateIA::PERSEGUIR;	
-	}else if(pointFarm > 0 && pointFarm < pointKill &&  pointFarm < pointGoToPU){
+	}else if(pointFarm > 0 && (pointFarm < pointKill || pointKill == 0 ) &&  (pointFarm < pointGoToPU || pointGoToPU == 0)){
 		movements = movementes2Farm;
 		this->currentState = StateIA::FARM;	
-	}else if(pointKill > 0 &&  pointKill < pointGoToPU){
+	}else if(pointKill > 0 &&  (pointKill < pointGoToPU || pointGoToPU == 0)){
 		this->currentState = StateIA::KILL;	
 	}else{
 		this->currentState = StateIA::CATCH_PU;	

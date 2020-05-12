@@ -471,7 +471,6 @@ void ss(sf::Vector2i p ){
     if(std::dynamic_pointer_cast<BuffPoweUp>(e)){
         
     }
-    
 }
 
 bool pathFinderDestroy2Farm(const sf::Vector2i &positionEnemy, std::list<ANode_Ptr> &path, Entity_ptr e, int costAddDestroy)
@@ -514,7 +513,8 @@ bool pathFinderDestroy2Farm(const sf::Vector2i &positionEnemy, std::list<ANode_P
                     interestSite = levelInterset != nullptr ? levelInterset->intersest() : 0;
                     ANode_Ptr newNode = std::make_shared<ANode>(ANode(nodePosition, currentNode->fAcum() + 1, interestSite ,currentNode));
                     int incrementCost = 0;
-                    if (checkValidPositionWithImprudence(nodePosition, e, newNode->costNode(), incrementCost) && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(newNode))
+                    if (checkValidPositionWithImprudence(nodePosition, e, newNode->costNode(), incrementCost) && isOnVision(nodePosition, positionEnemy, IA->sg._SeekPEStruct.RangoVision)
+                             && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(newNode))
                     { //Si es una posicion valida y no se ha expandido
                         newNode->incrementCost(incrementCost); // TODO: variable segun IA
                         frontera.add(newNode);
