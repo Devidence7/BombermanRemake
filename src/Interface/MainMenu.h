@@ -87,6 +87,7 @@ private:
 		int id = menu->onEvent(event);
 		switch (id) {
 		case ButtonActions::STORY_MODE:
+			game.samePlay = false;
 			game.gameOptions.numIAPlayers = 0;
 			game.gameOptions.historyMode = true;
 			game.debug = false;
@@ -95,7 +96,7 @@ private:
 			break;
 		case ButtonActions::VERSUS_MODE:
 			//  game.gameOptions.numPlayers = 2;
-		
+			game.samePlay = false;
 			game.gameOptions.numIAPlayers = 0;
 			game.gameOptions.historyMode = false;
 			game.debug = false;

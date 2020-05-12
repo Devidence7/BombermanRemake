@@ -80,7 +80,7 @@ void PlayerIAEntity::updateMovement(){
 	}
 	
 	if(currentMovement == nullptr && movements.size() < 1){
-		currentState = StateIA::NON_OBJETIVE;
+		//currentState = StateIA::NON_OBJETIVE;
 		//currentMovement = std::make_shared<ANode>(ANode(getMapCoordinates(getCenterPosition()), sf::Vector2i(0,0), getMapCoordinates(getCenterPosition()), 0));
 	}
 	else if (currentMovement == nullptr)
@@ -94,6 +94,11 @@ void PlayerIAEntity::updateMovement(){
 bool PlayerIAEntity::updateVelocity(){
 	velocity.x = 0;
 	velocity.y = 0;
+	double moveTime = 0;
+	if (lastMovementTime) {
+		moveTime = (GameTime::getTimeNow() - lastMovementTime) * 60;
+	}
+	lastMovementTime = GameTime::getTimeNow();
 	if(currentMovement == nullptr){
 		return false;
 	}
@@ -101,12 +106,6 @@ bool PlayerIAEntity::updateVelocity(){
 	sf::Vector2f currentPosition = getCenterPosition();
 	
 	sf::Vector2f dir = nextPosition - currentPosition;
-	double moveTime = 0;
-	if (lastMovementTime) {
-		moveTime = (GameTime::getTimeNow() - lastMovementTime) * 60;
-		
-	}
-	lastMovementTime = GameTime::getTimeNow();
 	velocity = normalize(dir);
 	
 	if(abs(dir.x) < 1 && abs(dir.y) < 1){
@@ -115,7 +114,12 @@ bool PlayerIAEntity::updateVelocity(){
 
 	}else if(abs(velocity.x) < 0.1){
 		velocity.x = 0;
-		velocity.y = velocity.y/abs(velocity.y);
+		if(velocity.y > 0){
+			velocity.y = 1;
+		}else{
+			velocity.y = -1;
+		}
+		//velocity.y = velocty.y/abs(velocity.y);
 	}else if(abs(velocity.y) < 0.1){
 		velocity.y = 0;
 		velocity.x = velocity.x/abs(velocity.x);
@@ -141,6 +145,7 @@ bool PlayerIAEntity::updateVelocity(){
 			lastMovement = LookingAt::up;
 		}
 	}
+	
 
 }
 
@@ -170,20 +175,27 @@ bool PlayerIAEntity::updatePerseguirState(){
 }
 
 bool PlayerIAEntity::updateRunawayState(){
-	if(movements.size()< 1){
+	if(movements.size()< 1 && currentMovement == nullptr){
 		currentState = StateIA::NON_OBJETIVE;
 	}
 	return false;
 }
 
 void PlayerIAEntity::putABomb(){
+	//OmittedAreas.push_back(OmittedArea(getEntityMapCoordinates()));
 	if(haveBombs() && canPutABombSafe(getMapCoordinates(getCenterPosition()),me, movements) ){
+		lastPositionKnowed = getCenterPosition();
 		if (Level::addBomb(this->me))
 		{		
 			numOfBombs--;
 			currentState = StateIA::RUNAWAY;
 			this->currentMovement = nullptr;
-	}
+		}
+		if(moduleVector(getCenterPosition() - lastPositionKnowed) > 20){
+			std::cout << "Al poner bomba, a tomar por culo\n";
+		}
+	}else if(haveBombs()){
+		std::cout << "IS not safe or not Bobms\n";
 	}
 }
 
@@ -226,8 +238,8 @@ void PlayerIAEntity::decildetState(){
 /* Determina estado actual */
 void PlayerIAEntity::updateState(){
 	sf::Vector2i currentPosMap = getMapCoordinates(getCenterPosition());
-	//OmittedAreas.clear();
-	//generateOmitedZones(currentPosMap, OmittedAreas, sg._PerseguirStruct.RangoVision);
+	OmittedAreas.clear();
+	generateOmitedZones(currentPosMap, OmittedAreas, sg._PerseguirStruct.RangoVision);
 	
 	switch (currentState)
 	{
@@ -254,7 +266,6 @@ void PlayerIAEntity::updateState(){
 	default:
 		break;
 	}
-	OmittedAreas.clear();
 }
 
 void PlayerIAEntity::startStates(){
@@ -268,7 +279,10 @@ void PlayerIAEntity::startStates(){
 }
 
 
-bool PlayerIAEntity::updatePlayer(){
+bool PlayerIAEntity::updatePlayer(int posX,int posY){
+	if(moduleVector(lastPositionKnowed - getCenterPosition()) > 20){
+		std::cout << "Posicion idea mal\n";
+	}
 	generatePathStates();
 	
 	updateMovement();
@@ -280,6 +294,7 @@ bool PlayerIAEntity::updatePlayer(){
 	// Move Entity position
 	if (!expiredEntity) {
 		move(velocity.x, velocity.y);
+		lastPositionKnowed = getCenterPosition();
 		if (BombTaked != nullptr) {//Si tiene bomba, actualizar a la posicion del jugador (centrado segun cuadricula)
 			BombTaked->setPosition(Level::getMapCellCorner(this->getCenterPosition()));
 		}

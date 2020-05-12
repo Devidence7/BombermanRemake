@@ -46,7 +46,11 @@ class MultiplayerMenu {
 				PLVSPL2IA,
 				PL2VS2IA,
 				PLIAVSPLIA,
-				//
+				//Maps
+				MAP_1,
+				MAP_2,
+				MAP_3,
+
 				BACK,
 				QUIT
 
@@ -56,6 +60,7 @@ class MultiplayerMenu {
 		MAIN = 1,
 		NUM_PLAYERS_SEL = 2,
 		TYPE_OF_GAME = 3,
+		PICK_MAP = 4,
 	};
 
 	sf::Texture texture;
@@ -150,16 +155,14 @@ private:
 			game.gameOptions.numPlayers = 1;
 			game.gameOptions.numIAPlayers = 1;
 			previousMenu = MenuState::MAIN;
-			createNumPlaySelection(*window, gameDisplay);
-			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			pickMap(*window, gameDisplay);
 			break;
 
 		case ButtonActions::PLVSPL:
 			game.gameOptions.numPlayers = 2;
 			game.gameOptions.numIAPlayers = 0;
 			previousMenu = MenuState::MAIN;
-			createNumPlaySelection(*window, gameDisplay);
-			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			pickMap(*window, gameDisplay);
 
 			break;
 
@@ -167,31 +170,27 @@ private:
 			game.gameOptions.numPlayers = 1;
 			game.gameOptions.numIAPlayers = 2;
 			previousMenu = MenuState::MAIN;
-			createNumPlaySelection(*window, gameDisplay);
-			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			pickMap(*window, gameDisplay);
 			break;
 
 		case ButtonActions::PL21IA:
 			game.gameOptions.numPlayers = 2;
 			game.gameOptions.numIAPlayers = 1;
 			previousMenu = MenuState::MAIN;
-			createNumPlaySelection(*window, gameDisplay);
-			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			pickMap(*window, gameDisplay);
 			break;
 
 		case ButtonActions::PL13IA:
 			game.gameOptions.numPlayers = 1;
 			game.gameOptions.numIAPlayers = 3;
 			previousMenu = MenuState::MAIN;
-			createNumPlaySelection(*window, gameDisplay);
-			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			pickMap(*window, gameDisplay);
 			break;
 		case ButtonActions::PL22IA:
 			game.gameOptions.numPlayers = 2;
 			game.gameOptions.numIAPlayers = 2;
 			previousMenu = MenuState::MAIN;
-			createNumPlaySelection(*window, gameDisplay);
-			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			pickMap(*window, gameDisplay);
 			break;
 
 
@@ -199,8 +198,7 @@ private:
 			game.gameOptions.numPlayers = 1;
 			game.gameOptions.numIAPlayers = 2;
 			previousMenu = MenuState::MAIN;
-			createNumPlaySelection(*window, gameDisplay);
-			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			pickMap(*window, gameDisplay);
 			fillPlayersAndTeamsArray(game, 0, 1, 1, 1, 2);
 			break;
 
@@ -208,8 +206,7 @@ private:
 			game.gameOptions.numPlayers = 2;
 			game.gameOptions.numIAPlayers = 1;
 			previousMenu = MenuState::MAIN;
-			createNumPlaySelection(*window, gameDisplay);
-			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			pickMap(*window, gameDisplay);
 			fillPlayersAndTeamsArray(game, 0, 1, 1, 1, 2);
 			break;
 
@@ -217,8 +214,7 @@ private:
 			game.gameOptions.numPlayers = 2;
 			game.gameOptions.numIAPlayers = 1;
 			previousMenu = MenuState::MAIN;
-			createNumPlaySelection(*window, gameDisplay);
-			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			pickMap(*window, gameDisplay);
 			fillPlayersAndTeamsArray(game, 0, 0, 1, 1, 2);
 			break;
 
@@ -228,16 +224,14 @@ private:
 			game.gameOptions.numPlayers = 1;
 			game.gameOptions.numIAPlayers = 3;
 			previousMenu = MenuState::MAIN;
-			createNumPlaySelection(*window, gameDisplay);
-			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			pickMap(*window, gameDisplay);
 			fillPlayersAndTeamsArray(game, 0, 1, 1, 1, 2);
 			break;
 		case ButtonActions::PLVSPL2IA:
 			game.gameOptions.numPlayers = 2;
 			game.gameOptions.numIAPlayers = 1;
 			previousMenu = MenuState::MAIN;
-			createNumPlaySelection(*window, gameDisplay);
-			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			pickMap(*window, gameDisplay);
 			fillPlayersAndTeamsArray(game, 0, 1, 1, 1, 2);
 			break;
 
@@ -245,17 +239,38 @@ private:
 			game.gameOptions.numPlayers = 2;
 			game.gameOptions.numIAPlayers = 2;
 			previousMenu = MenuState::MAIN;
-			createNumPlaySelection(*window, gameDisplay);
-			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			pickMap(*window, gameDisplay);
 			fillPlayersAndTeamsArray(game, 0, 0, 1, 1, 2);
 			break;
 		case ButtonActions::PLIAVSPLIA:
 			game.gameOptions.numPlayers = 2;
 			game.gameOptions.numIAPlayers = 2;
 			previousMenu = MenuState::MAIN;
+			pickMap(*window, gameDisplay);
+			fillPlayersAndTeamsArray(game, 0, 1, 0, 1, 2);
+			break;
+
+		case ButtonActions::MAP_1:
+			previousMenu = MenuState::PICK_MAP;
 			createNumPlaySelection(*window, gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
-			fillPlayersAndTeamsArray(game, 0, 1, 0, 1, 2);
+			game.gameOptions.selectedStage = 1;
+			break;
+
+
+		case ButtonActions::MAP_2:
+			previousMenu = MenuState::PICK_MAP;
+			createNumPlaySelection(*window, gameDisplay);
+			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			game.gameOptions.selectedStage = 2;
+			break;
+
+
+		case ButtonActions::MAP_3:
+			previousMenu = MenuState::PICK_MAP;
+			createNumPlaySelection(*window, gameDisplay);
+			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
+			game.gameOptions.selectedStage = 3;
 			break;
 
 
@@ -275,6 +290,11 @@ private:
 				createGameTypeMenu(*window, gameDisplay);
 				break;
 
+			case PICK_MAP:
+				previousMenu = MenuState::TYPE_OF_GAME;
+				createAllVSAllMenu(*window, gameDisplay, game.gameOptions.numPlayers);
+				break;
+
 			default:
 				break;
 			}
@@ -291,7 +311,7 @@ private:
 		GameGUI::HorizontalBoxLayout* hboxQuit = menu->addHorizontalBoxLayout();
 
 
-		menu->addButton("                2 jugadores               ", ButtonActions::TWOPLAYERS);
+		menu->addButton("                2 jugadores                 ", ButtonActions::TWOPLAYERS);
 		menu->addButton("                3 jugadores                 ", ButtonActions::THREEPLAYERS);
 		menu->addButton("                4 jugadores                 ", ButtonActions::FOURPLAYERS);
 		//	menu->addButton("                   Atras       ", ButtonActions::BACK);
@@ -306,7 +326,7 @@ private:
 		menu = new GameGUI::Menu(window);
 		GameGUI::HorizontalBoxLayout* hboxQuit = menu->addHorizontalBoxLayout();
 
-		menu->addButton("                Todos contra todos              ", ButtonActions::ALLVSALL);
+		menu->addButton("                Todos contra todos                  ", ButtonActions::ALLVSALL);
 		menu->addButton("                Batalla por equipos                 ", ButtonActions::TEAM);
 		//menu->addButton("            		    Atras      ", ButtonActions::BACK);
 
@@ -322,19 +342,19 @@ private:
 		GameGUI::HorizontalBoxLayout* hboxQuit = menu->addHorizontalBoxLayout();
 		switch ((numPlayers)) {
 		case 2:
-			menu->addButton("                   Jugador vs IA               ", ButtonActions::PLVSIA);
+			menu->addButton("                      Jugador vs IA                       ", ButtonActions::PLVSIA);
 			menu->addButton("                  Jugador vs Jugador                ", ButtonActions::PLVSPL);
 			hboxQuit->addButton("Atras", ButtonActions::BACK);
 			break;
 
 		case 3:
-			menu->addButton("               1  Jugador , 2 IA                ", ButtonActions::PL12IA);
+			menu->addButton("                1  Jugador , 2 IA                   ", ButtonActions::PL12IA);
 			menu->addButton("               2  Jugadores , 1 IA                 ", ButtonActions::PL21IA);
 			hboxQuit->addButton("Atras", ButtonActions::BACK);
 			break;
 
 		case 4:
-			menu->addButton("                 1 Jugador , 3 IA                ", ButtonActions::PL13IA);
+			menu->addButton("                 1 Jugador , 3 IA                   ", ButtonActions::PL13IA);
 			menu->addButton("                2 Jugadores , 2 IA                 ", ButtonActions::PL22IA);
 			hboxQuit->addButton("Atras", ButtonActions::BACK);
 			break;
@@ -354,16 +374,16 @@ private:
 		switch ((numPlayers)) {
 
 		case 3:
-			menu->addButton("                 1 Jugador Vs 2 IA                ", ButtonActions::PL1VS2IA);
-			menu->addButton("                 2 Jugadores Vs 1 IA                 ", ButtonActions::PL2VS1IA);
+			menu->addButton("                     1 Jugador Vs 2 IA                      ", ButtonActions::PL1VS2IA);
+			menu->addButton("                    2 Jugadores Vs 1 IA                    ", ButtonActions::PL2VS1IA);
 			menu->addButton("                1 Jugador vs Jugador IA                ", ButtonActions::PLVSPLIA);
 			hboxQuit->addButton("Atras", ButtonActions::BACK);
 
 			break;
 
 		case 4:
-			menu->addButton("           	1 Jugador Vs  3 IA                ", ButtonActions::PL1VS3IA);
-			menu->addButton("          	    2 Jugadores Vs 2 IA                ", ButtonActions::PL2VS2IA);
+			menu->addButton("                    1 Jugador Vs  3 IA                      ", ButtonActions::PL1VS3IA);
+			menu->addButton("          	     2 Jugadores Vs 2 IA                     ", ButtonActions::PL2VS2IA);
 			menu->addButton("             Jugador IA  Vs Jugador IA                 ", ButtonActions::PLIAVSPLIA);
 			hboxQuit->addButton("Atras", ButtonActions::BACK);
 			break;
@@ -373,6 +393,18 @@ private:
 		}
 		createBackgroundMenu(window);
 
+	}
+
+	void pickMap(sf::RenderWindow& window, GameDisplayController& gameDisplay) {
+		menu = new GameGUI::Menu(window);
+		GameGUI::HorizontalBoxLayout* hboxQuit = menu->addHorizontalBoxLayout();
+
+		menu->addButton("             STAGE 1             ", ButtonActions::MAP_1);
+		menu->addButton("             STAGE 2             ", ButtonActions::MAP_2);
+		menu->addButton("             STAGE 3             ", ButtonActions::MAP_3);
+		hboxQuit->addButton("Atras", ButtonActions::BACK);
+
+		createBackgroundMenu(window);
 	}
 
 	void draw(sf::RenderWindow& window) {
