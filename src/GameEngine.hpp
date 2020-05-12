@@ -3,10 +3,9 @@
 
 #include "Include/global.hpp"
 #include "Include/EntitiesInclude.hpp"
-
+#include "Interface/GameDisplayController.h"
 #include "Map/Level.hpp"
 #include "Textures/TextureStorage.h"
-#include "Interface/GameInterface.h"
 #include "Music/GameMusic.h"
 #include "Utils/IAFunctions.hpp"
 ///#include "Interface/GameDisplayController.h"
@@ -47,6 +46,7 @@ public:
 	GameOptions gameOptions;
 	bool debug=false;
 	bool timesUp=false;
+	bool samePlay = false;
 
 Game(){
 	stage=1;
@@ -116,7 +116,15 @@ Game(){
 		cout<<"NumEnemies: "<<numEnemies<<endl;
 	
 		if(!debug && gameOptions.historyMode){
+			if (!samePlay) {
+				stage = 1;
+				samePlay = true;
+			}
+			
 			Enemies::insertarEnemigos(dimX, dimY,numEnemies,stage,gameOptions.difLevel);
+		}
+		else if (!gameOptions.historyMode) {
+			stage = gameOptions.selectedStage;
 		}
 		//insertEnemies(7);
 		level = new Level(dimX, dimY, debug, stage, &gameOptions);

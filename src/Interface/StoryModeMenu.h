@@ -141,9 +141,9 @@ private:
 	void createDifficultyMenu(sf::RenderWindow& window){
 		menu = new GameGUI::Menu(window);
 		GameGUI::HorizontalBoxLayout* hboxQuit = menu->addHorizontalBoxLayout();
-		menu->addButton("                Facil               ", ButtonActions::EASYLEVEL);
+		menu->addButton("                  Facil                   ", ButtonActions::EASYLEVEL);
 		menu->addButton("                Normal                 ", ButtonActions::NORMALLEVEL);
-		menu->addButton("                Dificil                ", ButtonActions::HARDLEVEL);
+		menu->addButton("                 Dificil                   ", ButtonActions::HARDLEVEL);
 		hboxQuit->addButton("Atras", ButtonActions::BACK);
 
 		createBackgroundMenu(window);
@@ -153,7 +153,7 @@ private:
 	void createNumPlayersMenu(sf::RenderWindow& window){
 		menu = new GameGUI::Menu(window);
 		GameGUI::HorizontalBoxLayout* hboxQuit = menu->addHorizontalBoxLayout();
-		menu->addButton("                1 jugador               ", ButtonActions::SINGLEPLAYER);
+		menu->addButton("                  1 jugador                   ", ButtonActions::SINGLEPLAYER);
 		menu->addButton("                2 jugadores                 ", ButtonActions::COOP);
 		hboxQuit->addButton("Atras", ButtonActions::BACK);
 		createBackgroundMenu(window);

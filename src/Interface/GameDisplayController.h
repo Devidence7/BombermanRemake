@@ -38,7 +38,9 @@ public:
 		LOADING,
 		VICTORY,
 		FINAL_SCORE,
-		END_BATTLE
+		END_BATTLE,
+		PICK_COLOR,
+		PICK_MAP
 		//RESTART
     };
 
@@ -58,6 +60,7 @@ public:
 	bool storyReprocessDisplay = false;
 	bool endBattleReprocessDisplay = false;
 	bool gameInterfaceReprocessDisplay = false;
+	bool colorPickerReprocessDisplay = false;
 	
 	/**
 	 * Constructor
@@ -153,6 +156,7 @@ public:
 		victoryReprocessDisplay = true;
 		endBattleReprocessDisplay = true;
 		gameInterfaceReprocessDisplay = true;
+		colorPickerReprocessDisplay = true;
 	}
 
 	void updateCamera() {

@@ -16,6 +16,10 @@ struct GameOptions {
 	bool historyMode = false;
 	int playersAndTeams[4];
 	int numTeams = 0;
+	sf::Color* colorList;
+	int player1ColorPick = 0;
+	int player2ColorPick = 1;
+	int selectedStage = 1;
 };
 
 class GlobalTime{

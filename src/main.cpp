@@ -22,6 +22,7 @@
 #include "Interface/UserKeyPress.h"
 #include "Interface/FinalScoreInterface.h"
 #include "Interface/BattleVictoryMenu.h"
+#include "Interface/PickColor.h"
 
 
 int main(int argc, char* argv[]) {
@@ -54,6 +55,8 @@ int main(int argc, char* argv[]) {
 	VictoryScreen victory(*gameDisplayController.getWindow(),game);
 	FinalScoreInterface finalScore(*gameDisplayController.getWindow(),game, gameDisplayController);
 	BattleVictoryMenu battleVictory(*gameDisplayController.getWindow(), game, gameDisplayController);
+	PickColorMenu pickColorMenu(*gameDisplayController.getWindow(), gameDisplayController, game);
+	
 
 	// Start game loop
 	while (gameDisplayController.windowOpen()) {
@@ -77,7 +80,7 @@ int main(int argc, char* argv[]) {
 			cout<<"Nivel: "<<game.stage<<endl;
 			game.startNewGame(*gameDisplayController.getWindow(),gameDisplayController);
 			
-			gameInterface.createInterface(*gameDisplayController.getWindow());
+			gameInterface.createInterface(*gameDisplayController.getWindow(), gameDisplayController, game);
 			
 			gameDisplayController.setGameState(GameDisplayController::GameState::PLAYING);
 			break;
@@ -119,6 +122,10 @@ int main(int argc, char* argv[]) {
 			gameDisplayController.getWindow()->setView(gameDisplayController.menuView);
 			battleVictory.menuActions(gameDisplayController, game);
 			break;
+		case GameDisplayController::GameState::PICK_COLOR:
+			gameDisplayController.getWindow()->setView(gameDisplayController.menuView);
+			pickColorMenu.menuActions(gameDisplayController, game);
+			break;
 
 
 		case GameDisplayController::GameState::PLAYING:
@@ -136,15 +143,15 @@ int main(int argc, char* argv[]) {
 
 			gameInterface.update();
 
-			gameInterface.draw(gameDisplayController);
+			gameInterface.draw(gameDisplayController, game);
 
 			// Manage pause menu when playing
 			pauseMenu.checkUserPauseActions(gameDisplayController);
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num9)) {
-			battleVictory.createBattleVictoryMenu(*gameDisplayController.getWindow(), game, gameDisplayController);
-			gameDisplayController.gameState = GameDisplayController::GameState::END_BATTLE;
+			
+			gameDisplayController.gameState = GameDisplayController::GameState::PICK_COLOR;
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
