@@ -305,8 +305,6 @@ bool PlayerIAEntity::updatePlayer(){
 	return false;
 }
 
-bool 
-
 //Upadate
 // -> Upadte State (nuevo estado/continuar estado)
 // -> generar camino

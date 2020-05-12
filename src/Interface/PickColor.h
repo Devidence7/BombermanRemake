@@ -39,7 +39,7 @@ class PickColorMenu {
 	sf::Sprite playerHeadColor2;
 	sf::Sprite playerHead2;
 
-	void createBackgroundMenu(sf::RenderWindow& window) {
+	void createBackgroundMenu(sf::RenderWindow& window, Game& game) {
 		menu->setPosition(sf::Vector2f((int)window.getSize().x / 2 - (int)menu->getSize().x / 2, (int)window.getSize().y / 2 - (int)menu->getSize().y / 2));
 
 		playerHeadColor1.setPosition(sf::Vector2f(menu->getPosition().x + 90, menu->getPosition().y+80));
@@ -67,7 +67,7 @@ class PickColorMenu {
 	}
 
 public:
-	PickColorMenu(sf::RenderWindow& window, GameDisplayController& gameDisplay, Game& game) {
+	void buildPickUpMenu(sf::RenderWindow& window, GameDisplayController& gameDisplay, Game& game) {
 		menu = new GameGUI::Menu(window);
 
 		texture.loadFromFile("../textures/interface/Background_orange_squares.png");
@@ -81,8 +81,8 @@ public:
 		GameGUI::VerticalBoxLayout* vbox1 = hbox->addVerticalBoxLayout();
 		GameGUI::VerticalBoxLayout* vbox2 = hbox->addVerticalBoxLayout();
 
-		PlayerTexture *playerTexture = &TextureStorage::getPlayerTexture();
-		PlayerColor *playerColor = &TextureStorage::getPlayerColor();
+		PlayerTexture* playerTexture = &TextureStorage::getPlayerTexture();
+		PlayerColor* playerColor = &TextureStorage::getPlayerColor();
 
 		playerHeadColor1.setTexture(playerColor->getTexture());
 		playerHeadColor1.setTextureRect(sf::IntRect(sf::Vector2i(9, 0), sf::Vector2i(39, 72)));
@@ -108,22 +108,29 @@ public:
 		color1->setValue(game.gameOptions.player1ColorPick * 10);
 		vbox1->add(color1, ButtonActions::COLOR_1);
 
-		vbox2->add(new Label("   Player 2"));
-		vbox2->add(new Label(""));
-		vbox2->add(new Label(""));
-		vbox2->add(new Label(""));
-		vbox2->add(new Label(""));
-		vbox2->add(new Label(""));
+		if (game.gameOptions.numPlayers > 1) {
+			vbox2->add(new Label("   Player 2"));
+			vbox2->add(new Label(""));
+			vbox2->add(new Label(""));
+			vbox2->add(new Label(""));
+			vbox2->add(new Label(""));
+			vbox2->add(new Label(""));
 
-		color2 = new Slider();
-		color2->setValue(game.gameOptions.player2ColorPick * 10);
-		vbox2->add(color2, ButtonActions::COLOR_2);
+			color2 = new Slider();
+			color2->setValue(game.gameOptions.player2ColorPick * 10);
+			vbox2->add(color2, ButtonActions::COLOR_2);
+		}
+
 
 
 		menu->addButton("             Continuar            ", ButtonActions::CONTINUE);
 		menu->addButton("                Atras                ", ButtonActions::GO_MAIN_MENU);
 
-		createBackgroundMenu(window);
+		createBackgroundMenu(window, game);
+	}
+
+	PickColorMenu(sf::RenderWindow& window, GameDisplayController& gameDisplay, Game& game) {
+		buildPickUpMenu(window, gameDisplay, game);
 	}
 
 private:
@@ -158,7 +165,7 @@ private:
 		}
 	}
 
-	void draw(sf::RenderWindow& window) {
+	void draw(sf::RenderWindow& window, Game& game) {
 		window.draw(background);
 
 		window.draw(menuBackgroundShadow2);
@@ -166,10 +173,13 @@ private:
 		window.draw(menuBackgroundShadow);
 		window.draw(menuBackground);
 
+	
 		window.draw(playerHead1);
 		window.draw(playerHeadColor1);
-		window.draw(playerHead2);
-		window.draw(playerHeadColor2);
+		if (game.gameOptions.numPlayers > 1) {
+			window.draw(playerHead2);
+			window.draw(playerHeadColor2);
+		}
 
 		window.draw(*menu);
 	}
@@ -178,11 +188,11 @@ public:
 	void menuActions(GameDisplayController& gameDisplay, Game& game) {
 		// Manage window events and pass a callback to manage this menu buttons
 		gameDisplay.manageGameInterface(gameDisplay, std::bind(&PickColorMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
-		if (gameDisplay.pauseMenuReprocessDisplay) {
-			gameDisplay.pauseMenuReprocessDisplay = false;
-			createBackgroundMenu(*gameDisplay.getWindow());
+		if (gameDisplay.colorPickerReprocessDisplay) {
+			gameDisplay.colorPickerReprocessDisplay = false;
+			buildPickUpMenu(*gameDisplay.getWindow(), gameDisplay, game);
 		}
-		draw(*gameDisplay.getWindow());
+		draw(*gameDisplay.getWindow(), game);
 	}
 };
 
