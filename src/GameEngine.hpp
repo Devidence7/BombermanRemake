@@ -46,6 +46,7 @@ public:
 	GameOptions gameOptions;
 	bool debug=false;
 	bool timesUp=false;
+	bool samePlay = false;
 
 Game(){
 	stage=1;
@@ -115,7 +116,15 @@ Game(){
 		cout<<"NumEnemies: "<<numEnemies<<endl;
 	
 		if(!debug && gameOptions.historyMode){
+			if (!samePlay) {
+				stage = 1;
+				samePlay = true;
+			}
+			
 			Enemies::insertarEnemigos(dimX, dimY,numEnemies,stage,gameOptions.difLevel);
+		}
+		else if (!gameOptions.historyMode) {
+			stage = gameOptions.selectedStage;
 		}
 		//insertEnemies(7);
 		level = new Level(dimX, dimY, debug, stage, &gameOptions);

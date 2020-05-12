@@ -19,6 +19,7 @@ struct GameOptions {
 	sf::Color* colorList;
 	int player1ColorPick = 0;
 	int player2ColorPick = 1;
+	int selectedStage = 1;
 };
 
 class GlobalTime{
