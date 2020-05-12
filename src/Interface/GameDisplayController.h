@@ -57,7 +57,7 @@ public:
 	bool multiplayerReprocessDisplay = false;
 	bool storyReprocessDisplay = false;
 	bool endBattleReprocessDisplay = false;
-
+	bool gameInterfaceReprocessDisplay = false;
 	
 	/**
 	 * Constructor
@@ -152,6 +152,7 @@ public:
 		scoreReprocessDisplay = true;
 		victoryReprocessDisplay = true;
 		endBattleReprocessDisplay = true;
+		gameInterfaceReprocessDisplay = true;
 	}
 
 	void updateCamera() {
@@ -190,6 +191,8 @@ public:
 				notifyChangeDisplay();
 				
 				camera.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
+				playingGuiView = sf::View(sf::FloatRect(0.f, 0.f, window->getSize().x, window->getSize().y / 5));
+				playingGuiView.setViewport(sf::FloatRect(0.f, 0.f, 1.f, 0.2f));
 
 				sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
 				menuView = sf::View(visibleArea);

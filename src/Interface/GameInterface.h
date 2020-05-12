@@ -58,7 +58,7 @@ public:
 
 			lives[i].setFont(font);
 			// lives[i].setFillColor(sf::Color::White);
-			lives[i].setColor(sf::Color::White);
+			lives[i].setFillColor(sf::Color::White);
 			lives[i].setString("X" + to_string(PLayers::getVectorPlayer()[i]->getLives()));
 			// lives[i].setPosition(PLayers::getVectorPlayer()[i]->playerHead2.getPosition().x + 35, PLayers::getVectorPlayer()[i]->playerHead2.getPosition().y + 7.5);
 			// lives[i].setScale(0.5, 0.5);
@@ -93,8 +93,8 @@ public:
 
 		time.setFont(font);
 		time.setString(to_string(timeLeft / 60) + ":" + to_string(timeLeft % 60));
-		time.setColor(sf::Color::White);
-		
+		time.setFillColor(sf::Color::White);
+
 
 		//time.setPosition((container.getSize().x/2) - (time.getLocalBounds().width/2), (container.getSize().y/2) - (time.getLocalBounds().height / 2));
 		sf::FloatRect textRect = time.getLocalBounds();
@@ -117,6 +117,13 @@ public:
 
 
 	void draw(GameDisplayController& gameDisplay) {
+		if (gameDisplay.gameInterfaceReprocessDisplay) {
+			gameDisplay.gameInterfaceReprocessDisplay = false;
+			gameDisplay.getWindow()->setView(gameDisplay.playingGuiView);
+			createInterface(*gameDisplay.getWindow());
+			gameDisplay.getWindow()->setView(gameDisplay.camera);
+		}
+
 		gameDisplay.getWindow()->setView(gameDisplay.playingGuiView);
 
 		gameDisplay.getWindow()->draw(containerBorder);
@@ -158,7 +165,7 @@ public:
 
 		timeAMostrar = timeLeft - GameTime::getTimeNow();
 		if (timeLeft < 0) {
-			timeLeft = 0;
+			timeAMostrar = 0;
 		}
 		string seconds =  timeAMostrar % 60 > 9 ? to_string(timeAMostrar % 60) : "0" + to_string(timeAMostrar % 60);
 		time.setString(to_string(timeAMostrar / 60) + ":" + seconds);
