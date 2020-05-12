@@ -47,6 +47,7 @@ public:
 	bool debug=false;
 	bool timesUp=false;
 	bool samePlay = false;
+	int scoreForTheMoment = 0;
 
 Game(){
 	stage=1;
@@ -128,14 +129,11 @@ Game(){
 
 		//	cout<<gameOptions.numPlayers<<endl;
 		int numEnemies=DEFAULT_NUM_OF_ENEMIES*gameOptions.difLevel+(stage/0.5);
-		cout<<"NumEnemies: "<<numEnemies<<endl;
-	
 		if(!debug && gameOptions.historyMode){
 			if (!samePlay) {
 				stage = 1;
-				samePlay = true;
 			}
-			
+
 			Enemies::insertarEnemigos(dimX, dimY,numEnemies,stage,gameOptions.difLevel);
 		}
 		else if (!gameOptions.historyMode) {
@@ -160,6 +158,20 @@ Game(){
 		sf::View view(sf::FloatRect(0.f, 0.f, pixelsX, pixelsY));
 		view.move(sf::Vector2f(0, -48));
 		window.setView(view);
+
+		if (gameOptions.historyMode) {
+			if (!samePlay) {
+				samePlay = true;
+				if (gameOptions.numPlayers > 1) {
+					for (auto player : PLayers::getVectorPlayer()) {
+						player->lives = 2;
+					}
+				}
+			}
+		}
+
+		PLayers::getVectorPlayer()[0]->score = scoreForTheMoment;
+		scoreForTheMoment = 0;
 	}
 
 	void restartGame(sf::RenderWindow& window,GameDisplayController &gameDisplay){
@@ -335,6 +347,9 @@ Game(){
 				if (stage < 3) {
 					gameDisplay.setGameState(GameDisplayController::VICTORY);
 					gameDisplay.notifyChangeDisplay();
+					for (auto player : PLayers::getVectorPlayer()) {
+						scoreForTheMoment += player->score;
+					}
 				}
 				else {
 					gameDisplay.setGameState(GameDisplayController::FINAL_SCORE);

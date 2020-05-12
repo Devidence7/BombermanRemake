@@ -91,6 +91,7 @@ private:
 			game.gameOptions.numIAPlayers = 0;
 			game.gameOptions.historyMode = true;
 			game.debug = false;
+			game.scoreForTheMoment = 0;
 			gameDisplay.setGameState(GameDisplayController::GameState::STORY_MENU);
 			//game.startNewGame(*window);
 			break;
@@ -100,6 +101,7 @@ private:
 			game.gameOptions.numIAPlayers = 0;
 			game.gameOptions.historyMode = false;
 			game.debug = false;
+			game.scoreForTheMoment = 0;
 			gameDisplay.setGameState(GameDisplayController::GameState::VS_NUMPLAYERS_MENU);
 
 			break;

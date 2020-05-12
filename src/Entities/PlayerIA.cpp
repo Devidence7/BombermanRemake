@@ -227,12 +227,12 @@ void PlayerIAEntity::decildetState(){
 	float pointFarm = 0;
 	if(!!somePlayerEnemyOnRange(getMapCoordinates(getCenterPosition()), getPowerOfBombs(), team)){
 		selectEnemyPlayers(me, objetivePlayers, this->sg._PerseguirStruct.RangoVision);
-		if(pathFinding(this->getEntityMapCoordinates() , objetivePlayers, movementes2Players, me, TypeSeekIA::BEST_PATH, false)){
-			pointKill = movementes2Players.back()->costNode();
+		if(pathFindingGoWithCare(this->getEntityMapCoordinates(), movementes2Players, me, 0)){
+			pointKill = 1/movementes2Players.back()->costNode() * sg._KillStruct.ansiansDeKill;
 		}
 	}	
 	if(pathFinderDestroy2Farm(this->getEntityMapCoordinates(), movementes2Farm, me, 0)){
-		pointFarm = movementes2Farm.back()->costNode() * getIntersetDestroyWalls();
+		pointFarm = 1/movementes2Farm.back()->costNode() * getIntersetDestroyWalls();
 	}
 	std::cout << "Points " << pointKill << " " << pointFarm << "\n"; 
 	if(pointKill > 0 && pointKill < pointFarm){
