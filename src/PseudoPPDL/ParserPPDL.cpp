@@ -77,7 +77,7 @@ void StateGenerator::generateState(ifstream &f, string estado)
 
       found = estado.find("buscarpu");
       if (found != std::string::npos){
-        
+          for(int i = 0; i < 2; i++){
             string text;
             std::getline(f, text);
             // boost::algorithm::to_lower(text);
@@ -96,16 +96,17 @@ void StateGenerator::generateState(ifstream &f, string estado)
                 std::cout << "rangovision"<<val << std::endl;
                 this->_SeekPEStruct.RangoVision = stoi(val);
             }
+          }
 
             float buff, nerf,action;
-             f >>buff>> nerf >> action ;
-             cout<<buff<<" "<<nerf<<" "<<action<<endl; 
+            f>>buff>>nerf>>action;
+           
              this->_SeekPEStruct.interBuffPU = buff;
              this->_SeekPEStruct.interNerfPU = nerf;
              this->_SeekPEStruct.interActionPU =action;
              this->haveSeekPEStruct = true;
              return;
-             
+          
 
       }
     
