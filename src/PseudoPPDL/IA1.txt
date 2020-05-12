@@ -5,7 +5,12 @@
     RangoVision 8
     costDestroyWall 8
 )
-(Estado Matar 
-    
-    
+(Estado matar 
+    imprudencia 1
+    costDestroyWall 8
+)
+
+(Estado buscarpu
+    RangoVision 8
+        1 2 2
 )

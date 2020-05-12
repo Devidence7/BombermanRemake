@@ -113,7 +113,7 @@ Game(){
 		int numEnemies=DEFAULT_NUM_OF_ENEMIES*gameOptions.difLevel+(stage/0.5);
 		cout<<"NumEnemies: "<<numEnemies<<endl;
 	
-		if(!debug){
+		if(!debug && gameOptions.historyMode){
 			Enemies::insertarEnemigos(dimX, dimY,numEnemies,stage,gameOptions.difLevel);
 		}
 		//insertEnemies(7);
@@ -180,16 +180,7 @@ Game(){
 				it2->reset();
 				it2 = PLayers::getVectorPlayer().erase(it2);
 		}
-	/*	auto it3 = Enemies::getVectorEnemiesExtra().begin();
-		while (it3 != Enemies::getVectorEnemiesExtra().end()) {
-				it3->reset();
-				it3 = Enemies::getVectorEnemiesExtra().erase(it3);
-		}*/
-		/*auto it4 = Enemies::getVectorEnemiesExtraTel().begin();
-		while (it4 != Enemies::getVectorEnemiesExtraTel().end()) {
-				it4->reset();
-				it4 = Enemies::getVectorEnemiesExtraTel().erase(it4);
-		}*/
+		PLayers::getVectorPlayer().clear();
 
 		
 	}
@@ -305,14 +296,53 @@ Game(){
 		PointsDestroyMap::updateMap();
 		level->update();
 
-		if (level->levelFinished) {
-			if (stage < 3) {
-				gameDisplay.setGameState(GameDisplayController::VICTORY);
-			}
-			else {
-				gameDisplay.setGameState(GameDisplayController::FINAL_SCORE);
+		if (gameOptions.historyMode) {
+			if (level->levelFinished) {
+				if (stage < 3) {
+					gameDisplay.setGameState(GameDisplayController::VICTORY);
+					gameDisplay.notifyChangeDisplay();
+				}
+				else {
+					gameDisplay.setGameState(GameDisplayController::FINAL_SCORE);
+					gameDisplay.notifyChangeDisplay();
+				}
 			}
 		}
+		else {
+			if (gameOptions.numTeams != 0) {
+				bool team1Alive = false;
+				bool team2Alive = false;
+
+				for (auto player : PLayers::getVectorPlayer()) {
+					if (player->lives > 1) {
+						if (player->team == 0) {
+							team1Alive = true;
+						}
+						else {
+							team2Alive = true;
+						}
+					}
+				}
+				if (!team1Alive || !team2Alive) {
+					gameDisplay.setGameState(GameDisplayController::END_BATTLE);
+					gameDisplay.notifyChangeDisplay();
+				}
+			}
+			else {
+				int numPlayersAlive = 0;
+				for (auto player : PLayers::getVectorPlayer()) {
+					if (player->lives > 1) {
+						numPlayersAlive += 1;
+					}
+				}
+				if (numPlayersAlive <= 1) {
+					gameDisplay.setGameState(GameDisplayController::END_BATTLE);
+					gameDisplay.notifyChangeDisplay();
+				}
+			}
+			
+		}
+		
 
 		updatePlayers(gameDisplay);
 		updateEnemies();
@@ -451,4 +481,6 @@ Game(){
 		drawEnemies(w);
 		drawPlayers(w);
 	}
+
+	
 };
