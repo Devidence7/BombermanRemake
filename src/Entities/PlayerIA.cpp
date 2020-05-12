@@ -233,7 +233,6 @@ void PlayerIAEntity::decildetState(){
 		pointKill = sg._KillStruct.ansiansDeKill * 3;
 	}
 	selectEnemyPlayers(me, objetivePlayers, this->sg._PerseguirStruct.RangoVision);
-	std::cout << "Num Enemies " << objetivePlayers.size() << "\n";
 	if(objetivePlayers.size() > 0){
 		if(pathFindingGoWithCare(this->getEntityMapCoordinates(), objetivePlayers , movementes2Players, me, 0)){
 			pointFollow = 1/movementes2Players.back()->costNode() * sg._KillStruct.ansiansDeKill;
@@ -250,13 +249,18 @@ void PlayerIAEntity::decildetState(){
 		}
 	}
 
-	std::cout << "Points " << pointKill << " " << pointFarm << "\n"; 
-	if(pointFollow > 0 && pointFollow < pointFarm){
+	//std::cout << "Points K " << pointKill << " - Farm "  << pointFarm << " - GPU " << pointGoToPU << " - Follow " << pointFollow  <<"\n"; 
+	if(pointFollow > 0 && (pointFollow < pointFarm || pointFarm == 0) && (pointFollow < pointKill || pointKill==0) && (pointFollow < pointGoToPU || pointGoToPU == 0)){
 		movements = movementes2Players;
 		this->currentState = StateIA::PERSEGUIR;	
-	}else{
+	}else if(pointFarm > 0 && (pointFarm < pointKill || pointKill == 0 ) &&  (pointFarm < pointGoToPU || pointGoToPU == 0)){
 		movements = movementes2Farm;
 		this->currentState = StateIA::FARM;	
+	}else if(pointKill > 0 &&  (pointKill < pointGoToPU || pointGoToPU == 0)){
+		this->currentState = StateIA::KILL;	
+	}else{
+		this->currentState = StateIA::CATCH_PU;	
+		movements = movementes2PE;
 	}
 	
 }
@@ -289,19 +293,24 @@ void PlayerIAEntity::updateState(){
 			putABomb();
 		}
 		break;
+	case StateIA::CATCH_PU:
+		if((movements.size() < 1 && currentMovement == nullptr) || (movements.size() > 1 && std::dynamic_pointer_cast<PowerUp>(Level::getCellMiniMapObject(movements.back()->getPosition())) != nullptr)){
+			currentState = StateIA::NON_OBJETIVE;
+		}
+		break;
 	default:
 		break;
 	}
 }
 
 void PlayerIAEntity::startStates(){
-	if(this->sg.havePatrolStruct){
-		currentState = StateIA::PATROL;
-		p = sg.getPatrol(getMapCoordinates(getCenterPosition()));
-		currentObjetive = p.getObetive(getMapCoordinates(this->getCenterPosition()));
-	}else{
+	// if(this->sg.havePatrolStruct){
+	// 	currentState = StateIA::PATROL;
+	// 	p = sg.getPatrol(getMapCoordinates(getCenterPosition()));
+	// 	currentObjetive = p.getObetive(getMapCoordinates(this->getCenterPosition()));
+	// }else{
 		currentState = StateIA::NON_OBJETIVE;
-	}
+	// }
 }
 
 
