@@ -131,7 +131,9 @@ private:
 		int id = menu->onEvent(event);
 		switch (id) {
 		case ButtonActions::COLOR_1: {
+			cout << color1->getValue() << endl;
 			int val = color1->getValue() / 10;
+			cout << val << endl;
 			game.gameOptions.player1ColorPick = val;
 			playerHeadColor1.setColor(game.gameOptions.colorList[game.gameOptions.player1ColorPick]);
 			break; }
@@ -173,7 +175,7 @@ private:
 	}
 
 public:
-	void menuActions(GameDisplayController& gameDisplay, Game game) {
+	void menuActions(GameDisplayController& gameDisplay, Game& game) {
 		// Manage window events and pass a callback to manage this menu buttons
 		gameDisplay.manageGameInterface(gameDisplay, std::bind(&PickColorMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
 		if (gameDisplay.pauseMenuReprocessDisplay) {
