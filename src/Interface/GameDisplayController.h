@@ -83,7 +83,7 @@ public:
 			window = new sf::RenderWindow(sf::VideoMode(windowWidth, windowHeight), "Bomberman");
 		}
 		
-		window->setFramerateLimit(FPSs);
+		
 
 		// CAMERA
 		menuView = sf::View(sf::FloatRect(0.f, 0.f, window->getSize().x, window->getSize().y));

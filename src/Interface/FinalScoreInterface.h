@@ -34,7 +34,7 @@ class FinalScoreInterface {
 
 	GameGUI::Slider* masterVolumenSlider;
 	GameGUI::Slider* musicSlider;
-	//GameGUI::InputBox* textbox;
+	GameGUI::InputBox* textbox;
 
 	void createBackgroundMenu(sf::RenderWindow& window) {
 		menu->setPosition(sf::Vector2f((int)window.getSize().x / 2 - (int)menu->getSize().x / 2, (int)window.getSize().y / 2 - (int)menu->getSize().y / 2));
@@ -67,7 +67,7 @@ class FinalScoreInterface {
 			score += p->score;
 		}
 
-		//scores[score] = textbox->getText();
+		scores[score] = textbox->getText();
 
 		for (auto it = scores.rbegin(); it != scores.rend(); it++) {
 			propertiesFile << it->first << " " << it->second << "\n";
@@ -123,7 +123,7 @@ public:
 		victory.setFont(font);
 		victory.setString("PUNTUACIONES");
 		//victory.setFillColor(sf::Color::White);
-		victory.setColor(sf::Color::White);
+		victory.setFillColor(sf::Color::White);
 		// victory.setScale(2,2);
 		victory.setCharacterSize(72);
 
@@ -150,9 +150,9 @@ public:
 		f->addRow(" >> Tu puntuacion ", yourScore);
 
 		// Textbox
-		//textbox = new GameGUI::InputBox();
-		//textbox->setText("Player");
-		//f->addRow(" >> Introduce Tu Nombre ", textbox, ButtonActions::TEXT);
+		textbox = new GameGUI::InputBox();
+		textbox->setText("Player");
+		f->addRow(" >> Introduce Tu Nombre ", textbox, ButtonActions::TEXT);
 
 		ReadPuntuation();
 		
@@ -177,6 +177,7 @@ private:
 			savePuntuation();
 			game.deleteMap();
 			gameDisplay.setGameState(GameDisplayController::GameState::MAIN_MENU);
+			GameMusic::playTitleMusic();
 			break;
 
 		case ButtonActions::QUIT:

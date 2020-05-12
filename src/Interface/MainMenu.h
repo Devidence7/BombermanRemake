@@ -52,7 +52,7 @@ public:
 
 		menu->addButton("           Modo historia            ", ButtonActions::STORY_MODE);
 		menu->addButton("           Modo batalla            ", ButtonActions::VERSUS_MODE);
-		menu->addButton("      Modo sin muros para Victor       ", ButtonActions::DEBUG);
+		//menu->addButton("      Modo sin muros para Victor       ", ButtonActions::DEBUG);
 		menu->addButton("               Opciones                 ", ButtonActions::OPCIONS);
 		menu->addButton("                  Salir                    ", ButtonActions::QUIT);
 

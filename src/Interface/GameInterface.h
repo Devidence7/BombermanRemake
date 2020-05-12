@@ -60,13 +60,13 @@ public:
 
 			lives[i].setFont(font);
 			// lives[i].setFillColor(sf::Color::White);
-			lives[i].setColor(sf::Color::White);
+			lives[i].setFillColor(sf::Color::White);
 			lives[i].setString("X" + to_string(PLayers::getVectorPlayer()[i]->getLives()));
 			// lives[i].setPosition(PLayers::getVectorPlayer()[i]->playerHead2.getPosition().x + 35, PLayers::getVectorPlayer()[i]->playerHead2.getPosition().y + 7.5);
 			// lives[i].setScale(0.5, 0.5);
 			lives[i].setCharacterSize(23);
-			//lives[i].setOutlineColor(sf::Color(0, 0, 0));
-			//lives[i].setOutlineThickness(3);
+			lives[i].setOutlineColor(sf::Color(0, 0, 0));
+			lives[i].setOutlineThickness(3);
 
 			
 
@@ -86,14 +86,14 @@ public:
 			int timeToShow = GlobalTime::timeLeft;
 			scoreText.setString("000000");
 			//time.setFillColor(sf::Color::White);
-			scoreText.setColor(sf::Color::White);
+			scoreText.setFillColor(sf::Color::White);
 
 
 			//time.setPosition((container.getSize().x/2) - (time.getLocalBounds().width/2), (container.getSize().y/2) - (time.getLocalBounds().height / 2));
 			sf::FloatRect textRect = scoreText.getLocalBounds();
 			scoreText.setOrigin(textRect.left + textRect.width / 2.0f,
 				textRect.top + textRect.height / 2.0f);
-			scoreText.setPosition(sf::Vector2f(container.getSize().x * 3 / 4.0f, container.getSize().y * 3 / 4.0f));
+			scoreText.setPosition(sf::Vector2f(container.getSize().x * 3 / 4.0f, container.getSize().y /2));
 
 
 			scoreBox.setSize(sf::Vector2f(scoreText.getLocalBounds().width * 1.5, scoreText.getLocalBounds().height * 1.5));
@@ -125,7 +125,7 @@ public:
 		int timeToShow=GlobalTime::timeLeft;
 		time.setString(to_string(timeToShow / 60) + ":" + to_string(timeToShow % 60));
 		//time.setFillColor(sf::Color::White);
-		time.setColor(sf::Color::White);
+		time.setFillColor(sf::Color::White);
 
 
 		//time.setPosition((container.getSize().x/2) - (time.getLocalBounds().width/2), (container.getSize().y/2) - (time.getLocalBounds().height / 2));

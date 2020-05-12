@@ -69,7 +69,7 @@ public:
 		victory.setFont(font);
 		victory.setString("RESULTADOS");
 		//victory.setFillColor(sf::Color::White);
-		victory.setColor(sf::Color::White);
+		victory.setFillColor(sf::Color::White);
 		// victory.setScale(2,2);
 		victory.setCharacterSize(72);
 
@@ -88,7 +88,7 @@ public:
 
 		auto f = menu->addFormLayout();
 		
-		if (game.gameOptions.numTeams == 0) {
+		if (game.gameOptions.numTeams != 2) {
 			std::multimap<int, std::tuple<int, string>> scores;
 			vector<Player_ptr> players = PLayers::getVectorPlayer();
 
@@ -188,6 +188,7 @@ private:
 		case ButtonActions::GO_MAIN_MENU:
 			game.deleteMap();
 			gameDisplay.setGameState(GameDisplayController::GameState::MAIN_MENU);
+			GameMusic::playTitleMusic();
 			break;
 
 		case ButtonActions::QUIT:

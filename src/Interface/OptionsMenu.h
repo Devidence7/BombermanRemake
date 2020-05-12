@@ -241,13 +241,13 @@ private:
 		masterVolumenSlider->setValue(GameMusic::getMasterVolume());
 		//f->addRow("Resolucion      ", masterVolumenSlider, ButtonActions::MASTER_VOLUME_SLIDER);
 
-		opt = new GameGUI::OptionsBox<sf::Vector2i>();
+		/*opt = new GameGUI::OptionsBox<sf::Vector2i>();
 		opt->addItem("1024 x 768", sf::Vector2i(1024, 768));
 		opt->addItem("1280 x 1024", sf::Vector2i(1280, 1024));
 		opt->addItem("1280 x 800", sf::Vector2i(1280, 800));
 		opt->addItem("1366 x 768", sf::Vector2i(1366, 768));
 		opt->addItem("1920 x 1080", sf::Vector2i(1920, 1080));
-		f->addRow("Resolucion", opt, ButtonActions::RESOLUTION);
+		f->addRow("Resolucion", opt, ButtonActions::RESOLUTION);*/
 
 		fullScreenCheckBox = new GameGUI::CheckBox(gameDisplay.fullScreen);
 		f->addRow("Pantalla Completa    ", fullScreenCheckBox, ButtonActions::FULLSCREEN);
@@ -302,11 +302,18 @@ private:
 		case ButtonActions::RESOLUTION: {
 			/*sf::FloatRect visibleArea(0, 0, opt->getSelectedValue().x, opt->getSelectedValue().y);
 			window.setView(sf::View(visibleArea));*/
-			gameDisplay.windowWidth = opt->getSelectedValue().x;
+			/*gameDisplay.windowWidth = opt->getSelectedValue().x;
 			gameDisplay.windowHeight = opt->getSelectedValue().y;
-			cout << opt->getSelectedValue().x << " x " << opt->getSelectedValue().y << endl;
-			window->setSize(sf::Vector2u(opt->getSelectedValue().x, opt->getSelectedValue().y));
 			gameDisplay.notifyChangeDisplay();
+		
+			window->setView(gameDisplay.menuView);
+			window->setSize(sf::Vector2u(opt->getSelectedValue().x, opt->getSelectedValue().y));
+			gameDisplay.camera.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
+			gameDisplay.playingGuiView = sf::View(sf::FloatRect(0.f, 0.f, window->getSize().x, window->getSize().y / 5));
+			gameDisplay.playingGuiView.setViewport(sf::FloatRect(0.f, 0.f, 1.f, 0.2f));
+
+			sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+			gameDisplay.menuView = sf::View(visibleArea);*/
 			// createGraphicsMenu(window);
 			break;
 		}
@@ -320,6 +327,14 @@ private:
 				gameDisplay.fullScreen = false;
 				window = new RenderWindow(sf::VideoMode(gameDisplay.windowWidth, gameDisplay.windowHeight), "Bombermenaman");
 			}
+
+			// CAMERA
+			gameDisplay.menuView = sf::View(sf::FloatRect(0.f, 0.f, window->getSize().x, window->getSize().y));
+			gameDisplay.camera = sf::View(sf::FloatRect(0.f, 0.f, window->getSize().x, window->getSize().y));
+			//camera.setViewport(sf::FloatRect(0.f, 0.2f, 1.f, 1.f));
+			gameDisplay.playingGuiView = sf::View(sf::FloatRect(0.f, 0.f, window->getSize().x, window->getSize().y / 5));
+			gameDisplay.playingGuiView.setViewport(sf::FloatRect(0.f, 0.f, 1.f, 0.2f));
+			window->setFramerateLimit(gameDisplay.FPSs);
 
 			gameDisplay.notifyChangeDisplay();
 			break;
