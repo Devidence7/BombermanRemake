@@ -247,8 +247,8 @@ public:
 
 		propertiesFile << "player2.up = " + to_string((int)sf::Keyboard::Up) << endl;
 		propertiesFile << "player2.down = " + to_string((int)sf::Keyboard::Down) << endl;
-		propertiesFile << "player2.right = " + to_string((int)sf::Keyboard::Left) << endl;
-		propertiesFile << "player2.left = " + to_string((int)sf::Keyboard::Right) << endl;
+		propertiesFile << "player2.right = " + to_string((int)sf::Keyboard::Right) << endl;
+		propertiesFile << "player2.left = " + to_string((int)sf::Keyboard::Left) << endl;
 		propertiesFile << "player2.bomb = " + to_string((int)sf::Keyboard::RControl) << endl;
 		propertiesFile << "player2.action = " + to_string((int)sf::Keyboard::RShift) << endl;
 
