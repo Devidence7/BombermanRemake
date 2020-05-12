@@ -348,7 +348,7 @@ Game(){
 				bool team2Alive = false;
 
 				for (auto player : PLayers::getVectorPlayer()) {
-					if (player->lives > 1) {
+					if (player->lives >= 1) {
 						if (player->team == 0) {
 							team1Alive = true;
 						}
@@ -365,7 +365,7 @@ Game(){
 			else {
 				int numPlayersAlive = 0;
 				for (auto player : PLayers::getVectorPlayer()) {
-					if (player->lives > 1) {
+					if (player->lives >= 1) {
 						numPlayersAlive += 1;
 					}
 				}
