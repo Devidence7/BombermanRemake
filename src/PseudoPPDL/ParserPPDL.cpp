@@ -87,7 +87,7 @@ void StateGenerator::generateState(ifstream &f, string estado)
             found = text.find("intergen");
             if (found != std::string::npos){
                 string val = text.substr(found + sizeof("intergen"), text.size()) ;
-                std::cout << "intergen"<<val << std::endl;
+                std::cout << "intergen "<<val << std::endl;
                 this->_SeekPEStruct.bootsSeek = stoi(val);
             }
 
