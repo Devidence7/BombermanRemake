@@ -50,6 +50,17 @@ public:
 
 Game(){
 	stage=1;
+	gameOptions.colorList = new sf::Color[10];
+	gameOptions.colorList[0] = sf::Color(255,255,255,225);
+	gameOptions.colorList[1] = sf::Color(0,0,0,225);
+	gameOptions.colorList[2] = sf::Color(255,0,0,225);
+	gameOptions.colorList[3] = sf::Color(0,255,0,225);
+	gameOptions.colorList[4] = sf::Color(0,0,255,225);
+	gameOptions.colorList[5] = sf::Color(150,0,150,225);
+	gameOptions.colorList[6] = sf::Color(0,150,150,225);
+	gameOptions.colorList[7] = sf::Color(150,150,0,225);
+	gameOptions.colorList[8] = sf::Color(100,150,40,225);
+	gameOptions.colorList[9] = sf::Color(40,100,150,225);
 }
 	int gameTime(){
 		return GlobalTime::timeLeft;
@@ -64,12 +75,15 @@ Game(){
 				PLayers::addPlayer(userKeyPress.getPlayerControls(i + 1), SIZE_PILLAR, 0, gameOptions.playersAndTeams[numPlayersInserter]);
 				level->checkSpawn(SIZE_PILLAR, 0);
 				numPlayersInserter++;
+				cout << "HHHEEEEEYYYY" << gameOptions.player1ColorPick << endl;
+				PLayers::getVectorPlayer()[0]->changeColor(gameOptions.colorList[gameOptions.player1ColorPick]);
 				break;
 
 			case 1:
 				PLayers::addPlayer(userKeyPress.getPlayerControls(i + 1), SIZE_PILLAR, (dimY - 1) * SIZE_PILLAR, gameOptions.playersAndTeams[numPlayersInserter]);
 				level->checkSpawn(SIZE_PILLAR, (dimY - 1) * SIZE_PILLAR);
 				numPlayersInserter++;
+				PLayers::getVectorPlayer()[1]->changeColor(gameOptions.colorList[gameOptions.player2ColorPick]);
 				break;
 
 			default:
@@ -77,6 +91,8 @@ Game(){
 			}
 			
 		}
+		
+
 		for (int i = 0; i < numIAPlayer; i++) {
 			switch (i) {
 
@@ -138,6 +154,7 @@ Game(){
 			insertPlayers(*gameDisplay.userKeyPress, gameOptions.numPlayers, gameOptions.numIAPlayers);
 		}
 	
+		gameDisplay.notifyChangeDisplay();
 		unsigned int pixelsX = window.getSize().x;
 		unsigned int pixelsY = window.getSize().y;
 			
