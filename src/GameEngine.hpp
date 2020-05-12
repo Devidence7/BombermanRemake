@@ -421,7 +421,7 @@ Game(){
 		for (Enemy_ptr e : Enemies::getVectorEnemies()) {
 			intersec = intersec || (e->CanHurtPlayer() && e->collision(*eCol));
 			if(intersec){
-				e->onCollission(e, eCol, CollisionType::NONE);
+				e->onCollission(eCol, e, CollisionType::NONE);
 			} 
 		}
 		return intersec;
