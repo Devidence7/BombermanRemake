@@ -9,15 +9,19 @@
 void PlayerIAEntity::setCollision(std::shared_ptr<Entity> col){
 	this->Entity::setCollision(col);
 	if(col != nullptr){
-		OmittedAreas.push_back(OmittedArea(getMapCoordinates(col->getCenterPosition())));
+		//OmittedAreas.push_back(OmittedArea(getMapCoordinates(col->getCenterPosition())));
 	}
-	
+	OmittedAreas.clear();
+	generateOmitedZones(getEntityMapCoordinates(), OmittedAreas, sg._PerseguirStruct.RangoVision);
+//	std::cout << "Omited areas on collision " << OmittedAreas.size() << "\n";
+
+	movements.clear();
+	currentMovement = nullptr;
 	if(std::dynamic_pointer_cast<Bomb>(col) != nullptr){
 		currentState = RUNAWAY;
 		canPutABombSafe(getMapCoordinates(getCenterPosition()),me, movements);
 	}else{
-		movements.clear();
-		currentMovement = nullptr;
+	
 		decildetState();
 	}
 	
