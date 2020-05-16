@@ -89,6 +89,7 @@ void Enemies::insertarEnemigosExtraTeleport(sf::Vector2f pos, int numEnemigos = 
 		auto a = std::make_shared<EnemyEntity>(Coin(3));
 		a->setPosition(pos);
 		a->me = a;
+		a->setInvencible1sec();
 		a->startMovement();
 		enemies.push_back(a);
 	}
