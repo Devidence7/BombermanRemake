@@ -47,7 +47,7 @@ protected:
 	
 public:
 	std::shared_ptr<EnemyEntity> me;
-	EnemyEntity();
+	EnemyEntity(float difficultyLevel);
 
 	void startMovement();
 
@@ -79,48 +79,48 @@ public:
 class Balloon : public EnemyEntity {
 public:
 
-	Balloon();
+	Balloon(float difficultyLevel);
 };
 
 //O'neal
 class Ice : public EnemyEntity {
 public:
 
-	Ice();
+	Ice(float difficultyLevel);
 };
 
 //Dahl
 class Barrel : public EnemyEntity {
 public:
 
-	Barrel();
+	Barrel(float difficultyLevel);
 };
 
 //Pontan
 class Coin : public EnemyEntity {
 public:
 
-	Coin();
+	Coin(float difficultyLevel);
 };
 
 //Doria
 class Blob : public EnemyEntity {
 public:
 
-	Blob();
+	Blob(float difficultyLevel);
 };
 
 //Ovape
 class Ghost : public EnemyEntity {
 public:
 
-	Ghost();
+	Ghost(float difficultyLevel);
 };
 
 //Pass
 class Hypo : public EnemyEntity {
 public:
 
-	Hypo();
+	Hypo(float difficultyLevel);
 };
 

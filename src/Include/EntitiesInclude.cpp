@@ -86,7 +86,7 @@ std::vector<Enemy_ptr> Enemies::enemiesExtra;
 
 void Enemies::insertarEnemigosExtraTeleport(sf::Vector2f pos, int numEnemigos = 3) {
 	for (int i = 0; i < numEnemigos; i++) {
-		auto a = std::make_shared<EnemyEntity>(Coin());
+		auto a = std::make_shared<EnemyEntity>(Coin(3));
 		a->setPosition(pos);
 		a->me = a;
 		a->startMovement();
@@ -98,7 +98,7 @@ void Enemies::insertarEnemigosExtra(int dimX, int dimY,int numEnemigos=5){
 	int x; 
 	int y;
 	for (int i = 0; i < numEnemigos; i++) {
-		auto a = std::make_shared<EnemyEntity>(Coin());
+		auto a = std::make_shared<EnemyEntity>(Coin(3));
 			
 		do {
 			x = Random::getIntNumberBetween(0, dimX / 2);
@@ -118,7 +118,7 @@ void Enemies::insertarEnemigosExtra(int dimX, int dimY,int numEnemigos=5){
 
 
 
-void Enemies::insertarEnemigos(int dimX, int dimY,int numEnemies,int stage,float dif) {
+void Enemies::insertarEnemigos(int dimX, int dimY,int numEnemies,int stage, float dif) {
 	std::vector<Enemy_ptr> a(numEnemies);
 	int enemyType;
 	
@@ -138,28 +138,28 @@ void Enemies::insertarEnemigos(int dimX, int dimY,int numEnemies,int stage,float
 	
 
 			if (probability < 20) {
-				a[i]=std::make_shared<EnemyEntity>(Balloon());
+				a[i]=std::make_shared<EnemyEntity>(Balloon(dif));
 				
 			}
 			else if (probability < 35) {
-				a[i]=std::make_shared<EnemyEntity>(Ice());
+				a[i]=std::make_shared<EnemyEntity>(Ice(dif));
 				
 			}
 			else if (probability < 45) {
-				a[i]=std::make_shared<EnemyEntity>(Barrel());
+				a[i]=std::make_shared<EnemyEntity>(Barrel(dif));
 				
 			}
 			else if (probability < 55) {
-				a[i]=std::make_shared<EnemyEntity>(Blob());
+				a[i]=std::make_shared<EnemyEntity>(Blob(dif));
 			}
 			else if (probability < 70) {
-				a[i]=std::make_shared<EnemyEntity>(Ghost());
+				a[i]=std::make_shared<EnemyEntity>(Ghost(dif));
 			}
 			else if (probability < 85) {
-				a[i]=std::make_shared<EnemyEntity>(Hypo());
+				a[i]=std::make_shared<EnemyEntity>(Hypo(dif));
 			}
 			else{
-				a[i]=std::make_shared<EnemyEntity>(Coin());
+				a[i]=std::make_shared<EnemyEntity>(Coin(dif));
 			}
 		enemies.push_back(a[i]);
 	}

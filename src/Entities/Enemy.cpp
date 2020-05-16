@@ -2,8 +2,7 @@
 #include "../Utils/IAFunctions.hpp"
 #include "../Music/GameSounds.h"
 #include "../GameMaths/GeometryMaths.hpp"
-EnemyEntity::EnemyEntity() : Entity()
-{
+EnemyEntity::EnemyEntity(float difficultyLevel) : Entity() {
 	isFireDestroyable = true;
 	fireCanGoThroght = true;
 	canHurtPlayers = true;
@@ -187,14 +186,14 @@ void EnemyEntity::setInvencible1sec() {
 	lastInvencibleTime = GameTime::getTimeNow();
 }
 
-Balloon::Balloon() : EnemyEntity()
+Balloon::Balloon(float difficultyLevel) : EnemyEntity(difficultyLevel)
 {
 	enemyType = balloon;
 	scoreValue=100;
 	//move(500, 100);
 }
 
-Ice::Ice() : EnemyEntity()
+Ice::Ice(float difficultyLevel) : EnemyEntity(difficultyLevel)
 {
 	enemyType = ice;
 	scoreValue=150;
@@ -209,7 +208,7 @@ Ice::Ice() : EnemyEntity()
 	//move(200, 200);
 }
 
-Barrel::Barrel() : EnemyEntity()
+Barrel::Barrel(float difficultyLevel) : EnemyEntity(difficultyLevel)
 {
 	enemyType = barrel;
 	scoreValue=200;
@@ -220,11 +219,11 @@ Barrel::Barrel() : EnemyEntity()
 	this->typePosIA = TypePositionRelative::LOKIN_POSITION;
 	this->canThroughWall = false;
 }
-Coin::Coin() : EnemyEntity()
+Coin::Coin(float difficultyLevel) : EnemyEntity(difficultyLevel)
 {
 	enemyType = coin;
-	scoreValue=400;
-	baseSpeed = 1.5;
+	scoreValue= 400;
+	baseSpeed = 2.5;
 	this->rangoVision = 10;
 	this->numConsecutiveMovements = 3;
 	this->typeSeek = TypeSeekIA::BEST_PATH;
@@ -233,7 +232,7 @@ Coin::Coin() : EnemyEntity()
 	this->canThroughWall = true;
 }
 
-Blob::Blob() : EnemyEntity()
+Blob::Blob(float difficultyLevel) : EnemyEntity(difficultyLevel)
 {
 	scoreValue=250;
 	enemyType = blob;
@@ -246,7 +245,7 @@ Blob::Blob() : EnemyEntity()
 	this->canThroughWall = true;
 }
 
-Ghost::Ghost() : EnemyEntity()
+Ghost::Ghost(float difficultyLevel) : EnemyEntity(difficultyLevel)
 {
 	scoreValue=300;
 	enemyType = ghost;
@@ -258,7 +257,7 @@ Ghost::Ghost() : EnemyEntity()
 	this->canThroughWall = true;
 }
 
-Hypo::Hypo() : EnemyEntity()
+Hypo::Hypo(float difficultyLevel) : EnemyEntity(difficultyLevel)
 {
 	scoreValue=350;
 	enemyType = hypo;
