@@ -327,6 +327,7 @@ private:
 				gameDisplay.fullScreen = false;
 				window = new RenderWindow(sf::VideoMode(gameDisplay.windowWidth, gameDisplay.windowHeight), "Bombermenaman");
 			}
+			window->setFramerateLimit(gameDisplay.FPSs);
 
 			// CAMERA
 			gameDisplay.menuView = sf::View(sf::FloatRect(0.f, 0.f, window->getSize().x, window->getSize().y));

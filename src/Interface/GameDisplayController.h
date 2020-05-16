@@ -82,7 +82,7 @@ public:
 		else {
 			window = new sf::RenderWindow(sf::VideoMode(windowWidth, windowHeight), "Bomberman");
 		}
-		
+		window->setFramerateLimit(FPSs);
 		
 
 		// CAMERA
