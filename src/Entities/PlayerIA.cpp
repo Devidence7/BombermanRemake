@@ -24,7 +24,6 @@ void PlayerIAEntity::setCollision(std::shared_ptr<Entity> col){
 	
 		decildetState();
 	}
-	
 }
 
 //	void realizeActions();
@@ -163,6 +162,7 @@ bool PlayerIAEntity::updateVelocity(){
 
 }
 
+
 void PlayerIAEntity::seekAndDestroyEnemy(){
 	
 }
@@ -197,6 +197,12 @@ bool PlayerIAEntity::updateRunawayState(){
 
 void PlayerIAEntity::putABomb(){
 	//OmittedAreas.push_back(OmittedArea(getEntityMapCoordinates()));
+	if(dead or respawning){
+		currentState = StateIA::NON_OBJETIVE;
+		movements.clear();
+		currentMovement = nullptr;
+		return;
+	}
 	if(haveBombs() && canPutABombSafe(getMapCoordinates(getCenterPosition()),me, movements) ){
 		lastPositionKnowed = getCenterPosition();
 		if (Level::addBomb(this->me))
@@ -205,11 +211,14 @@ void PlayerIAEntity::putABomb(){
 			currentState = StateIA::RUNAWAY;
 			this->currentMovement = nullptr;
 		}
-		if(moduleVector(getCenterPosition() - lastPositionKnowed) > 20){
-			std::cout << "Al poner bomba, a tomar por culo\n";
+	}else if(!haveBombs()){
+		Bomb_ptr b = std::dynamic_pointer_cast<Bomb>(BombsAsociated.front());
+		if(WillDead(getEntityMapCoordinates(), b->getExplosionTimeLeft())){
+			this->currentMovement = nullptr;
+			movements.clear();
+			canPutABombSafe(getEntityMapCoordinates(), me, movements);
+			currentState = StateIA::RUNAWAY;
 		}
-	}else if(haveBombs()){
-		std::cout << "IS not safe or not Bobms\n";
 	}
 }
 
@@ -217,6 +226,7 @@ void PlayerIAEntity::putABomb(){
 bool PlayerIAEntity::updateKillState(){
 	//if(somePlayerEnemyOnRange(getMapCoordinates(getCenterPosition()), getPowerOfBombs(), team)){
 		movements.clear();
+		currentMovement = nullptr;
 		putABomb();
 	//	return true;
 	//}
@@ -233,7 +243,7 @@ void PlayerIAEntity::decildetState(){
 	float pointFollow = 0;
 	float pointFarm = 0;
 	float pointGoToPU = 0;
-	if(somePlayerEnemyOnRange(getMapCoordinates(getCenterPosition()), getPowerOfBombs(), team)){
+	if(somePlayerEnemyOnRange(getMapCoordinates(getCenterPosition()), getPowerOfBombs(), team) && haveBombs()){
 		pointKill = sg._KillStruct.ansiansDeKill * 3;
 	}
 	selectEnemyPlayers(me, objetivePlayers, this->sg._PerseguirStruct.RangoVision);
@@ -262,9 +272,14 @@ void PlayerIAEntity::decildetState(){
 		this->currentState = StateIA::FARM;	
 	}else if(pointKill > 0 &&  (pointKill < pointGoToPU || pointGoToPU == 0)){
 		this->currentState = StateIA::KILL;	
-	}else{
+	}else if(pointGoToPU > 0){
 		this->currentState = StateIA::CATCH_PU;	
 		movements = movementes2PE;
+	}else{
+		if(WillDead(getEntityMapCoordinates(), -1)){
+			canPutABombSafe(getEntityMapCoordinates(), me, movements);
+		}
+		this->currentState = StateIA::NON_OBJETIVE;	
 	}
 	
 }
@@ -275,17 +290,23 @@ void PlayerIAEntity::updateState(){
 	OmittedAreas.clear();
 	generateOmitedZones(currentPosMap, OmittedAreas, sg._PerseguirStruct.RangoVision);
 	
+	if(currentState != StateIA::RUNAWAY && std::dynamic_pointer_cast<Bomb>(Level::getCellMiniMapObject(getEntityMapCoordinates()))  != nullptr){
+		currentMovement = nullptr;
+		movements.clear();
+		currentState = StateIA::NON_OBJETIVE;
+	}
 	switch (currentState)
 	{
 	case StateIA::NON_OBJETIVE:
 		//Si tiene en rango a algun jugador
 		/* if(sg.havePatrolStruct){
 			currentState = StateIA::PATROL;
-		}else   */if(somePlayerEnemyOnRange(currentPosMap, getPowerOfBombs(), team)){
-			currentState =  StateIA::KILL;
-		}else {
+		}else   */
+		//if(somePlayerEnemyOnRange(currentPosMap, getPowerOfBombs(), team)){
+		//	currentState =  StateIA::KILL;
+		//}else {
 			decildetState();
-		}
+		//}
 
 		break;
 	case StateIA::PERSEGUIR:
@@ -297,6 +318,8 @@ void PlayerIAEntity::updateState(){
 			putABomb();
 		}
 		break;
+	case StateIA::KILL:
+
 	case StateIA::CATCH_PU:
 		if((movements.size() < 1 && currentMovement == nullptr) || (movements.size() > 1 && std::dynamic_pointer_cast<PowerUp>(Level::getCellMiniMapObject(movements.back()->getPosition())) != nullptr)){
 			currentState = StateIA::NON_OBJETIVE;
@@ -304,6 +327,14 @@ void PlayerIAEntity::updateState(){
 		break;
 	default:
 		break;
+	}
+	if(StateIA::NON_OBJETIVE){
+		movements.clear();
+		currentMovement = nullptr;
+		std::cout << "NON OBJ\n";
+		if(pathFindingGoSafeArea(getEntityMapCoordinates(), movements, me, 0)){
+			currentState = StateIA::RUNAWAY;
+		}
 	}
 }
 

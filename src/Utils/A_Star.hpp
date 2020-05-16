@@ -78,6 +78,10 @@ public:
         h =  1 - _numOfWalss/3;
     }
 
+    ANode(const sf::Vector2i cp, float fAcum, int numOFBombsOrFires, bool bombOrNot,std::shared_ptr<ANode> p = nullptr){
+        h = numOFBombsOrFires;
+    }
+
     ANode(const sf::Vector2i cp, sf::Vector2i dir, const sf::Vector2i objetive, float fAcum, std::shared_ptr<ANode> p = nullptr)
         : currentPostion(cp), direction_to_arrive(dir), f(fAcum), parent(p)
     {

@@ -144,15 +144,18 @@ void seekAnyPlayerOrRandom(list<ANode_Ptr> &movements, Entity_ptr e, TypeSeekIA 
 
 bool checkValidPositionWithImprudence(const sf::Vector2i &v, std::shared_ptr<Entity> e, int CostPath, int & incrementCost){
     PlayerIA_ptr p = std::dynamic_pointer_cast<PlayerIAEntity>(e);
+    incrementCost = 0;
     bool valid = (Level::isValidCell(v) && (Level::getCellMiniMapObject(v) == nullptr || !Level::getCellMiniMapObject(v)->isColliderWith(e)));
     if(valid){
         //Verficar si es un area omitida
         if(e->OmittedAreas.size() > 0){
             for(OmittedArea oa : e->OmittedAreas){
                 if(oa == v){
-                    if(abs(CostPath - oa.TimeAp()) == 0 || p->avanzaAtravesDelFuego(abs(CostPath - oa.TimeAp()))){
+                    if(abs(CostPath - oa.TimeAp()) == 0 /* || p->avanzaAtravesDelFuego(abs(CostPath - oa.TimeAp())) */){
                         valid = false;
                         break;
+                    }else{
+                        incrementCost = std::dynamic_pointer_cast<PlayerIAEntity>(e)->sg._KillStruct.imprudencia;
                     }
                 }
             }
@@ -165,6 +168,53 @@ bool checkValidPositionWithImprudence(const sf::Vector2i &v, std::shared_ptr<Ent
 //////////////////////////////////
 ////  Interst/Omited Zones   /////
 //////////////////////////////////
+
+// timeToPutNewBomb < 0 -> no quiere poner bomba
+bool WillDead(sf::Vector2i posPLayer, float timeToPutNewBomb){
+    sf::Vector2i sLevel = Level::sizeLevel();
+    bool willDead = false;
+    for(int x = 1; !willDead && x < sLevel.x - 1; x++){
+        Bomb_ptr b = std::dynamic_pointer_cast<Bomb>(Level::getCellMiniMapObject(x, posPLayer.y));
+        if(b != nullptr && (timeToPutNewBomb < 0 || timeToPutNewBomb > b->getExplosionTimeLeft())){
+            willDead = b->bombPower >= abs(x - posPLayer.x);
+        }
+    }
+    if(willDead){
+        return true;
+    }
+
+    for(int y = 1; !willDead && y < sLevel.y - 1; y++){
+        Bomb_ptr b = std::dynamic_pointer_cast<Bomb>(Level::getCellMiniMapObject(posPLayer.x, y));
+        if(b != nullptr && (timeToPutNewBomb < 0 || timeToPutNewBomb > b->getExplosionTimeLeft())){
+            willDead = b->bombPower >= abs(y - posPLayer.y);
+        }
+    }
+    return willDead;
+}
+
+int getFiresOnPlayer(sf::Vector2i posPLayer, float time2Pass){
+    sf::Vector2i sLevel = Level::sizeLevel();
+    int countFires = 0;
+    for(int x = 1; x < sLevel.x - 1; x++){
+        Bomb_ptr b = std::dynamic_pointer_cast<Bomb>(Level::getCellMiniMapObject(x, posPLayer.y));
+        if(b != nullptr && ( abs(time2Pass - b->getExplosionTimeLeft()) < 10)){
+            if(b->bombPower >= abs(x - posPLayer.x)){
+                countFires++;
+            }
+        }
+    }
+
+    for(int y = 1; y < sLevel.y - 1; y++){
+        Bomb_ptr b = std::dynamic_pointer_cast<Bomb>(Level::getCellMiniMapObject(posPLayer.x, y));
+        if(b != nullptr && ( abs(time2Pass - b->getExplosionTimeLeft()) < 10)){
+            if(b->bombPower >= abs(y - posPLayer.y)){
+                countFires++;
+            }
+        }
+    }
+    return countFires;
+}
+
 void generateOmitedZoneByBomb(sf::Vector2i bombPosition, std::list<OmittedArea> &AreasOmited, float timeBomb, int powerBomb)
 {
     //TODO: Posiblidad de cruz más grande?
@@ -188,10 +238,14 @@ void generateOmitedZones(sf::Vector2i positionP, std::list<OmittedArea> &AreasOm
     {
         for (int y = by.y; y < to.y; y++)
         {
-            Bomb_ptr b = std::dynamic_pointer_cast<Bomb>(Level::getCellMiniMapObject(x, y));
+            Entity_ptr e = Level::getCellMiniMapObject(x, y);
+            Bomb_ptr b = std::dynamic_pointer_cast<Bomb>(e);
             if ( b != nullptr)
             {
                 generateOmitedZoneByBomb(sf::Vector2i(x, y), AreasOmited, b->getExplosionTimeLeft(), b->bombPower);
+            }else if(std::dynamic_pointer_cast<Fire>(e) != nullptr){
+                //
+                generateOmitedZoneByBomb(sf::Vector2i(x, y), AreasOmited, 0, 1);
             }
         }
     }
@@ -682,6 +736,101 @@ bool pathFindingGoWithCare(const sf::Vector2i &positionEnemy, const std::vector<
                         if(levelInterset != nullptr){
                             newNode->incrementCost(levelInterset->intersest()); // TODO: variable segun IA
                         }
+                        frontera.add(newNode);
+                    }
+                    else
+                    {
+                        newNode = nullptr;
+                    }
+                }
+            }
+        }
+        //Extraer nodo
+        if (frontera.isEmpty())
+        {
+            break;
+        }
+        currentNode = frontera.pop();
+
+        //currentNode = *
+        if (currentNode->isObjetive())
+        {
+            lastBest = currentNode;
+            found =  true; 
+        }
+    }
+
+    std::list<ANode_Ptr> list_actions;
+    //Si no se ha encontrado -> seleccionar aleatorio
+    if (!found && lastBest == nullptr)
+    {
+        return false;
+    }
+    found = lastBest != nullptr;
+    while (lastBest != nullptr)
+    {
+        if (lastBest->getParent() != nullptr)
+        {
+            list_actions.push_back(lastBest);
+        }
+        lastBest = lastBest->getParent();
+    }
+
+    while (!list_actions.empty())
+    {
+        ANode_Ptr e = list_actions.back();
+        path.push_back(e);
+        list_actions.pop_back();
+    }
+    return found;
+}
+
+
+
+bool pathFindingGoSafeArea(const sf::Vector2i &positionEnemy, std::list<ANode_Ptr> &path, Entity_ptr e, int costAddDestroy)
+{
+    std::cout << "Go safe Area\n";
+    PlayerIA_ptr IA =  std::dynamic_pointer_cast<PlayerIAEntity>(e);
+    path.clear();
+    Heap<ANode_Ptr> frontera;
+    std::map<vec2i, ANode_Ptr> expanded;
+    std::map<vec2i, int> objetivesFound;
+
+    bool haveInterset = IA->getIntersetDestroyWalls() > 0;
+    
+    ANode_Ptr lastBest;
+    Interst_ptr levelInterset;
+    int interestSite = levelInterset != nullptr ? levelInterset->intersest() : 0;
+    int bestfounds = interestSite;
+    int f = getFiresOnPlayer(positionEnemy, 0);
+    ANode_Ptr currentNode = std::make_shared<ANode>(ANode(positionEnemy, 0, f, true));
+    if(f == 0){
+        path.push_back(currentNode);
+        return true;
+    }
+
+    bool found = false;
+    while (!found)
+    {
+
+        expanded[vec2i(currentNode->getPosition())] = currentNode;
+        //expandir nodos
+        for (int i = -1; i < 2; i++)
+        {
+            for (int j = -1; j < 2; j++)
+            {
+                if (abs(i) != abs(j))
+                {
+                    sf::Vector2i nodePosition(currentNode->xPosition() + i, currentNode->yPosition() + j);
+                    if(!Level::isValidCell(nodePosition)){
+                        continue;
+                    }
+                    f = getFiresOnPlayer(nodePosition, currentNode->costNode());
+                    ANode_Ptr newNode = std::make_shared<ANode>(ANode(nodePosition, currentNode->costNode(), f, true, currentNode));//std::make_shared<ANode>(ANode(nodePosition, currentNode->fAcum() + 1, interestSite ,currentNode));
+                    int incrementCost = 0;
+                    if (checkValidPositionWithImprudence(nodePosition, e, newNode->costNode(), incrementCost) && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(newNode))
+                    { //Si es una posicion valida y no se ha expandido
+                        newNode->incrementCost(levelInterset->intersest()); // TODO: variable segun IA
                         frontera.add(newNode);
                     }
                     else

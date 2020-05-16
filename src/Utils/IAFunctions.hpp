@@ -34,7 +34,9 @@ inline bool isOnRangeExplosion(sf::Vector2i pos, sf::Vector2f centerPosition, sf
     return onRange;
 }
 
-
+// timeToPutNewBomb < 0 -> no quiere poner bomba
+bool WillDead(sf::Vector2i posPLayer, float timeToPutNewBomb);
+int getFiresOnPlayer(sf::Vector2i posPLayer, float timeToPutNewBomb);
 
 inline bool isOnRange(sf::Vector2i pos,sf::Vector2i objetive, int rangeBomb){
     return abs(pos.x - objetive.x) < rangeBomb && abs(pos.y - objetive.y) < rangeBomb;
@@ -64,6 +66,7 @@ bool canPutABombSafe(sf::Vector2i posBomb, std::shared_ptr<PlayerEntity> e, std:
 Interst_ptr generateIntersetPointDestroyer(sf::Vector2i posPossibleBom);
 bool pathFinderDestroy2Farm(const sf::Vector2i &positionEnemy, std::list<ANode_Ptr> &path, std::shared_ptr<Entity>  e, int costAddDestroy);
 bool pathFindingGoWithCare(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> &path, std::shared_ptr<Entity>  e, int costAddDestroy);
+bool pathFindingGoSafeArea(const sf::Vector2i &positionEnemy, std::list<ANode_Ptr> &path, std::shared_ptr<Entity>  e, int costAddDestroy);
 #include "OmittedAreas.hpp"
 
 

@@ -83,6 +83,6 @@ public:
 	}
 
 	bool avanzaAtravesDelFuego(double scoreCamino){
-		return ((scoreCamino/sg._KillStruct.imprudencia)>prob);
+		return ((scoreCamino/sg._KillStruct.imprudencia) > prob);
 	}
 };
