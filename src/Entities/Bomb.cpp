@@ -64,10 +64,10 @@ void Bomb::rotateBomb(double velMult) {
 	auto bombOri = getOrigin();
 	auto bombPos = getPosition();
 	auto bombLimits = getLocalBounds();
-	cout << "-----------" << endl;
+	/*cout << "-----------" << endl;
 	cout << getOrigin().x << endl;
 	cout << getPosition().x << endl;
-	
+	*/
 	
 
 	if (velocity.x < 0) {
@@ -76,9 +76,9 @@ void Bomb::rotateBomb(double velMult) {
 	else {
 		rotate(100 * velMult);
 	}
-	cout << getOrigin().x << endl;
+	/*cout << getOrigin().x << endl;
 	cout << getPosition().x << endl;
-
+*/
 	
 	// setOrigin(bombOri);
 	// setPosition(bombPos);
@@ -124,7 +124,7 @@ void Bomb::update()
 		move(sf::Vector2f(velocity.x * velMult, velocity.y * velMult));
 		double module = moduleVector(positionObjetive - getPosition());
 
-		if (module > cornerModuleBefore) {
+		if (module < 3) {
 			setPosition(positionObjetive);
 			rePutBomb = true;
 			onFlight = false;
@@ -132,8 +132,8 @@ void Bomb::update()
 		}
 		else {
 			cornerModuleBefore = module;
+			rotateBomb(velMult);
 		}
-		rotateBomb(velMult);
 		lastMove = GameTime::getTimeNow();
 	}
 	else if (onMove) {
@@ -145,8 +145,8 @@ void Bomb::update()
 		}
 		else {
 			move(sf::Vector2f(velocity.x * velMult, velocity.y * velMult));
+			rotateBomb(velMult);
 		}
-		rotateBomb(velMult);
 		lastMove = GameTime::getTimeNow();
 	}
 
@@ -176,6 +176,7 @@ Fire::Fire(Player_ptr p, int type ) : Entity()
 	spriteLastFrameTime = GameTime::getTimeNow();
 	explosionType = type;
 
+	fireCanGoThroght = true;
 	// Texture Controller:
 	fireTexture = &TextureStorage::getFireTexture();
 	// Set starting sprite

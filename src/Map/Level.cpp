@@ -283,19 +283,26 @@ void Level::update() {
 			std::shared_ptr<Bomb> b;
 			if ((b = std::dynamic_pointer_cast<Bomb>(*it)) != nullptr) {
 
-				sf::Vector2f positionBomb = b->getPosition();
+				sf::Vector2f positionBomb = b->getCenterPosition();
 				sf::Vector2i positionMap = getMapCoordinates(positionBomb);
 
 				if (b->rePutBomb) {
 					Entity_ptr e;
+					b->rePutBomb = false;
 					if ((e = getCellMiniMapObject(positionMap)) == nullptr || std::dynamic_pointer_cast<PowerUp>(e) != nullptr) {
-						b->rePutBomb = false;
 						addEntityToMiniMap((*it), positionMap);
+					}else if(std::dynamic_pointer_cast<Fire>(e) != nullptr){
+						addEntityToMiniMap((*it), positionMap);
+						b->setExpiredEntity();
+						
 					}
 					else {
 						b->onFlight = true;
 						sf::Vector2f v = normalize(b->getVelocity());
 						sf::Vector2i vi = sf::Vector2i(v.x, v.y);
+						if((vi.x != 0 && vi.y != 0) || (vi.x == 0 && vi.y == 0 )){
+							std::cout << "VI MAL " << vi.x << " " << vi.y << "\n";
+						}
 						sf::Vector2i newPos = positionMap + vi;
 						if (newPos.x < 1 || newPos.y < 1 || (miniMap.size() - 2) < newPos.y || (miniMap[0].size() - 2) < newPos.x) { //Si se sale del mapa, rebotar
 							vi = -vi;
@@ -304,6 +311,8 @@ void Level::update() {
 						}
 
 						b->setObjetive(MapCoordinates2GlobalCoorCorner(positionMap + vi));
+						b->initialCenterFlight = positionBomb;
+						b->endCenterFlight = MapCoordinates2GlobalCoorCenter(positionMap + vi);
 					}
 				}
 				else if (b->onMove) {
@@ -743,7 +752,7 @@ void Level::ThrowBomb(Player_ptr p, Bomb_ptr b) {
 		b->setObjetive(MapCoordinates2GlobalCoorCorner(fallPosition));
 		b->setPosition(Level::getMapCellCorner(p->getCenterPosition()));
 		b->setOnFlight(normalize(dirThrow));
-
+		b->endCenterFlight = MapCoordinates2GlobalCoorCenter(fallPosition);
 	}
 	b->player2Score = p;
 }

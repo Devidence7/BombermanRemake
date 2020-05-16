@@ -38,6 +38,8 @@ public:
 
 	bool isRemoteBomb = false;
 	bool signalExplote = false;
+	sf::Vector2f initialCenterFlight;
+	sf::Vector2f endCenterFlight;
 	// Player which bomb is from:
 	std::shared_ptr<PlayerEntity> player;
 	std::shared_ptr<PlayerEntity> player2Score;
@@ -70,6 +72,7 @@ public:
 	} 
 	void setOnFlight(sf::Vector2f dir, bool onf = true){
 		onFlight = onf;
+		initialCenterFlight = getCenterPosition();
 		this->velocity = sf::Vector2f(dir.x * this->baseSpeed, dir.y * this->baseSpeed);
 		lastMove = GameTime::getTimeNow();
 	}

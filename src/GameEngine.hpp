@@ -337,8 +337,8 @@ Game(){
 	}
 
 	void update(GameDisplayController &gameDisplay) {
-		PointsDestroyMap::updateMap();
 		level->update();
+		PointsDestroyMap::updateMap();
 
 		if (gameOptions.historyMode) {
 			if (level->levelFinished) {
