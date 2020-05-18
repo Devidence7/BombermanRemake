@@ -28,6 +28,7 @@ class MainMenu {
 		VERSUS_MODE,
 		DEBUG,
 		OPCIONS,
+		HISTORY_SCORE,
 		QUIT
 	};
 
@@ -54,6 +55,7 @@ public:
 		menu->addButton("           Modo batalla            ", ButtonActions::VERSUS_MODE);
 		//menu->addButton("      Modo sin muros para Victor       ", ButtonActions::DEBUG);
 		menu->addButton("               Opciones                 ", ButtonActions::OPCIONS);
+		menu->addButton("           Puntuaciones             ", ButtonActions::HISTORY_SCORE);
 		menu->addButton("                  Salir                    ", ButtonActions::QUIT);
 
 		menu->setPosition(sf::Vector2f(window.getSize().x / 8 * 1.2, window.getSize().y - menu->getSize().y - window.getSize().x / 8));
@@ -122,6 +124,12 @@ private:
 			OptionsMenu::lastGameStateOptionsMenu = GameDisplayController::GameState::MAIN_MENU;
 			gameDisplay.setGameState(GameDisplayController::GameState::OPTIONS_MENU);
 			break;
+
+		case ButtonActions::HISTORY_SCORE:
+			gameDisplay.setGameState(GameDisplayController::FINAL_SCORE);
+			gameDisplay.notifyChangeDisplay();
+			break;
+
 		case ButtonActions::QUIT:
 			window->close();
 			break;

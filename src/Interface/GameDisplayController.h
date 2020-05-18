@@ -61,6 +61,8 @@ public:
 	bool endBattleReprocessDisplay = false;
 	bool gameInterfaceReprocessDisplay = false;
 	bool colorPickerReprocessDisplay = false;
+
+	bool newScore = false;
 	
 	/**
 	 * Constructor

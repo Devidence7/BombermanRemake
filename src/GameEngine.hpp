@@ -348,6 +348,7 @@ Game(){
 				}
 				else {
 					gameDisplay.setGameState(GameDisplayController::FINAL_SCORE);
+					gameDisplay.newScore = true;
 					gameDisplay.notifyChangeDisplay();
 				}
 			}

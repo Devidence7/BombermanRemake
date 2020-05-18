@@ -151,7 +151,7 @@ int main(int argc, char* argv[]) {
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num9)) {
 			
-			gameDisplayController.gameState = GameDisplayController::GameState::PICK_COLOR;
+			gameDisplayController.gameState = GameDisplayController::GameState::FINAL_SCORE;
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
