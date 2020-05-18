@@ -390,7 +390,6 @@ void Level::draw(sf::RenderWindow& w) {
 bool Level::createFire(int type, int posX, int posY, Player_ptr p) {
 	// Get the object in cell
 	Entity_ptr e = getCellMiniMapObject(getMapCoordinates(posX, posY));
-	std::cout << "Create fire type " << type << " Pos (" << posX << " " << posY << " ) == ("<<  getMapCoordinates(posX, posY).x << " " << getMapCoordinates(posX, posY).y << ")" << std::endl;
 
 	if (std::dynamic_pointer_cast<Teleporter>(e) != nullptr) {
 		Enemies::insertarEnemigosExtraTeleport(e->getPosition(), 3);
@@ -425,7 +424,6 @@ bool Level::createFire(int type, int posX, int posY, Player_ptr p) {
 
 void Level::createFires(Bomb& b) {
 	sf::Vector2f pos = MapCoordinates2GlobalCoorCorner(b.getEntityMapCoordinates());
-	std::cout << "Start create fires on cell " << b.getEntityMapCoordinates().x << " " << b.getEntityMapCoordinates().y << std::endl;
 	Player_ptr p2score = b.player2Score;
 	// Central:
 	createFire(0, pos.x, pos.y, p2score);
