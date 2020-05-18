@@ -34,11 +34,11 @@ int main(int argc, char* argv[]) {
 
 	// Create new game
 	Game game = Game();
-	
+
 
 	// Create a Multiple interface controller
 	auto gameDisplayController = GameDisplayController();
-	LoadingScreen ls =LoadingScreen(*gameDisplayController.getWindow(),game);
+	LoadingScreen ls = LoadingScreen(*gameDisplayController.getWindow(), game);
 
 	// Play Title music
 	GameMusic::playTitleMusic();
@@ -48,15 +48,15 @@ int main(int argc, char* argv[]) {
 	OptionsMenu optionsMenu(*gameDisplayController.getWindow());
 	PauseMenu pauseMenu(*gameDisplayController.getWindow());
 	GameOver gameOverMenu(*gameDisplayController.getWindow());
-	MultiplayerMenu multiplayerMenu(*gameDisplayController.getWindow(),gameDisplayController);
+	MultiplayerMenu multiplayerMenu(*gameDisplayController.getWindow(), gameDisplayController);
 	StoryModeMenu storyModeMenu(*gameDisplayController.getWindow());
 	DifficultyMenu difficultyMenu(*gameDisplayController.getWindow());
 	GameInterface gameInterface(*gameDisplayController.getWindow());
-	VictoryScreen victory(*gameDisplayController.getWindow(),game);
-	FinalScoreInterface finalScore(*gameDisplayController.getWindow(),game, gameDisplayController);
+	VictoryScreen victory(*gameDisplayController.getWindow(), game);
+	FinalScoreInterface finalScore(*gameDisplayController.getWindow(), game, gameDisplayController);
 	BattleVictoryMenu battleVictory(*gameDisplayController.getWindow(), game, gameDisplayController);
 	PickColorMenu pickColorMenu(*gameDisplayController.getWindow(), gameDisplayController, game);
-	
+
 
 	// Start game loop
 	while (gameDisplayController.windowOpen()) {
@@ -66,7 +66,6 @@ int main(int argc, char* argv[]) {
 		case GameDisplayController::GameState::MAIN_MENU:
 			gameDisplayController.getWindow()->setView(gameDisplayController.menuView);
 			gameMainMenu.menuActions(gameDisplayController, game);
-			//victory.menuActions(gameDisplayController, game);
 			break;
 
 		case GameDisplayController::GameState::VICTORY:
@@ -76,21 +75,20 @@ int main(int argc, char* argv[]) {
 
 		case GameDisplayController::GameState::LOADING:
 			gameDisplayController.getWindow()->setView(gameDisplayController.menuView);
-			//Mostrar pantalla de carga
-			cout<<"Nivel: "<<game.stage<<endl;
-			game.startNewGame(*gameDisplayController.getWindow(),gameDisplayController);
-			
+
+			game.startNewGame(*gameDisplayController.getWindow(), gameDisplayController);
+
 			gameInterface.createInterface(*gameDisplayController.getWindow(), gameDisplayController, game);
-			
+
 			gameDisplayController.setGameState(GameDisplayController::GameState::PLAYING);
 			break;
-		
+
 		case GameDisplayController::GameState::VS_NUMPLAYERS_MENU:
 			gameDisplayController.getWindow()->setView(gameDisplayController.menuView);
 			multiplayerMenu.menuActions(gameDisplayController, game);
 			break;
 
-		
+
 		case GameDisplayController::GameState::STORY_MENU:
 			gameDisplayController.getWindow()->setView(gameDisplayController.menuView);
 			storyModeMenu.menuActions(gameDisplayController, game);
@@ -122,6 +120,7 @@ int main(int argc, char* argv[]) {
 			gameDisplayController.getWindow()->setView(gameDisplayController.menuView);
 			battleVictory.menuActions(gameDisplayController, game);
 			break;
+
 		case GameDisplayController::GameState::PICK_COLOR:
 			gameDisplayController.getWindow()->setView(gameDisplayController.menuView);
 			pickColorMenu.menuActions(gameDisplayController, game);
@@ -132,12 +131,12 @@ int main(int argc, char* argv[]) {
 
 			// Clear screen from previous drawings
 			gameDisplayController.getWindow()->clear(sf::Color(0, 102, 128));
-		
+
 			game.update(gameDisplayController);
-		
+
 			// Draw the player and the scene
 			game.draw(*gameDisplayController.getWindow());
-			
+
 			// Manage user window actions
 			gameDisplayController.manageGameInterface(gameDisplayController);
 
@@ -150,8 +149,8 @@ int main(int argc, char* argv[]) {
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num9)) {
-			
-			gameDisplayController.gameState = GameDisplayController::GameState::FINAL_SCORE;
+
+			gameDisplayController.gameState = GameDisplayController::GameState::GAME_OVER;
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
@@ -171,7 +170,7 @@ int main(int argc, char* argv[]) {
 			PLayers::getVectorPlayer()[3]->lives = 0;
 		}
 
-		
+
 		// Update display window window
 		gameDisplayController.getWindow()->display();
 	}
