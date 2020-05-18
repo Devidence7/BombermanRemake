@@ -376,6 +376,38 @@ bool PlayerIAEntity::updatePlayer(){
 	return false;
 }
 
+
+bool PlayerIAEntity::canKickBomb(){
+	sf::Vector2i lookinCell = getEntityMapCoordinates();
+	switch (lastMovement)
+	{
+	case LookingAt::down :
+		lookinCell.y++;
+		break;
+	case LookingAt::up :
+		lookinCell.y--;
+		break;
+	case LookingAt::left :
+		lookinCell.x--;
+		break;
+	case LookingAt::right :
+		lookinCell.x++;
+		break;
+
+	default:
+		break;
+	}
+	if(Level::isValidCell(lookinCell)){
+		Bomb_ptr b = std::dynamic_pointer_cast<Bomb>(Level::getCellMiniMapObject(lookinCell));
+		return b != nullptr && canKickBombSafe(lookinCell, b->bombPower, lastMovement);
+	}
+	return false;
+}
+
+bool PlayerIAEntity::canThrowBomb(){
+	return this->BombTaked != nullptr && canThrowBombSafe(getEntityMapCoordinates(), std::dynamic_pointer_cast<Bomb>(BombTaked)->bombPower, this->lastMovement);
+}
+
 //Upadate
 // -> Upadte State (nuevo estado/continuar estado)
 // -> generar camino

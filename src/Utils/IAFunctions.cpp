@@ -498,7 +498,7 @@ bool canPutABombSafe(sf::Vector2i posBomb, Player_ptr e, std::list<ANode_Ptr> &m
 }
 
 
-bool canThrowBomb(sf::Vector2i currentPosition, int rangeBomb, const LookingAt &l){
+bool canThrowBombSafe(sf::Vector2i currentPosition, int rangeBomb, const LookingAt &l){
     sf::Vector2i fallPosition(currentPosition.x,currentPosition.y);
     sf::Vector2i desplaceOnCollision(0, 0);
     switch (l)
@@ -542,7 +542,7 @@ bool canThrowBomb(sf::Vector2i currentPosition, int rangeBomb, const LookingAt &
 }
 
 
-bool canKickBomb(sf::Vector2i currentPosition, int rangeBomb, const LookingAt &l){
+bool canKickBombSafe(sf::Vector2i currentPosition, int rangeBomb, const LookingAt &l){
     sf::Vector2i siteCollision(currentPosition.x,currentPosition.y);
     sf::Vector2i desplaceOnCollision(0, 0);
     switch (l)
@@ -564,14 +564,24 @@ bool canKickBomb(sf::Vector2i currentPosition, int rangeBomb, const LookingAt &l
         break;
     }
     sf::Vector2i sLevel = Level::sizeLevel();
-    Entity_ptr e = Level::getCellMiniMapObject(siteCollision);
-    while (e == nullptr || std::dynamic_pointer_cast<PowerUp>(e) != nullptr)
+    
+    Entity_ptr e;
+    bool outMap = !Level::isValidCell(siteCollision);
+    if(outMap){
+        return false;
+    }
+
+    while (!outMap && e == nullptr || std::dynamic_pointer_cast<PowerUp>(e) != nullptr)
     {
         siteCollision = siteCollision + desplaceOnCollision;
-        e = Level::getCellMiniMapObject(siteCollision);
+        outMap =  !Level::isValidCell(siteCollision);
+        if(!outMap){
+            e = Level::getCellMiniMapObject(siteCollision);
+        }
+        
     }
     
-    return abs(currentPosition.x - siteCollision.x)  > rangeBomb || abs(currentPosition.y - siteCollision.y)  > rangeBomb;
+    return !outMap && abs(currentPosition.x - siteCollision.x)  > rangeBomb || abs(currentPosition.y - siteCollision.y)  > rangeBomb;
 }
 
 //Go To Objetive
