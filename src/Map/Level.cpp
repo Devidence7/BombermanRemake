@@ -71,7 +71,7 @@ Level::Level(int dimX, int dimY, bool debug, int stage,GameOptions* gameOptions)
 		for (int y = 1; y < dimY + 1; y++) {
 			if (x % 2 == 1 || y % 2 == 1) {
 				// Create random Bricks:
-				if (!Random::getIntNumberBetween(0, 3)) {
+				if (!Random::getIntNumberBetween(0, 50)) {
 					bool intersec = false;
 					for (Enemy_ptr e : Enemies::getVectorEnemies()) {
 						sf::Vector2i p = getMapCoordinates(e->getCenterPosition());
@@ -84,6 +84,10 @@ Level::Level(int dimX, int dimY, bool debug, int stage,GameOptions* gameOptions)
 						addWall(x, y);
 
 					}
+				}
+
+				if (numWalls < 4) {
+					addWall(x, y);
 				}
 			}
 			else {
@@ -868,7 +872,7 @@ void Level::deleteWall(sf::Vector2i pos) {
 		getCellObject(pos) = nullptr;
 		e = nullptr;
 
-		//numWalls--;
+		numWalls--;
 		cout << "MURO ENCONTRADO" << endl;
 	}
 }

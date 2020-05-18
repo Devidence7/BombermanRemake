@@ -332,7 +332,7 @@ private:
 			// CAMERA
 			gameDisplay.menuView = sf::View(sf::FloatRect(0.f, 0.f, window->getSize().x, window->getSize().y));
 			gameDisplay.camera = sf::View(sf::FloatRect(0.f, 0.f, window->getSize().x, window->getSize().y));
-			//camera.setViewport(sf::FloatRect(0.f, 0.2f, 1.f, 1.f));
+			gameDisplay.camera.setViewport(sf::FloatRect(0.f, 0.1f, 1.f, 1.f));
 			gameDisplay.playingGuiView = sf::View(sf::FloatRect(0.f, 0.f, window->getSize().x, window->getSize().y / 5));
 			gameDisplay.playingGuiView.setViewport(sf::FloatRect(0.f, 0.f, 1.f, 0.2f));
 			window->setFramerateLimit(gameDisplay.FPSs);

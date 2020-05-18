@@ -92,6 +92,7 @@ private:
 			game.gameOptions.historyMode = true;
 			game.debug = false;
 			game.scoreForTheMoment = 0;
+			gameDisplay.camera = sf::View(sf::FloatRect(0.f, 0.f, window->getSize().x, window->getSize().y));
 			gameDisplay.setGameState(GameDisplayController::GameState::STORY_MENU);
 			//game.startNewGame(*window);
 			break;
