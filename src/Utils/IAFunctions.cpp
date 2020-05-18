@@ -498,6 +498,81 @@ bool canPutABombSafe(sf::Vector2i posBomb, Player_ptr e, std::list<ANode_Ptr> &m
 }
 
 
+bool canThrowBomb(sf::Vector2i currentPosition, int rangeBomb, const LookingAt &l){
+    sf::Vector2i fallPosition(currentPosition.x,currentPosition.y);
+    sf::Vector2i desplaceOnCollision(0, 0);
+    switch (l)
+    {
+    case LookingAt::down:
+        fallPosition.y += 5;
+        desplaceOnCollision.y = 1;
+        break;
+    case LookingAt::up:
+        fallPosition.y -= 5;
+        desplaceOnCollision.y = -1;
+        break;
+    case LookingAt::left:
+        fallPosition.x -= 5;
+        desplaceOnCollision.x = -1;
+        break;
+    case LookingAt::right:
+        fallPosition.x += 5;
+        desplaceOnCollision.x = 1;
+        break;
+
+    default:
+        break;
+    }
+    sf::Vector2i sLevel = Level::sizeLevel();
+    fallPosition.x = max(min(fallPosition.x, sLevel.x-1), 0);
+    fallPosition.y = max(min(fallPosition.y, sLevel.y-1), 0);
+    Entity_ptr e = Level::getCellMiniMapObject(fallPosition);
+    while (e != nullptr && std::dynamic_pointer_cast<PowerUp>(e) == nullptr)
+    {
+        fallPosition = fallPosition + desplaceOnCollision;
+        if(!Level::isValidCell(fallPosition))   { //Se ha salido -> rebotar
+            desplaceOnCollision = -desplaceOnCollision;
+            fallPosition = fallPosition + desplaceOnCollision; //recuperar posicion anterior ya determinada como colision
+            fallPosition = fallPosition + desplaceOnCollision;
+        }
+        e = Level::getCellMiniMapObject(fallPosition);
+    }
+    
+    return abs(currentPosition.x - fallPosition.x)  > rangeBomb || abs(currentPosition.y - fallPosition.y)  > rangeBomb;
+}
+
+
+bool canKickBomb(sf::Vector2i currentPosition, int rangeBomb, const LookingAt &l){
+    sf::Vector2i siteCollision(currentPosition.x,currentPosition.y);
+    sf::Vector2i desplaceOnCollision(0, 0);
+    switch (l)
+    {
+    case LookingAt::down:
+        desplaceOnCollision.y = 1;
+        break;
+    case LookingAt::up:
+        desplaceOnCollision.y = -1;
+        break;
+    case LookingAt::left:
+        desplaceOnCollision.x = -1;
+        break;
+    case LookingAt::right:
+        desplaceOnCollision.x = 1;
+        break;
+
+    default:
+        break;
+    }
+    sf::Vector2i sLevel = Level::sizeLevel();
+    Entity_ptr e = Level::getCellMiniMapObject(siteCollision);
+    while (e == nullptr || std::dynamic_pointer_cast<PowerUp>(e) != nullptr)
+    {
+        siteCollision = siteCollision + desplaceOnCollision;
+        e = Level::getCellMiniMapObject(siteCollision);
+    }
+    
+    return abs(currentPosition.x - siteCollision.x)  > rangeBomb || abs(currentPosition.y - siteCollision.y)  > rangeBomb;
+}
 
 //Go To Objetive
 // GoToObjetive(x, y)
