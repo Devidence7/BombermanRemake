@@ -271,5 +271,5 @@ Hypo::Hypo(float difficultyLevel) : EnemyEntity(difficultyLevel)
 	this->typeSeek = TypeSeekIA::BEST_PATH;
 	this->longMorePAth = 10;
 	this->typePosIA = TypePositionRelative::OBJETIVE_POSITION;
-	this->canThroughWall = true;
+	this->canThroughWall = false;
 }
