@@ -44,8 +44,8 @@ PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team, float posX,floa
 	cout<<"INITIAL POS X "<<posX<<" INITIAL POS Y "<<posY<<endl;
 
 
-	// actionAvaible = ActionsAvalible::KICK_BOM;
-	// numOfBombs = 3;
+	 actionAvaible = ActionsAvalible::KICK_BOM;
+	 numOfBombs = 3;
 	// powerOfBombs = 4;
 }
 

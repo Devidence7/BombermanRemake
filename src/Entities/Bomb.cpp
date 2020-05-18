@@ -102,9 +102,10 @@ void Bomb::update()
 	// If it is time to explote:
 	if ((!isRemoteBomb && GameTime::getTimeNow() - explosionCounter > explosionTime || signalExplote) && !onFlight && canExplote )
 	{
+		setPosition(MapCoordinates2GlobalCoorCorner(getEntityMapCoordinates()));//Asegurarse de que se centra antes de esplotar
+		std::cout << "cell 2 explote " << getEntityMapCoordinates().x << " " << getEntityMapCoordinates().y << std::endl;
+		std::cout << "cell 2 global explote " << MapCoordinates2GlobalCoorCorner(getEntityMapCoordinates()).x << " " << MapCoordinates2GlobalCoorCorner(getEntityMapCoordinates()).y << std::endl;
 		setExpiredEntity();
-		setPosition(Level::getMapCellCorner(getCenterPosition()));//Asegurarse de que se centra antes de esplotar
-		
 	}
 
 	if (GameTime::getTimeNow() - spriteCounter > spriteSpeed)

@@ -130,8 +130,12 @@ void Level::chechAndFixBombCollision(Bomb_ptr b) {
 		//Mirar colision con mapa
 		if (Level::isValidCell(mapPos2)) { //No hace falta mirar si esta en el centro de la casilla
 			onColision = false;
-			if (getCellMiniMapObject(mapPos2) != nullptr) {
-				onColision = (std::dynamic_pointer_cast<PowerUp>(getCellMiniMapObject(mapPos2)) == nullptr);
+			Entity_ptr eCol;
+			if ( (eCol = getCellMiniMapObject(mapPos2)) != nullptr) {
+				onColision = (std::dynamic_pointer_cast<PowerUp>(eCol) == nullptr);
+				if(std::dynamic_pointer_cast<Fire>(eCol) != nullptr){
+					b->setExpiredEntity();
+				}
 			}
 			//TODO:: Si se añaden mas vectores, añadir aqui!!!!
 			onColision = (onColision || PLayers::cehckSomeCollision(b));
@@ -374,9 +378,19 @@ void Level::draw(sf::RenderWindow& w) {
 	}
 }
 
+/**
+ * Types
+ * 0 centro
+ * 2 fin top
+ * 3 fin bot
+ * 6 fin izq
+ * 5 fin dch
+ */ 
+
 bool Level::createFire(int type, int posX, int posY, Player_ptr p) {
 	// Get the object in cell
 	Entity_ptr e = getCellMiniMapObject(getMapCoordinates(posX, posY));
+	std::cout << "Create fire type " << type << " Pos (" << posX << " " << posY << " ) == ("<<  getMapCoordinates(posX, posY).x << " " << getMapCoordinates(posX, posY).y << ")" << std::endl;
 
 	if (std::dynamic_pointer_cast<Teleporter>(e) != nullptr) {
 		Enemies::insertarEnemigosExtraTeleport(e->getPosition(), 3);
@@ -410,7 +424,8 @@ bool Level::createFire(int type, int posX, int posY, Player_ptr p) {
 }
 
 void Level::createFires(Bomb& b) {
-	sf::Vector2f pos = b.getPosition();
+	sf::Vector2f pos = MapCoordinates2GlobalCoorCorner(b.getEntityMapCoordinates());
+	std::cout << "Start create fires on cell " << b.getEntityMapCoordinates().x << " " << b.getEntityMapCoordinates().y << std::endl;
 	Player_ptr p2score = b.player2Score;
 	// Central:
 	createFire(0, pos.x, pos.y, p2score);
