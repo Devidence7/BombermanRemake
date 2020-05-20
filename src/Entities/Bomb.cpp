@@ -21,6 +21,14 @@ Bomb::Bomb(std::shared_ptr<PlayerEntity> p) : Entity() {
 	setTexture(bombTexture->getTexture());
 
 	setOrigin(24,24);
+
+	shadow.setTexture(TextureStorage::getEntityShadowTexture().getTexture());
+	shadow.setColor(sf::Color(255, 255, 255, 150));
+}
+
+void Bomb::drawShadow(sf::RenderWindow& window) {
+	shadow.setPosition(this->getPosition().x + 3, this->getPosition().y + 33);
+	window.draw(shadow);
 }
 
 void Bomb::setExpiredEntity()

@@ -359,19 +359,6 @@ void Level::draw(sf::RenderWindow& w) {
 		}
 	}
 
-	auto it = onFlightBombs.begin();
-	while (it != onFlightBombs.end()) {
-		if (!(*it)->onFlight) {
-			// Remove the bomb from the list onFlightBombs if it at floor.
-			it->reset();
-			it = onFlightBombs.erase(it);
-		}
-		else {
-			(*it)->drawShadow(w);
-		}
-	}
-
-
 	// Draw the entities
 	for (std::vector<Entity_ptr>& v : miniMap) {
 		for (Entity_ptr e : v) {
@@ -385,11 +372,18 @@ void Level::draw(sf::RenderWindow& w) {
 		}
 	}
 
-	it = onFlightBombs.begin();
-	// This is made this way because we need to erase element from a vector while we are iterating
+	auto it = onFlightBombs.begin();
 	while (it != onFlightBombs.end()) {
-		(*it)->drawEntity(w);
-		++it;
+		if (!(*it)->onFlight) {
+			// Remove the bomb from the list onFlightBombs if it at floor.
+			it->reset();
+			it = onFlightBombs.erase(it);
+		}
+		else {
+			(*it)->drawEntity(w);
+			(*it)->drawShadow(w);
+			++it;
+		}
 	}
 }
 

@@ -22,6 +22,7 @@ public:
 
 	// Texture Variables:
 	BombTexture* bombTexture;
+	sf::Sprite shadow;
 	double spriteCounter;
 	const double spriteSpeed = 0.2;
 	int actualFrame = 0;
@@ -50,6 +51,8 @@ public:
 	 **********/
 
 	Bomb(std::shared_ptr<PlayerEntity> p);
+	void drawShadow(sf::RenderWindow& window) override;
+
 	// void setPosition(sf::Vector2f pos);
 	sf::FloatRect getGlobalBounds() const override;
 	void setExpiredEntity() override;
