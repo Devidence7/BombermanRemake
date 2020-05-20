@@ -12,7 +12,7 @@ class EnemyEntity : public Entity {
 private:
 	EnemyTexture* enemyTexture;
 	LookingAtBi lookingDir = bRight;
-	
+	sf::Sprite shadow;
 
 	double spriteStartTime;
 	double spriteLastFrameTime;
@@ -48,6 +48,8 @@ protected:
 public:
 	std::shared_ptr<EnemyEntity> me;
 	EnemyEntity(float difficultyLevel);
+
+	void drawShadow(sf::RenderWindow& window) override;
 
 	void startMovement();
 

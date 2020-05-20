@@ -16,6 +16,9 @@ BrickWall::BrickWall(int &xloc, int &yloc, int stage) : Entity()
 	setTextureRect(wallTexture->getRectWall(1, stage));
 	// Set sprite Sheet texture
 	setTexture(wallTexture->getTexture());
+
+	shadow.setTexture(TextureStorage::getWallShadowTexture().getTexture());
+	shadow.setColor(sf::Color(255,255,255,150));
 }
 
 void BrickWall::update()
@@ -29,8 +32,17 @@ void BrickWall::update()
 			spriteLastFrameTime = GameTime::getTimeNow();
 			currentFrame = (currentFrame + 1) % spriteFrames;
 			setTextureRect(wallTexture->getRectWall(currentFrame, stage));
+			int alfa = shadow.getColor().a;
+			alfa = alfa - 40 < 0 ? 0 : alfa - 40;
+
+			shadow.setColor(sf::Color(255, 255, 255, alfa));
 		}	
 	}
+}
+
+void BrickWall::drawShadow(sf::RenderWindow& window) {
+	shadow.setPosition(this->getPosition().x, this->getPosition().y + 45);
+	window.draw(shadow);
 }
  
 

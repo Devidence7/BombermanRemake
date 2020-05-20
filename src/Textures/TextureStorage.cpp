@@ -2,7 +2,9 @@
 
 PlayerTexture TextureStorage::playerTexture;
 PlayerColor TextureStorage::playerColor;
+EntityShadowTexture TextureStorage::entityShadowTexture;
 WallTexture TextureStorage::level1WallTexture;
+WallShadowTexture TextureStorage::wallShadowTexture;
 BombTexture TextureStorage::bombTexture;
 FireTexture TextureStorage::fireTexture;
 EnemyTexture TextureStorage::enemyTexture;
@@ -22,9 +24,17 @@ PlayerColor &TextureStorage::getPlayerColor() {
 	return playerColor;
 }
 
+EntityShadowTexture& TextureStorage::getEntityShadowTexture() {
+	return entityShadowTexture;
+}
+
 WallTexture &TextureStorage::getlevel1WallTexture()
 {
 	return level1WallTexture;
+}
+
+WallShadowTexture& TextureStorage::getWallShadowTexture() {
+	return wallShadowTexture;
 }
 
 BombTexture &TextureStorage::getBombTexture()

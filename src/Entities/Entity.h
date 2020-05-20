@@ -86,6 +86,10 @@ public:
 
 	virtual void setExpiredEntity();
 
+	virtual void drawEntity(sf::RenderWindow &window);
+
+	virtual void drawShadow(sf::RenderWindow& window);
+
 	bool getIsFireDestroyable();
 
 	bool getFireCanGoThroght();

@@ -18,6 +18,19 @@ EnemyEntity::EnemyEntity(float difficultyLevel) : Entity() {
 	// Set sprite Sheet texture
 	setTexture(enemyTexture->getTexture());
 	colorPath = sf::Color(Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255), Random::getIntNumberBetween(0, 255));
+
+	shadow.setTexture(TextureStorage::getEntityShadowTexture().getTexture());
+	shadow.setColor(sf::Color(255, 255, 255, 150));
+}
+
+void EnemyEntity::drawShadow(sf::RenderWindow& window) {
+	int xPlus = 0;
+	if (lookingDir == bLeft) {
+		xPlus = 3;
+	}
+
+	shadow.setPosition(this->getPosition().x + xPlus, this->getPosition().y + 39);
+	window.draw(shadow);
 }
 
 void EnemyEntity::startMovement(){
@@ -116,6 +129,14 @@ void EnemyEntity::updateVelocity()
 	sf::Vector2f n= normalize(dir);
 	velocity.x = baseSpeed *currentMovement->getAction().x * moveTime;
 	velocity.y = baseSpeed *currentMovement->getAction().y * moveTime;
+
+	if (velocity.x > 0) {
+		lookingDir = bRight;
+	}
+	else {
+		lookingDir = bLeft;
+	}
+
 	//std::cout << "Vel: " << velocity.x << " " << velocity.y << std::endl;
 
 	move(velocity.x, velocity.y);

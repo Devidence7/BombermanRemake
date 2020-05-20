@@ -17,3 +17,9 @@ class WallTexture : public TextureVector {
 
 	sf::IntRect &getRectPillar(int stage);
 };
+
+
+class WallShadowTexture : public TextureVector {
+public:
+	WallShadowTexture();
+};

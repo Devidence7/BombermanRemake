@@ -351,20 +351,15 @@ void Level::draw(sf::RenderWindow& w) {
 	// Draw the flooro:
 	w.draw(flooro);
 
-	// Draw the entities
 	for (std::vector<Entity_ptr>& v : miniMap) {
 		for (Entity_ptr e : v) {
 			if (e != nullptr && !e->getExpiredEntity()) {
-				w.draw(*e);
-#ifdef HITBOX_DEBUG_MODE
-				e->drawEntityHitbox(w);
-#endif
+				e->drawShadow(w);
 			}
 		}
 	}
 
 	auto it = onFlightBombs.begin();
-	// This is made this way because we need to erase element from a vector while we are iterating
 	while (it != onFlightBombs.end()) {
 		if (!(*it)->onFlight) {
 			// Remove the bomb from the list onFlightBombs if it at floor.
@@ -372,9 +367,29 @@ void Level::draw(sf::RenderWindow& w) {
 			it = onFlightBombs.erase(it);
 		}
 		else {
-			w.draw(*(*it));
-			++it;
+			(*it)->drawShadow(w);
 		}
+	}
+
+
+	// Draw the entities
+	for (std::vector<Entity_ptr>& v : miniMap) {
+		for (Entity_ptr e : v) {
+			if (e != nullptr && !e->getExpiredEntity()) {
+				// w.draw(*e);
+				e->drawEntity(w);
+#ifdef HITBOX_DEBUG_MODE
+				e->drawEntityHitbox(w);
+#endif
+			}
+		}
+	}
+
+	it = onFlightBombs.begin();
+	// This is made this way because we need to erase element from a vector while we are iterating
+	while (it != onFlightBombs.end()) {
+		(*it)->drawEntity(w);
+		++it;
 	}
 }
 

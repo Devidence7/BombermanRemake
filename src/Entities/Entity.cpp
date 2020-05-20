@@ -95,6 +95,13 @@ void Entity::setExpiredEntity()
 	BombTaked.reset();
 }
 
+void Entity::drawEntity(sf::RenderWindow& window) {
+	window.draw(*this);
+}
+
+void Entity::drawShadow(sf::RenderWindow& window) {
+}
+
 bool Entity::getIsFireDestroyable()
 {
 	return isFireDestroyable;
