@@ -145,11 +145,11 @@ void Bomb::update()
 
 	if (onFlight) {
 		double velMult = GameTime::getTimeNow() - lastMove < 0.5 ? GameTime::getTimeNow() - lastMove : 0.5;
-		velMult *= 10;
+		velMult *= 8;
 		move(sf::Vector2f(velocity.x * velMult, velocity.y * velMult));
 		double module = moduleVector(positionObjetive - getPosition());
 
-		if (module < 3) {
+		if (module > cornerModuleBefore || module < 1) {
 			setPosition(positionObjetive);
 			rePutBomb = true;
 			onFlight = false;
