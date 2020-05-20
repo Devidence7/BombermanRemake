@@ -131,6 +131,7 @@ void EnemyEntity::setExpiredEntity()
 		spriteStartTime = GameTime::getTimeNow();
 		spriteLastFrameTime = GameTime::getTimeNow();
 		dyingEntity = true;
+		currentFrame = 0;
 		GameSounds::playEnemyDied();
 	}
 	
@@ -168,10 +169,10 @@ void EnemyEntity::update()
 	}
 	else
 	{
-		if (GameTime::getTimeNow() - spriteStartTime > expiredTime) {
+		if (currentFrame == deadSpriteFrames - 1 && GameTime::getTimeNow() - spriteLastFrameTime > expiredspriteSpeed) {
 			expiredEntity = true;
 		}
-		else if (GameTime::getTimeNow() - spriteLastFrameTime > spriteSpeed) {
+		else if (GameTime::getTimeNow() - spriteLastFrameTime > expiredspriteSpeed) {
 			spriteLastFrameTime = GameTime::getTimeNow();
 			currentFrame = (currentFrame + 1) % deadSpriteFrames;
 			setTextureRect(enemyTexture->getDeathSprite(currentFrame, enemyType));
