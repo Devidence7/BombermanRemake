@@ -61,6 +61,7 @@ int main(int argc, char* argv[]) {
 	// Start game loop
 	while (gameDisplayController.windowOpen()) {
 		GameTime::updateCurrentTime();
+		GameSounds::Update();
 
 		switch (gameDisplayController.gameState) {
 		case GameDisplayController::GameState::MAIN_MENU:

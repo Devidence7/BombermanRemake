@@ -298,6 +298,7 @@ private:
 		case ButtonActions::SOUND_SLIDER:
 			GameSounds::setVolume(soundSlider->getValue());
 			soundText->setText(to_string(soundSlider->getValue()));
+			GameSounds::playBombSound();
 			break;
 		case ButtonActions::RESOLUTION: {
 			/*sf::FloatRect visibleArea(0, 0, opt->getSelectedValue().x, opt->getSelectedValue().y);
