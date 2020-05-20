@@ -60,6 +60,11 @@ private:
 	int waitingForKeyPlayer = 1;
 	ButtonActions waitingForKeyKey;
 
+	GameGUI::HorizontalBoxLayout* hboxQuit = nullptr;
+	GameGUI::FormLayout *f_Controls;
+	GameGUI::HorizontalBoxLayout* hbox_Controls;
+	GameGUI::HorizontalBoxLayout* hbox2_Controls;
+
 	GameGUI::Label* playerLabel;
 	GameGUI::Button* b_up;
 	GameGUI::Button* b_down;
@@ -94,15 +99,20 @@ private:
 		e->setPosition(e->getPosition() + sf::Vector2f(mSize.x - eSize.x, 0));
 	}
 
+	void correctControlsMenu() {
+		endLineElement(hboxQuit);
+		centerElement(hbox_Controls);
+		centerElement(hbox2_Controls);
+		centerElement(f_Controls);
+	}
+
 	void createBackgroundMenu(sf::RenderWindow& window, bool addButton = true) {
-		GameGUI::HorizontalBoxLayout* hboxQuit = nullptr;
 		if (addButton) {
 			hboxQuit = menu->addHorizontalBoxLayout();
 
 			//hbox2->addButton("Aplicar y salir", ButtonActions::SAVE_AND_QUIT);
 			//hbox2->addButton("Aplicar", ButtonActions::SAVE);
 			hboxQuit->addButton("Atras", ButtonActions::QUIT);
-
 		}
 
 		menu->setPosition(sf::Vector2f((int)window.getSize().x / 2 - (int)menu->getSize().x / 2, (int)window.getSize().y / 2 - (int)menu->getSize().y / 2));
@@ -123,10 +133,6 @@ private:
 		menuBackgroundShadow2.setSize(sf::Vector2f(menu->getSize().x + 2 * menuBackgroundPadding, menu->getSize().y + 2 * menuBackgroundPadding));
 		menuBackgroundShadow2.setPosition(menu->getPosition().x - menuBackgroundPadding + 10, menu->getPosition().y - menuBackgroundPadding + 10);
 		menuBackgroundShadow2.setFillColor(sf::Color(15, 35, 35, 20));
-
-		/*if (addButton) {
-			endLineElement(hboxQuit);
-		}*/
 	}
 
 
@@ -134,50 +140,49 @@ private:
 		menu = new GameGUI::Menu(window);
 		// GameGUI::VerticalBoxLayout* vbox = menu->addVerticalBoxLayout();
 
-		GameGUI::HorizontalBoxLayout* hbox = menu->addHorizontalBoxLayout();
+		hbox_Controls = menu->addHorizontalBoxLayout();
 		// GameGUI::VerticalBoxLayout* vbox = menu->addVerticalBoxLayout();
 
 		GameGUI::HorizontalBoxLayout* masterLine = new GameGUI::HorizontalBoxLayout();
 		GameGUI::HorizontalBoxLayout* musicLine = new GameGUI::HorizontalBoxLayout();
 		GameGUI::HorizontalBoxLayout* soundLine = new GameGUI::HorizontalBoxLayout();
 
-		hbox->addButton("Audio", ButtonActions::AUDIO);
-		hbox->addButton("Graficos", ButtonActions::GRAPHICS);
-		hbox->addButton("Controles", ButtonActions::CONTROLS);
+		hbox_Controls->addButton("Audio", ButtonActions::AUDIO);
+		hbox_Controls->addButton("Graficos", ButtonActions::GRAPHICS);
+		hbox_Controls->addButton("Controles", ButtonActions::CONTROLS);
 
-
-		GameGUI::HorizontalBoxLayout* hbox2 = menu->addHorizontalBoxLayout();
-		hbox2->addButton("Player 1", ButtonActions::PLAYER1_CONTROLS);
-		hbox2->addButton("Player 2", ButtonActions::PLAYER2_CONTROLS);
-
+		hbox2_Controls = menu->addHorizontalBoxLayout();
+		hbox2_Controls->addButton("Player 1", ButtonActions::PLAYER1_CONTROLS);
+		hbox2_Controls->addButton("Player 2", ButtonActions::PLAYER2_CONTROLS);
 
 		GameGUI::HorizontalBoxLayout* hbox3 = menu->addHorizontalBoxLayout();
-		auto f = menu->addFormLayout();
+		f_Controls = menu->addFormLayout();
 		playerLabel = new GameGUI::Label("Player 1");
-		f->add(playerLabel);
+		f_Controls->add(playerLabel);
 
 		b_up = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goUp));
-		f->addRow("ARRIBA", b_up, ButtonActions::P1_UP);
+		f_Controls->addRow("ARRIBA", b_up, ButtonActions::P1_UP);
 
 		b_down = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goDown));
-		f->addRow("ABAJO", b_down, ButtonActions::P1_DOWN);
+		f_Controls->addRow("ABAJO", b_down, ButtonActions::P1_DOWN);
 
 		b_left = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goLeft));
-		f->addRow("IZQUIERDA", b_left, ButtonActions::P1_LEFT);
+		f_Controls->addRow("IZQUIERDA", b_left, ButtonActions::P1_LEFT);
 
 		b_right = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goRight));
-		f->addRow("DERECHA", b_right, ButtonActions::P1_RIGHT);
+		f_Controls->addRow("DERECHA", b_right, ButtonActions::P1_RIGHT);
 
 		b_bomb = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.UseBomb));
-		f->addRow("Usar Bomba", b_bomb, ButtonActions::P1_BOMB);
+		f_Controls->addRow("Usar Bomba", b_bomb, ButtonActions::P1_BOMB);
 
 		b_action = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.MakeAction));
-		f->addRow("Ejecutar Accion", b_action, ButtonActions::P1_ACTION);
+		f_Controls->addRow("Ejecutar Accion", b_action, ButtonActions::P1_ACTION);
 
 
 		createBackgroundMenu(window);
-		/*centerElement(hbox);
-		centerElement(hbox2);*/
+		correctControlsMenu();
+		//centerElement(hbox);
+		//centerElement(hbox2);
 		//centerElement(f);
 	}
 
@@ -196,6 +201,7 @@ private:
 		hbox->addButton("Controles", ButtonActions::CONTROLS);
 
 		GameGUI::FormLayout* f = menu->addFormLayout();
+		f->add(new GameGUI::Label(" "));
 
 		masterVolumenSlider = new GameGUI::Slider();
 		masterVolumenSlider->setQuantum(2);
@@ -223,7 +229,8 @@ private:
 		f->addRow("Sonido", soundLine);
 
 		createBackgroundMenu(window);
-		// centerElement(hbox);
+		endLineElement(hboxQuit);
+		centerElement(hbox);
 	}
 
 	void createGraphicsMenu(sf::RenderWindow& window, GameDisplayController& gameDisplay) {
@@ -231,6 +238,7 @@ private:
 
 		GameGUI::HorizontalBoxLayout* hbox = menu->addHorizontalBoxLayout();
 		GameGUI::FormLayout* f = menu->addFormLayout();
+		f->add(new GameGUI::Label(" "));
 
 		hbox->addButton("Audio", ButtonActions::AUDIO);
 		hbox->addButton("Graficos", ButtonActions::GRAPHICS);
@@ -269,7 +277,8 @@ private:
 		f->addRow("FPS", fpsLine);
 
 		createBackgroundMenu(window);
-		// centerElement(hbox);
+		endLineElement(hboxQuit);
+		centerElement(hbox);
 	}
 
 	void userActions(sf::Event& event, sf::RenderWindow*& window, GameDisplayController& gameDisplay, Game& game) {
@@ -289,15 +298,15 @@ private:
 			break;
 		case ButtonActions::MASTER_VOLUME_SLIDER:
 			GameMusic::setMasterVolume(masterVolumenSlider->getValue());
-			masterVText->setText(to_string(masterVolumenSlider->getValue()));
+			masterVText->setText(to_string(masterVolumenSlider->getValue()), false);
 			break;
 		case ButtonActions::MUSIC_SLIDER:
 			GameMusic::setVolume(musicSlider->getValue());
-			musicText->setText(to_string(musicSlider->getValue()));
+			musicText->setText(to_string(musicSlider->getValue()), false);
 			break;
 		case ButtonActions::SOUND_SLIDER:
 			GameSounds::setVolume(soundSlider->getValue());
-			soundText->setText(to_string(soundSlider->getValue()));
+			soundText->setText(to_string(soundSlider->getValue()), false);
 			GameSounds::playBombSound();
 			break;
 		case ButtonActions::RESOLUTION: {
@@ -365,6 +374,7 @@ private:
 			b_right->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goRight));
 			b_bomb->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.UseBomb));
 			b_action->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.MakeAction));
+			correctControlsMenu();
 			break;
 		case ButtonActions::PLAYER2_CONTROLS:
 			waitingForKeyPlayer = 2;
@@ -375,6 +385,7 @@ private:
 			b_right->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.goRight));
 			b_bomb->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.UseBomb));
 			b_action->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.MakeAction));
+			correctControlsMenu();
 			break;
 
 		case ButtonActions::P1_UP:
@@ -467,7 +478,7 @@ private:
 					}
 					break;
 				}
-
+				correctControlsMenu();
 				waitingForKey = false;
 			}
 		}
