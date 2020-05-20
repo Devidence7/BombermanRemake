@@ -127,10 +127,13 @@ void EnemyEntity::setExpiredEntity()
 		return;
 	}
 
-	spriteStartTime = GameTime::getTimeNow();
-	spriteLastFrameTime = GameTime::getTimeNow();
-	dyingEntity = true;
-	GameSounds::playEnemyDied();
+	if (!dyingEntity) {
+		spriteStartTime = GameTime::getTimeNow();
+		spriteLastFrameTime = GameTime::getTimeNow();
+		dyingEntity = true;
+		GameSounds::playEnemyDied();
+	}
+	
 	//velocity = sf::Vector2f(0, 0);
 }
 
