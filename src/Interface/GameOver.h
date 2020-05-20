@@ -98,9 +98,8 @@ private:
 		switch (id) {
 		case ButtonActions::RETRY:
 			game.restartGame(*window, gameDisplay);
+			game.samePlay = false;
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
-
-
 			break;
 
 		case ButtonActions::GO_MAIN_MENU:

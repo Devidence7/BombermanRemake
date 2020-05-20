@@ -14,7 +14,7 @@ struct GameOptions {
 	double difLevel = 1;
 	int numIAPlayers = 0;
 	bool historyMode = false;
-	int playersAndTeams[4];
+	int playersAndTeams[4] = {0,0,0,0};
 	int numTeams = 0;
 	sf::Color* colorList;
 	int player1ColorPick = 0;

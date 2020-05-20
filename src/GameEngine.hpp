@@ -133,13 +133,16 @@ public:
 			if (!samePlay) {
 				stage = 1;
 			}
-
 			Enemies::insertarEnemigos(dimX, dimY, numEnemies, stage, gameOptions.difLevel);
 		}
 		else if (!gameOptions.historyMode) {
 			stage = gameOptions.selectedStage;
 		}
 		//insertEnemies(7);
+		if (level != nullptr) {
+			delete(level);
+		}
+
 		level = new Level(dimX, dimY, debug, stage, &gameOptions);
 		PointsDestroyMap::resetMap();
 		//Enemies::insertarEnemigos(dimX, dimY);
@@ -177,12 +180,12 @@ public:
 
 	void restartGame(sf::RenderWindow& window, GameDisplayController& gameDisplay) {
 		timesUp = false;
+		
 		cout << "Enemigos antes de reiniciar: " << Enemies::getVectorEnemies().size() << endl;
 		deleteMap();
 
 		cout << "Enemigos después de reiniciar : " << Enemies::getVectorEnemies().size() << endl;
 		//startNewGame(window,gameDisplay);
-
 	}
 
 	void passLevel() {
@@ -203,7 +206,7 @@ public:
 	}
 
 	void deleteMap() {
-		delete level;
+		//delete level;
 		auto it = Enemies::getVectorEnemies().begin();
 		while (it != Enemies::getVectorEnemies().end()) {
 			it->reset();
@@ -216,8 +219,6 @@ public:
 			it2 = PLayers::getVectorPlayer().erase(it2);
 		}
 		PLayers::getVectorPlayer().clear();
-
-
 	}
 
 	void updatePlayers(GameDisplayController& gameDisplay) {
@@ -278,7 +279,7 @@ public:
 				gameDisplay.camera.setCenter(sf::Vector2f(gameDisplay.camera.getCenter().x + ((distCenter2Player.x + squareRadius.x) / 20) * moveTime, gameDisplay.camera.getCenter().y));
 			}
 
-			if (distCenter2Player.y > squareRadius.y && gameDisplay.camera.getCenter().y + gameDisplay.camera.getSize().y / 2 < level->sizeLevel().y * SIZE_PILLAR + SIZE_PILLAR * 4) {
+			if (distCenter2Player.y > squareRadius.y && gameDisplay.camera.getCenter().y + gameDisplay.camera.getSize().y / 2 < level->sizeLevel().y * SIZE_PILLAR + SIZE_PILLAR * 2) {
 				gameDisplay.camera.setCenter(sf::Vector2f(gameDisplay.camera.getCenter().x, gameDisplay.camera.getCenter().y + ((distCenter2Player.y - squareRadius.y) / 20) * moveTime));
 			}
 			else if (distCenter2Player.y < -squareRadius.y && gameDisplay.camera.getCenter().y - gameDisplay.camera.getSize().y / 2 > -SIZE_PILLAR * 2) {
@@ -394,6 +395,7 @@ public:
 		}
 
 		if (totalLives == 0) {
+			samePlay = false;
 			gameDisplay.setGameState(GameDisplayController::GameState::GAME_OVER);
 		}
 
