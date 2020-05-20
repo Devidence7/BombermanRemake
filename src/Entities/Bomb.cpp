@@ -26,6 +26,24 @@ Bomb::Bomb(std::shared_ptr<PlayerEntity> p) : Entity() {
 	shadow.setColor(sf::Color(255, 255, 255, 150));
 }
 
+void Bomb::drawEntity(sf::RenderWindow& window) {
+	if (!onFlight) {
+		window.draw(*this);
+	}
+	else {
+		float flyingDistance = max(abs(endCenterFlight.x - initialCenterFlight.x), abs(endCenterFlight.y - initialCenterFlight.y));
+		float flyingPoint = max(abs(initialCenterFlight.x - getCenterPosition().x), abs(initialCenterFlight.y - getCenterPosition().y));
+		flyingPoint = (flyingPoint / flyingDistance) * 2.14 + 1;
+		float upMaxValue = flyingDistance < 50 ? 30 : 100;
+
+		float upValue = sin(flyingPoint) * upMaxValue;
+
+		setPosition(sf::Vector2f(getPosition().x, getPosition().y - upValue));
+		window.draw(*this);
+		setPosition(sf::Vector2f(getPosition().x, getPosition().y + upValue));
+	}
+}
+
 void Bomb::drawShadow(sf::RenderWindow& window) {
 	shadow.setPosition(this->getPosition().x + 3, this->getPosition().y + 33);
 	window.draw(shadow);

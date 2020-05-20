@@ -51,6 +51,7 @@ public:
 	 **********/
 
 	Bomb(std::shared_ptr<PlayerEntity> p);
+	void drawEntity(sf::RenderWindow& window) override;
 	void drawShadow(sf::RenderWindow& window) override;
 
 	// void setPosition(sf::Vector2f pos);
