@@ -183,9 +183,17 @@ public:
 				break;
 			case sf::Event::LostFocus:
 				// Pause
+				if (gameState == GameDisplayController::GameState::PLAYING) {
+					GameTime::stopGameTime();
+					gameDisplay.setGameState(GameDisplayController::GameState::PAUSE_MENU);
+				}
 				break;
 			case sf::Event::GainedFocus:
 				// Resume
+				/*if (gameState == GameDisplayController::GameState::PAUSE_MENU) {
+					GameTime::resumeGameTime();
+					gameDisplay.setGameState(GameDisplayController::GameState::PLAYING);
+				}*/
 				break;
 			case sf::Event::Resized: {
 				// update the view to the new size of the window
