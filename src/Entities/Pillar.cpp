@@ -14,5 +14,14 @@ Pillar::Pillar(int &x, int &y, int stage) : Entity()
 	setTextureRect(wallTexture->getRectPillar(stage));
 	// Set sprite Sheet texture
 	setTexture(wallTexture->getTexture());
+
+	shadow.setTexture(TextureStorage::getWallShadowTexture().getTexture());
+	shadow.setColor(sf::Color(255, 255, 255, 150));
 }
+
+void Pillar::drawShadow(sf::RenderWindow& window) {
+	shadow.setPosition(this->getPosition().x, this->getPosition().y + 45);
+	window.draw(shadow);
+}
+
 void Pillar::update() {}

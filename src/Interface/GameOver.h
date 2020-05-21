@@ -54,7 +54,7 @@ class GameOver {
 	}
 
 public:
-	GameOver(sf::RenderWindow& window) {
+	void createGameOverInterface(sf::RenderWindow& window) {
 		menu = new GameGUI::Menu(window);
 		if (!font.loadFromFile("../textures/mainMenu/PixelEmulator.ttf")) {
 			//cosas
@@ -62,10 +62,11 @@ public:
 
 		texture.loadFromFile("../textures/interface/Background_orange_squares.png");
 		texture.setRepeated(true);
-		background.setColor(sf::Color(0, 0, 0, 5));
+		
 		background.setTexture(texture);
 		background.setScale(sf::Vector2f(2, 2));
 		background.setTextureRect({ 0, 0, (int)window.getSize().x, (int)window.getSize().y });
+		background.setColor(sf::Color(10, 10, 10, 20));
 
 
 		menu->addButton("                Reintentar               ", ButtonActions::RETRY);
@@ -84,9 +85,11 @@ public:
 		sf::FloatRect textRect = game_over.getLocalBounds();
 		game_over.setOrigin(textRect.left + textRect.width / 2.0f,
 			textRect.top + textRect.height / 2.0f);
-		game_over.setPosition(sf::Vector2f(window.getSize().x / 2.0f, window.getSize().y / 4.0f));
+		game_over.setPosition(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 5));
+	}
 
-		game_over.setPosition(sf::Vector2f(window.getSize().x / 2 - menu->getSize().x / 2, window.getSize().y / 2 - menu->getSize().y / 2 - 150));
+	GameOver(sf::RenderWindow& window) {
+		createGameOverInterface(window);
 	}
 
 private:
@@ -95,15 +98,15 @@ private:
 		switch (id) {
 		case ButtonActions::RETRY:
 			game.restartGame(*window, gameDisplay);
+			game.samePlay = false;
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
-
-
 			break;
 
 		case ButtonActions::GO_MAIN_MENU:
 			game.timesUp = false;
 			game.deleteMap();
 			gameDisplay.setGameState(GameDisplayController::GameState::MAIN_MENU);
+			GameMusic::playTitleMusic();
 			break;
 
 		case ButtonActions::QUIT:
@@ -125,13 +128,14 @@ private:
 
 public:
 	void menuActions(GameDisplayController& gameDisplay, Game game) {
-		// Manage window events and pass a callback to manage this menu buttons
-		gameDisplay.manageGameInterface(gameDisplay, std::bind(&GameOver::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
 		if (gameDisplay.gameOverReprocessDisplay) {
 			gameDisplay.gameOverReprocessDisplay = false;
-			createBackgroundMenu(*gameDisplay.getWindow());
+			createGameOverInterface(*gameDisplay.getWindow());
 		}
 		draw(*gameDisplay.getWindow());
+
+		// Manage window events and pass a callback to manage this menu buttons
+		gameDisplay.manageGameInterface(gameDisplay, std::bind(&GameOver::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
 	}
 };
 

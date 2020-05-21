@@ -14,7 +14,9 @@ class Label : public Widget
 public:
 	Label(const sf::String& string = "");
 
-	void setText(const sf::String& string);
+	void setText(const sf::String& string, bool updateGeo = true);
+
+	//void setText(const sf::String& string);
 	const sf::String& getText() const;
 
 	void setColor(const sf::Color& color);

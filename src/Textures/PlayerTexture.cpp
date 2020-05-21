@@ -77,3 +77,14 @@
 	sf::IntRect& PlayerColor::getDeathSprite(int i) {
 		return frames[44 + i];
 	}
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//											SHADOW
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////
+	EntityShadowTexture::EntityShadowTexture() {
+		if (!this->texture.loadFromFile("../textures/Entities/moveEntityShadow.png")) {
+			throw ExceptionLoadImage("Imagen no cargada: ../textures/Entities/moveEntityShadow.png");
+		}
+
+		this->frames.push_back(sf::IntRect(0, 0, 45, 15));
+	}

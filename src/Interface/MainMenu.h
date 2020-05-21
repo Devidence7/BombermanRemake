@@ -28,6 +28,7 @@ class MainMenu {
 		VERSUS_MODE,
 		DEBUG,
 		OPCIONS,
+		HISTORY_SCORE,
 		QUIT
 	};
 
@@ -54,6 +55,7 @@ public:
 		menu->addButton("           Modo batalla            ", ButtonActions::VERSUS_MODE);
 		//menu->addButton("      Modo sin muros para Victor       ", ButtonActions::DEBUG);
 		menu->addButton("               Opciones                 ", ButtonActions::OPCIONS);
+		menu->addButton("           Puntuaciones             ", ButtonActions::HISTORY_SCORE);
 		menu->addButton("                  Salir                    ", ButtonActions::QUIT);
 
 		menu->setPosition(sf::Vector2f(window.getSize().x / 8 * 1.2, window.getSize().y - menu->getSize().y - window.getSize().x / 8));
@@ -92,6 +94,7 @@ private:
 			game.gameOptions.historyMode = true;
 			game.debug = false;
 			game.scoreForTheMoment = 0;
+			gameDisplay.camera = sf::View(sf::FloatRect(0.f, 0.f, window->getSize().x, window->getSize().y));
 			gameDisplay.setGameState(GameDisplayController::GameState::STORY_MENU);
 			//game.startNewGame(*window);
 			break;
@@ -121,6 +124,12 @@ private:
 			OptionsMenu::lastGameStateOptionsMenu = GameDisplayController::GameState::MAIN_MENU;
 			gameDisplay.setGameState(GameDisplayController::GameState::OPTIONS_MENU);
 			break;
+
+		case ButtonActions::HISTORY_SCORE:
+			gameDisplay.setGameState(GameDisplayController::FINAL_SCORE);
+			gameDisplay.notifyChangeDisplay();
+			break;
+
 		case ButtonActions::QUIT:
 			window->close();
 			break;
@@ -147,12 +156,13 @@ public:
 	 * @param game
 	 */
 	void menuActions(GameDisplayController& gameDisplay, Game& game) {
-		// Manage window events and pass a callback to manage this menu buttons
-		gameDisplay.manageGameInterface(gameDisplay, std::bind(&MainMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
 		if (gameDisplay.mainMenuReprocessDisplay) {
 			gameDisplay.mainMenuReprocessDisplay = false;
 			createMainMenu(*gameDisplay.getWindow());
 		}
 		draw(*gameDisplay.getWindow());
+
+		// Manage window events and pass a callback to manage this menu buttons
+		gameDisplay.manageGameInterface(gameDisplay, std::bind(&MainMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
 	}
 };

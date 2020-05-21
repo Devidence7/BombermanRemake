@@ -20,6 +20,7 @@ class FinalScoreInterface {
 	enum ButtonActions {
 		TEXT,
 		GO_MAIN_MENU,
+		GO_MAIN_MENU_FROM_MENU,
 		QUIT
 	};
 
@@ -141,18 +142,22 @@ public:
 		background.setTextureRect({ 0, 0, (int)window.getSize().x, (int)window.getSize().y });
 
 		auto f = menu->addFormLayout();
-		int score = 0;
-		for (Player_ptr p : PLayers::getVectorPlayer()) {
-			score += p->score;
+		if (gameDisplay.newScore) {
+			
+			int score = 0;
+			for (Player_ptr p : PLayers::getVectorPlayer()) {
+				score += p->score;
+			}
+
+			Label* yourScore = new GameGUI::Label(to_string(score));
+			f->addRow(" >> Tu puntuacion ", yourScore);
+
+			// Textbox
+			//textbox = new GameGUI::InputBox();
+			//textbox->setText("Player");
+			//f->addRow(" >> Introduce Tu Nombre ", textbox, ButtonActions::TEXT);
 		}
-
-		Label* yourScore = new GameGUI::Label(to_string(score));
-		f->addRow(" >> Tu puntuacion ", yourScore);
-
-		// Textbox
-		//textbox = new GameGUI::InputBox();
-		//textbox->setText("Player");
-		//f->addRow(" >> Introduce Tu Nombre ", textbox, ButtonActions::TEXT);
+		
 
 		ReadPuntuation();
 		
@@ -163,8 +168,15 @@ public:
 			i++;
 		}
 
-		menu->addButton("       Ir al menu principal       ", ButtonActions::GO_MAIN_MENU);
-		menu->addButton("                   Salir                    ", ButtonActions::QUIT);
+		if (gameDisplay.newScore) {
+			menu->addButton("       Ir al menu principal       ", ButtonActions::GO_MAIN_MENU);
+			menu->addButton("                   Salir                    ", ButtonActions::QUIT);
+		}
+		else {
+			menu->addButton("                   Volver                    ", ButtonActions::GO_MAIN_MENU_FROM_MENU);
+		}
+
+		gameDisplay.newScore = false;
 
 		createBackgroundMenu(window);
 	}
@@ -178,6 +190,10 @@ private:
 			game.deleteMap();
 			gameDisplay.setGameState(GameDisplayController::GameState::MAIN_MENU);
 			GameMusic::playTitleMusic();
+			break;
+
+		case ButtonActions::GO_MAIN_MENU_FROM_MENU:
+			gameDisplay.setGameState(GameDisplayController::GameState::MAIN_MENU);
 			break;
 
 		case ButtonActions::QUIT:
@@ -202,13 +218,14 @@ private:
 
 public:
 	void menuActions(GameDisplayController& gameDisplay, Game& game) {
-		// Manage window events and pass a callback to manage this menu buttons
-		gameDisplay.manageGameInterface(gameDisplay, std::bind(&FinalScoreInterface::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
 		if (gameDisplay.scoreReprocessDisplay) {
 			gameDisplay.scoreReprocessDisplay = false;
 			createFinalScoreInterface(*gameDisplay.getWindow(), game, gameDisplay);
 		}
 		draw(*gameDisplay.getWindow());
+
+		// Manage window events and pass a callback to manage this menu buttons
+		gameDisplay.manageGameInterface(gameDisplay, std::bind(&FinalScoreInterface::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
 	}
 
 	void updateLevel(Game& game) {

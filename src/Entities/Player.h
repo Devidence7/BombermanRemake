@@ -22,6 +22,7 @@ public:
 	// Sprites for GUI
 	sf::Sprite playerHead;
 	sf::Sprite playerHead2;
+	sf::Sprite shadow;
 	sf::Sprite playerCurrentAbility;
 
 	bool isBombKeyPresed = false;
@@ -101,6 +102,8 @@ public:
 	sf::FloatRect getGlobalBounds() const override;
 
 	Entity& playerUpdateColor();
+
+	virtual void drawEntity(sf::RenderWindow& window) override;
 
 	void setCanThroughBomb(bool _ctb) override{
 		return; //No se puede asignar la posibilidad de atravesar bombas sin action

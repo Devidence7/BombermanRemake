@@ -41,3 +41,9 @@ public:
 
 	sf::IntRect& getDeathSprite(int i);
 };
+
+
+class EntityShadowTexture : public TextureVector {
+public:
+	EntityShadowTexture();
+};

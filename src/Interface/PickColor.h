@@ -21,7 +21,9 @@ class PickColorMenu {
 	};
 
 	sf::Texture texture;
+	sf::Texture textureBomberman;
 	sf::Sprite background;
+	sf::Sprite backgroundBomberman;
 	sf::RectangleShape menuBackground;
 	sf::RectangleShape menuBackgroundShadow;
 	sf::RectangleShape menuBackgroundShadow1;
@@ -72,6 +74,15 @@ public:
 
 		texture.loadFromFile("../textures/interface/Background_orange_squares.png");
 		texture.setRepeated(true);
+
+    	/*textureBomberman.loadFromFile(MAIN_MENU_BACKGROUND_PATH);
+		backgroundBomberman.setTexture(textureBomberman);
+		float resizeVal = std::fmax((float)window.getSize().x / textureBomberman.getSize().x, (float)window.getSize().y / textureBomberman.getSize().y);
+		backgroundBomberman.setScale(resizeVal, resizeVal);
+		window.clear(sf::Color::Black);
+		window.draw(backgroundBomberman);
+		window.display();*/
+
 		background.setColor(sf::Color(255, 255, 0, 5));
 		background.setTexture(texture);
 		background.setScale(sf::Vector2f(2, 2));
@@ -166,6 +177,7 @@ private:
 	}
 
 	void draw(sf::RenderWindow& window, Game& game) {
+		// window.draw(backgroundBomberman);
 		window.draw(background);
 
 		window.draw(menuBackgroundShadow2);
@@ -173,6 +185,7 @@ private:
 		window.draw(menuBackgroundShadow);
 		window.draw(menuBackground);
 
+		window.draw(*menu);
 	
 		window.draw(playerHead1);
 		window.draw(playerHeadColor1);
@@ -181,18 +194,20 @@ private:
 			window.draw(playerHeadColor2);
 		}
 
-		window.draw(*menu);
+		
 	}
 
 public:
 	void menuActions(GameDisplayController& gameDisplay, Game& game) {
-		// Manage window events and pass a callback to manage this menu buttons
-		gameDisplay.manageGameInterface(gameDisplay, std::bind(&PickColorMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
 		if (gameDisplay.colorPickerReprocessDisplay) {
 			gameDisplay.colorPickerReprocessDisplay = false;
 			buildPickUpMenu(*gameDisplay.getWindow(), gameDisplay, game);
 		}
 		draw(*gameDisplay.getWindow(), game);
+
+		// Manage window events and pass a callback to manage this menu buttons
+		gameDisplay.manageGameInterface(gameDisplay, std::bind(&PickColorMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
+
 	}
 };
 

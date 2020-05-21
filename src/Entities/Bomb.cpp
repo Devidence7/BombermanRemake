@@ -21,6 +21,32 @@ Bomb::Bomb(std::shared_ptr<PlayerEntity> p) : Entity() {
 	setTexture(bombTexture->getTexture());
 
 	setOrigin(24,24);
+
+	shadow.setTexture(TextureStorage::getEntityShadowTexture().getTexture());
+	shadow.setColor(sf::Color(255, 255, 255, 150));
+}
+
+void Bomb::drawEntity(sf::RenderWindow& window) {
+	if (!onFlight) {
+		window.draw(*this);
+	}
+	else {
+		float flyingDistance = max(abs(endCenterFlight.x - initialCenterFlight.x), abs(endCenterFlight.y - initialCenterFlight.y));
+		float flyingPoint = max(abs(initialCenterFlight.x - getCenterPosition().x), abs(initialCenterFlight.y - getCenterPosition().y));
+		flyingPoint = (flyingPoint / flyingDistance) * 2.14 + 1;
+		float upMaxValue = flyingDistance < 50 ? 30 : 100;
+
+		float upValue = sin(flyingPoint) * upMaxValue;
+
+		setPosition(sf::Vector2f(getPosition().x, getPosition().y - upValue));
+		window.draw(*this);
+		setPosition(sf::Vector2f(getPosition().x, getPosition().y + upValue));
+	}
+}
+
+void Bomb::drawShadow(sf::RenderWindow& window) {
+	shadow.setPosition(this->getPosition().x + 3, this->getPosition().y + 33);
+	window.draw(shadow);
 }
 
 void Bomb::setExpiredEntity()
@@ -119,11 +145,11 @@ void Bomb::update()
 
 	if (onFlight) {
 		double velMult = GameTime::getTimeNow() - lastMove < 0.5 ? GameTime::getTimeNow() - lastMove : 0.5;
-		velMult *= 10;
+		velMult *= 8;
 		move(sf::Vector2f(velocity.x * velMult, velocity.y * velMult));
 		double module = moduleVector(positionObjetive - getPosition());
 
-		if (module < 3) {
+		if (module > cornerModuleBefore || module < 1) {
 			setPosition(positionObjetive);
 			rePutBomb = true;
 			onFlight = false;

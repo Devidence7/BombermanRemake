@@ -61,6 +61,8 @@ public:
 	bool endBattleReprocessDisplay = false;
 	bool gameInterfaceReprocessDisplay = false;
 	bool colorPickerReprocessDisplay = false;
+
+	bool newScore = false;
 	
 	/**
 	 * Constructor
@@ -88,7 +90,7 @@ public:
 		// CAMERA
 		menuView = sf::View(sf::FloatRect(0.f, 0.f, window->getSize().x, window->getSize().y));
 		camera = sf::View (sf::FloatRect(0.f, 0.f, window->getSize().x, window->getSize().y));
-		//camera.setViewport(sf::FloatRect(0.f, 0.2f, 1.f, 1.f));
+		camera.setViewport(sf::FloatRect(0.f, 0.1f, 1.f, 1.f));
 		playingGuiView = sf::View(sf::FloatRect(0.f, 0.f, window->getSize().x, window->getSize().y / 5));
 		playingGuiView.setViewport(sf::FloatRect(0.f, 0.f, 1.f, 0.2f));
 	}
@@ -195,6 +197,7 @@ public:
 				notifyChangeDisplay();
 				
 				camera.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
+				camera.setViewport(sf::FloatRect(0.f, 0.1f, 1.f, 1.f));
 				playingGuiView = sf::View(sf::FloatRect(0.f, 0.f, window->getSize().x, window->getSize().y / 5));
 				playingGuiView.setViewport(sf::FloatRect(0.f, 0.f, 1.f, 0.2f));
 

@@ -25,34 +25,34 @@ class MultiplayerMenu {
 
 		//VERSUS
 		//Dos jugadores
-			//Dos jugadores
-			PLVSIA,
-			PLVSPL,
-			//Tres jugadores
-			PL12IA,
-			PL21IA,
-			//Cuatro jugadores
-			PL13IA,
-			PL22IA,
+		//Dos jugadores
+		PLVSIA,
+		PLVSPL,
+		//Tres jugadores
+		PL12IA,
+		PL21IA,
+		//Cuatro jugadores
+		PL13IA,
+		PL22IA,
 
-			//TEAM
+		//TEAM
 
-				//Tres jugadores
-				PL1VS2IA,
-				PLVSPLIA,
-				PL2VS1IA,
-				//Cuatro jugadores
-				PL1VS3IA,
-				PLVSPL2IA,
-				PL2VS2IA,
-				PLIAVSPLIA,
-				//Maps
-				MAP_1,
-				MAP_2,
-				MAP_3,
+		//Tres jugadores
+		PL1VS2IA,
+		PLVSPLIA,
+		PL2VS1IA,
+		//Cuatro jugadores
+		PL1VS3IA,
+		PLVSPL2IA,
+		PL2VS2IA,
+		PLIAVSPLIA,
+		//Maps
+		MAP_1,
+		MAP_2,
+		MAP_3,
 
-				BACK,
-				QUIT
+		BACK,
+		QUIT
 
 	};
 
@@ -429,13 +429,14 @@ private:
 
 public:
 	void menuActions(GameDisplayController& gameDisplay, Game& game) {
-		// Manage window events and pass a callback to manage this menu buttons
-		gameDisplay.manageGameInterface(gameDisplay, std::bind(&MultiplayerMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
 		if (gameDisplay.multiplayerReprocessDisplay) {
 			gameDisplay.multiplayerReprocessDisplay = false;
 			createBackgroundMenu(*gameDisplay.getWindow());
 		}
 		draw(*gameDisplay.getWindow());
+
+		// Manage window events and pass a callback to manage this menu buttons
+		gameDisplay.manageGameInterface(gameDisplay, std::bind(&MultiplayerMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
 	}
 
 

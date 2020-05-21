@@ -29,3 +29,17 @@ sf::IntRect &WallTexture::getRectPillar(int stage)
 {
 	return this->frames[0 + 8 * stage];
 }
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//											SHADOW
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+WallShadowTexture::WallShadowTexture() {
+	if (!this->texture.loadFromFile("../textures/Entities/wallShadow.png")) {
+		throw ExceptionLoadImage("Imagen no cargada: ../textures/Entities/wallShadow.png");
+	}
+
+	this->frames.push_back(sf::IntRect(0, 0, 48, 15));
+}

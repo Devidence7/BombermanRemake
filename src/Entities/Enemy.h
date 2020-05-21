@@ -12,7 +12,7 @@ class EnemyEntity : public Entity {
 private:
 	EnemyTexture* enemyTexture;
 	LookingAtBi lookingDir = bRight;
-	
+	sf::Sprite shadow;
 
 	double spriteStartTime;
 	double spriteLastFrameTime;
@@ -21,9 +21,9 @@ private:
 	int currentFrame = 0;				// Current frame number
 	int spriteFrames = 4;				// Number of walking frames
 
-	double expiredspriteSpeed = 0.4;	// Time between dead frames
+	double expiredspriteSpeed = 0.2;	// Time between dead frames
 	double expiredTime = 1;				// Time for delete entity
-	int deadSpriteFrames = 3;
+	int deadSpriteFrames = 5;
 
 	bool dyingEntity = false;			// Starts entity dying animation
 
@@ -48,6 +48,8 @@ protected:
 public:
 	std::shared_ptr<EnemyEntity> me;
 	EnemyEntity(float difficultyLevel);
+
+	void drawShadow(sf::RenderWindow& window) override;
 
 	void startMovement();
 

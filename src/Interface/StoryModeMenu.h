@@ -98,6 +98,7 @@ private:
 				createNumPlayersMenu(*window);
 			gameDisplay.setGameState(GameDisplayController::GameState::PICK_COLOR);
 			gameDisplay.notifyChangeDisplay();
+			//delete(menu);
 			break;
 
 		case ButtonActions::NORMALLEVEL:
@@ -107,7 +108,7 @@ private:
 			createNumPlayersMenu(*window);
         	gameDisplay.setGameState(GameDisplayController::GameState::PICK_COLOR);
 			gameDisplay.notifyChangeDisplay();
-					
+			//delete(menu);
 			break;
 				
 		case ButtonActions::HARDLEVEL:
@@ -117,6 +118,7 @@ private:
 			//OptionsMenu::lastGameStateOptionsMenu = GameDisplayController::GameState::MULTIPLAYER_MENU;
 			gameDisplay.setGameState(GameDisplayController::GameState::PICK_COLOR);
 			gameDisplay.notifyChangeDisplay();
+			//delete(menu);
 			break;
 		
 
@@ -177,13 +179,14 @@ private:
 
 public:
 	void menuActions(GameDisplayController& gameDisplay, Game& game) {
-		// Manage window events and pass a callback to manage this menu buttons
-		gameDisplay.manageGameInterface(gameDisplay, std::bind(&StoryModeMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
 		if (gameDisplay.storyReprocessDisplay) {
 			gameDisplay.storyReprocessDisplay = false;
 			createBackgroundMenu(*gameDisplay.getWindow());
 		}
 		draw(*gameDisplay.getWindow());
+
+		// Manage window events and pass a callback to manage this menu buttons
+		gameDisplay.manageGameInterface(gameDisplay, std::bind(&StoryModeMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
 	}
 };
 

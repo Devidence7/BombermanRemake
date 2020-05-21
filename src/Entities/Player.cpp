@@ -226,6 +226,25 @@ Entity &PlayerEntity::playerUpdateColor()
 	return playerColorEntity;
 }
 
+void PlayerEntity::drawEntity(sf::RenderWindow& w) {
+	// Draw the player if they are not dead
+	if (!dead && !respawning) {
+		w.draw(*this);
+		w.draw(playerUpdateColor());
+	}
+
+	// Draw the bomb if they are carrying one
+	if (getBomb() != nullptr) {
+		auto bombpos = getBomb()->getPosition();
+		auto playerPos = getCenterPosition();
+
+		getBomb()->setPosition(playerPos.x, playerPos.y - getTextureRect().height + 10);
+		w.draw(*getBomb());
+		getBomb()->setPosition(bombpos);
+	}
+}
+
+
 void PlayerEntity::update() {
 	return;
 }

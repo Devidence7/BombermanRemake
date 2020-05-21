@@ -13,7 +13,7 @@
 #define MAX_NUMBER_OF_STAGES 3
 #define DEFAULT_NUM_OF_ENEMIES 10
 
-Level *level;
+Level* level;
 
 using namespace sf;
 
@@ -31,43 +31,43 @@ private:
 	int dimX = 25;
 
 	double lastCameraMovedTime;
-	
+
 	/*double timeLeft = 299;
 	double timeToShow=timeLeft;*/
-	
+
 	// Initialize textures
 	TextureStorage textureStorage;
 	int numEnemigos;
 	//MainMenu mainMenu;
 
 public:
-	
+
 	int stage;
 	GameOptions gameOptions;
-	bool debug=false;
-	bool timesUp=false;
+	bool debug = false;
+	bool timesUp = false;
 	bool samePlay = false;
 	int scoreForTheMoment = 0;
 
-Game(){
-	stage=1;
-	gameOptions.colorList = new sf::Color[10];
-	gameOptions.colorList[0] = sf::Color(255,255,255,225);
-	gameOptions.colorList[1] = sf::Color(0,0,0,225);
-	gameOptions.colorList[2] = sf::Color(255,0,0,225);
-	gameOptions.colorList[3] = sf::Color(0,255,0,225);
-	gameOptions.colorList[4] = sf::Color(0,0,255,225);
-	gameOptions.colorList[5] = sf::Color(150,0,150,225);
-	gameOptions.colorList[6] = sf::Color(0,150,150,225);
-	gameOptions.colorList[7] = sf::Color(150,150,0,225);
-	gameOptions.colorList[8] = sf::Color(100,150,40,225);
-	gameOptions.colorList[9] = sf::Color(40,100,150,225);
-}
-	int gameTime(){
+	Game() {
+		stage = 1;
+		gameOptions.colorList = new sf::Color[10];
+		gameOptions.colorList[0] = sf::Color(255, 255, 255, 225);
+		gameOptions.colorList[1] = sf::Color(0, 0, 0, 225);
+		gameOptions.colorList[2] = sf::Color(255, 0, 0, 225);
+		gameOptions.colorList[3] = sf::Color(0, 255, 0, 225);
+		gameOptions.colorList[4] = sf::Color(0, 0, 255, 225);
+		gameOptions.colorList[5] = sf::Color(150, 0, 150, 225);
+		gameOptions.colorList[6] = sf::Color(0, 150, 150, 225);
+		gameOptions.colorList[7] = sf::Color(150, 150, 0, 225);
+		gameOptions.colorList[8] = sf::Color(100, 150, 40, 225);
+		gameOptions.colorList[9] = sf::Color(40, 100, 150, 225);
+	}
+	int gameTime() {
 		return GlobalTime::timeLeft;
 	}
 
-	void insertPlayers(UserKeyPress &userKeyPress, int numPlayers, int numIAPlayer) {
+	void insertPlayers(UserKeyPress& userKeyPress, int numPlayers, int numIAPlayer) {
 		int numPlayersInserter = 0;
 
 		for (int i = 0; i < numPlayers; i++) {
@@ -89,24 +89,24 @@ Game(){
 			default:
 				break;
 			}
-			
+
 		}
-		
+
 
 		for (int i = 0; i < numIAPlayer; i++) {
 			switch (i) {
 
 			case 0:
 				cout << "IA 1" << endl;
-				PLayers::addIAPlayer(userKeyPress.getPlayerControls(i + 1), (dimX+1) * SIZE_PILLAR, 0, debug, gameOptions.playersAndTeams[numPlayersInserter]);
-				level->checkSpawn((dimX) * SIZE_PILLAR, 0);
+				PLayers::addIAPlayer(userKeyPress.getPlayerControls(i + 1), (dimX + 1) * SIZE_PILLAR, 0, debug, gameOptions.playersAndTeams[numPlayersInserter]);
+				level->checkSpawn((dimX)*SIZE_PILLAR, 0);
 				numPlayersInserter++;
 				break;
 
 			case 1:
 				cout << "IA 2" << endl;
-				PLayers::addIAPlayer(userKeyPress.getPlayerControls(i + 1), (dimX+1) * SIZE_PILLAR, (dimY - 1)*SIZE_PILLAR, debug, gameOptions.playersAndTeams[numPlayersInserter]);
-				level->checkSpawn((dimX) * SIZE_PILLAR, (dimY - 1) * SIZE_PILLAR);
+				PLayers::addIAPlayer(userKeyPress.getPlayerControls(i + 1), (dimX + 1) * SIZE_PILLAR, (dimY - 1) * SIZE_PILLAR, debug, gameOptions.playersAndTeams[numPlayersInserter]);
+				level->checkSpawn((dimX)*SIZE_PILLAR, (dimY - 1) * SIZE_PILLAR);
 				numPlayersInserter++;
 				break;
 
@@ -123,38 +123,42 @@ Game(){
 		}
 	}
 
-	void startNewGame(sf::RenderWindow& window, GameDisplayController &gameDisplay){
+	void startNewGame(sf::RenderWindow& window, GameDisplayController& gameDisplay) {
 		// Restart time parameters
 		GameTime::startGameTime();
 
 		//	cout<<gameOptions.numPlayers<<endl;
-		int numEnemies=DEFAULT_NUM_OF_ENEMIES*gameOptions.difLevel+(stage/0.5);
-		if(!debug && gameOptions.historyMode){
+		int numEnemies = DEFAULT_NUM_OF_ENEMIES * gameOptions.difLevel + (stage / 0.5);
+		if (!debug && gameOptions.historyMode) {
 			if (!samePlay) {
 				stage = 1;
 			}
-
-			Enemies::insertarEnemigos(dimX, dimY,numEnemies,stage,gameOptions.difLevel);
+			Enemies::insertarEnemigos(dimX, dimY, numEnemies, stage, gameOptions.difLevel);
 		}
 		else if (!gameOptions.historyMode) {
 			stage = gameOptions.selectedStage;
 		}
 		//insertEnemies(7);
+		if (level != nullptr) {
+			delete(level);
+		}
+
 		level = new Level(dimX, dimY, debug, stage, &gameOptions);
 		PointsDestroyMap::resetMap();
 		//Enemies::insertarEnemigos(dimX, dimY);
-		if(debug){
+		if (debug) {
 			insertPlayers(*gameDisplay.userKeyPress, 1, 1);
-		}else{
+		}
+		else {
 			cout << "Numero de Players: " << gameOptions.numPlayers << endl;
-			cout<<"Numero de IAs: "<<gameOptions.numIAPlayers<<endl;
+			cout << "Numero de IAs: " << gameOptions.numIAPlayers << endl;
 			insertPlayers(*gameDisplay.userKeyPress, gameOptions.numPlayers, gameOptions.numIAPlayers);
 		}
-	
+
 		gameDisplay.notifyChangeDisplay();
 		unsigned int pixelsX = window.getSize().x;
 		unsigned int pixelsY = window.getSize().y;
-			
+
 		sf::View view(sf::FloatRect(0.f, 0.f, pixelsX, pixelsY));
 		view.move(sf::Vector2f(0, -48));
 		window.setView(view);
@@ -174,91 +178,85 @@ Game(){
 		scoreForTheMoment = 0;
 	}
 
-	void restartGame(sf::RenderWindow& window,GameDisplayController &gameDisplay){
-		timesUp=false;
-		cout<<"Enemigos antes de reiniciar: "<<Enemies::getVectorEnemies().size()<<endl;
+	void restartGame(sf::RenderWindow& window, GameDisplayController& gameDisplay) {
+		timesUp = false;
+		
+		cout << "Enemigos antes de reiniciar: " << Enemies::getVectorEnemies().size() << endl;
 		deleteMap();
-		
-		cout<<"Enemigos después de reiniciar : "<<Enemies::getVectorEnemies().size()<<endl;
+
+		cout << "Enemigos después de reiniciar : " << Enemies::getVectorEnemies().size() << endl;
 		//startNewGame(window,gameDisplay);
-		
 	}
 
-	void passLevel(){
-		if(stage<=MAX_NUMBER_OF_STAGES){
-			stage=stage+1;
+	void passLevel() {
+		if (stage <= MAX_NUMBER_OF_STAGES) {
+			stage = stage + 1;
 		}
-		else{
-			
+		else {
 			//PANTALLA DE VICTORIA FINAL
-
 		}
-
-		
 	}
 
-	void newStage(sf::RenderWindow& window,GameDisplayController &gameDisplay){
+	void newStage(sf::RenderWindow& window, GameDisplayController& gameDisplay) {
 		deleteMap();
 		stage++;
-		Enemies::insertarEnemigos(dimX, dimY,DEFAULT_NUM_OF_ENEMIES*gameOptions.difLevel+(stage/0.5),stage,gameOptions.difLevel);
-		startNewGame(window,gameDisplay);
-		
+		Enemies::insertarEnemigos(dimX, dimY, DEFAULT_NUM_OF_ENEMIES * gameOptions.difLevel + (stage / 0.5), stage, gameOptions.difLevel);
+		startNewGame(window, gameDisplay);
+
 	}
 
-	void deleteMap(){
-		delete level;
+	void deleteMap() {
+		//delete level;
 		auto it = Enemies::getVectorEnemies().begin();
 		while (it != Enemies::getVectorEnemies().end()) {
-				it->reset();
-				it = Enemies::getVectorEnemies().erase(it);
+			it->reset();
+			it = Enemies::getVectorEnemies().erase(it);
 		}
 		Enemies::getVectorEnemies().clear();
-		auto it2 =  PLayers::getVectorPlayer().begin();
-		while (it2 !=  PLayers::getVectorPlayer().end()) {
-				it2->reset();
-				it2 = PLayers::getVectorPlayer().erase(it2);
+		auto it2 = PLayers::getVectorPlayer().begin();
+		while (it2 != PLayers::getVectorPlayer().end()) {
+			it2->reset();
+			it2 = PLayers::getVectorPlayer().erase(it2);
 		}
 		PLayers::getVectorPlayer().clear();
-
-		
 	}
 
-	void updatePlayers( GameDisplayController& gameDisplay) {
-		int ply=1;
+	void updatePlayers(GameDisplayController& gameDisplay) {
+		int ply = 1;
 		for (Player_ptr player : PLayers::getVectorPlayer()) {
-			switch(ply){
-				case 1:
-					player->updatePlayer();
-				
-					break;
-				
-				case 2:
-					player->updatePlayer();
-					//level->checkSpawn(SIZE_PILLAR,(dimY-1)*SIZE_PILLAR);
-					break;
+			switch (ply) {
+			case 1:
+				player->updatePlayer();
 
-				case 3:
-					player->updatePlayer();
-					//level->checkSpawn((dimX-1)*SIZE_PILLAR,SIZE_PILLAR);
-					break;
+				break;
 
-				case 4:
-					player->updatePlayer();
-					//level->checkSpawn((dimX-1)*SIZE_PILLAR,(dimY-1)*SIZE_PILLAR);
-					break;
-				
-				default:
+			case 2:
+				player->updatePlayer();
+				//level->checkSpawn(SIZE_PILLAR,(dimY-1)*SIZE_PILLAR);
+				break;
+
+			case 3:
+				player->updatePlayer();
+				//level->checkSpawn((dimX-1)*SIZE_PILLAR,SIZE_PILLAR);
+				break;
+
+			case 4:
+				player->updatePlayer();
+				//level->checkSpawn((dimX-1)*SIZE_PILLAR,(dimY-1)*SIZE_PILLAR);
+				break;
+
+			default:
 				break;
 
 			}
-			
+
 
 			//player->updatePlayer();
 			player->playerActions();
 
 			level->checkAndFixCollisions(player);
 			colissionWithEnemies(player);
-			
+
 			ply++;
 		}
 	}
@@ -266,34 +264,31 @@ Game(){
 	void moveCamera(GameDisplayController& gameDisplay) {
 		gameDisplay.updateCamera();
 		double moveTime = GameTime::getTimeNow() - lastCameraMovedTime;
-		
+
 		moveTime = fmax(fmin(moveTime, 1), 0);
 		moveTime *= 60;
 
 		if (PLayers::getVectorPlayer().size() == 1) {
+			sf::Vector2f distCenter2Player = PLayers::getVectorPlayer()[0]->getCenterPosition() - gameDisplay.camera.getCenter();
 
-			
-
-			sf::Vector2f distCenter2Player =  PLayers::getVectorPlayer()[0]->getCenterPosition() - gameDisplay.camera.getCenter();
-			
 			sf::Vector2f squareRadius = sf::Vector2f(gameDisplay.getWindow()->getSize().x / 6, gameDisplay.getWindow()->getSize().y / 6);
-			if (distCenter2Player.x > squareRadius.x) {
+			if (distCenter2Player.x > squareRadius.x && gameDisplay.camera.getCenter().x + gameDisplay.camera.getSize().x / 2 < level->sizeLevel().x * SIZE_PILLAR + SIZE_PILLAR * 2) {
 				gameDisplay.camera.setCenter(sf::Vector2f(gameDisplay.camera.getCenter().x + ((distCenter2Player.x - squareRadius.x) / 20) * moveTime, gameDisplay.camera.getCenter().y));
 			}
-			else if (distCenter2Player.x < -squareRadius.x) {
+			else if (distCenter2Player.x < -squareRadius.x && gameDisplay.camera.getCenter().x - gameDisplay.camera.getSize().x / 2 > -SIZE_PILLAR * 2) {
 				gameDisplay.camera.setCenter(sf::Vector2f(gameDisplay.camera.getCenter().x + ((distCenter2Player.x + squareRadius.x) / 20) * moveTime, gameDisplay.camera.getCenter().y));
 			}
 
-			if (distCenter2Player.y > squareRadius.y) {
+			if (distCenter2Player.y > squareRadius.y && gameDisplay.camera.getCenter().y + gameDisplay.camera.getSize().y / 2 < level->sizeLevel().y * SIZE_PILLAR + SIZE_PILLAR * 2) {
 				gameDisplay.camera.setCenter(sf::Vector2f(gameDisplay.camera.getCenter().x, gameDisplay.camera.getCenter().y + ((distCenter2Player.y - squareRadius.y) / 20) * moveTime));
 			}
-			else if (distCenter2Player.y < -squareRadius.y) {
+			else if (distCenter2Player.y < -squareRadius.y && gameDisplay.camera.getCenter().y - gameDisplay.camera.getSize().y / 2 > -SIZE_PILLAR * 2) {
 				gameDisplay.camera.setCenter(sf::Vector2f(gameDisplay.camera.getCenter().x, gameDisplay.camera.getCenter().y + ((distCenter2Player.y + squareRadius.y) / 20) * moveTime));
 			}
 		}
 		else {
 			gameDisplay.getWindow()->getSize();
-			
+
 			sf::Vector2f zoomLessRadius = sf::Vector2f(gameDisplay.getWindow()->getSize().x / 6, gameDisplay.getWindow()->getSize().y / 6);
 			sf::Vector2f zoomMoreRadius = sf::Vector2f(zoomLessRadius.x * 2, zoomLessRadius.y * 2);
 			sf::Vector2f squareRadius = sf::Vector2f(zoomLessRadius.x * 0.5, zoomLessRadius.y * 0.5);
@@ -324,11 +319,10 @@ Game(){
 				if (distCenter2Player.x > zoomMoreRadius.x || distCenter2Player.x < -zoomMoreRadius.x) {
 					gameDisplay.camera.zoom(1.0 + 0.005 * moveTime);
 				}
-
 				if (zoomValue < 1.2 && (distCenter2Player.y < zoomLessRadius.y && distCenter2Player.y > -zoomLessRadius.y) && (distCenter2Player.x < zoomLessRadius.x && distCenter2Player.x > -zoomLessRadius.x)) {
 					gameDisplay.camera.zoom(1.0 - 0.001 * moveTime);
 				}
-				
+
 			}
 		}
 
@@ -336,7 +330,7 @@ Game(){
 		gameDisplay.updateCamera();
 	}
 
-	void update(GameDisplayController &gameDisplay) {
+	void update(GameDisplayController& gameDisplay) {
 		level->update();
 		PointsDestroyMap::updateMap();
 
@@ -351,6 +345,7 @@ Game(){
 				}
 				else {
 					gameDisplay.setGameState(GameDisplayController::FINAL_SCORE);
+					gameDisplay.newScore = true;
 					gameDisplay.notifyChangeDisplay();
 				}
 			}
@@ -387,54 +382,42 @@ Game(){
 					gameDisplay.notifyChangeDisplay();
 				}
 			}
-			
+
 		}
-		
+
 
 		updatePlayers(gameDisplay);
 		updateEnemies();
 
-		int totalLives=0;
+		int totalLives = 0;
 		for (Player_ptr player : PLayers::getVectorPlayer()) {
-			totalLives+=player->getLives();
+			totalLives += player->getLives();
 		}
-		
-		if(totalLives==0){	
+
+		if (totalLives == 0) {
+			samePlay = false;
 			gameDisplay.setGameState(GameDisplayController::GameState::GAME_OVER);
 		}
 
 		//Update camera:
 		moveCamera(gameDisplay);
-		
-		GlobalTime::timeLeft = GlobalTime::totalTime -GameTime::getTimeNow();;
+
+		GlobalTime::timeLeft = GlobalTime::totalTime - GameTime::getTimeNow();;
 		if (GlobalTime::timeLeft <= 0 && !timesUp) {
-			timesUp=true;
+			timesUp = true;
 			//gameDisplay.setGameState(GameDisplayController::GameState::VICTORY);
-			Enemies::insertarEnemigosExtra(dimX,dimY,5);
+			Enemies::insertarEnemigosExtra(dimX, dimY, 5);
 		}
 	}
 
 	void drawPlayers(sf::RenderWindow& w) {
 
 		for (Player_ptr player : PLayers::getVectorPlayer()) {
-			if (!player->dead && !player->respawning) {
-				w.draw(*player);
-				w.draw(player->playerUpdateColor());
-			}
-
-			
-			if (player->getBomb() != nullptr) {
-				auto bombpos = player->getBomb()->getPosition();
-				auto playerPos = player->getCenterPosition();
-
-				player->getBomb()->setPosition(playerPos.x, playerPos.y - player->getTextureRect().height + 10);
-				w.draw(*player->getBomb());
-				player->getBomb()->setPosition(bombpos);
-			}
+			player->drawEntity(w);
 
 #ifdef HITBOX_DEBUG_MODE
 			PlayerIA_ptr pIA;
-			if((pIA = std::dynamic_pointer_cast<PlayerIAEntity>(player)) != nullptr){
+			if ((pIA = std::dynamic_pointer_cast<PlayerIAEntity>(player)) != nullptr) {
 				pIA->drawMovements(w);
 			}
 			player->drawEntityHitbox(w);
@@ -444,7 +427,9 @@ Game(){
 
 	void drawEnemies(sf::RenderWindow& w) {
 		for (Enemy_ptr e : Enemies::getVectorEnemies()) {
-			w.draw(*e);
+			e->drawShadow(w);
+			e->drawEntity(w);
+			
 #ifdef HITBOX_DEBUG_MODE
 			e->drawEntityHitbox(w);
 			//		e->generateMovements();
@@ -460,14 +445,14 @@ Game(){
 			e2->drawMovements(w);
 #endif
 		}
-		
+
 	}
 
 	void colissionWithEnemies(Entity_ptr eCol) {
 		for (Enemy_ptr e : Enemies::getVectorEnemies()) {
-			if(e->CanHurtPlayer() && e->collision(*eCol)){
+			if (e->CanHurtPlayer() && e->collision(*eCol)) {
 				e->onCollission(eCol, e, CollisionType::NONE);
-			} 
+			}
 		}
 	}
 
@@ -476,47 +461,47 @@ Game(){
 	void updateEnemies() {
 		auto it = Enemies::getVectorEnemies().begin();
 		int counter = 0;
-		
+
 		while (it != Enemies::getVectorEnemies().end()) {
-			
+
 			// Update the enemies.
 			(*it)->update();
 			level->checkAndFixCollisions((*it));
-			
+
 			if ((*it)->getExpiredEntity()) {
 				it->reset();
 				it = Enemies::getVectorEnemies().erase(it);
 				numEnemigos--;
-				if(numEnemigos==0){
+				if (numEnemigos == 0) {
 					//level->Level::tel.openTeleporter();
 				}
 			}
-			
+
 			else {
 				++it;
 				counter++;
 			}
-			
+
 		}
 		auto it2 = Enemies::getVectorEnemiesExtra().begin();
 		counter = 0;
 		while (it2 != Enemies::getVectorEnemiesExtra().end()) {
-			
+
 			// Update the enemies.
 			(*it2)->update();
 			level->checkAndFixCollisions((*it2));
-			
+
 			if ((*it2)->getExpiredEntity()) {
 				it2->reset();
 				it2 = Enemies::getVectorEnemies().erase(it2);
-				
+
 			}
-			
+
 			else {
 				++it2;
 				counter++;
 			}
-			
+
 		}
 	}
 
@@ -526,5 +511,5 @@ Game(){
 		drawPlayers(w);
 	}
 
-	
+
 };

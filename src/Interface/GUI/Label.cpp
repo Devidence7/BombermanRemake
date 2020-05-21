@@ -16,10 +16,13 @@ Label::Label(const sf::String& string)
 	setSelectable(false);
 }
 
-void Label::setText(const sf::String& string)
+void Label::setText(const sf::String& string, bool updateGeo)
 {
 	m_text.setString(string);
-	updateGeometry();
+	if (updateGeo) {
+		updateGeometry();
+	}
+	
 }
 
 const sf::String& Label::getText() const

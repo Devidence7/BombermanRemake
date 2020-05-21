@@ -3,6 +3,7 @@
 #include "GameMusic.h"
 #include "../Exceptions/ExceptionsGame.hpp"
 #include "../Logic/Random.h"
+#include <deque>
 
 class GameSounds {
 	static float soundVolume;
@@ -11,7 +12,7 @@ class GameSounds {
 
 	static unsigned int currentSound;
 
-	static sf::Sound sound[MAX_SOUND];
+	static std::deque<sf::Sound> soundInstances;
 	static sf::SoundBuffer soundBuffer[MAX_SOUND];
 
 	// TODO: MUTEX REQUIRED
@@ -34,9 +35,9 @@ class GameSounds {
 	static void playTrack(int track) {
 		unsigned int currentIndice = getCurrentIndice();
 
-		sound[currentIndice].setBuffer(soundBuffer[track]);
-		sound[currentIndice].setVolume(2 * soundVolume / 12.5 * GameMusic::getMasterVolume() / 100);
-		sound[currentIndice].play();
+		soundInstances.push_back(sf::Sound(soundBuffer[track]));
+		soundInstances.back().setVolume(2 * soundVolume / 12.5 * GameMusic::getMasterVolume() / 100);
+		soundInstances.back().play();
 	}
 
 public:
@@ -52,6 +53,19 @@ public:
 
 		insertSoundTrack("../music/Sounds/Teleporter/Sound Effects (283).wav", 6);
 		insertSoundTrack("../music/Sounds/Teleporter/Sound Effects (142).wav", 7);
+	}
+
+	static void Update(void) {
+		for (int i = 0; i < soundInstances.size(); ++i) {
+			if (soundInstances[i].getStatus() == sf::Sound::Stopped) {
+				soundInstances.erase(soundInstances.begin() + i);
+				--i;
+			}
+		}
+	}
+
+	static unsigned int Count() {
+		soundInstances.size();
 	}
 
 
