@@ -201,12 +201,12 @@ void Layout::onKeyPressed(sf::Keyboard::Key key)
 	// TODO: if in a text box, focus next widget on return
 	// TODO: make this more versatile
 
-	if (key == Theme::nextWidgetKey || (key == sf::Keyboard::Key::Tab && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)))
+	if (key == Theme::nextWidgetKey || key == sf::Keyboard::Key::S || key == sf::Keyboard::Key::Right || key == sf::Keyboard::Key::D || (key == sf::Keyboard::Key::Tab && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)))
 	{
 		if (!focusNextWidget())
 			focusNextWidget();
 	}
-	else if (key == Theme::previousWidgetKey || key == sf::Keyboard::Key::Tab)
+	else if (key == Theme::previousWidgetKey || key == sf::Keyboard::Key::Left || key == sf::Keyboard::Key::A || key == sf::Keyboard::Key::W || key == sf::Keyboard::Key::Tab)
 	{
 		if (!focusPreviousWidget())
 			focusPreviousWidget();
