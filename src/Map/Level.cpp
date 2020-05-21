@@ -722,6 +722,43 @@ bool Level::canTakeBomb(Player_ptr p) {
 	return false;
 }
 
+bool Level::TakeBomb(Player_ptr p, sf::Vector2i BombPosition) {
+	Bomb_ptr bomb;
+	if (isValidCell(BombPosition) && (bomb = std::dynamic_pointer_cast<Bomb>(getCellMiniMapObject(BombPosition))) != nullptr) {
+		p->takeBomb(bomb);
+		getCellMiniMapObject(BombPosition).reset();
+		return true;
+	}
+	return false;
+}
+
+bool Level::KickBomb(Player_ptr p, sf::Vector2i BombPosition) {
+	Bomb_ptr bomb;
+	if (isValidCell(BombPosition) && (bomb = std::dynamic_pointer_cast<Bomb>(getCellMiniMapObject(BombPosition))) != nullptr) {
+		sf::Vector2f dirThrow;
+		switch (p->lastMovement) {
+		case LookingAt::down:
+			dirThrow.y = 1;
+			break;
+		case LookingAt::up:
+			dirThrow.y = -1;
+			break;
+		case LookingAt::left:
+			dirThrow.x = -1;
+			break;
+		case LookingAt::right:
+			dirThrow.x = 1;
+			break;
+		}
+
+		bomb->setOnMove(dirThrow);
+		return true;
+	}
+	return false;
+}
+
+
+
 void Level::ThrowBomb(Player_ptr p, Bomb_ptr b) {
 	sf::Vector2i dirThrow;
 	switch (p->lastMovement) {

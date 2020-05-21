@@ -21,7 +21,6 @@ void PlayerIAEntity::setCollision(std::shared_ptr<Entity> col){
 		currentState = RUNAWAY;
 		canPutABombSafe(getMapCoordinates(getCenterPosition()),me, movements);
 	}else{
-	
 		decildetState();
 	}
 }
@@ -239,13 +238,26 @@ void PlayerIAEntity::decildetState(){
 	std::list<ANode_Ptr> movementes2PE;
 	std::vector<sf::Vector2i> objetivePlayers;
 	std::vector<sf::Vector2i> objetivesPE;
+	LookingAt lAt;
 	float pointKill = 0;
+	float pointAvility = 0;
+
 	float pointFollow = 0;
 	float pointFarm = 0;
 	float pointGoToPU = 0;
 	if(somePlayerEnemyOnRange(getMapCoordinates(getCenterPosition()), getPowerOfBombs(), team) && haveBombs()){
 		pointKill = sg._KillStruct.ansiansDeKill * 3;
 	}
+	if(this->CanGrabBomb()){
+		if(somePlayerEnemyOnRangeThrow(getEntityMapCoordinates(), getPowerOfBombs() + 5, team, lAt) && haveBombs()){
+			pointAvility =  sg._KillStruct.ansiansDeKill * 3 + 3;
+			pointKill = sg._KillStruct.ansiansDeKill * 3;
+		}
+	}else if(this->CanKickBom()){
+
+	}
+
+
 	selectEnemyPlayers(me, objetivePlayers, this->sg._PerseguirStruct.RangoVision);
 	if(objetivePlayers.size() > 0){
 		if(pathFindingGoWithCare(this->getEntityMapCoordinates(), objetivePlayers , movementes2Players, me, 0)){
@@ -271,7 +283,22 @@ void PlayerIAEntity::decildetState(){
 		movements = movementes2Farm;
 		this->currentState = StateIA::FARM;	
 	}else if(pointKill > 0 &&  (pointKill < pointGoToPU || pointGoToPU == 0)){
-		this->currentState = StateIA::KILL;	
+		if(pointAvility > 0){
+			switch (this->actionAvaible)
+			{
+			case ActionsAvalible::GRAB_BOMB:
+				currentState = StateIA::THROWING_BOMB;
+				movements.clear();
+				currentMovement = nullptr;
+				lastMovement = lAt;
+				break;
+			
+			default:
+				break;
+			}
+		}else{
+			this->currentState = StateIA::KILL;	
+		}
 	}else if(pointGoToPU > 0){
 		this->currentState = StateIA::CATCH_PU;	
 		movements = movementes2PE;
@@ -282,6 +309,19 @@ void PlayerIAEntity::decildetState(){
 		this->currentState = StateIA::NON_OBJETIVE;	
 	}
 	
+}
+
+void PlayerIAEntity::ThrowingState(){
+	if(BombTaked != nullptr){
+		TryThrowBomb();
+		currentState = StateIA::NON_OBJETIVE;
+		currentMovement = nullptr;
+		movements.clear();
+	}else if(nullptr == Level::getCellMiniMapObject(getEntityMapCoordinates())){
+		Level::addBomb(me);
+	}else{
+		TryGrabBomb();
+	}
 }
 
 /* Determina estado actual */
@@ -298,20 +338,18 @@ void PlayerIAEntity::updateState(){
 	switch (currentState)
 	{
 	case StateIA::NON_OBJETIVE:
-		//Si tiene en rango a algun jugador
-		/* if(sg.havePatrolStruct){
-			currentState = StateIA::PATROL;
-		}else   */
-		//if(somePlayerEnemyOnRange(currentPosMap, getPowerOfBombs(), team)){
-		//	currentState =  StateIA::KILL;
-		//}else {
 			decildetState();
-		//}
-
-		break;
+			break;
 	case StateIA::PERSEGUIR:
-		if(somePlayerEnemyOnRange(currentPosMap, getPowerOfBombs(), team)){
-				currentState =  StateIA::KILL;
+		//if(somePlayerEnemyOnRange(currentPosMap, getPowerOfBombs(), team)){
+		//		currentState =  StateIA::KILL;
+		//}
+		LookingAt at;
+		if(somePlayerEnemyOnRangeThrow(currentPosMap, getPowerOfBombs(), team, at)){
+			currentState = StateIA::THROWING_BOMB;
+			lastMovement = at;
+			movements.clear();
+			currentMovement = nullptr;
 		}
 	case  StateIA::FARM:
 		if(movements.size() < 1 && currentMovement == nullptr){
@@ -319,7 +357,11 @@ void PlayerIAEntity::updateState(){
 		}
 		break;
 	case StateIA::KILL:
-
+	break;
+	case StateIA::THROWING_BOMB:
+		std::cout << "Throwing\n";
+		ThrowingState();
+		break;
 	case StateIA::CATCH_PU:
 		if((movements.size() < 1 && currentMovement == nullptr) || (movements.size() > 1 && std::dynamic_pointer_cast<PowerUp>(Level::getCellMiniMapObject(movements.back()->getPosition())) != nullptr)){
 			currentState = StateIA::NON_OBJETIVE;
@@ -377,8 +419,11 @@ bool PlayerIAEntity::updatePlayer(){
 }
 
 
-bool PlayerIAEntity::canKickBomb(){
-	sf::Vector2i lookinCell = getEntityMapCoordinates();
+bool PlayerIAEntity::canKickBomb(sf::Vector2i &lookinCell){
+	if(actionAvaible != ActionsAvalible::KICK_BOM){
+		return false;
+	}
+	lookinCell = getEntityMapCoordinates();
 	switch (lastMovement)
 	{
 	case LookingAt::down :
@@ -404,8 +449,87 @@ bool PlayerIAEntity::canKickBomb(){
 	return false;
 }
 
+
+bool PlayerIAEntity::canGrabBombIA(sf::Vector2i &lookinCell){
+	if(actionAvaible != ActionsAvalible::GRAB_BOMB){
+		return false;
+	}	
+	lookinCell = getEntityMapCoordinates();
+	Bomb_ptr b = std::dynamic_pointer_cast<Bomb>(Level::getCellMiniMapObject(lookinCell));
+	if(b == nullptr){
+		switch (lastMovement)
+		{
+		case LookingAt::down :
+			lookinCell.y++;
+			break;
+		case LookingAt::up :
+			lookinCell.y--;
+			break;
+		case LookingAt::left :
+			lookinCell.x--;
+			break;
+		case LookingAt::right :
+			lookinCell.x++;
+			break;
+
+		default:
+			break;
+		}
+		if(Level::isValidCell(lookinCell)){
+			b = std::dynamic_pointer_cast<Bomb>(Level::getCellMiniMapObject(lookinCell));
+		}
+	}
+	if(b!= nullptr){
+		std::cout <<"HAy una bomba!!!\n";
+	}
+	return b != nullptr;
+}
+
 bool PlayerIAEntity::canThrowBomb(){
 	return this->BombTaked != nullptr && canThrowBombSafe(getEntityMapCoordinates(), std::dynamic_pointer_cast<Bomb>(BombTaked)->bombPower, this->lastMovement);
+}
+
+
+bool PlayerIAEntity::TryGrabBomb(){
+	sf::Vector2i bombPosition;
+	if(BombTaked != nullptr || !canGrabBombIA(bombPosition)){
+		return false;
+	}
+	std::cout <<"intentando coger bomba\n";
+	return Level::TakeBomb(me, bombPosition);
+}
+
+bool PlayerIAEntity::TryKickBomb(){
+	sf::Vector2i bombPosition;
+	if(!canKickBomb(bombPosition)){
+		return false;
+	}
+	return Level::KickBomb(me, bombPosition);
+}
+
+bool PlayerIAEntity::TryThrowBomb(){
+	if(!this->canThrowBomb()){
+		return false;
+	}
+	Level::ThrowBomb(me, std::dynamic_pointer_cast<Bomb>(BombTaked));
+}
+
+bool PlayerIAEntity::useAvility(){
+	bool used = false;
+	if(BombTaked != nullptr){
+		return TryThrowBomb();
+	}
+	switch (actionAvaible)
+	{
+	case ActionsAvalible::GRAB_BOMB:
+		used = TryGrabBomb();
+		break;
+	case ActionsAvalible::KICK_BOM:
+		used = TryKickBomb();
+	default:
+		break;
+	}
+	return used;
 }
 
 //Upadate

@@ -86,6 +86,12 @@ public:
 		return ((scoreCamino/sg._KillStruct.imprudencia) > prob);
 	}
 
-	bool canKickBomb();
+	bool canKickBomb(sf::Vector2i &lookinCell);
+	bool canGrabBombIA(sf::Vector2i &lookinCell);
 	bool canThrowBomb();
+	bool TryGrabBomb();
+	bool TryKickBomb();
+	bool TryThrowBomb();
+	void ThrowingState();
+	bool useAvility();
 };

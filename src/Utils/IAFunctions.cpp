@@ -417,9 +417,56 @@ bool somePlayerEnemyOnRange(sf::Vector2i pos, int rangeBomb, int team){
     bool onRange = false;
     for(Player_ptr p : PLayers::getVectorPlayer()){
         if(p->team != team && !p->respawning && !p->dead){
-            onRange = isOnRange(pos, getMapCoordinates(p->getCenterPosition()), rangeBomb);
+            onRange = isOnRangeBomb(pos, getMapCoordinates(p->getCenterPosition()), rangeBomb);
             if(onRange){break;}
         }
+    }
+    return onRange;
+}
+
+bool somePlayerEnemyOnRangeThrow(sf::Vector2i pos, int rangeBomb, int team, LookingAt &lAt){
+    bool onRange = false;
+    sf::Vector2i bomPos = getFallBomb(pos, rangeBomb, LookingAt::down);
+    lAt = LookingAt::down;
+    onRange = somePlayerEnemyOnRange(bomPos, rangeBomb, team);
+    
+    if(!onRange){
+        lAt = LookingAt::up;
+        bomPos = getFallBomb(pos, rangeBomb, LookingAt::up);
+        onRange = somePlayerEnemyOnRange(bomPos, rangeBomb, team);
+    }
+    if(!onRange){
+        lAt = LookingAt::left;
+        bomPos = getFallBomb(pos, rangeBomb, LookingAt::left);
+        onRange = somePlayerEnemyOnRange(bomPos, rangeBomb, team);
+    }
+    if(!onRange){
+        lAt = LookingAt::right;
+        bomPos = getFallBomb(pos, rangeBomb, LookingAt::right);
+        onRange = somePlayerEnemyOnRange(bomPos, rangeBomb, team);
+    }
+    return onRange;
+}
+
+bool somePlayerEnemyOnRangeKick(sf::Vector2i pos, int rangeBomb, int team,  LookingAt &lAt){
+    bool onRange = false;
+    sf::Vector2i bomPos;
+    
+    if(canKickBombSafe(bomPos, rangeBomb, LookingAt::down)){
+        lAt = LookingAt::down;
+        onRange = somePlayerEnemyOnRange(bomPos, rangeBomb, team);
+    }
+    if(!onRange && canKickBombSafe(bomPos, rangeBomb, LookingAt::up)){
+        lAt = LookingAt::up;
+        onRange = somePlayerEnemyOnRange(bomPos, rangeBomb, team);
+    }
+    if(!onRange && canKickBombSafe(bomPos, rangeBomb, LookingAt::left)){
+        lAt = LookingAt::left;
+        onRange = somePlayerEnemyOnRange(bomPos, rangeBomb, team);
+    }
+    if(!onRange && canKickBombSafe(bomPos, rangeBomb, LookingAt::right)){
+        lAt = LookingAt::right;
+        onRange = somePlayerEnemyOnRange(bomPos, rangeBomb, team);
     }
     return onRange;
 }
@@ -497,6 +544,48 @@ bool canPutABombSafe(sf::Vector2i posBomb, Player_ptr e, std::list<ANode_Ptr> &m
     return false;
 }
 
+sf::Vector2i  getFallBomb(sf::Vector2i currentPosition, int rangeBomb, const LookingAt &l){
+    sf::Vector2i fallPosition(currentPosition.x,currentPosition.y);
+    sf::Vector2i desplaceOnCollision(0, 0);
+    switch (l)
+    {
+    case LookingAt::down:
+        fallPosition.y += 5;
+        desplaceOnCollision.y = 1;
+        break;
+    case LookingAt::up:
+        fallPosition.y -= 5;
+        desplaceOnCollision.y = -1;
+        break;
+    case LookingAt::left:
+        fallPosition.x -= 5;
+        desplaceOnCollision.x = -1;
+        break;
+    case LookingAt::right:
+        fallPosition.x += 5;
+        desplaceOnCollision.x = 1;
+        break;
+
+    default:
+        break;
+    }
+    sf::Vector2i sLevel = Level::sizeLevel();
+    fallPosition.x = max(min(fallPosition.x, sLevel.x-1), 0);
+    fallPosition.y = max(min(fallPosition.y, sLevel.y-1), 0);
+    Entity_ptr e = Level::getCellMiniMapObject(fallPosition);
+    while (e != nullptr && std::dynamic_pointer_cast<PowerUp>(e) == nullptr)
+    {
+        fallPosition = fallPosition + desplaceOnCollision;
+        if(!Level::isValidCell(fallPosition))   { //Se ha salido -> rebotar
+            desplaceOnCollision = -desplaceOnCollision;
+            fallPosition = fallPosition + desplaceOnCollision; //recuperar posicion anterior ya determinada como colision
+            fallPosition = fallPosition + desplaceOnCollision;
+        }
+        e = Level::getCellMiniMapObject(fallPosition);
+    }
+    return fallPosition;
+}
+
 
 bool canThrowBombSafe(sf::Vector2i currentPosition, int rangeBomb, const LookingAt &l){
     sf::Vector2i fallPosition(currentPosition.x,currentPosition.y);
@@ -538,7 +627,7 @@ bool canThrowBombSafe(sf::Vector2i currentPosition, int rangeBomb, const Looking
         e = Level::getCellMiniMapObject(fallPosition);
     }
     
-    return abs(currentPosition.x - fallPosition.x)  > rangeBomb || abs(currentPosition.y - fallPosition.y)  > rangeBomb;
+    return abs(currentPosition.x - fallPosition.x)  > 1 || abs(currentPosition.y - fallPosition.y)  > 1 ;
 }
 
 

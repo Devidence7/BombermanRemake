@@ -42,6 +42,10 @@ inline bool isOnRange(sf::Vector2i pos,sf::Vector2i objetive, int rangeBomb){
     return abs(pos.x - objetive.x) < rangeBomb && abs(pos.y - objetive.y) < rangeBomb;
 }
 
+inline bool isOnRangeBomb(sf::Vector2i pos,sf::Vector2i objetive, int rangeBomb){
+    return (abs(pos.x - objetive.x) < rangeBomb && pos.y == objetive.y) || ((abs(pos.y - objetive.y) < rangeBomb) &&  pos.x == objetive.x);
+}
+
 
 
 
@@ -62,8 +66,11 @@ void selectEnemyPlayers(std::shared_ptr<Entity> IA, std::vector<sf::Vector2i> &o
 void tryKillAEnemy(std::shared_ptr<Entity> IA, std::list<ANode_Ptr> &movements, int rangeVision, int costDestroy);
 bool somePlayerEnemyOnVision(sf::Vector2i pos, int rangeVision, int team);
 bool somePlayerEnemyOnRange(sf::Vector2i pos, int rangeBomb, int team);
+bool somePlayerEnemyOnRangeThrow(sf::Vector2i pos, int rangeBomb, int team, LookingAt &lAt);
+bool somePlayerEnemyOnRangeKick(sf::Vector2i pos, int rangeBomb, int team, LookingAt &lAt);
 bool canPutABombSafe(sf::Vector2i posBomb, std::shared_ptr<PlayerEntity> e, std::list<ANode_Ptr> &movements);
 bool canThrowBombSafe(sf::Vector2i currentPosition, int rangeBomb, const LookingAt &l);
+sf::Vector2i  getFallBomb(sf::Vector2i currentPosition, int rangeBomb, const LookingAt &l);
 bool canKickBombSafe(sf::Vector2i currentPosition, int rangeBomb, const LookingAt &l);
 Interst_ptr generateIntersetPointDestroyer(sf::Vector2i posPossibleBom);
 bool pathFinderDestroy2Farm(const sf::Vector2i &positionEnemy, std::list<ANode_Ptr> &path, std::shared_ptr<Entity>  e, int costAddDestroy);
