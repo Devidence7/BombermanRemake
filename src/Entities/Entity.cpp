@@ -116,6 +116,10 @@ void Entity::setObjetive(sf::Vector2f pos){
 	positionObjetive = Level::getMapCellCorner(pos);
 }
 
+sf::Vector2f Entity::getObjetive(){
+	return positionObjetive;
+}
+
 // PRE: this esta en colision con eCollisioning
 //Devuelve cuanto penetra eCollisioning en this en el eje X; Y se considera centrado
 float Entity::moveOnX(const std::shared_ptr<Entity> eCollisioning)

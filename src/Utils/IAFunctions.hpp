@@ -39,11 +39,11 @@ bool WillDead(sf::Vector2i posPLayer, float timeToPutNewBomb);
 int getFiresOnPlayer(sf::Vector2i posPLayer, float timeToPutNewBomb);
 
 inline bool isOnRange(sf::Vector2i pos,sf::Vector2i objetive, int rangeBomb){
-    return abs(pos.x - objetive.x) < rangeBomb && abs(pos.y - objetive.y) < rangeBomb;
+    return abs(pos.x - objetive.x) <= rangeBomb && abs(pos.y - objetive.y) <= rangeBomb;
 }
 
 inline bool isOnRangeBomb(sf::Vector2i pos,sf::Vector2i objetive, int rangeBomb){
-    return (abs(pos.x - objetive.x) < rangeBomb && pos.y == objetive.y) || ((abs(pos.y - objetive.y) < rangeBomb) &&  pos.x == objetive.x);
+    return (abs(pos.x - objetive.x) <= rangeBomb && pos.y == objetive.y) || ((abs(pos.y - objetive.y) <= rangeBomb) &&  pos.x == objetive.x);
 }
 
 

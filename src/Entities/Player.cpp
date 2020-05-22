@@ -290,7 +290,7 @@ void PlayerEntity::realizeActions()
 bool PlayerEntity::playerActions() {
 	bool playerBOMB = sf::Keyboard::isKeyPressed(playerControls.UseBomb);
 	bool actionButton = sf::Keyboard::isKeyPressed(playerControls.MakeAction);
-if(!respawning){
+if(!respawning && !this->dead && !this->expiredEntity){
 	if (!playerBOMB)
 	{
 		isBombKeyPresed = false;

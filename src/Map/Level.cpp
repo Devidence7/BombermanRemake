@@ -27,6 +27,8 @@ Level::Level(int dimX, int dimY, bool debug, int stage,GameOptions* gameOptions)
 	
 	Level::stage = stage;
 	
+	this->onFlightBombs.clear();
+	this->entities.clear();
 	// Reserve space for faster insert, delete of the entities
 	entities.reserve(10000);
 	// Create map matrix:

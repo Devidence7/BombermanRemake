@@ -9,6 +9,8 @@
 
 #define SHOOTING_DISTANCE 5
 
+#define HITBOX_DEBUG_MODE
+
 struct GameOptions {
 	int numPlayers = 0;
 	double difLevel = 1;

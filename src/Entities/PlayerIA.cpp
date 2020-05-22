@@ -25,6 +25,13 @@ void PlayerIAEntity::setCollision(std::shared_ptr<Entity> col){
 	}
 }
 
+void PlayerIAEntity::setExpiredEntity(){
+	PlayerEntity::setExpiredEntity();
+	this->currentState = StateIA::NON_OBJETIVE;
+	this->currentMovement = nullptr;
+	this->movements.clear();
+}
+
 //	void realizeActions();
 
 bool PlayerIAEntity::playerActions(){
@@ -65,6 +72,9 @@ void PlayerIAEntity::drawMovements(sf::RenderWindow &w)
 // }
 
 void PlayerIAEntity::generatePathStates(){
+	if(this->expiredEntity || this->dead || this->respawning){
+		return;
+	}
 	updateState();
 	bool generatedNewObj = false;
 	switch (currentState)
@@ -158,6 +168,10 @@ bool PlayerIAEntity::updateVelocity(){
 		}
 	}
 	
+	if(StateIA::THROWING_BOMB == currentState){
+		lastMovement = objetiveTo;
+		velocity = sf::Vector2f(0,0);
+	}
 
 }
 
@@ -276,30 +290,20 @@ void PlayerIAEntity::decildetState(){
 	}
 
 	//std::cout << "Points K " << pointKill << " - Farm "  << pointFarm << " - GPU " << pointGoToPU << " - Follow " << pointFollow  <<"\n"; 
-	if(pointFollow > 0 && (pointFollow < pointFarm || pointFarm == 0) && (pointFollow < pointKill || pointKill==0) && (pointFollow < pointGoToPU || pointGoToPU == 0)){
+	if(pointFollow != 0 && (pointFollow < pointFarm || pointFarm == 0) && (pointFollow < pointKill || pointKill==0) && (pointFollow < pointGoToPU || pointGoToPU == 0)){
 		movements = movementes2Players;
 		this->currentState = StateIA::PERSEGUIR;	
-	}else if(pointFarm > 0 && (pointFarm < pointKill || pointKill == 0 ) &&  (pointFarm < pointGoToPU || pointGoToPU == 0)){
+	}else if(pointFarm != 0 && (pointFarm < pointKill || pointKill == 0 ) &&  (pointFarm < pointGoToPU || pointGoToPU == 0)){
 		movements = movementes2Farm;
 		this->currentState = StateIA::FARM;	
-	}else if(pointKill > 0 &&  (pointKill < pointGoToPU || pointGoToPU == 0)){
-		if(pointAvility > 0){
-			switch (this->actionAvaible)
-			{
-			case ActionsAvalible::GRAB_BOMB:
-				currentState = StateIA::THROWING_BOMB;
-				movements.clear();
-				currentMovement = nullptr;
-				lastMovement = lAt;
-				break;
-			
-			default:
-				break;
-			}
-		}else{
-			this->currentState = StateIA::KILL;	
+	}else if(pointKill != 0 &&  (pointKill < pointGoToPU || pointGoToPU == 0)){
+		this->currentState = StateIA::KILL;	
+		if(pointAvility != 0 && haveBombs()){
+			this->currentState = StateIA::THROWING_BOMB;
+			objetiveTo = lAt;
+			//movements.clear();
 		}
-	}else if(pointGoToPU > 0){
+	}else if(pointGoToPU != 0){
 		this->currentState = StateIA::CATCH_PU;	
 		movements = movementes2PE;
 	}else{
@@ -312,25 +316,63 @@ void PlayerIAEntity::decildetState(){
 }
 
 void PlayerIAEntity::ThrowingState(){
-	if(BombTaked != nullptr){
-		TryThrowBomb();
-		currentState = StateIA::NON_OBJETIVE;
-		currentMovement = nullptr;
-		movements.clear();
+	movements.clear();
+	currentMovement = nullptr;
+
+	if(justActionDone){
+		if((GameTime::getTimeNow() - lastActionDone) > 0.5){
+			justActionDone = false;
+			lastActionDone = GameTime::getTimeNow();
+			canPutABombSafe(getEntityMapCoordinates(), me, movements);
+			if(movements.size() < 1){
+				currentState = StateIA::NON_OBJETIVE;
+			}else{
+				currentState = StateIA::RUNAWAY;
+			}
+		}
+	}else if(BombTaked != nullptr){
+		if(GameTime::getTimeNow() - lastActionDone > frameSpeed){
+			lastMovement = objetiveTo;
+			
+			currentMovement = nullptr;
+			TryThrowBomb();
+			movements.clear();
+			lastActionDone = GameTime::getTimeNow();
+			justActionDone = true;
+		}
 	}else if(nullptr == Level::getCellMiniMapObject(getEntityMapCoordinates())){
 		Level::addBomb(me);
+		lastActionDone = GameTime::getTimeNow();
 	}else{
-		TryGrabBomb();
+		if(GameTime::getTimeNow() - lastActionDone > frameSpeed){
+			TryGrabBomb();
+			lastActionDone = GameTime::getTimeNow();
+		}
 	}
 }
 
 /* Determina estado actual */
 void PlayerIAEntity::updateState(){
 	sf::Vector2i currentPosMap = getMapCoordinates(getCenterPosition());
+	sf::Vector2i currentMovemPos;
+	if(currentMovement != nullptr){
+	 	currentMovemPos = currentMovement->getPosition();
+	}
 	OmittedAreas.clear();
 	generateOmitedZones(currentPosMap, OmittedAreas, sg._PerseguirStruct.RangoVision);
-	
-	if(currentState != StateIA::RUNAWAY && std::dynamic_pointer_cast<Bomb>(Level::getCellMiniMapObject(getEntityMapCoordinates()))  != nullptr){
+	for(Entity_ptr e : BombsAsociated){
+		Bomb_ptr b = std::dynamic_pointer_cast<Bomb>(e);
+		if(b->onFlight){
+			this->OmittedAreas.push_back(OmittedArea(getMapCoordinates(b->getObjetive()) ));
+		}
+	}
+	if(/* currentState != StateIA::THROWING_BOMB && */ movements.size() 
+				&& (currentMovement == nullptr || currentMovemPos.x == currentPosMap.x && currentMovemPos.y == currentMovemPos.y) < 1 
+				&& WillDead(currentPosMap, -1)){
+		currentMovement = nullptr;
+		movements.clear();
+		currentState = StateIA::NON_OBJETIVE;
+	}else if(currentState != StateIA::THROWING_BOMB && currentState != StateIA::RUNAWAY && std::dynamic_pointer_cast<Bomb>(Level::getCellMiniMapObject(currentPosMap)) != nullptr ){
 		currentMovement = nullptr;
 		movements.clear();
 		currentState = StateIA::NON_OBJETIVE;
@@ -341,25 +383,26 @@ void PlayerIAEntity::updateState(){
 			decildetState();
 			break;
 	case StateIA::PERSEGUIR:
-		//if(somePlayerEnemyOnRange(currentPosMap, getPowerOfBombs(), team)){
-		//		currentState =  StateIA::KILL;
-		//}
+		if(somePlayerEnemyOnRange(currentPosMap, getPowerOfBombs(), team)){
+			currentState =  StateIA::KILL;
+		}
 		LookingAt at;
 		if(somePlayerEnemyOnRangeThrow(currentPosMap, getPowerOfBombs(), team, at)){
 			currentState = StateIA::THROWING_BOMB;
-			lastMovement = at;
-			movements.clear();
-			currentMovement = nullptr;
+			objetiveTo = at;
+			//movements.clear();
 		}
 	case  StateIA::FARM:
 		if(movements.size() < 1 && currentMovement == nullptr){
 			putABomb();
+		}else if(isObjetiveFarmOnRange()){
+			//movements.clear();
+			currentState = StateIA::THROWING_BOMB;
 		}
 		break;
 	case StateIA::KILL:
 	break;
 	case StateIA::THROWING_BOMB:
-		std::cout << "Throwing\n";
 		ThrowingState();
 		break;
 	case StateIA::CATCH_PU:
@@ -390,7 +433,11 @@ void PlayerIAEntity::startStates(){
 	// }
 }
 
+
 void PlayerIAEntity::checkExploteRemote(){
+	if(this->expiredEntity || this->dead || this->respawning){
+		return;
+	}
 	if(this->actionAvaible == ActionsAvalible::REMOTE_BOMB && this->BombsAsociated.size() > 0){
 		if(!isOnRangeExplosion(BombsAsociated.front()->getEntityMapCoordinates(), getCenterPosition(), getGlobalBounds() ,getPowerOfBombs())){
 			BombsAsociated.front()->setExpiredEntity();
@@ -398,11 +445,15 @@ void PlayerIAEntity::checkExploteRemote(){
 	}
 }
 bool PlayerIAEntity::updatePlayer(){
+	if(this->dead){
+		return false;
+	}
 
-	checkExploteRemote();
-	generatePathStates();
-	
-	updateMovement();
+	if(!this->expiredEntity && !this->dead && !this->respawning){
+		checkExploteRemote();
+		generatePathStates();
+		updateMovement();
+	}
 	updateVelocity();
 	// Call animate function to change current sprite if needed.
 	animate(velocity);
@@ -479,9 +530,6 @@ bool PlayerIAEntity::canGrabBombIA(sf::Vector2i &lookinCell){
 			b = std::dynamic_pointer_cast<Bomb>(Level::getCellMiniMapObject(lookinCell));
 		}
 	}
-	if(b!= nullptr){
-		std::cout <<"HAy una bomba!!!\n";
-	}
 	return b != nullptr;
 }
 
@@ -495,7 +543,6 @@ bool PlayerIAEntity::TryGrabBomb(){
 	if(BombTaked != nullptr || !canGrabBombIA(bombPosition)){
 		return false;
 	}
-	std::cout <<"intentando coger bomba\n";
 	return Level::TakeBomb(me, bombPosition);
 }
 
@@ -508,10 +555,84 @@ bool PlayerIAEntity::TryKickBomb(){
 }
 
 bool PlayerIAEntity::TryThrowBomb(){
-	if(!this->canThrowBomb()){
+	//if(!this->canThrowBomb()){
+	//	return false;
+	//}
+	Level::ThrowBomb(me, std::dynamic_pointer_cast<Bomb>(BombTaked));
+	BombTaked.reset();
+	bombThrowed = true;
+	lastThrowedTime = GameTime::getTimeNow();
+	currentFrame = 0;
+}
+bool PlayerIAEntity::isObjetiveOnRange(){
+	if(movements.size() < 1 || !haveBombs()  || actionAvaible != ActionsAvalible::GRAB_BOMB){
 		return false;
 	}
-	Level::ThrowBomb(me, std::dynamic_pointer_cast<Bomb>(BombTaked));
+	ANode_Ptr obj = movements.back();
+	sf::Vector2i objPosition = obj->getPosition();
+	sf::Vector2i positionIA = getEntityMapCoordinates();
+	sf::Vector2i sLevel = Level::sizeLevel();
+	bool OnRange = false;
+	if(isOnRangeBomb(sf::Vector2i(min(positionIA.x + 5, sLevel.x) , positionIA.y), objPosition, getPowerOfBombs())){
+		//lanzar hacia dch
+		OnRange = true;
+		objetiveTo = LookingAt::right;
+	}
+	if(isOnRangeBomb(sf::Vector2i(max(positionIA.x - 5, 1) , positionIA.y), objPosition, getPowerOfBombs())){
+		//lanzar hacia izq
+		OnRange = true;
+		objetiveTo = LookingAt::left;
+	}
+	
+	if(isOnRangeBomb(sf::Vector2i(positionIA.x, min(positionIA.y + 5, sLevel.y) ), objPosition, getPowerOfBombs())){
+		//lanzar abajo
+		OnRange = true;
+		objetiveTo = LookingAt::down;
+	}
+	if(isOnRangeBomb(sf::Vector2i(positionIA.x, max(positionIA.y - 5, 1) ), objPosition, getPowerOfBombs())){
+		//lanzar arriba
+		OnRange = true;
+		objetiveTo = LookingAt::up;
+	}
+	return OnRange;
+}
+
+
+bool PlayerIAEntity::isObjetiveFarmOnRange(){
+	if(movements.size() < 1 || !haveBombs()  || actionAvaible != ActionsAvalible::GRAB_BOMB){
+		return false;
+	}
+	ANode_Ptr obj = movements.back();
+	sf::Vector2i objPosition = obj->getPosition();
+	sf::Vector2i positionIA = getEntityMapCoordinates();
+	sf::Vector2i sLevel = Level::sizeLevel();
+	bool OnRange = false;
+	sf::Vector2i fallPossR(min(positionIA.x + 5, sLevel.x-2) , positionIA.y);
+	sf::Vector2i fallPossL(max(positionIA.x - 5, 1) , positionIA.y);
+	sf::Vector2i fallPossU(positionIA.x, max(positionIA.y - 5, 1));
+	sf::Vector2i fallPossD(positionIA.x, min(positionIA.y + 5, sLevel.y - 2));
+
+	if(fallPossR.x == objPosition.x && fallPossR.y == objPosition.y){
+		//lanzar hacia dch
+		OnRange = true;
+		objetiveTo = LookingAt::right;
+	}else if(fallPossL.x == objPosition.x && fallPossL.y == objPosition.y){
+		//lanzar hacia izq
+		OnRange = true;
+		objetiveTo = LookingAt::left;
+	}
+	
+	if(fallPossD.x == objPosition.x && fallPossD.y == objPosition.y){
+		//lanzar abajo
+		OnRange = true;
+		objetiveTo = LookingAt::down;
+	}
+	if(fallPossU.x == objPosition.x && fallPossU.y == objPosition.y){
+		//lanzar arriba
+		OnRange = true;
+		objetiveTo = LookingAt::up;
+	}
+	return OnRange;
 }
 
 bool PlayerIAEntity::useAvility(){

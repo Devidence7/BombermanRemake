@@ -19,7 +19,10 @@ public:
 	StateIA currentState = StateIA::NON_OBJETIVE;
 	sf::Vector2f lastPositionKnowed;
 	PatrolState p;
+	LookingAt objetiveTo;
 	int IAPlayer;
+	bool justActionDone = false;
+	double lastActionDone = 0;
 	const double prob=0.5;
 
 	/*,pos
@@ -35,7 +38,7 @@ public:
 		sg.readIA(path);
 	}
 //	sf::FloatRect getGlobalBounds() const override; Modificar??
-
+	void setExpiredEntity() override;
 //	void update() override;
 	void setCollision(std::shared_ptr<Entity> e) override;
 	void drawMovements(sf::RenderWindow &w);
@@ -94,4 +97,7 @@ public:
 	bool TryThrowBomb();
 	void ThrowingState();
 	bool useAvility();
+	bool isObjetiveOnRange();
+	bool isObjetiveFarmOnRange();
+
 };

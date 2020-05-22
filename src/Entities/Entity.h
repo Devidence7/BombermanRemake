@@ -132,7 +132,7 @@ public:
 	}
 
 	void setObjetive(sf::Vector2f pos);
-
+	sf::Vector2f getObjetive();
 
 	virtual sf::FloatRect getGlobalBounds() const;
 	virtual sf::FloatRect getGlobalBoundsCollisioner() const;
