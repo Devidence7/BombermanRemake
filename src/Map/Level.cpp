@@ -400,10 +400,6 @@ bool Level::createFire(int type, int posX, int posY, Player_ptr p) {
 	// Get the object in cell
 	Entity_ptr e = getCellMiniMapObject(getMapCoordinates(posX, posY));
 
-	if (std::dynamic_pointer_cast<Teleporter>(e) != nullptr) {
-		Enemies::insertarEnemigosExtraTeleport(e->getPosition(), 3);
-	}
-
 	if (e && e->getIsFireDestroyable() && !e->getFireCanGoThroght()) {
 		e->setExpiredEntity();
 		addEntity(e);
@@ -484,6 +480,7 @@ void Level::checkAndFixCollisions(Entity_ptr eCollisioning) {
 	bool horizontal = false;
 	bool vertical = false;
 	sf::Vector2i position2(position.x, position.y);
+
 	//ver posibilidad colision horizontal
 	if (position_plus.x != position.x) {
 		//sobre sale por la dch
@@ -496,7 +493,7 @@ void Level::checkAndFixCollisions(Entity_ptr eCollisioning) {
 		horizontal = true;
 	}
 
-	//ver posiblida colision vertical
+	//ver posiblidad colision vertical
 	if (position_plus.y != position.y) {
 		//sobre sale por la dch
 		position2.y++;

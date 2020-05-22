@@ -125,7 +125,8 @@ float Entity::moveOnX(const std::shared_ptr<Entity> eCollisioning)
 	sf::Vector2f position = eCollisioning->getCenterPosition();
 	sf::FloatRect body = eCollisioning->getGlobalBounds();
 	sf::Vector2f position2 = this->getCenterPosition();
-	sf::FloatRect body2 = this->getGlobalBoundsCollisioner();
+	// sf::FloatRect body2 = this->getGlobalBoundsCollisioner();
+	sf::FloatRect body2 = this->getGlobalBounds();
 	if(!body2.intersects(body)){
 		return 0;
 	}

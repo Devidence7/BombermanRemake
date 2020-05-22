@@ -123,6 +123,10 @@ sf::Vector2f Bomb::getCenterPosition() {
 	return this->sf::Sprite::getPosition();
 }
 
+sf::Vector2f Bomb::getCenterPosition() const {
+	return this->sf::Sprite::getPosition();
+}
+
 void Bomb::update()
 {
 	// If it is time to explote:
@@ -184,14 +188,8 @@ double Bomb::getExplosionTimeLeft() {
 
 sf::FloatRect Bomb::getGlobalBounds() const
 {
-	sf::FloatRect dim = sf::Sprite::getGlobalBounds();
-	if (!onMove) {
-		return sf::FloatRect(dim.left + 3, dim.top + 3, dim.width - 6, dim.height - 6);
-	}
-	else {
-		return sf::FloatRect(dim.left + 18, dim.top + 18, dim.width - 36, dim.height - 36);
-	}
-	
+	sf::Vector2f pos = getCenterPosition();
+	return sf::FloatRect(pos.x - 24, pos.y - 24, 48, 48);
 }
 
 Fire::Fire(Player_ptr p, int type ) : Entity()
