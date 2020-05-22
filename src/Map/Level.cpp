@@ -422,6 +422,18 @@ bool Level::createFire(int type, int posX, int posY, Player_ptr p) {
 	}
 
 	if (!e || e->getFireCanGoThroght()) {
+
+		Fire_ptr previusFire;
+		if ((previusFire = std::dynamic_pointer_cast<Fire>(e)) != nullptr) {
+			if (type == 2 || type == 3 || type == 5 || type == 6) {
+				// If there is a previous fire and we are a end type dont override type
+				type = previusFire->explosionType;
+			}
+			else if (previusFire->explosionType == 0) {
+				type = 0;
+			}
+		}
+
 		e = nullptr;
 		Entity_ptr f = std::make_shared<Fire>(Fire(p, type));
 		f->setPosition(posX, posY);
@@ -486,6 +498,7 @@ void Level::checkAndFixCollisions(Entity_ptr eCollisioning) {
 	bool horizontal = false;
 	bool vertical = false;
 	sf::Vector2i position2(position.x, position.y);
+
 	//ver posibilidad colision horizontal
 	if (position_plus.x != position.x) {
 		//sobre sale por la dch
@@ -498,7 +511,7 @@ void Level::checkAndFixCollisions(Entity_ptr eCollisioning) {
 		horizontal = true;
 	}
 
-	//ver posiblida colision vertical
+	//ver posiblidad colision vertical
 	if (position_plus.y != position.y) {
 		//sobre sale por la dch
 		position2.y++;
