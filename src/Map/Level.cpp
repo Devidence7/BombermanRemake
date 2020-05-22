@@ -427,6 +427,9 @@ bool Level::createFire(int type, int posX, int posY, Player_ptr p) {
 				// If there is a previous fire and we are a end type dont override type
 				type = previusFire->explosionType;
 			}
+			else if (previusFire->explosionType == 0) {
+				type = 0;
+			}
 		}
 
 		e = nullptr;
