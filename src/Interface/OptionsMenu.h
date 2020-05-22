@@ -60,8 +60,12 @@ private:
 	int waitingForKeyPlayer = 1;
 	ButtonActions waitingForKeyKey;
 
+	double lastBlickTime = 0;
+	double blickSpeed = 0.5;
+	bool isLetterInvisible = false;
+
 	GameGUI::HorizontalBoxLayout* hboxQuit = nullptr;
-	GameGUI::FormLayout *f_Controls;
+	GameGUI::FormLayout* f_Controls;
 	GameGUI::HorizontalBoxLayout* hbox_Controls;
 	GameGUI::HorizontalBoxLayout* hbox2_Controls;
 
@@ -136,7 +140,7 @@ private:
 	}
 
 
-	void createControlsMenu(sf::RenderWindow& window, GameDisplayController &gameDisplay) {
+	void createControlsMenu(sf::RenderWindow& window, GameDisplayController& gameDisplay) {
 		menu = new GameGUI::Menu(window);
 		// GameGUI::VerticalBoxLayout* vbox = menu->addVerticalBoxLayout();
 
@@ -158,9 +162,9 @@ private:
 
 		hbox2_Controls = menu->addHorizontalBoxLayout();
 		//hbox2_Controls->addButton("Player 1", ButtonActions::PLAYER1_CONTROLS);
-		
+
 		//hbox2_Controls->addButton("Player 2", ButtonActions::PLAYER2_CONTROLS);
-		
+
 		if (waitingForKeyPlayer == 1) {
 			hbox2_Controls->add(new GameGUI::Label("Player 1"), ButtonActions::PLAYER1_CONTROLS);
 			hbox2_Controls->add(new GameGUI::Button("Player 2"), ButtonActions::PLAYER2_CONTROLS);
@@ -214,7 +218,7 @@ private:
 			b_action = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.MakeAction));
 			f_Controls->addRow("Ejecutar Accion", b_action, ButtonActions::P1_ACTION);
 		}
-		
+
 		createBackgroundMenu(window);
 		correctControlsMenu();
 		//centerElement(hbox);
@@ -281,7 +285,7 @@ private:
 		GameGUI::FormLayout* f = menu->addFormLayout();
 		f->add(new GameGUI::Label(" "));
 
-		auto *b1 = hbox->addButton("Audio", ButtonActions::AUDIO);
+		auto* b1 = hbox->addButton("Audio", ButtonActions::AUDIO);
 		b1->goDownDown = 2;
 		b1->transformableOptions = false;
 		//hbox->addButton("Graficos", ButtonActions::GRAPHICS);
@@ -324,14 +328,176 @@ private:
 		centerElement(hbox);
 	}
 
+	void writeUserKeys(GameDisplayController& gameDisplay) {
+		if (waitingForKeyPlayer == 1) {
+			b_up->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goUp));
+			b_down->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goDown));
+			b_left->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goLeft));
+			b_right->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goRight));
+			b_bomb->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.UseBomb));
+			b_action->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.MakeAction));
+		}
+		else {
+			b_up->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.goUp));
+			b_down->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.goDown));
+			b_left->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.goLeft));
+			b_right->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.goRight));
+			b_bomb->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.UseBomb));
+			b_action->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.MakeAction));
+		}
+	}
+
+	void cleanUserKey(GameDisplayController& gameDisplay) {
+		switch (waitingForKeyKey) {
+		case P1_UP:
+			b_up->setString(" ");
+			break;
+		case P1_DOWN:
+			b_down->setString(" ");
+			break;
+		case P1_LEFT:
+			b_left->setString(" ");
+			break;
+		case P1_RIGHT:
+			b_right->setString(" ");
+			break;
+		case P1_BOMB:
+			b_bomb->setString(" ");
+			break;
+		case P1_ACTION:
+			b_action->setString(" ");
+			break;
+		}
+	}
+
+	bool checkIfKeyIsInUse(GameDisplayController& gameDisplay, sf::Keyboard::Key& key) {
+		bool returnVal = false;
+
+		if (key == gameDisplay.userKeyPress->player1.goUp && !(waitingForKeyPlayer == 1 && waitingForKeyKey == P1_UP)) {
+			returnVal = true;
+		}
+		else if (key == gameDisplay.userKeyPress->player1.goDown && !(waitingForKeyPlayer == 1 && waitingForKeyKey == P1_DOWN)) {
+			returnVal = true;
+		}
+		else if (key == gameDisplay.userKeyPress->player1.goLeft && !(waitingForKeyPlayer == 1 && waitingForKeyKey == P1_LEFT)) {
+			returnVal = true;
+		}
+		else if (key == gameDisplay.userKeyPress->player1.goRight && !(waitingForKeyPlayer == 1 && waitingForKeyKey == P1_RIGHT)) {
+			returnVal = true;
+		}
+		else if (key == gameDisplay.userKeyPress->player1.UseBomb && !(waitingForKeyPlayer == 1 && waitingForKeyKey == P1_BOMB)) {
+			returnVal = true;
+		}
+		else if (key == gameDisplay.userKeyPress->player1.MakeAction && !(waitingForKeyPlayer == 1 && waitingForKeyKey == P1_ACTION)) {
+			returnVal = true;
+		}
+		else if (key == gameDisplay.userKeyPress->player2.goUp && !(waitingForKeyPlayer == 2 && waitingForKeyKey == P1_UP)) {
+			returnVal = true;
+		}
+		else if (key == gameDisplay.userKeyPress->player2.goDown && !(waitingForKeyPlayer == 2 && waitingForKeyKey == P1_DOWN)) {
+			returnVal = true;
+		}
+		else if (key == gameDisplay.userKeyPress->player2.goLeft && !(waitingForKeyPlayer == 2 && waitingForKeyKey == P1_LEFT)) {
+			returnVal = true;
+		}
+		else if (key == gameDisplay.userKeyPress->player2.goRight && !(waitingForKeyPlayer == 2 && waitingForKeyKey == P1_RIGHT)) {
+			returnVal = true;
+		}
+		else if (key == gameDisplay.userKeyPress->player2.UseBomb && !(waitingForKeyPlayer == 2 && waitingForKeyKey == P1_BOMB)) {
+			returnVal = true;
+		}
+		else if (key == gameDisplay.userKeyPress->player2.MakeAction && !(waitingForKeyPlayer == 2 && waitingForKeyKey == P1_ACTION)) {
+			returnVal = true;
+		}
+
+		return returnVal;
+	}
+
 	void userActions(sf::Event& event, sf::RenderWindow*& window, GameDisplayController& gameDisplay, Game& game) {
+		if (waitingForKey) {
+			if (event.type == sf::Event::KeyPressed) {
+				cout << gameDisplay.userKeyPress->getKeyName(event.key.code) << endl;
+				if (checkIfKeyIsInUse(gameDisplay, event.key.code)) {
+					GameSounds::buttonError();
+				}
+				else {
+					switch (waitingForKeyKey) {
+					case P1_UP:
+						b_up->setString(gameDisplay.userKeyPress->getKeyName(event.key.code));
+						if (waitingForKeyPlayer == 1) {
+							gameDisplay.userKeyPress->player1.goUp = (sf::Keyboard::Key)event.key.code;
+						}
+						else {
+							gameDisplay.userKeyPress->player2.goUp = (sf::Keyboard::Key)event.key.code;
+						}
+						break;
+					case P1_DOWN:
+						b_down->setString(gameDisplay.userKeyPress->getKeyName(event.key.code));
+						if (waitingForKeyPlayer == 1) {
+							gameDisplay.userKeyPress->player1.goDown = (sf::Keyboard::Key)event.key.code;
+						}
+						else {
+							gameDisplay.userKeyPress->player2.goDown = (sf::Keyboard::Key)event.key.code;
+						}
+						break;
+					case P1_LEFT:
+						b_left->setString(gameDisplay.userKeyPress->getKeyName(event.key.code));
+						if (waitingForKeyPlayer == 1) {
+							gameDisplay.userKeyPress->player1.goLeft = (sf::Keyboard::Key)event.key.code;
+						}
+						else {
+							gameDisplay.userKeyPress->player2.goLeft = (sf::Keyboard::Key)event.key.code;
+						}
+						break;
+					case P1_RIGHT:
+						b_right->setString(gameDisplay.userKeyPress->getKeyName(event.key.code));
+						if (waitingForKeyPlayer == 1) {
+							gameDisplay.userKeyPress->player1.goRight = (sf::Keyboard::Key)event.key.code;
+						}
+						else {
+							gameDisplay.userKeyPress->player2.goRight = (sf::Keyboard::Key)event.key.code;
+						}
+						break;
+					case P1_BOMB:
+						b_bomb->setString(gameDisplay.userKeyPress->getKeyName(event.key.code));
+						if (waitingForKeyPlayer == 1) {
+							gameDisplay.userKeyPress->player1.UseBomb = (sf::Keyboard::Key)event.key.code;
+						}
+						else {
+							gameDisplay.userKeyPress->player2.UseBomb = (sf::Keyboard::Key)event.key.code;
+						}
+						break;
+					case P1_ACTION:
+						b_action->setString(gameDisplay.userKeyPress->getKeyName(event.key.code));
+						if (waitingForKeyPlayer == 1) {
+							gameDisplay.userKeyPress->player1.MakeAction = (sf::Keyboard::Key)event.key.code;
+						}
+						else {
+							gameDisplay.userKeyPress->player2.MakeAction = (sf::Keyboard::Key)event.key.code;
+						}
+						break;
+					}
+					GameSounds::buttonPress();
+					writeUserKeys(gameDisplay);
+					correctControlsMenu();
+					waitingForKey = false;
+				}
+			}
+		}
+
 		int id = menu->onEvent(event);
 		switch (id) {
 		case ButtonActions::AUDIO:
+			writeUserKeys(gameDisplay);
+			correctControlsMenu();
+			waitingForKey = false;
 			delete(menu);
 			createAudioMenu(*window);
 			break;
 		case ButtonActions::GRAPHICS:
+			writeUserKeys(gameDisplay);
+			correctControlsMenu();
+			waitingForKey = false;
 			delete(menu);
 			createGraphicsMenu(*window, gameDisplay);
 			break;
@@ -350,7 +516,7 @@ private:
 		case ButtonActions::SOUND_SLIDER:
 			GameSounds::setVolume(soundSlider->getValue());
 			soundText->setText(to_string(soundSlider->getValue()), false);
-			GameSounds::playBombSound();
+			GameSounds::soundChange();
 			break;
 		case ButtonActions::RESOLUTION: {
 			/*sf::FloatRect visibleArea(0, 0, opt->getSelectedValue().x, opt->getSelectedValue().y);
@@ -358,7 +524,7 @@ private:
 			/*gameDisplay.windowWidth = opt->getSelectedValue().x;
 			gameDisplay.windowHeight = opt->getSelectedValue().y;
 			gameDisplay.notifyChangeDisplay();
-		
+
 			window->setView(gameDisplay.menuView);
 			window->setSize(sf::Vector2u(opt->getSelectedValue().x, opt->getSelectedValue().y));
 			gameDisplay.camera.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
@@ -374,11 +540,11 @@ private:
 			window->close();
 			if (fullScreenCheckBox->isChecked()) {
 				gameDisplay.fullScreen = true;
-				window = new RenderWindow(sf::VideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height), "Bombermenaman", sf::Style::Fullscreen);
+				window = new RenderWindow(sf::VideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height), "Bomberman", sf::Style::Fullscreen);
 			}
 			else {
 				gameDisplay.fullScreen = false;
-				window = new RenderWindow(sf::VideoMode(gameDisplay.windowWidth, gameDisplay.windowHeight), "Bombermenaman");
+				window = new RenderWindow(sf::VideoMode(gameDisplay.windowWidth, gameDisplay.windowHeight), "Bomberman");
 			}
 			window->setFramerateLimit(gameDisplay.FPSs);
 
@@ -421,7 +587,7 @@ private:
 			createControlsMenu(*window, gameDisplay);
 			break;
 		case ButtonActions::PLAYER2_CONTROLS:
-			
+
 			waitingForKeyPlayer = 2;
 			//playerLabel->setText("Player 2");
 			/*b_up->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.goUp));
@@ -464,69 +630,8 @@ private:
 			break;
 		}
 
-		if (waitingForKey) {
-			if (event.type == sf::Event::KeyPressed) {
-				cout << gameDisplay.userKeyPress->getKeyName(event.key.code) << endl;
-
-				switch (waitingForKeyKey) {
-				case P1_UP:
-					b_up->setString(gameDisplay.userKeyPress->getKeyName(event.key.code));
-					if (waitingForKeyPlayer == 1) {
-						gameDisplay.userKeyPress->player1.goUp = (sf::Keyboard::Key)event.key.code;
-					}
-					else {
-						gameDisplay.userKeyPress->player2.goUp = (sf::Keyboard::Key)event.key.code;
-					}
-					break;
-				case P1_DOWN:
-					b_down->setString(gameDisplay.userKeyPress->getKeyName(event.key.code));
-					if (waitingForKeyPlayer == 1) {
-						gameDisplay.userKeyPress->player1.goDown = (sf::Keyboard::Key)event.key.code;
-					}
-					else {
-						gameDisplay.userKeyPress->player2.goDown = (sf::Keyboard::Key)event.key.code;
-					}
-					break;
-				case P1_LEFT:
-					b_left->setString(gameDisplay.userKeyPress->getKeyName(event.key.code));
-					if (waitingForKeyPlayer == 1) {
-						gameDisplay.userKeyPress->player1.goLeft = (sf::Keyboard::Key)event.key.code;
-					}
-					else {
-						gameDisplay.userKeyPress->player2.goLeft = (sf::Keyboard::Key)event.key.code;
-					}
-					break;
-				case P1_RIGHT:
-					b_right->setString(gameDisplay.userKeyPress->getKeyName(event.key.code));
-					if (waitingForKeyPlayer == 1) {
-						gameDisplay.userKeyPress->player1.goRight = (sf::Keyboard::Key)event.key.code;
-					}
-					else {
-						gameDisplay.userKeyPress->player2.goRight = (sf::Keyboard::Key)event.key.code;
-					}
-					break;
-				case P1_BOMB:
-					b_bomb->setString(gameDisplay.userKeyPress->getKeyName(event.key.code));
-					if (waitingForKeyPlayer == 1) {
-						gameDisplay.userKeyPress->player1.UseBomb = (sf::Keyboard::Key)event.key.code;
-					}
-					else {
-						gameDisplay.userKeyPress->player2.UseBomb = (sf::Keyboard::Key)event.key.code;
-					}
-					break;
-				case P1_ACTION:
-					b_action->setString(gameDisplay.userKeyPress->getKeyName(event.key.code));
-					if (waitingForKeyPlayer == 1) {
-						gameDisplay.userKeyPress->player1.MakeAction = (sf::Keyboard::Key)event.key.code;
-					}
-					else {
-						gameDisplay.userKeyPress->player2.MakeAction = (sf::Keyboard::Key)event.key.code;
-					}
-					break;
-				}
-				correctControlsMenu();
-				waitingForKey = false;
-			}
+		if (id != -1 && id != MASTER_VOLUME_SLIDER && id != SOUND_SLIDER && id != MUSIC_SLIDER && id != FPS) {
+			GameSounds::buttonPress();
 		}
 
 	}
@@ -544,10 +649,35 @@ private:
 
 public:
 	void menuActions(GameDisplayController& gameDisplay, Game& game) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+			writeUserKeys(gameDisplay);
+			correctControlsMenu();
+			waitingForKey = false;
+		}
+
 		if (gameDisplay.optionsMenuReprocessDisplay) {
 			gameDisplay.optionsMenuReprocessDisplay = false;
 			createBackgroundMenu(*gameDisplay.getWindow(), false);
 		}
+
+		if (waitingForKey) {
+			menu->userCanMakeActions = false;
+			if (GameTime::getTimeNow() - lastBlickTime > blickSpeed) {
+				if (isLetterInvisible) {
+					writeUserKeys(gameDisplay);
+				}
+				else {
+					cleanUserKey(gameDisplay);
+				}
+				correctControlsMenu();
+				isLetterInvisible = !isLetterInvisible;
+				lastBlickTime = GameTime::getTimeNow();
+			}
+		}
+		else {
+			menu->userCanMakeActions = true;
+		}
+
 		draw(*gameDisplay.getWindow());
 
 		// Manage window events and pass a callback to manage this menu buttons

@@ -36,6 +36,8 @@ public:
 	int goDownDown = 1;
 	int goDownRight = 1;
 
+	bool userCanMakeActions = true;
+
 
 	// set the Widget's position
 	// this is relative to the origin of the Layout in which the Widget is held.
