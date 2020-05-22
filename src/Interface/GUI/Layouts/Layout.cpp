@@ -181,6 +181,10 @@ namespace GameGUI {
 	}
 
 	void Layout::onKeyPressed(sf::Keyboard::Key key) {
+		if (!userCanMakeActions) {
+			return;
+		}
+
 		if (m_focus == NULL) {
 			if (key == sf::Keyboard::Key::Right || key == sf::Keyboard::Key::D) {
 				if (!focusNextWidget())

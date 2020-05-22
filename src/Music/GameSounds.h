@@ -53,6 +53,14 @@ public:
 
 		insertSoundTrack("../music/Sounds/Teleporter/Sound Effects (283).wav", 6);
 		insertSoundTrack("../music/Sounds/Teleporter/Sound Effects (142).wav", 7);
+		insertSoundTrack("../music/Sounds/Teleporter/Arrive Teleporter.wav", 8);
+
+		insertSoundTrack("../music/Sounds/Menu/Button Press.wav", 9);
+		insertSoundTrack("../music/Sounds/Menu/Game Error.wav", 10);
+		insertSoundTrack("../music/Sounds/Menu/Sound Change.wav", 11);
+		insertSoundTrack("../music/Sounds/Menu/The_Game_Over.wav", 12);
+
+		insertSoundTrack("../music/Sounds/Menu/Player Dead.wav", 13);
 	}
 
 	static void Update(void) {
@@ -111,6 +119,23 @@ public:
 
 	static void teleportEnter() {
 		playTrack(7);
+	}
+
+	static void buttonPress() {
+		playTrack(9);
+	}
+	static void buttonError() {
+		playTrack(10);
+	}
+	static void soundChange() {
+		playTrack(11);
+	}
+	static void gameOverSound() {
+		playTrack(12);
+	}
+
+	static void playerDead() {
+		playTrack(13);
 	}
 };
 
