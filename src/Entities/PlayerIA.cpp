@@ -650,23 +650,23 @@ bool PlayerIAEntity::isObjetiveOnRange(){
 	sf::Vector2i positionIA = getEntityMapCoordinates();
 	sf::Vector2i sLevel = Level::sizeLevel();
 	bool OnRange = false;
-	if(isOnRangeBomb(sf::Vector2i(min(positionIA.x + 5, sLevel.x) , positionIA.y), objPosition, getPowerOfBombs())){
+	if(abs(min(positionIA.x + 5, sLevel.x) - positionIA.x) > 1 && isOnRangeBomb(sf::Vector2i(min(positionIA.x + 5, sLevel.x) , positionIA.y), objPosition, getPowerOfBombs())){
 		//lanzar hacia dch
 		OnRange = true;
 		objetiveTo = LookingAt::right;
 	}
-	if(isOnRangeBomb(sf::Vector2i(max(positionIA.x - 5, 1) , positionIA.y), objPosition, getPowerOfBombs())){
+	if(abs(max(positionIA.x - 5, 1) - positionIA.x) > 1  && isOnRangeBomb(sf::Vector2i(max(positionIA.x - 5, 1) , positionIA.y), objPosition, getPowerOfBombs())){
 		//lanzar hacia izq
 		OnRange = true;
 		objetiveTo = LookingAt::left;
 	}
 	
-	if(isOnRangeBomb(sf::Vector2i(positionIA.x, min(positionIA.y + 5, sLevel.y) ), objPosition, getPowerOfBombs())){
+	if(abs(min(positionIA.y + 5, sLevel.y) - positionIA.y) > 1  && isOnRangeBomb(sf::Vector2i(positionIA.x, min(positionIA.y + 5, sLevel.y) ), objPosition, getPowerOfBombs())){
 		//lanzar abajo
 		OnRange = true;
 		objetiveTo = LookingAt::down;
 	}
-	if(isOnRangeBomb(sf::Vector2i(positionIA.x, max(positionIA.y - 5, 1) ), objPosition, getPowerOfBombs())){
+	if(abs(max(positionIA.y - 5, 1) - positionIA.y) > 1  && isOnRangeBomb(sf::Vector2i(positionIA.x, max(positionIA.y - 5, 1) ), objPosition, getPowerOfBombs())){
 		//lanzar arriba
 		OnRange = true;
 		objetiveTo = LookingAt::up;
