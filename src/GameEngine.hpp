@@ -352,6 +352,7 @@ public:
 			if (level->levelFinished) {
 				if (stage < 3) {
 					gameDisplay.setGameState(GameDisplayController::VICTORY);
+					gameDisplay.backgroundOpacity = 0;
 					gameDisplay.notifyChangeDisplay();
 					for (auto player : PLayers::getVectorPlayer()) {
 						scoreForTheMoment += player->score;
@@ -359,6 +360,7 @@ public:
 				}
 				else {
 					gameDisplay.setGameState(GameDisplayController::FINAL_SCORE);
+					gameDisplay.backgroundOpacity = 0;
 					gameDisplay.newScore = true;
 					gameDisplay.notifyChangeDisplay();
 				}

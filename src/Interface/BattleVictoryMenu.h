@@ -21,10 +21,8 @@ class BattleVictoryMenu {
 		QUIT
 	};
 
-	sf::Texture texture;
 	sf::Text level;
 	sf::Text victory;
-	sf::Sprite background;
 	sf::RectangleShape menuBackground;
 	sf::RectangleShape menuBackgroundShadow;
 	sf::RectangleShape menuBackgroundShadow1;
@@ -77,14 +75,6 @@ public:
 		victory.setOrigin(textRect.left + textRect.width / 2.0f,
 			textRect.top + textRect.height / 2.0f);
 		victory.setPosition(sf::Vector2f(window.getSize().x / 2.0f, window.getSize().y / 12.0f));
-
-
-		texture.loadFromFile("../textures/interface/Background_orange_squares.png");
-		texture.setRepeated(true);
-		background.setColor(sf::Color(0, 10, 153, 5));
-		background.setTexture(texture);
-		background.setScale(sf::Vector2f(2, 2));
-		background.setTextureRect({ 0, 0, (int)window.getSize().x, (int)window.getSize().y });
 
 		auto f = menu->addFormLayout();
 		
@@ -197,8 +187,9 @@ private:
 		}
 	}
 
-	void draw(sf::RenderWindow& window) {
-		window.draw(background);
+	void draw(sf::RenderWindow& window, GameDisplayController& gameDisplay) {
+		window.draw(gameDisplay.backgroundBomberman);
+		window.draw(gameDisplay.getSquaresBackground());
 
 		window.draw(menuBackgroundShadow2);
 		window.draw(menuBackgroundShadow1);
@@ -216,7 +207,7 @@ public:
 			gameDisplay.endBattleReprocessDisplay = false;
 			createBattleVictoryMenu(*gameDisplay.getWindow(), game, gameDisplay);
 		}
-		draw(*gameDisplay.getWindow());
+		draw(*gameDisplay.getWindow(), gameDisplay);
 
 		// Manage window events and pass a callback to manage this menu buttons
 		gameDisplay.manageGameInterface(gameDisplay, std::bind(&BattleVictoryMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));

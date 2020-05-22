@@ -8,6 +8,7 @@
 #include "GUI/Theme.hpp"
 #include "../Utils/PropertiesReader.h"
 #include "../Music/GameSounds.h"
+#include "InterfacePaths.h"
 
 /**
  * User Interface master controller class
@@ -48,6 +49,17 @@ public:
 	UserKeyPress* userKeyPress;
 
 	PropReader::data gameProperties;
+
+	// Background:
+	sf::Texture textureBomberman;
+	sf::Sprite backgroundBomberman;
+	sf::Texture textureSquares;
+	sf::Sprite backgroundSquares;
+
+	double backgroundOpacity;
+	double lastBackGroundOpacityChanged;
+	sf::Color backgroundSquaresColor;
+
     
 	bool mainMenuReprocessDisplay = false;
 	bool playingReprocessDisplay = false;
@@ -93,6 +105,34 @@ public:
 		camera.setViewport(sf::FloatRect(0.f, 0.1f, 1.f, 1.f));
 		playingGuiView = sf::View(sf::FloatRect(0.f, 0.f, window->getSize().x, window->getSize().y / 5));
 		playingGuiView.setViewport(sf::FloatRect(0.f, 0.f, 1.f, 0.2f));
+
+		// Background Bomberman:
+		textureBomberman.loadFromFile(MAIN_MENU_BACKGROUND_PATH);
+		backgroundBomberman.setTexture(textureBomberman);
+		float resizeVal = std::fmax((float)window->getSize().x / textureBomberman.getSize().x, (float)window->getSize().y / textureBomberman.getSize().y);
+		backgroundBomberman.setScale(resizeVal, resizeVal);
+
+		// BackgroundSquares:
+		textureSquares.loadFromFile("../textures/interface/Background_orange_squares.png");
+		textureSquares.setRepeated(true);
+
+		backgroundOpacity = 0;
+		backgroundSquaresColor = sf::Color(255, 255, 0, 0);
+
+		backgroundSquares.setColor(backgroundSquaresColor);
+		backgroundSquares.setTexture(textureSquares);
+		backgroundSquares.setScale(sf::Vector2f(2, 2));
+		backgroundSquares.setTextureRect({ window->getPosition().x, window->getPosition().y, (int)window->getSize().x, (int)window->getSize().y });
+	}
+
+	sf::Sprite &getSquaresBackground() {
+		lastBackGroundOpacityChanged = GameTime::getTimeNow();
+		double OpacityChanged = fmin(lastBackGroundOpacityChanged, 0.1) * 20;
+
+		backgroundOpacity = std::fmin(backgroundOpacity + OpacityChanged, 200);
+		backgroundSquaresColor = sf::Color(255, 255, 0, (sf::Uint8)backgroundOpacity);
+		backgroundSquares.setColor(backgroundSquaresColor);
+		return backgroundSquares;
 	}
 
 	/**
@@ -147,6 +187,10 @@ public:
 	 * Notify interfaces if a display option has been change (to recompute geometry, etc ...)
 	 */
 	void notifyChangeDisplay() {
+		float resizeVal = std::fmax((float)window->getSize().x / textureBomberman.getSize().x, (float)window->getSize().y / textureBomberman.getSize().y);
+		backgroundBomberman.setScale(resizeVal, resizeVal);
+		backgroundSquares.setTextureRect({ window->getPosition().x, window->getPosition().y, (int)window->getSize().x, (int)window->getSize().y });
+
 		mainMenuReprocessDisplay = true;
 		playingReprocessDisplay = true;
 		optionsMenuReprocessDisplay = true;

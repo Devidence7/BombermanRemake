@@ -21,8 +21,6 @@ class DifficultyMenu {
 		QUIT
 	};
 
-	sf::Texture texture;
-	sf::Sprite background;
 	sf::RectangleShape menuBackground;
 	sf::RectangleShape menuBackgroundShadow;
 	sf::RectangleShape menuBackgroundShadow1;
@@ -52,13 +50,6 @@ class DifficultyMenu {
 public:
 	DifficultyMenu(sf::RenderWindow& window) {
 		menu = new GameGUI::Menu(window);
-
-		texture.loadFromFile("../textures/interface/Background_orange_squares.png");
-		texture.setRepeated(true);
-		background.setColor(sf::Color(255, 255, 0, 5));
-		background.setTexture(texture);
-		background.setScale(sf::Vector2f(2, 2));
-		background.setTextureRect({ 0, 0, (int)window.getSize().x, (int)window.getSize().y });
 
 		menu->addButton("                Facil               ", ButtonActions::EASYLEVEL);
 		menu->addButton("                Normal                 ", ButtonActions::NORMALLEVEL);
@@ -101,8 +92,9 @@ private:
 		}
 	}
 
-	void draw(sf::RenderWindow& window) {
-		window.draw(background);
+	void draw(sf::RenderWindow& window, GameDisplayController& gameDisplay) {
+		window.draw(gameDisplay.backgroundBomberman);
+		window.draw(gameDisplay.getSquaresBackground());
 
 		window.draw(menuBackgroundShadow2);
 		window.draw(menuBackgroundShadow1);
@@ -118,7 +110,7 @@ public:
 			gameDisplay.pauseMenuReprocessDisplay = false;
 			createBackgroundMenu(*gameDisplay.getWindow());
 		}
-		draw(*gameDisplay.getWindow());
+		draw(*gameDisplay.getWindow(), gameDisplay);
 
 		// Manage window events and pass a callback to manage this menu buttons
 		gameDisplay.manageGameInterface(gameDisplay, std::bind(&DifficultyMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));

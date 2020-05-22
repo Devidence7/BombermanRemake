@@ -127,6 +127,9 @@ private:
 			window->close();
 			break;
 		}
+		if (id != -1) {
+			GameSounds::buttonPress();
+		}
 	}
 
 	void draw(sf::RenderWindow& window) {
