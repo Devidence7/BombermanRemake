@@ -488,15 +488,11 @@ private:
 		int id = menu->onEvent(event);
 		switch (id) {
 		case ButtonActions::AUDIO:
-			writeUserKeys(gameDisplay);
-			correctControlsMenu();
 			waitingForKey = false;
 			delete(menu);
 			createAudioMenu(*window);
 			break;
 		case ButtonActions::GRAPHICS:
-			writeUserKeys(gameDisplay);
-			correctControlsMenu();
 			waitingForKey = false;
 			delete(menu);
 			createGraphicsMenu(*window, gameDisplay);
@@ -625,6 +621,7 @@ private:
 			waitingForKeyKey = P1_ACTION;
 			break;
 		case ButtonActions::QUIT:
+			waitingForKey = false;
 			gameDisplay.setGameState(lastGameStateOptionsMenu);
 			gameDisplay.saveProperties();
 			break;
@@ -649,7 +646,7 @@ private:
 
 public:
 	void menuActions(GameDisplayController& gameDisplay, Game& game) {
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+		if (waitingForKey && sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 			writeUserKeys(gameDisplay);
 			correctControlsMenu();
 			waitingForKey = false;
