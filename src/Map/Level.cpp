@@ -400,6 +400,10 @@ bool Level::createFire(int type, int posX, int posY, Player_ptr p) {
 	// Get the object in cell
 	Entity_ptr e = getCellMiniMapObject(getMapCoordinates(posX, posY));
 
+	if (std::dynamic_pointer_cast<Teleporter>(e) != nullptr) {
+		Enemies::insertarEnemigosExtraTeleport(e->getPosition(), 3);
+	}
+
 	if (e && e->getIsFireDestroyable() && !e->getFireCanGoThroght()) {
 		e->setExpiredEntity();
 		addEntity(e);
@@ -416,6 +420,15 @@ bool Level::createFire(int type, int posX, int posY, Player_ptr p) {
 	}
 
 	if (!e || e->getFireCanGoThroght()) {
+
+		Fire_ptr previusFire;
+		if ((previusFire = std::dynamic_pointer_cast<Fire>(e)) != nullptr) {
+			if (type == 2 || type == 3 || type == 5 || type == 6) {
+				// If there is a previous fire and we are a end type dont override type
+				type = previusFire->explosionType;
+			}
+		}
+
 		e = nullptr;
 		Entity_ptr f = std::make_shared<Fire>(Fire(p, type));
 		f->setPosition(posX, posY);
