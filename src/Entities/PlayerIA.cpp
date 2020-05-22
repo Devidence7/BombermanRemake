@@ -35,7 +35,7 @@ void PlayerIAEntity::setCollision(std::shared_ptr<Entity> col){
 	sf::Vector2i colPos = col->getEntityMapCoordinates();
 	if(dir.x != colPos.x || dir.y != colPos.y){
 		//Si no esta intentando llegar a la posicion donde ha colisionado
-		std::cout << "No hay nda que evitar\n";
+		//std::cout << "No hay nda que evitar\n";
 		return;
 	}
 
@@ -48,7 +48,7 @@ void PlayerIAEntity::setCollision(std::shared_ptr<Entity> col){
 		currentState = RUNAWAY;
 		go2SafeZone(getMapCoordinates(getCenterPosition()),me, movements);
 	}else{
-		std::cout << "DEcidir en Colision\n";
+		//std::cout << "DEcidir en Colision\n";
 		decildetState();
 	}
 }
@@ -265,11 +265,11 @@ void PlayerIAEntity::putABomb(){
 	}else if(haveBombs()  && canPutABombSafe(getMapCoordinates(getCenterPosition()),me, movements) ){
 		lastPositionKnowed = getCenterPosition();
 		if(movements.size() < 2){
-			std::cout << "Size M. " << movements.size() << "\n";
+			//std::cout << "Size M. " << movements.size() << "\n";
 		}
 		if (Level::addBomb(this->me))
 		{		
-			std::cout << "put A Bomb\n";
+			//std::cout << "put A Bomb\n";
 			numOfBombs--;
 		}
 		currentState = StateIA::RUNAWAY;
@@ -401,20 +401,20 @@ void PlayerIAEntity::ThrowingState(){
 			justActionDone = true;
 		}
 	}else if(!CanGrabBomb()){
-			std::cout << "NO PUEDE COGER BOMBAS\n";
+			//std::cout << "NO PUEDE COGER BOMBAS\n";
 			currentMovement = nullptr;
 			movements.clear();
 			lastActionDone = GameTime::getTimeNow();
 			justActionDone = false;
 	}else if(nullptr == Level::getCellMiniMapObject(getEntityMapCoordinates())){
 		Level::addBomb(me);
-		std::cout << "trow Bomb\n";
+		//std::cout << "trow Bomb\n";
 
 		if(currentMovement != nullptr){
-			std::cout << "CurrentM " << currentMovement->getPosition().x << " " << currentMovement->getPosition().y << "\n";
+		//	std::cout << "CurrentM " << currentMovement->getPosition().x << " " << currentMovement->getPosition().y << "\n";
 		}
 		if(movements.size() > 0){
-			std::cout << "Size M. " << movements.size() << "\n";
+	//		std::cout << "Size M. " << movements.size() << "\n";
 		}
 		lastActionDone = GameTime::getTimeNow();
 	}else{
@@ -522,9 +522,8 @@ void PlayerIAEntity::checkExploteRemote(){
 bool PlayerIAEntity::updatePlayer(){
 	if(this->dead){
 		return false;
-		std::cout << "dead\n";
 	}
-	std::cout << "c State " << State2string(currentState) <<"\n";
+//	std::cout << "c State " << State2string(currentState) <<"\n";
 
 	if(!this->expiredEntity && !this->dead && !this->respawning){
 		checkExploteRemote();

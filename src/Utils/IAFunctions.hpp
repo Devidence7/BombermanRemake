@@ -21,16 +21,16 @@ inline bool isOnVision(sf::Vector2i pos, sf::Vector2i PointReference, int RangeV
 
 inline bool isOnRangeExplosion(sf::Vector2i pos, sf::Vector2f centerPosition, sf::FloatRect body, int rangeBomb){
     sf::Vector2i centerMap = getMapCoordinates(centerPosition);
-    sf::Vector2i AnchoMax = getMapCoordinates(centerPosition + sf::Vector2f(body.height   , 0));
-    sf::Vector2i AnchoMin = getMapCoordinates(centerPosition - sf::Vector2f(body.height   , 0));
-    sf::Vector2i AltoMax = getMapCoordinates(centerPosition + sf::Vector2f(0, body.height ));
-    sf::Vector2i AltoMin = getMapCoordinates(centerPosition - sf::Vector2f(0, body.height ));
+    sf::Vector2i AnchoMax = getMapCoordinates(centerPosition + sf::Vector2f(body.height/2, 0));
+    sf::Vector2i AnchoMin = getMapCoordinates(centerPosition - sf::Vector2f(body.height/2, 0));
+    sf::Vector2i AltoMax = getMapCoordinates(centerPosition + sf::Vector2f(0, body.height/2 ));
+    sf::Vector2i AltoMin = getMapCoordinates(centerPosition - sf::Vector2f(0, body.height/2 ));
 
-    bool onRange = (abs(pos.x - centerMap.x) <= rangeBomb && abs(pos.y - centerMap.y) == 0 )|| (abs(pos.y - centerMap.y)     <= rangeBomb && abs(pos.x - centerMap.x) == 0);
-    onRange = onRange || (abs(pos.x - AnchoMax.x) <= rangeBomb && abs(pos.y - AnchoMax.y) == 0 )|| (abs(pos.y - AnchoMax.y) <= rangeBomb && abs(pos.x - AnchoMax.x) == 0);
-    onRange = onRange || (abs(pos.x - AnchoMin.x) <= rangeBomb && abs(pos.y - AnchoMin.y) == 0 )|| (abs(pos.y - AnchoMin.y) <= rangeBomb && abs(pos.x - AnchoMin.x) == 0);
-    onRange = onRange || (abs(pos.x - AltoMax.x)  <= rangeBomb && abs(pos.y - AltoMax.y) == 0 )|| (abs(pos.y - AltoMax.y)   <= rangeBomb && abs(pos.x - AltoMax.x) == 0);
-    onRange = onRange || (abs(pos.x - AltoMin.x)  <= rangeBomb && abs(pos.y - AltoMin.y) == 0 )|| (abs(pos.y - AltoMin.y)   <= rangeBomb && abs(pos.x - AltoMin.x) == 0);
+    bool onRange = (abs(pos.x - centerMap.x) <= rangeBomb && abs(pos.y - centerMap.y) == 0 )    || (abs(pos.y - centerMap.y) <= rangeBomb && abs(pos.x - centerMap.x) == 0);
+    onRange = onRange || (abs(pos.x - AnchoMax.x) <= rangeBomb && abs(pos.y - AnchoMax.y) == 0) || (abs(pos.y - AnchoMax.y)  <= rangeBomb && abs(pos.x - AnchoMax.x) == 0);
+    onRange = onRange || (abs(pos.x - AnchoMin.x) <= rangeBomb && abs(pos.y - AnchoMin.y) == 0) || (abs(pos.y - AnchoMin.y)  <= rangeBomb && abs(pos.x - AnchoMin.x) == 0);
+    onRange = onRange || (abs(pos.x - AltoMax.x)  <= rangeBomb && abs(pos.y - AltoMax.y) == 0 ) || (abs(pos.y - AltoMax.y)   <= rangeBomb && abs(pos.x - AltoMax.x) == 0);
+    onRange = onRange || (abs(pos.x - AltoMin.x)  <= rangeBomb && abs(pos.y - AltoMin.y) == 0 ) || (abs(pos.y - AltoMin.y)   <= rangeBomb && abs(pos.x - AltoMin.x) == 0);
     return onRange;
 }
 
