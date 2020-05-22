@@ -53,6 +53,7 @@ protected:
 	void onMousePressed(float x, float y) override;
 	void onMouseReleased(float x, float y) override;
 	void onMouseWheelMoved(int delta) override;
+	Widget* searchFinalFocussedWidget() override;
 	void onKeyPressed(sf::Keyboard::Key key) override;
 	void onKeyReleased(sf::Keyboard::Key key) override;
 	void onTextEntered(sf::Uint32 unicode) override;

@@ -19,7 +19,6 @@ enum class State
 class Layout;
 
 // Abstract base class for GameGUI widgets
-// ---- This class is NOT meant to be used outside the API.
 class Widget : public sf::Drawable
 {
 public:
@@ -29,6 +28,14 @@ public:
 	void setID(int id);
 	// Return Callback ID
 	int getID() const;
+
+	bool transformableOptions = true;
+	bool editedWidget = true;
+	int goUpUp = 1;
+	int goUpLeft = 1;
+	int goDownDown = 1;
+	int goDownRight = 1;
+
 
 	// set the Widget's position
 	// this is relative to the origin of the Layout in which the Widget is held.
@@ -59,6 +66,7 @@ public:
 	virtual void onMousePressed(float x, float y);
 	virtual void onMouseReleased(float x, float y);
 	virtual void onMouseWheelMoved(int delta);
+	virtual Widget* searchFinalFocussedWidget();
 	virtual void onKeyPressed(sf::Keyboard::Key key);
 	virtual void onKeyReleased(sf::Keyboard::Key key);
 	virtual void onTextEntered(sf::Uint32 unicode);

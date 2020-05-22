@@ -147,8 +147,12 @@ private:
 		GameGUI::HorizontalBoxLayout* musicLine = new GameGUI::HorizontalBoxLayout();
 		GameGUI::HorizontalBoxLayout* soundLine = new GameGUI::HorizontalBoxLayout();
 
-		hbox_Controls->addButton("Audio", ButtonActions::AUDIO);
-		hbox_Controls->addButton("Graficos", ButtonActions::GRAPHICS);
+		auto b1 = hbox_Controls->addButton("Audio", ButtonActions::AUDIO);
+		b1->goDownDown = 2;
+		b1->transformableOptions = false;
+		auto b2 = hbox_Controls->addButton("Graficos", ButtonActions::GRAPHICS);
+		b2->goUpUp = 2;
+		b2->transformableOptions = false;
 		hbox_Controls->add(new GameGUI::Label("Controles"));
 		//hbox_Controls->addButton("Controles", ButtonActions::CONTROLS);
 
@@ -230,8 +234,12 @@ private:
 
 		// hbox->addButton("Audio", ButtonActions::AUDIO);
 		hbox->add(new GameGUI::Label("AUDIO"));
-		hbox->addButton("Graficos", ButtonActions::GRAPHICS);
-		hbox->addButton("Controles", ButtonActions::CONTROLS);
+		auto b2 = hbox->addButton("Graficos", ButtonActions::GRAPHICS);
+		b2->goDownDown = 2;
+		b2->transformableOptions = false;
+		auto b3 = hbox->addButton("Controles", ButtonActions::CONTROLS);
+		b3->goUpUp = 2;
+		b3->transformableOptions = false;
 
 		GameGUI::FormLayout* f = menu->addFormLayout();
 		f->add(new GameGUI::Label(" "));
@@ -273,14 +281,15 @@ private:
 		GameGUI::FormLayout* f = menu->addFormLayout();
 		f->add(new GameGUI::Label(" "));
 
-		hbox->addButton("Audio", ButtonActions::AUDIO);
+		auto *b1 = hbox->addButton("Audio", ButtonActions::AUDIO);
+		b1->goDownDown = 2;
+		b1->transformableOptions = false;
 		//hbox->addButton("Graficos", ButtonActions::GRAPHICS);
 		hbox->add(new GameGUI::Label("Graficos"));
-		hbox->addButton("Controles", ButtonActions::CONTROLS);
+		auto b2 = hbox->addButton("Controles", ButtonActions::CONTROLS);
+		b2->goUpUp = 2;
+		b2->transformableOptions = false;
 
-		masterVolumenSlider = new GameGUI::Slider();
-		masterVolumenSlider->setQuantum(4);
-		masterVolumenSlider->setValue(GameMusic::getMasterVolume());
 		//f->addRow("Resolucion      ", masterVolumenSlider, ButtonActions::MASTER_VOLUME_SLIDER);
 
 		/*opt = new GameGUI::OptionsBox<sf::Vector2i>();
@@ -386,13 +395,13 @@ private:
 		case ButtonActions::FPS: {
 			int fpss = fpsSlider->getValue() * 5 / 4 + 5;
 			if (fpss == 130) {
-				fpsText->setText("MAX");
+				fpsText->setText("MAX", false);
 				//GameInterfaceController::FPSs = 0;
 				fpss = 0;
 
 			}
 			else {
-				fpsText->setText(to_string(fpss));
+				fpsText->setText(to_string(fpss), false);
 			}
 			window->setFramerateLimit(fpss);
 			gameDisplay.FPSs = fpss;
