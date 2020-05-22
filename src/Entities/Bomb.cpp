@@ -53,6 +53,7 @@ void Bomb::setExpiredEntity()
 {
 	GameSounds::playBombSound();
 	expiredEntity = true;
+	
 	player->bombExploted(this->me);
 }
 

@@ -507,6 +507,33 @@ bool somePlayerEnemyOnRangeKick(sf::Vector2i pos, int rangeBomb, int team,  Look
 // Post: RunAway(IA)
 
 
+void go2SafeZone(sf::Vector2i posBomb, Player_ptr e, std::list<ANode_Ptr> &movements){
+    std::vector<sf::Vector2i> safeCelss;
+    sf::Vector2i sLevel = Level::sizeLevel();
+    for(int x = 1; x < sLevel.x - 1; x++){
+        for(int y = 1; y < sLevel.y; y++){
+            Entity_ptr eM = Level::getCellMiniMapObject(x,y);
+            if(eM == nullptr || std::dynamic_pointer_cast<PowerUp>(eM) ){
+                bool safe = true;
+                sf::Vector2i cPos(x,y);
+                for(OmittedArea & oa : e->OmittedAreas){
+                    if(oa == cPos ){
+                        safe = false;
+                        break;
+                    }
+                }
+                if(safe){
+                    safeCelss.push_back(sf::Vector2i(x,y));
+                }
+            }
+        }
+    }
+    std::list<ANode_Ptr> movementsAux;
+    if(pathFindingGoWithCare(getMapCoordinates(e->getCenterPosition()), safeCelss, movementsAux, e, 0)){
+        movements = movementsAux;
+    }
+}
+
 
 bool canPutABombSafe(sf::Vector2i posBomb, Player_ptr e, std::list<ANode_Ptr> &movements)
 {
@@ -524,7 +551,7 @@ bool canPutABombSafe(sf::Vector2i posBomb, Player_ptr e, std::list<ANode_Ptr> &m
                     objetives.push_back(pos);
                   //  std:: cout << " Y añadidos\n";
                 }
-            }else if((j == 0  &&  abs(i) > range ) || ( i == 0 && abs(j) > range)){
+            }else if((j == 0  &&  abs(i) > range+1 ) || ( i == 0 && abs(j) > range +1 )){
                 sf::Vector2i pos =  posBomb + sf::Vector2i(i,j);
                 //std::cout << "pos Fire " << pos.x << " " << pos.y << "\n";
                 if(Level::isValidCell(pos) && (Level::getCellMiniMapObject(pos) == nullptr || !Level::getCellMiniMapObject(pos)->isColliderWith(e))){
@@ -708,11 +735,12 @@ bool pathFinderDestroy2Farm(const sf::Vector2i &positionEnemy, std::list<ANode_P
 
     bool haveInterset = IA->getIntersetDestroyWalls() > 0;
     
-    ANode_Ptr lastBest;
     Interst_ptr levelInterset = PointsDestroyMap::getIntersetZone(positionEnemy);
     int interestSite = levelInterset != nullptr ? levelInterset->intersest() : 0;
+    int firstIntersetSite = interestSite;
     int bestfounds = interestSite;
     ANode_Ptr currentNode = std::make_shared<ANode>(ANode(positionEnemy, 0, interestSite ,nullptr));
+    ANode_Ptr lastBest = currentNode;
     if(interestSite == 3){
         path.push_back(currentNode);
         return true;
@@ -777,6 +805,16 @@ bool pathFinderDestroy2Farm(const sf::Vector2i &positionEnemy, std::list<ANode_P
         return false;
     }
     found = lastBest != nullptr;
+    if(lastBest->getParent() == nullptr){
+        //the best is the current site
+        if(firstIntersetSite != 0){
+            path.push_back(lastBest);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     while (lastBest != nullptr)
     {
         if (lastBest->getParent() != nullptr)

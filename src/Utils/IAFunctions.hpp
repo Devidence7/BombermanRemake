@@ -69,6 +69,7 @@ bool somePlayerEnemyOnRange(sf::Vector2i pos, int rangeBomb, int team);
 bool somePlayerEnemyOnRangeThrow(sf::Vector2i pos, int rangeBomb, int team, LookingAt &lAt);
 bool somePlayerEnemyOnRangeKick(sf::Vector2i pos, int rangeBomb, int team, LookingAt &lAt);
 bool canPutABombSafe(sf::Vector2i posBomb, std::shared_ptr<PlayerEntity> e, std::list<ANode_Ptr> &movements);
+void go2SafeZone(sf::Vector2i posBomb, std::shared_ptr<PlayerEntity> e, std::list<ANode_Ptr> &movements);
 bool canThrowBombSafe(sf::Vector2i currentPosition, int rangeBomb, const LookingAt &l);
 sf::Vector2i  getFallBomb(sf::Vector2i currentPosition, int rangeBomb, const LookingAt &l);
 bool canKickBombSafe(sf::Vector2i currentPosition, int rangeBomb, const LookingAt &l);
@@ -80,6 +81,14 @@ bool pathFindingGoSafeArea(const sf::Vector2i &positionEnemy, std::list<ANode_Pt
 
 #include "OmittedAreas.hpp"
 
+inline void addThisZone2OmittedArea(sf::Vector2i cPos, std::list<OmittedArea> & oaList, int powerOfBombs ){
+    for(int x = -powerOfBombs; x < powerOfBombs+1; x++){
+        oaList.push_back(OmittedArea(sf::Vector2i(cPos.x + x, cPos.y)));
+    }
+    for(int y = -powerOfBombs; y < powerOfBombs+1; y++){
+        oaList.push_back(OmittedArea(sf::Vector2i(cPos.x, cPos.y+ y)));
+    }
+}
 
 class PointsDestroyMap{
     static std::vector<std::vector<Interst_ptr>> interestingMap;

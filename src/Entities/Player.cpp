@@ -340,18 +340,32 @@ bool PlayerEntity::updatePlayer() {
 	velocity.x = 0;
 	velocity.y = 0;
 
+	sf::FloatRect body = getGlobalBounds();
 	if (playerDown) {
 		velocity.y = baseSpeed * speedBoost * moveTime;
+		if(velocity.y > body.height/2){
+			velocity.y = body.height/2;
+		}
+
 	}
 	if (playerUp) {
 		velocity.y = -baseSpeed * speedBoost * moveTime;
+		if(velocity.y < -body.height/2){
+			velocity.y = -body.height/2;
+		}
 	}
 	if (playerLeft) {
 		velocity.x = -baseSpeed * speedBoost * moveTime;
+		if(velocity.x > body.width/2){
+			velocity.x = body.width/2;
+		}
 	}
 	if (playerRight) {
 		velocity.x = baseSpeed * speedBoost * moveTime;
 		//lives--;
+		if(velocity.x < -body.width/2){
+			velocity.x = -body.width/2;
+		}
 	}
 
 	// If bomberman has dizzy debuff

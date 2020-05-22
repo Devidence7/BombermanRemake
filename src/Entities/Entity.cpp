@@ -52,12 +52,12 @@ void Entity::onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr
 	switch (colT)
 	{
 	case HORIZONTAL:
-		eCollisioning->setCollision(eCollisioner);
 		position.x += this->moveOnX(eCollisioning);
+		eCollisioning->setCollision(eCollisioner);
 		break;
 	case VERTICAL:
-		eCollisioning->setCollision(eCollisioner);
 		position.y += this->moveOnY(eCollisioning);
+		eCollisioning->setCollision(eCollisioner);
 		break;
 	case CORNER:
 		//Sin colision ya que puede seguir moviendose

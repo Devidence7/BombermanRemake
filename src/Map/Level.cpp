@@ -147,10 +147,10 @@ void Level::chechAndFixBombCollision(Bomb_ptr b) {
 			getCellMiniMapObject(mapPos2) = b;
 		}
 		else {
-			b->setCollision(nullptr);
 			b->onMove = false;
 			b->canExplote = true;
 			b->setPosition(getMapCellCorner(globalPos));
+			b->setCollision(nullptr);
 		}
 	}
 	getCellMiniMapObject(mapPosition) = b; //Volver a poner bomb
@@ -376,7 +376,7 @@ void Level::draw(sf::RenderWindow& w) {
 
 	auto it = onFlightBombs.begin();
 	while (it != onFlightBombs.end()) {
-		if (!(*it)->onFlight) {
+		if (!(*it)->onFlight || (*it)->getExpiredEntity()) {
 			// Remove the bomb from the list onFlightBombs if it at floor.
 			it->reset();
 			it = onFlightBombs.erase(it);
