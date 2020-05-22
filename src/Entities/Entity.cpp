@@ -125,8 +125,10 @@ float Entity::moveOnX(const std::shared_ptr<Entity> eCollisioning)
 	sf::Vector2f position = eCollisioning->getCenterPosition();
 	sf::FloatRect body = eCollisioning->getGlobalBounds();
 	sf::Vector2f position2 = this->getCenterPosition();
+
 	// sf::FloatRect body2 = this->getGlobalBoundsCollisioner();
 	sf::FloatRect body2 = this->getGlobalBounds();
+
 	if(!body2.intersects(body)){
 		return 0;
 	}
@@ -146,7 +148,10 @@ float Entity::moveOnY(const std::shared_ptr<Entity> eCollisioning)
 	sf::Vector2f position = eCollisioning->getCenterPosition();
 	sf::FloatRect body = eCollisioning->getGlobalBounds();
 	sf::Vector2f position2 = this->getCenterPosition();
-	sf::FloatRect body2 = this->getGlobalBoundsCollisioner();
+
+	// sf::FloatRect body2 = this->getGlobalBoundsCollisioner();
+	sf::FloatRect body2 = this->getGlobalBounds();
+
 	if(!body2.intersects(body)){
 		return 0;
 	}
@@ -167,7 +172,9 @@ inline sf::Vector2f Entity::moveCircleOverCorner(std::shared_ptr<Entity> eCircle
 	float r_Circle = eCircle->getGlobalBounds().width / 2;
 
 	sf::Vector2f centerRect = this->getCenterPosition();
-	sf::FloatRect bodyRect = this->getGlobalBoundsCollisioner();
+
+	// sf::FloatRect body2 = this->getGlobalBoundsCollisioner();
+	sf::FloatRect bodyRect = this->getGlobalBounds();
 
 	sf::Vector2f dir_centros = centerRect - CenterCircle;
 	float distanciaCentros = moduleVector(dir_centros);
