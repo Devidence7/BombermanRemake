@@ -147,38 +147,74 @@ private:
 		GameGUI::HorizontalBoxLayout* musicLine = new GameGUI::HorizontalBoxLayout();
 		GameGUI::HorizontalBoxLayout* soundLine = new GameGUI::HorizontalBoxLayout();
 
-		hbox_Controls->addButton("Audio", ButtonActions::AUDIO);
-		hbox_Controls->addButton("Graficos", ButtonActions::GRAPHICS);
-		hbox_Controls->addButton("Controles", ButtonActions::CONTROLS);
+		auto b1 = hbox_Controls->addButton("Audio", ButtonActions::AUDIO);
+		b1->goDownDown = 2;
+		b1->transformableOptions = false;
+		auto b2 = hbox_Controls->addButton("Graficos", ButtonActions::GRAPHICS);
+		b2->goUpUp = 2;
+		b2->transformableOptions = false;
+		hbox_Controls->add(new GameGUI::Label("Controles"));
+		//hbox_Controls->addButton("Controles", ButtonActions::CONTROLS);
 
 		hbox2_Controls = menu->addHorizontalBoxLayout();
-		hbox2_Controls->addButton("Player 1", ButtonActions::PLAYER1_CONTROLS);
-		hbox2_Controls->addButton("Player 2", ButtonActions::PLAYER2_CONTROLS);
+		//hbox2_Controls->addButton("Player 1", ButtonActions::PLAYER1_CONTROLS);
+		
+		//hbox2_Controls->addButton("Player 2", ButtonActions::PLAYER2_CONTROLS);
+		
+		if (waitingForKeyPlayer == 1) {
+			hbox2_Controls->add(new GameGUI::Label("Player 1"), ButtonActions::PLAYER1_CONTROLS);
+			hbox2_Controls->add(new GameGUI::Button("Player 2"), ButtonActions::PLAYER2_CONTROLS);
+		}
+		else {
+			hbox2_Controls->add(new GameGUI::Button("Player 1"), ButtonActions::PLAYER1_CONTROLS);
+			hbox2_Controls->add(new GameGUI::Label("Player 2"), ButtonActions::PLAYER2_CONTROLS);
+		}
+
 
 		GameGUI::HorizontalBoxLayout* hbox3 = menu->addHorizontalBoxLayout();
 		f_Controls = menu->addFormLayout();
-		playerLabel = new GameGUI::Label("Player 1");
-		f_Controls->add(playerLabel);
+		// playerLabel = new GameGUI::Label("Player 1");
+		// f_Controls->add(playerLabel);
 
-		b_up = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goUp));
-		f_Controls->addRow("ARRIBA", b_up, ButtonActions::P1_UP);
+		if (waitingForKeyPlayer == 1) {
+			b_up = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goUp));
+			f_Controls->addRow("ARRIBA", b_up, ButtonActions::P1_UP);
 
-		b_down = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goDown));
-		f_Controls->addRow("ABAJO", b_down, ButtonActions::P1_DOWN);
+			b_down = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goDown));
+			f_Controls->addRow("ABAJO", b_down, ButtonActions::P1_DOWN);
 
-		b_left = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goLeft));
-		f_Controls->addRow("IZQUIERDA", b_left, ButtonActions::P1_LEFT);
+			b_left = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goLeft));
+			f_Controls->addRow("IZQUIERDA", b_left, ButtonActions::P1_LEFT);
 
-		b_right = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goRight));
-		f_Controls->addRow("DERECHA", b_right, ButtonActions::P1_RIGHT);
+			b_right = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goRight));
+			f_Controls->addRow("DERECHA", b_right, ButtonActions::P1_RIGHT);
 
-		b_bomb = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.UseBomb));
-		f_Controls->addRow("Usar Bomba", b_bomb, ButtonActions::P1_BOMB);
+			b_bomb = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.UseBomb));
+			f_Controls->addRow("Usar Bomba", b_bomb, ButtonActions::P1_BOMB);
 
-		b_action = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.MakeAction));
-		f_Controls->addRow("Ejecutar Accion", b_action, ButtonActions::P1_ACTION);
+			b_action = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.MakeAction));
+			f_Controls->addRow("Ejecutar Accion", b_action, ButtonActions::P1_ACTION);
+		}
+		else {
+			b_up = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.goUp));
+			f_Controls->addRow("ARRIBA", b_up, ButtonActions::P1_UP);
 
+			b_down = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.goDown));
+			f_Controls->addRow("ABAJO", b_down, ButtonActions::P1_DOWN);
 
+			b_left = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.goLeft));
+			f_Controls->addRow("IZQUIERDA", b_left, ButtonActions::P1_LEFT);
+
+			b_right = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.goRight));
+			f_Controls->addRow("DERECHA", b_right, ButtonActions::P1_RIGHT);
+
+			b_bomb = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.UseBomb));
+			f_Controls->addRow("Usar Bomba", b_bomb, ButtonActions::P1_BOMB);
+
+			b_action = new GameGUI::Button(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.MakeAction));
+			f_Controls->addRow("Ejecutar Accion", b_action, ButtonActions::P1_ACTION);
+		}
+		
 		createBackgroundMenu(window);
 		correctControlsMenu();
 		//centerElement(hbox);
@@ -196,9 +232,14 @@ private:
 		GameGUI::HorizontalBoxLayout* musicLine = new GameGUI::HorizontalBoxLayout();
 		GameGUI::HorizontalBoxLayout* soundLine = new GameGUI::HorizontalBoxLayout();
 
-		hbox->addButton("Audio", ButtonActions::AUDIO);
-		hbox->addButton("Graficos", ButtonActions::GRAPHICS);
-		hbox->addButton("Controles", ButtonActions::CONTROLS);
+		// hbox->addButton("Audio", ButtonActions::AUDIO);
+		hbox->add(new GameGUI::Label("AUDIO"));
+		auto b2 = hbox->addButton("Graficos", ButtonActions::GRAPHICS);
+		b2->goDownDown = 2;
+		b2->transformableOptions = false;
+		auto b3 = hbox->addButton("Controles", ButtonActions::CONTROLS);
+		b3->goUpUp = 2;
+		b3->transformableOptions = false;
 
 		GameGUI::FormLayout* f = menu->addFormLayout();
 		f->add(new GameGUI::Label(" "));
@@ -240,13 +281,15 @@ private:
 		GameGUI::FormLayout* f = menu->addFormLayout();
 		f->add(new GameGUI::Label(" "));
 
-		hbox->addButton("Audio", ButtonActions::AUDIO);
-		hbox->addButton("Graficos", ButtonActions::GRAPHICS);
-		hbox->addButton("Controles", ButtonActions::CONTROLS);
+		auto *b1 = hbox->addButton("Audio", ButtonActions::AUDIO);
+		b1->goDownDown = 2;
+		b1->transformableOptions = false;
+		//hbox->addButton("Graficos", ButtonActions::GRAPHICS);
+		hbox->add(new GameGUI::Label("Graficos"));
+		auto b2 = hbox->addButton("Controles", ButtonActions::CONTROLS);
+		b2->goUpUp = 2;
+		b2->transformableOptions = false;
 
-		masterVolumenSlider = new GameGUI::Slider();
-		masterVolumenSlider->setQuantum(4);
-		masterVolumenSlider->setValue(GameMusic::getMasterVolume());
 		//f->addRow("Resolucion      ", masterVolumenSlider, ButtonActions::MASTER_VOLUME_SLIDER);
 
 		/*opt = new GameGUI::OptionsBox<sf::Vector2i>();
@@ -352,13 +395,13 @@ private:
 		case ButtonActions::FPS: {
 			int fpss = fpsSlider->getValue() * 5 / 4 + 5;
 			if (fpss == 130) {
-				fpsText->setText("MAX");
+				fpsText->setText("MAX", false);
 				//GameInterfaceController::FPSs = 0;
 				fpss = 0;
 
 			}
 			else {
-				fpsText->setText(to_string(fpss));
+				fpsText->setText(to_string(fpss), false);
 			}
 			window->setFramerateLimit(fpss);
 			gameDisplay.FPSs = fpss;
@@ -367,25 +410,28 @@ private:
 		}
 		case ButtonActions::PLAYER1_CONTROLS:
 			waitingForKeyPlayer = 1;
-			playerLabel->setText("Player 1");
-			b_up->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goUp));
+			//playerLabel->setText("Player 1");
+			/*b_up->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goUp));
 			b_down->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goDown));
 			b_left->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goLeft));
 			b_right->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.goRight));
 			b_bomb->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.UseBomb));
 			b_action->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.MakeAction));
-			correctControlsMenu();
+			correctControlsMenu();*/
+			createControlsMenu(*window, gameDisplay);
 			break;
 		case ButtonActions::PLAYER2_CONTROLS:
+			
 			waitingForKeyPlayer = 2;
-			playerLabel->setText("Player 2");
-			b_up->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.goUp));
+			//playerLabel->setText("Player 2");
+			/*b_up->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.goUp));
 			b_down->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.goDown));
 			b_left->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.goLeft));
 			b_right->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.goRight));
 			b_bomb->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.UseBomb));
 			b_action->setString(gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player2.MakeAction));
-			correctControlsMenu();
+			correctControlsMenu();*/
+			createControlsMenu(*window, gameDisplay);
 			break;
 
 		case ButtonActions::P1_UP:

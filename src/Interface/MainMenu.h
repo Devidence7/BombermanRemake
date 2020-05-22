@@ -58,7 +58,7 @@ public:
 		menu->addButton("           Puntuaciones             ", ButtonActions::HISTORY_SCORE);
 		menu->addButton("                  Salir                    ", ButtonActions::QUIT);
 
-		menu->setPosition(sf::Vector2f(window.getSize().x / 8 * 1.2, window.getSize().y - menu->getSize().y - window.getSize().x / 8));
+		menu->setPosition(sf::Vector2f(window.getSize().x / 8 * 1.2, window.getSize().y / 2));
 
 		float menuBackgroundPadding = window.getSize().x / 32;
 		menuBackground.setSize(sf::Vector2f(menu->getSize().x + 2 * menuBackgroundPadding, menu->getSize().y + 2 * menuBackgroundPadding));
