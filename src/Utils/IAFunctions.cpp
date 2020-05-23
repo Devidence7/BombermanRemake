@@ -903,7 +903,7 @@ bool pathFinderActions( Entity_ptr _ia, const std::vector<sf::Vector2i> &objetiv
                     sf::Vector2i nodePosition(currentNode->xPosition() + i, currentNode->yPosition() + j);
                     sf::Vector2i objetiveP = selectCloseObjetive(nodePosition, objetives);
                     NodeAction_ptr newNode = std::make_shared<NodeAction>(NodeAction(nodePosition, objetiveP, currentNode->fAcum() + 1, currentNode));
-                    if (checkValidPositionOrDestroyer(nodePosition, _ia) && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(currentNode))
+                    if (/* checkValidPositionOrDestroyer(nodePosition, _ia) &&  */expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(currentNode))
                     { //Si es una posicion valida y no se ha expandido
                         newNode->incrementCost(costAddDestroy); // TODO: variable segun IA
                         frontera.add(newNode);
