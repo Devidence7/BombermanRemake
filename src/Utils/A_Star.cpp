@@ -1,7 +1,6 @@
 #include "A_Star.hpp"
 #include "../Include/EntitiesInclude.hpp"
 
-
 bool checkObjetive(const sf::Vector2i &currentP, const sf::Vector2i &objetivePosition)
 {
     return currentP.x == objetivePosition.x && currentP.y == objetivePosition.y;
@@ -291,15 +290,15 @@ bool pathFindingBreakingWalls(const sf::Vector2i &positionEnemy, const std::vect
                     sf::Vector2i nodePosition(currentNode->xPosition() + i, currentNode->yPosition() + j);
                     sf::Vector2i objetiveP = selectCloseObjetive(nodePosition, objetives);
                     ANode_Ptr newNode = std::make_shared<ANode>(ANode(nodePosition, sf::Vector2i(i, j), objetiveP, currentNode->fAcum() + 1, currentNode));
-                    if (checkValidPositionOrDestroyer(nodePosition, e) && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(newNode))
-                    { //Si es una posicion valida y no se ha expandido
-                        newNode->incrementCost(costAddDestroy); // TODO: variable segun IA
-                        frontera.add(newNode);
-                    }
-                    else
-                    {
-                        newNode = nullptr;
-                    }
+                    //if (checkValidPositionOrDestroyer(nodePosition, e) && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(newNode))
+                    //{ //Si es una posicion valida y no se ha expandido
+                    //    newNode->incrementCost(costAddDestroy); // TODO: variable segun IA
+                    //    frontera.add(newNode);
+                    //}
+                    //else
+                    //{
+                    //    newNode = nullptr;
+                    //}
                 }
             }
         }
@@ -367,3 +366,74 @@ bool pathFindingBreakingWalls(const sf::Vector2i &positionEnemy, const std::vect
     return found;
 }
 
+
+
+
+
+ANode::ANode(){
+    direction_to_arrive = sf::Vector2i(0,0);
+}
+ANode::ANode(const sf::Vector2i cp, float fAcum, int _numOfWalss ,std::shared_ptr<ANode> p)
+    : currentPostion(cp), f(fAcum), parent(p), numOfWalls(_numOfWalss)
+{
+    h =  1 - _numOfWalss/3;
+}
+
+ANode::ANode(const sf::Vector2i cp, float fAcum, int numOFBombsOrFires, bool bombOrNot,std::shared_ptr<ANode> p){
+    h = numOFBombsOrFires;
+}
+
+ANode::ANode(const sf::Vector2i cp, sf::Vector2i dir, const sf::Vector2i objetive, float fAcum, std::shared_ptr<ANode> p)
+    : currentPostion(cp), direction_to_arrive(dir), f(fAcum), parent(p)
+{
+    h = manhattan(cp, objetive);
+    if(direction_to_arrive.x > 1 || direction_to_arrive.y >1 ){
+        std::cout<< "Error al construir accion\n";
+        volatile int x = 0;
+    }
+}
+
+void ANode::inverseDirection(){
+    direction_to_arrive = -direction_to_arrive;
+    currentPostion += direction_to_arrive;
+    currentPostion += direction_to_arrive;
+}
+float ANode::costNode() const { return h + f; }
+
+void ANode::incrementCost(float x){ f += x;  }
+
+bool ANode::isObjetive() const { return h == 0; }
+void ANode::setParent(std::shared_ptr<ANode> p) { parent = p; }
+const sf::Vector2i &ANode::getPosition() const { return currentPostion; }
+sf::Vector2i ANode::getAction() const { return direction_to_arrive; }
+std::shared_ptr<ANode> ANode::getParent() const { return parent; }
+bool ANode::operator<(const ANode &other) const
+{
+    return (f + h) < other.costNode();
+}
+bool ANode::operator<=(const ANode &other) const
+{
+    return (f + h) <= other.costNode();
+}
+bool ANode::operator>(const ANode &other) const
+{
+    return (f + h) > other.costNode();
+}
+bool ANode::operator>=(const ANode &other) const
+{
+    return (f + h) >= other.costNode();
+}
+
+bool ANode::operator==(const sf::Vector2i &otherPosition) const
+{
+    return currentPostion.x == otherPosition.x && currentPostion.y == otherPosition.y;
+}
+
+bool ANode::operator==(const ANode &other) const
+{
+    return (f + h) == other.costNode() && *this == other.currentPostion;
+}
+
+float ANode::fAcum() { return f; }
+int ANode::xPosition() { return currentPostion.x; }
+int ANode::yPosition() { return currentPostion.y; }
