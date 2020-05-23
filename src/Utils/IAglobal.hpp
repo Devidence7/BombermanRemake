@@ -10,7 +10,9 @@ enum StateIA{
     PERSEGUIR = 4,
     RUNAWAY = 5,
     FARM = 6,
-    THROWING_BOMB = 7
+    THROWING_BOMB = 7,
+    KICKING_BOMB = 8,
+    PANIC_MODE = 9
 };
 
 inline std::string State2string(StateIA ia ){
@@ -40,6 +42,10 @@ inline std::string State2string(StateIA ia ){
     case StateIA::THROWING_BOMB:
         return "THROWING_BOMB";
     break;
+    case StateIA::KICKING_BOMB:
+        return "KICKING_BOMB";
+    case StateIA::PANIC_MODE:
+        return "PANIC_MODE";
     default:
         break;
     }

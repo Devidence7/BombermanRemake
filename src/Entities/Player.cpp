@@ -44,7 +44,7 @@ PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team, float posX,floa
 	cout<<"INITIAL POS X "<<posX<<" INITIAL POS Y "<<posY<<endl;
 
 
-	 actionAvaible = ActionsAvalible::REMOTE_BOMB;
+	 actionAvaible = ActionsAvalible::KICK_BOM;
 	 numOfBombs = 3;
 	 powerOfBombs = 3;
 }
@@ -59,6 +59,9 @@ void PlayerEntity::setExpiredEntity() {
 	}
 	//
 	if (!expiredEntity) {
+		if(BombTaked != nullptr){
+			BombTaked->setExpiredEntity();
+		}
 		this->BombTaked = nullptr;
 		expiredEntity = true;
 		//if(!dead){

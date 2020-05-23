@@ -67,6 +67,8 @@ public:
 	bool updateKillState();
 	bool updatePerseguirState();
 	bool updateRunawayState();
+	void updateFarm();
+	void updateCathPU();
 	void putABomb();
 	void decildetState();
 	void checkExploteRemote();
@@ -96,8 +98,11 @@ public:
 	bool TryKickBomb();
 	bool TryThrowBomb();
 	void ThrowingState();
+	void kickingState();
 	bool useAvility();
 	bool isObjetiveOnRange();
 	bool isObjetiveFarmOnRange();
-
+	bool objetiveOnExactlyThrowBomb();
+	bool canArraiveBombKickinExactly();
+	void updatePanicMode();
 };

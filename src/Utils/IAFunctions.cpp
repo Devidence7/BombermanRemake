@@ -1138,3 +1138,66 @@ bool pathFindingGoSafeArea(const sf::Vector2i &positionEnemy, std::list<ANode_Pt
     }
     return found;
 }
+
+
+bool canUseAbilityPM(sf::Vector2i pos, ActionsAvalible aa, sf::Vector2i nextPos){
+    Entity_ptr e;
+    if(!Level::isValidCell(nextPos)){
+        return false;
+    }
+    e = Level::getCellMiniMapObject(nextPos);
+
+    switch (aa)
+    {
+    case ActionsAvalible::GRAB_BOMB:
+        return true;
+        break;
+    case ActionsAvalible::KICK_BOM:
+        if(e != nullptr && std::dynamic_pointer_cast<PowerUp>(e) == nullptr){
+            return false;
+        }
+        break;
+    
+    default:
+        break;
+    }
+}
+
+bool PanicMode(sf::Vector2i cPosition, ActionsAvalible aa, LookingAt &at){
+    if(aa != ActionsAvalible::GRAB_BOMB && aa != ActionsAvalible::KICK_BOM){
+        return false;
+    }
+
+    sf::Vector2i pUp(cPosition.x, cPosition.y -1);
+    sf::Vector2i pD(cPosition.x, cPosition.y +1);
+    sf::Vector2i pR(cPosition.x + 1, cPosition.y);
+    sf::Vector2i pL(cPosition.x - 1, cPosition.y);
+    bool canUSe = false;
+    if(Level::isValidCell(pUp) && std::dynamic_pointer_cast<Bomb>(Level::getCellMiniMapObject(pUp)) != nullptr){
+        if(canUseAbilityPM(pUp, aa, sf::Vector2i(cPosition.x, cPosition.y - 1))){
+            at = LookingAt::up;
+            canUSe = true;
+        }
+    }
+
+    if(!canUSe && Level::isValidCell(pD) && std::dynamic_pointer_cast<Bomb>(Level::getCellMiniMapObject(pD)) != nullptr){
+        if(canUseAbilityPM(pD, aa, sf::Vector2i(cPosition.x, cPosition.y + 1))){
+            at = LookingAt::down;
+            canUSe = true;
+        }
+    }
+
+    if(!canUSe && Level::isValidCell(pR) && std::dynamic_pointer_cast<Bomb>(Level::getCellMiniMapObject(pR)) != nullptr){
+        if(canUseAbilityPM(pR, aa, sf::Vector2i(cPosition.x + 1, cPosition.y ))){
+            at = LookingAt::right;
+            canUSe = true;
+        }
+    }
+    if(!canUSe && Level::isValidCell(pL) && std::dynamic_pointer_cast<Bomb>(Level::getCellMiniMapObject(pL)) != nullptr){
+        if(canUseAbilityPM(pL, aa, sf::Vector2i(cPosition.x - 1, cPosition.y ))){
+            at = LookingAt::left;
+            canUSe = true;
+        }
+    }
+    return canUSe;
+}
