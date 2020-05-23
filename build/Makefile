@@ -94,7 +94,7 @@ $(bin)/Time.o: $(logicPath)/Time.cpp $(logicPath)/Time.h
 ../bin/Player.o: $(entityPath)/Player.cpp $(entityPath)/Player.h $(bin)/Entity.o
 	$(CC) -o $(bin)/Player.o -c $(entityPath)/Player.cpp $(std)  $(O)
 
-../bin/PlayerIA.o: $(entityPath)/PlayerIA.cpp $(entityPath)/PlayerIA.hpp $(bin)/Player.o
+../bin/PlayerIA.o: $(entityPath)/PlayerIA.cpp $(entityPath)/PlayerIA.hpp $(bin)/Player.o $(UtilsPath)/IAFunctions.hpp
 	$(CC) -o $(bin)/PlayerIA.o -c $(entityPath)/PlayerIA.cpp $(std)  $(O)
 
 ../bin/PowerUp.o: $(entityPath)/PowerUp.cpp $(entityPath)/PowerUp.h $(bin)/Entity.o
