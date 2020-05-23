@@ -373,7 +373,7 @@ bool pathFindingBreakingWalls(const sf::Vector2i &positionEnemy, const std::vect
 ANode::ANode(){
     direction_to_arrive = sf::Vector2i(0,0);
 }
-ANode::ANode(const sf::Vector2i cp, float fAcum, int _numOfWalss ,std::shared_ptr<ANode> p)
+ANode::ANode(float fAcum, const sf::Vector2i cp, int _numOfWalss ,std::shared_ptr<ANode> p)
     : currentPostion(cp), f(fAcum), parent(p), numOfWalls(_numOfWalss)
 {
     h =  1 - _numOfWalss/3;

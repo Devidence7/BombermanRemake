@@ -909,7 +909,7 @@ bool PlayerIAEntity::canArraiveBombKickin(){
 				objetiveTo = LookingAt::up;
 			}
 			movements.clear();
-			movements.push_back(std::make_shared<ANode>(ANode(sf::Vector2i(cPosition - iDir), 0,0)));
+			movements.push_back(std::make_shared<ANode>(ANode(0, sf::Vector2i(cPosition - iDir), 0)));
 			//movements.push_back(std::make_shared<ANode>(sf::Vector2i(cPosition)));
 		}
 		return space2kick;
@@ -956,7 +956,7 @@ bool PlayerIAEntity::canArraiveBombKickinExactly(){
 				objetiveTo = LookingAt::up;
 			}
 			movements.clear();
-			movements.push_back(std::make_shared<ANode>(ANode(sf::Vector2i(cPosition - iDir), 0,0)));
+			movements.push_back(std::make_shared<ANode>(ANode(0, sf::Vector2i(cPosition - iDir), 0)));
 			//movements.push_back(std::make_shared<ANode>(sf::Vector2i(cPosition)));
 		}
 		return space2kick;

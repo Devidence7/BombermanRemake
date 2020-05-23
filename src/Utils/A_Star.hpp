@@ -70,7 +70,7 @@ class ANode
 public:
     int numOfWalls = 0;
     ANode();
-    ANode(const sf::Vector2i cp, float fAcum, int _numOfWalss ,std::shared_ptr<ANode> p = nullptr);
+    ANode(float fAcum, const sf::Vector2i cp, int _numOfWalss ,std::shared_ptr<ANode> p = nullptr);
     ANode(const sf::Vector2i cp, float fAcum, int numOFBombsOrFires, bool bombOrNot,std::shared_ptr<ANode> p = nullptr);
     ANode(const sf::Vector2i cp, sf::Vector2i dir, const sf::Vector2i objetive, float fAcum, std::shared_ptr<ANode> p = nullptr);
     void inverseDirection();

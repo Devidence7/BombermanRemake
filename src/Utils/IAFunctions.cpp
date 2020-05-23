@@ -766,13 +766,12 @@ bool pathFinderDestroy2Farm(const sf::Vector2i &positionEnemy, std::list<ANode_P
     std::cout << positionEnemy.x << " --- " << positionEnemy.y << std::endl;
 
     bool haveInterset = IA->getIntersetDestroyWalls() > 0;
-    
+
     Interst_ptr levelInterset = PointsDestroyMap::getIntersetZone(positionEnemy);
     int interestSite = levelInterset != nullptr ? levelInterset->intersest() : 0;
     int firstIntersetSite = interestSite;
     int bestfounds = interestSite;
-    ANode* a = new ANode(positionEnemy, 0, interestSite, nullptr);
-    auto currentNode = std::make_shared<ANode>(*a);
+    auto currentNode = std::make_shared<ANode>(ANode(0, positionEnemy, interestSite));
     ANode_Ptr lastBest = currentNode;
     if(interestSite == 3){
         path.push_back(currentNode);
@@ -801,7 +800,7 @@ bool pathFinderDestroy2Farm(const sf::Vector2i &positionEnemy, std::list<ANode_P
                     if (levelInterset > 0) {
                         std::cout << levelInterset << std::endl;
                     }
-                    ANode_Ptr newNode = std::make_shared<ANode>(ANode(nodePosition, currentNode->fAcum() + 1, interestSite ,currentNode));
+                    ANode_Ptr newNode = std::make_shared<ANode>(ANode(currentNode->fAcum() + 1, nodePosition, interestSite ,currentNode));
                     int incrementCost = 0;
                     if (checkValidPositionWithImprudence(nodePosition, e, newNode->costNode(), incrementCost) && isOnVision(nodePosition, positionEnemy, IA->sg._SeekPEStruct.RangoVision)
                              && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(newNode))
@@ -1252,7 +1251,7 @@ bool PanicMode(sf::Vector2i posPLayer, ActionsAvalible aa, LookingAt &at, std::l
     sf::Vector2f nDir = normalize(bomP - posPLayer);
     sf::Vector2i inDir(nDir.x, nDir.y);
     for(sf::Vector2i ip = posPLayer + inDir; ip.x != bomP.x && ip.y != bomP.y; ip = ip + inDir){
-        movements.push_back(std::make_shared<ANode>(ANode(ip, 0,0)));
+        movements.push_back(std::make_shared<ANode>(ANode(0, ip, 0)));
     }
     if(aa == ActionsAvalible::GRAB_BOMB){
         //Lanzar bomba hacia atras
