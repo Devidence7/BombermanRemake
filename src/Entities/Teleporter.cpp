@@ -46,15 +46,14 @@ void Teleporter::update() {
 		spriteCounter = GameTime::getTimeNow();
 	}
 }
-//
+
+
 void Teleporter::onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<Entity> eCollisioner, CollisionType colT) {
 	std::shared_ptr<PlayerEntity> pe;
 	if (!this->expiredEntity && (pe = std::dynamic_pointer_cast<PlayerEntity>(eCollisioning)) != nullptr){
 		if(teleporterState == OPEN){
 			playerCross = true;
 			GameSounds::teleportEnter();
-			//GameDisplayController::displayController->setGameState(GameDisplayController::GameState::VICTORY);
-			// gameDisplay.setGameState(GameDisplayController::GameState::VICTORY);
 		}
 	}
 }

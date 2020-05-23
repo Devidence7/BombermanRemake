@@ -164,15 +164,12 @@ void Level::createTeleporter(Entity_ptr it) {
 	GameSounds::teleportAppear();
 
 	teleporter = newObject;
-	if (canFinishLevel) {
-		teleporter->openTeleporter();
-	}
 }
 
 void Level::brickWallOutcomes(Entity_ptr it) {
 
 	// Last oportunity to get a teleporter
-	if (gameOptions->historyMode && !Level::exitHasApeared && Level::numWalls == 1) {
+	if (gameOptions->historyMode && teleporter == nullptr && Level::numWalls < 3) {
 		createTeleporter(it);
 	}
 	// Russian Roullete
@@ -222,7 +219,7 @@ void Level::brickWallOutcomes(Entity_ptr it) {
 			else if (gameOptions->historyMode && probability < 120) {
 				newObject = std::make_shared<ExtraLifePowerUp>(ExtraLifePowerUp((it)->getPosition()));
 			}
-			else if (gameOptions->historyMode && !Level::exitHasApeared && probability < 125) {
+			else if (gameOptions->historyMode && teleporter == nullptr && probability < 125) {
 				createTeleporter(it);
 				tryTeleport = true;
 			}

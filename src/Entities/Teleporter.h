@@ -20,8 +20,6 @@ public:
 
 	TeleporterState teleporterState = TeleporterState::CLOSE;
 
-	Teleporter();
-
 	Teleporter(sf::Vector2f pos);
 
 	void update();
