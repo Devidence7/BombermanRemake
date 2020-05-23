@@ -9,7 +9,7 @@ Interst_ptr &PointsDestroyMap::getIntersetZone(sf::Vector2i pos){
     return getIntersetZone(pos.x, pos.y);
 }
 
-Interst_ptr &PointsDestroyMap::addInterset(sf::Vector2i pos, Interst_ptr in){
+void PointsDestroyMap::addInterset(sf::Vector2i pos, Interst_ptr in){
     addInterset(pos.x, pos.y, in);
 }
 
@@ -391,22 +391,6 @@ void addPowerUpObjetive(sf::Vector2i poistionPU, std::vector<sf::Vector2i> &obje
     objetives.push_back(poistionPU);
 }
 
-sf::Vector2i seekPowerUp(list<ANode_Ptr> &movements, Entity_ptr e)
-{
-    std::vector<sf::Vector2i> objetives;
-    sf::Vector2i sizeLevel = Level::sizeLevel();
-    for (int x = 0; x < sizeLevel.x; x++)
-    {
-        for (int y = 0; y < sizeLevel.y; y++)
-        {
-            Entity_ptr e = Level::getCellMiniMapObject(x, y);
-            if (std::dynamic_pointer_cast<PowerUp>(e) != nullptr)
-            {
-                //generateOmitedZoneByBomb(sf::Vector2i(x,y), AreasOmited);
-            }
-        }
-    }
-}
 
 void selectEnemyPlayers(Entity_ptr IA, std::vector<sf::Vector2i> &objetives, int rangeVision)
 {
@@ -779,6 +763,7 @@ bool pathFinderDestroy2Farm(const sf::Vector2i &positionEnemy, std::list<ANode_P
     Heap<ANode_Ptr> frontera;
     std::map<vec2i, ANode_Ptr> expanded;
     std::map<vec2i, int> objetivesFound;
+    std::cout << positionEnemy.x << " --- " << positionEnemy.y << std::endl;
 
     bool haveInterset = IA->getIntersetDestroyWalls() > 0;
     
@@ -786,7 +771,8 @@ bool pathFinderDestroy2Farm(const sf::Vector2i &positionEnemy, std::list<ANode_P
     int interestSite = levelInterset != nullptr ? levelInterset->intersest() : 0;
     int firstIntersetSite = interestSite;
     int bestfounds = interestSite;
-    ANode_Ptr currentNode = std::make_shared<ANode>(ANode(positionEnemy, 0, interestSite ,nullptr));
+    ANode* a = new ANode(positionEnemy, 0, interestSite, nullptr);
+    auto currentNode = std::make_shared<ANode>(*a);
     ANode_Ptr lastBest = currentNode;
     if(interestSite == 3){
         path.push_back(currentNode);
@@ -806,11 +792,15 @@ bool pathFinderDestroy2Farm(const sf::Vector2i &positionEnemy, std::list<ANode_P
                 if (abs(i) != abs(j))
                 {
                     sf::Vector2i nodePosition(currentNode->xPosition() + i, currentNode->yPosition() + j);
+                    
                     if(!Level::isValidCell(nodePosition)){
                         continue;
                     }
                     levelInterset = PointsDestroyMap::getIntersetZone(nodePosition);
                     interestSite = levelInterset != nullptr ? levelInterset->intersest() : 0;
+                    if (levelInterset > 0) {
+                        std::cout << levelInterset << std::endl;
+                    }
                     ANode_Ptr newNode = std::make_shared<ANode>(ANode(nodePosition, currentNode->fAcum() + 1, interestSite ,currentNode));
                     int incrementCost = 0;
                     if (checkValidPositionWithImprudence(nodePosition, e, newNode->costNode(), incrementCost) && isOnVision(nodePosition, positionEnemy, IA->sg._SeekPEStruct.RangoVision)
@@ -950,6 +940,8 @@ bool pathFinderActions( Entity_ptr _ia, const std::vector<sf::Vector2i> &objetiv
             }
         }
     }
+
+    return false;
 }
 
 bool pathFindingGoWithCare(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> &path, Entity_ptr e, int costAddDestroy)
