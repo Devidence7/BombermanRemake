@@ -653,7 +653,7 @@ bool PlayerIAEntity::updatePlayer(){
 	if(this->dead){
 		return false;
 	}
-	std::cout << "c State " << State2string(currentState) <<"\n";
+	//std::cout << "c State " << State2string(currentState) <<"\n";
 
 	if(!this->expiredEntity && !this->dead && !this->respawning){
 		checkExploteRemote();
@@ -761,14 +761,15 @@ bool PlayerIAEntity::TryKickBomb(){
 }
 
 bool PlayerIAEntity::TryThrowBomb(){
-	//if(!this->canThrowBomb()){
-	//	return false;
-	//}
+	if(BombTaked == nullptr){
+		return false;
+	}
 	Level::ThrowBomb(me, std::dynamic_pointer_cast<Bomb>(BombTaked));
 	BombTaked.reset();
 	bombThrowed = true;
 	lastThrowedTime = GameTime::getTimeNow();
 	currentFrame = 0;
+	return true;
 }
 bool PlayerIAEntity::isObjetiveOnRange(){
 	if(movements.size() < 1 || !haveBombs()  || actionAvaible != ActionsAvalible::GRAB_BOMB){

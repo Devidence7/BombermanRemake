@@ -44,9 +44,9 @@ PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team, float posX,floa
 	cout<<"INITIAL POS X "<<posX<<" INITIAL POS Y "<<posY<<endl;
 
 
-	 actionAvaible = ActionsAvalible::KICK_BOM;
-	 numOfBombs = 3;
-	 powerOfBombs = 3;
+	//actionAvaible = ActionsAvalible::KICK_BOM;
+	//numOfBombs = 3;
+	//powerOfBombs = 3;
 }
 
 int PlayerEntity::getPowerOfBombs() {
@@ -401,11 +401,11 @@ bool PlayerEntity::updatePlayer() {
 	// Move Entity position
 	if (!expiredEntity) {
 		Interst_ptr i = PointsDestroyMap::getIntersetZone(getEntityMapCoordinates());
-		//if(i != nullptr){
-		//	std::cout<< "interes " <<  i->intersest() << "\n";
-		//}else{
-		//	std::cout<< "interes 0\n";
-		//}
+		if(i != nullptr){
+			std::cout<< "interes " <<  i->intersest() << "\n";
+		}else{
+			std::cout<< "interes 0\n";
+		}
 		move(velocity.x, velocity.y);
 		if (BombTaked != nullptr) {//Si tiene bomba, actualizar a la posicion del jugador (centrado segun cuadricula)
 			BombTaked->setPosition(Level::getMapCellCorner(this->getCenterPosition()));
