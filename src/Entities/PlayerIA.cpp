@@ -209,6 +209,8 @@ bool PlayerIAEntity::updateVelocity(){
 	if(StateIA::THROWING_BOMB == currentState){
 		lastMovement = objetiveTo;
 		velocity = sf::Vector2f(0,0);
+	}else if(actionAvaible == ActionsAvalible::REMOTE_BOMB && justActionDone){
+		velocity = sf::Vector2f(0,0);
 	}
 
 }
@@ -513,9 +515,14 @@ void PlayerIAEntity::checkExploteRemote(){
 	if(this->expiredEntity || this->dead || this->respawning){
 		return;
 	}
+	if(actionAvaible == ActionsAvalible::REMOTE_BOMB && justActionDone && GameTime::getTimeNow() - lastActionDone > 0.5){
+		justActionDone = false;
+	}
 	if(this->actionAvaible == ActionsAvalible::REMOTE_BOMB && this->BombsAsociated.size() > 0){
 		if(!isOnRangeExplosion(BombsAsociated.front()->getEntityMapCoordinates(), getCenterPosition(), getGlobalBounds() ,getPowerOfBombs())){
 			BombsAsociated.front()->setExpiredEntity();
+			justActionDone = true;
+			lastActionDone = GameTime::getTimeNow();
 		}
 	}
 }

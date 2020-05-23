@@ -34,6 +34,8 @@ void PointsDestroyMap::resetMap(){
     interestingMap = std::vector<std::vector<Interst_ptr>>(sLevel.y, std::vector<Interst_ptr>(sLevel.x, nullptr));
 }
 
+
+
 void PointsDestroyMap::updateMap(){
     resetMap();
     sf::Vector2i sLevel =  Level::sizeLevel();
@@ -266,6 +268,47 @@ Interst_ptr generateIntersetPowerUps(Entity_ptr e, PlayerIA_ptr p){
     return nullptr;
 }
 
+bool checkIsDirectAccesible(sf::Vector2i posA, sf::Vector2i posB){
+    if(posA.x != posB.x && posA.y != posB.y){
+        return false;
+    }
+    if(posA.x == posB.x && posA.y == posB.y){
+        return true;
+    }
+    
+    sf::Vector2f nDir = normalize(posB - posA);
+    bool accesible = true;
+    if(nDir.x != 0){
+        for(int x = posA.x + nDir.x; accesible && x != (posB.x); x += nDir.x){
+            Entity_ptr e = Level::getCellMiniMapObject(x, posA.y);
+            accesible = e == nullptr || std::dynamic_pointer_cast<PowerUp>(e) != nullptr;
+        }
+    }else{
+        for(int y = posA.y + nDir.y; accesible && y != (posB.y); y += nDir.y){
+            Entity_ptr e = Level::getCellMiniMapObject(posA.x, y);
+            accesible = e == nullptr || std::dynamic_pointer_cast<PowerUp>(e) != nullptr;
+        }
+    }
+    return accesible;
+}
+
+bool checkIfWillDestroy(sf::Vector2i wallPos){
+    bool willDestroy = false;
+    for(Entity_ptr e : Level::getEntities2Update() ){
+        Bomb_ptr b = std::dynamic_pointer_cast<Bomb>(e);
+        if(b != nullptr){
+            sf::Vector2i bombPos = b->getEntityMapCoordinates();
+            if(b->onFlight){
+                bombPos = getMapCoordinates(b->getObjetive());
+            }
+            if(isOnRangeBomb(bombPos, wallPos, b->bombPower)  && checkIsDirectAccesible(wallPos, bombPos)){
+                willDestroy = true;
+                break;
+            }
+        }
+    }
+    return willDestroy;
+}
 
 Interst_ptr generateIntersetPointDestroyer(sf::Vector2i posPossibleBom){
     sf::Vector2i sLevel = Level::sizeLevel();
@@ -278,23 +321,27 @@ Interst_ptr generateIntersetPointDestroyer(sf::Vector2i posPossibleBom){
     ///Oeste
     if(posPossibleBom.x > 0){
         m = Level::getCellMiniMapObject(posPossibleBom.x-1, posPossibleBom.y);
-        if(m != nullptr && std::dynamic_pointer_cast<BrickWall>(m) != nullptr){sum++;}
+        if(m != nullptr && std::dynamic_pointer_cast<BrickWall>(m) != nullptr && !m->getExpiredEntity() 
+            && !checkIfWillDestroy(m->getEntityMapCoordinates())){ sum++;}
     }
     ///Norte
     if(posPossibleBom.y > 0  ){
         m = Level::getCellMiniMapObject(posPossibleBom.x, posPossibleBom.y - 1);
-        if(m != nullptr && std::dynamic_pointer_cast<BrickWall>(m) != nullptr){sum++;}
+        if(m != nullptr && std::dynamic_pointer_cast<BrickWall>(m) != nullptr && !m->getExpiredEntity() 
+            && !checkIfWillDestroy(m->getEntityMapCoordinates())){sum++;}
     }
 
     ///Este
     if(posPossibleBom.x < sLevel.x -1 ){
         m = Level::getCellMiniMapObject(posPossibleBom.x + 1, posPossibleBom.y);
-        if(m != nullptr && std::dynamic_pointer_cast<BrickWall>(m) != nullptr){sum++;}
+        if(m != nullptr && std::dynamic_pointer_cast<BrickWall>(m) != nullptr 
+            && !m->getExpiredEntity() && !checkIfWillDestroy(m->getEntityMapCoordinates())){sum++;}
     }
     //Norte
     if(posPossibleBom.y < sLevel.y -1 ){
         m = Level::getCellMiniMapObject(posPossibleBom.x ,posPossibleBom.y  + 1);
-        if(m != nullptr && std::dynamic_pointer_cast<BrickWall>(m) != nullptr){sum++;}
+        if(m != nullptr && std::dynamic_pointer_cast<BrickWall>(m) != nullptr && !m->getExpiredEntity() 
+            && !checkIfWillDestroy(m->getEntityMapCoordinates())){sum++;}
     }
     return std::make_shared<IntersetArea>(IntersetArea(posPossibleBom, sum));
 }

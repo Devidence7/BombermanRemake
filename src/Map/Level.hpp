@@ -92,4 +92,7 @@ public:
 	static void deleteWall(sf::Vector2i pos);
 	static void checkSpawn(int posX,int posY);
 	static void updateTime();
+	static std::vector<Entity_ptr> &getEntities2Update(){
+		return entities;
+	}
 };

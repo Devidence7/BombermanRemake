@@ -18,20 +18,52 @@ inline bool isOnVision(sf::Vector2i pos, sf::Vector2i PointReference, int RangeV
     return RangeVision < 0 || (abs(pos.x - PointReference.x) < RangeVision && abs(pos.y - PointReference.y) < RangeVision);
 }
 
+bool checkIsDirectAccesible(sf::Vector2i posA, sf::Vector2i posB);
 
 inline bool isOnRangeExplosion(sf::Vector2i pos, sf::Vector2f centerPosition, sf::FloatRect body, int rangeBomb){
     sf::Vector2i centerMap = getMapCoordinates(centerPosition);
-    sf::Vector2i AnchoMax = getMapCoordinates(centerPosition + sf::Vector2f(body.height/2, 0));
-    sf::Vector2i AnchoMin = getMapCoordinates(centerPosition - sf::Vector2f(body.height/2, 0));
-    sf::Vector2i AltoMax = getMapCoordinates(centerPosition + sf::Vector2f(0, body.height/2 ));
-    sf::Vector2i AltoMin = getMapCoordinates(centerPosition - sf::Vector2f(0, body.height/2 ));
+    sf::Vector2i AnchoMax = getMapCoordinates(centerPosition + sf::Vector2f(body.width/2 + 2, 0));
+    sf::Vector2i AnchoMin = getMapCoordinates(centerPosition - sf::Vector2f(body.width/2 + 2, 0));
+    sf::Vector2i AltoMax = getMapCoordinates(centerPosition + sf::Vector2f(0, body.height/2 + 2 ));
+    sf::Vector2i AltoMin = getMapCoordinates(centerPosition - sf::Vector2f(0, body.height/2 + 2 ));
 
+    int posCol = -1; //-1 = noCol;
     bool onRange = (abs(pos.x - centerMap.x) <= rangeBomb && abs(pos.y - centerMap.y) == 0 )    || (abs(pos.y - centerMap.y) <= rangeBomb && abs(pos.x - centerMap.x) == 0);
-    onRange = onRange || (abs(pos.x - AnchoMax.x) <= rangeBomb && abs(pos.y - AnchoMax.y) == 0) || (abs(pos.y - AnchoMax.y)  <= rangeBomb && abs(pos.x - AnchoMax.x) == 0);
-    onRange = onRange || (abs(pos.x - AnchoMin.x) <= rangeBomb && abs(pos.y - AnchoMin.y) == 0) || (abs(pos.y - AnchoMin.y)  <= rangeBomb && abs(pos.x - AnchoMin.x) == 0);
-    onRange = onRange || (abs(pos.x - AltoMax.x)  <= rangeBomb && abs(pos.y - AltoMax.y) == 0 ) || (abs(pos.y - AltoMax.y)   <= rangeBomb && abs(pos.x - AltoMax.x) == 0);
-    onRange = onRange || (abs(pos.x - AltoMin.x)  <= rangeBomb && abs(pos.y - AltoMin.y) == 0 ) || (abs(pos.y - AltoMin.y)   <= rangeBomb && abs(pos.x - AltoMin.x) == 0);
-    return onRange;
+    if(onRange){posCol = 0;} //0 = center
+    onRange = onRange || (abs(pos.x - AnchoMax.x) <= rangeBomb && abs(pos.y - AnchoMax.y) == 0) || (abs(pos.y -  AnchoMax.y) <= rangeBomb && abs(pos.x -  AnchoMax.x) == 0);
+    if(onRange && posCol <0){posCol = 1;} // 1 = dch
+    onRange = onRange || (abs(pos.x - AnchoMin.x) <= rangeBomb && abs(pos.y - AnchoMin.y) == 0) || (abs(pos.y -  AnchoMin.y) <= rangeBomb && abs(pos.x -  AnchoMin.x) == 0);
+    if(onRange && posCol <0){posCol = 2;} //2 = izq
+    onRange = onRange || (abs(pos.x -  AltoMax.x) <= rangeBomb && abs(pos.y -  AltoMax.y) == 0) || (abs(pos.y -   AltoMax.y) <= rangeBomb && abs(pos.x -   AltoMax.x) == 0);
+    if(onRange && posCol <0){posCol = 3;} //3 = down
+    onRange = onRange || (abs(pos.x -  AltoMin.x) <= rangeBomb && abs(pos.y -  AltoMin.y) == 0) || (abs(pos.y -   AltoMin.y) <= rangeBomb && abs(pos.x -   AltoMin.x) == 0);
+    if(onRange && posCol <0){posCol = 4;} //4 = up
+    if(!onRange){
+        return false;
+    }
+    sf::Vector2i pos2Check;
+    switch (posCol)
+    {
+    case 0:
+        pos2Check = centerMap;
+        break;
+    case 1:
+        pos2Check = AnchoMax;
+        break;
+    case 2:
+        pos2Check = AnchoMin;
+        break;
+    case 3:
+        pos2Check = AltoMax;
+        break;
+    case 4:
+        pos2Check = AltoMin;
+        break;
+    
+    default:
+        break;
+    }
+    return onRange && checkIsDirectAccesible(pos2Check, pos);
 }
 
 // timeToPutNewBomb < 0 -> no quiere poner bomba
@@ -77,7 +109,7 @@ Interst_ptr generateIntersetPointDestroyer(sf::Vector2i posPossibleBom);
 bool pathFinderDestroy2Farm(const sf::Vector2i &positionEnemy, std::list<ANode_Ptr> &path, std::shared_ptr<Entity>  e, int costAddDestroy);
 bool pathFindingGoWithCare(const sf::Vector2i &positionEnemy, const std::vector<sf::Vector2i> &objetives, std::list<ANode_Ptr> &path, std::shared_ptr<Entity>  e, int costAddDestroy);
 bool pathFindingGoSafeArea(const sf::Vector2i &positionEnemy, std::list<ANode_Ptr> &path, std::shared_ptr<Entity>  e, int costAddDestroy);
-
+bool checkIfWillDestroy(sf::Vector2i wallPos);
 
 #include "OmittedAreas.hpp"
 

@@ -1,5 +1,5 @@
 #include "../Map/Level.hpp"
-
+#include "../Utils/IAFunctions.hpp"
 PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team, float posX,float posY) : Entity(), playerControls(pControls) {
 
 	team = _team;
@@ -397,6 +397,12 @@ bool PlayerEntity::updatePlayer() {
 
 	// Move Entity position
 	if (!expiredEntity) {
+		Interst_ptr i = PointsDestroyMap::getIntersetZone(getEntityMapCoordinates());
+		//if(i != nullptr){
+		//	std::cout<< "interes " <<  i->intersest() << "\n";
+		//}else{
+		//	std::cout<< "interes 0\n";
+		//}
 		move(velocity.x, velocity.y);
 		if (BombTaked != nullptr) {//Si tiene bomba, actualizar a la posicion del jugador (centrado segun cuadricula)
 			BombTaked->setPosition(Level::getMapCellCorner(this->getCenterPosition()));
