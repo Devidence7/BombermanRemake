@@ -20,10 +20,6 @@ class PickColorMenu {
 		GO_MAIN_MENU
 	};
 
-	sf::Texture texture;
-	sf::Texture textureBomberman;
-	sf::Sprite background;
-	sf::Sprite backgroundBomberman;
 	sf::RectangleShape menuBackground;
 	sf::RectangleShape menuBackgroundShadow;
 	sf::RectangleShape menuBackgroundShadow1;
@@ -71,22 +67,6 @@ class PickColorMenu {
 public:
 	void buildPickUpMenu(sf::RenderWindow& window, GameDisplayController& gameDisplay, Game& game) {
 		menu = new GameGUI::Menu(window);
-
-		texture.loadFromFile("../textures/interface/Background_orange_squares.png");
-		texture.setRepeated(true);
-
-    	/*textureBomberman.loadFromFile(MAIN_MENU_BACKGROUND_PATH);
-		backgroundBomberman.setTexture(textureBomberman);
-		float resizeVal = std::fmax((float)window.getSize().x / textureBomberman.getSize().x, (float)window.getSize().y / textureBomberman.getSize().y);
-		backgroundBomberman.setScale(resizeVal, resizeVal);
-		window.clear(sf::Color::Black);
-		window.draw(backgroundBomberman);
-		window.display();*/
-
-		background.setColor(sf::Color(255, 255, 0, 5));
-		background.setTexture(texture);
-		background.setScale(sf::Vector2f(2, 2));
-		background.setTextureRect({ window.getPosition().x, window.getPosition().y, (int)window.getSize().x, (int)window.getSize().y });
 
 		GameGUI::HorizontalBoxLayout* hbox = menu->addHorizontalBoxLayout();
 		GameGUI::VerticalBoxLayout* vbox1 = hbox->addVerticalBoxLayout();
@@ -174,11 +154,15 @@ private:
 		default:
 			break;
 		}
+
+		if (id != -1 && id != COLOR_1 && id != COLOR_2) {
+			GameSounds::buttonPress();
+		}
 	}
 
-	void draw(sf::RenderWindow& window, Game& game) {
-		// window.draw(backgroundBomberman);
-		window.draw(background);
+	void draw(sf::RenderWindow& window, Game& game, GameDisplayController &gameDisplay) {
+		window.draw(gameDisplay.backgroundBomberman);
+		window.draw(gameDisplay.getSquaresBackground());
 
 		window.draw(menuBackgroundShadow2);
 		window.draw(menuBackgroundShadow1);
@@ -203,7 +187,7 @@ public:
 			gameDisplay.colorPickerReprocessDisplay = false;
 			buildPickUpMenu(*gameDisplay.getWindow(), gameDisplay, game);
 		}
-		draw(*gameDisplay.getWindow(), game);
+		draw(*gameDisplay.getWindow(), game, gameDisplay);
 
 		// Manage window events and pass a callback to manage this menu buttons
 		gameDisplay.manageGameInterface(gameDisplay, std::bind(&PickColorMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));

@@ -60,11 +60,10 @@ class MultiplayerMenu {
 		MAIN = 1,
 		NUM_PLAYERS_SEL = 2,
 		TYPE_OF_GAME = 3,
-		PICK_MAP = 4,
+		PICK_MAP_ALL_VS_ALL = 4,
+		PICK_MAP_TEAMS = 5
 	};
 
-	sf::Texture texture;
-	sf::Sprite background;
 	sf::RectangleShape menuBackground;
 	sf::RectangleShape menuBackgroundShadow;
 	sf::RectangleShape menuBackgroundShadow1;
@@ -96,14 +95,7 @@ class MultiplayerMenu {
 public:
 	MultiplayerMenu(sf::RenderWindow& window, GameDisplayController& gameDisplay) {
 		previousMenu = MenuState::MAIN;
-		texture.loadFromFile("../textures/interface/Background_orange_squares.png");
-		texture.setRepeated(true);
-		background.setColor(sf::Color(255, 255, 0, 5));
-		background.setTexture(texture);
-		background.setScale(sf::Vector2f(2, 2));
-		background.setTextureRect({ 0, 0, (int)window.getSize().x, (int)window.getSize().y });
 		createNumPlaySelection(window, gameDisplay);
-
 	}
 
 private:
@@ -155,7 +147,7 @@ private:
 			game.gameOptions.numPlayers = 1;
 			game.gameOptions.numIAPlayers = 1;
 			fillPlayersAndTeamsArray(game, 0, 1, 2, 3, 0);
-			previousMenu = MenuState::MAIN;
+			previousMenu = MenuState::PICK_MAP_ALL_VS_ALL;
 			pickMap(*window, gameDisplay);
 			break;
 
@@ -163,7 +155,7 @@ private:
 			game.gameOptions.numPlayers = 2;
 			game.gameOptions.numIAPlayers = 0;
 			fillPlayersAndTeamsArray(game, 0, 1, 2, 3, 0);
-			previousMenu = MenuState::MAIN;
+			previousMenu = MenuState::PICK_MAP_ALL_VS_ALL;
 			pickMap(*window, gameDisplay);
 
 			break;
@@ -172,7 +164,7 @@ private:
 			game.gameOptions.numPlayers = 1;
 			game.gameOptions.numIAPlayers = 2;
 			fillPlayersAndTeamsArray(game, 0, 1, 2, 3, 3);
-			previousMenu = MenuState::MAIN;
+			previousMenu = MenuState::PICK_MAP_ALL_VS_ALL;
 			pickMap(*window, gameDisplay);
 			break;
 
@@ -180,14 +172,14 @@ private:
 			game.gameOptions.numPlayers = 2;
 			game.gameOptions.numIAPlayers = 1;
 			fillPlayersAndTeamsArray(game, 0, 1, 2, 3, 3);
-			previousMenu = MenuState::MAIN;
+			previousMenu = MenuState::PICK_MAP_ALL_VS_ALL;
 			pickMap(*window, gameDisplay);
 			break;
 
 		case ButtonActions::PL13IA:
 			game.gameOptions.numPlayers = 1;
 			game.gameOptions.numIAPlayers = 3;
-			previousMenu = MenuState::MAIN;
+			previousMenu = MenuState::PICK_MAP_ALL_VS_ALL;
 			fillPlayersAndTeamsArray(game, 0, 1, 2, 3, 4);
 			pickMap(*window, gameDisplay);
 			break;
@@ -195,7 +187,7 @@ private:
 			game.gameOptions.numPlayers = 2;
 			game.gameOptions.numIAPlayers = 2;
 			fillPlayersAndTeamsArray(game, 0, 1, 2, 3, 4);
-			previousMenu = MenuState::MAIN;
+			previousMenu = MenuState::PICK_MAP_ALL_VS_ALL;
 			pickMap(*window, gameDisplay);
 			break;
 
@@ -203,7 +195,7 @@ private:
 		case ButtonActions::PL1VS2IA:
 			game.gameOptions.numPlayers = 1;
 			game.gameOptions.numIAPlayers = 2;
-			previousMenu = MenuState::MAIN;
+			previousMenu = MenuState::PICK_MAP_TEAMS;
 			pickMap(*window, gameDisplay);
 			fillPlayersAndTeamsArray(game, 0, 1, 1, 1, 2);
 			break;
@@ -211,7 +203,7 @@ private:
 		case ButtonActions::PLVSPLIA:
 			game.gameOptions.numPlayers = 2;
 			game.gameOptions.numIAPlayers = 1;
-			previousMenu = MenuState::MAIN;
+			previousMenu = MenuState::PICK_MAP_TEAMS;
 			pickMap(*window, gameDisplay);
 			fillPlayersAndTeamsArray(game, 0, 1, 1, 1, 2);
 			break;
@@ -219,7 +211,7 @@ private:
 		case ButtonActions::PL2VS1IA:
 			game.gameOptions.numPlayers = 2;
 			game.gameOptions.numIAPlayers = 1;
-			previousMenu = MenuState::MAIN;
+			previousMenu = MenuState::PICK_MAP_TEAMS;
 			pickMap(*window, gameDisplay);
 			fillPlayersAndTeamsArray(game, 0, 0, 1, 1, 2);
 			break;
@@ -229,14 +221,14 @@ private:
 		case ButtonActions::PL1VS3IA:
 			game.gameOptions.numPlayers = 1;
 			game.gameOptions.numIAPlayers = 3;
-			previousMenu = MenuState::MAIN;
+			previousMenu = MenuState::PICK_MAP_TEAMS;
 			pickMap(*window, gameDisplay);
 			fillPlayersAndTeamsArray(game, 0, 1, 1, 1, 2);
 			break;
 		case ButtonActions::PLVSPL2IA:
 			game.gameOptions.numPlayers = 2;
 			game.gameOptions.numIAPlayers = 1;
-			previousMenu = MenuState::MAIN;
+			previousMenu = MenuState::PICK_MAP_TEAMS;
 			pickMap(*window, gameDisplay);
 			fillPlayersAndTeamsArray(game, 0, 1, 1, 1, 2);
 			break;
@@ -244,20 +236,20 @@ private:
 		case ButtonActions::PL2VS2IA:
 			game.gameOptions.numPlayers = 2;
 			game.gameOptions.numIAPlayers = 2;
-			previousMenu = MenuState::MAIN;
+			previousMenu = MenuState::PICK_MAP_TEAMS;
 			pickMap(*window, gameDisplay);
 			fillPlayersAndTeamsArray(game, 0, 0, 1, 1, 2);
 			break;
 		case ButtonActions::PLIAVSPLIA:
 			game.gameOptions.numPlayers = 2;
 			game.gameOptions.numIAPlayers = 2;
-			previousMenu = MenuState::MAIN;
+			previousMenu = MenuState::PICK_MAP_TEAMS;
 			pickMap(*window, gameDisplay);
 			fillPlayersAndTeamsArray(game, 0, 1, 0, 1, 2);
 			break;
 
 		case ButtonActions::MAP_1:
-			previousMenu = MenuState::PICK_MAP;
+			previousMenu = MenuState::MAIN;
 			createNumPlaySelection(*window, gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::PICK_COLOR);
 			gameDisplay.notifyChangeDisplay();
@@ -266,7 +258,7 @@ private:
 
 
 		case ButtonActions::MAP_2:
-			previousMenu = MenuState::PICK_MAP;
+			previousMenu = MenuState::MAIN;
 			createNumPlaySelection(*window, gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::PICK_COLOR);
 			gameDisplay.notifyChangeDisplay();
@@ -275,7 +267,7 @@ private:
 
 
 		case ButtonActions::MAP_3:
-			previousMenu = MenuState::PICK_MAP;
+			previousMenu = MenuState::MAIN;
 			createNumPlaySelection(*window, gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::PICK_COLOR);
 			gameDisplay.notifyChangeDisplay();
@@ -299,9 +291,14 @@ private:
 				createGameTypeMenu(*window, gameDisplay);
 				break;
 
-			case PICK_MAP:
+			case PICK_MAP_ALL_VS_ALL:
 				previousMenu = MenuState::TYPE_OF_GAME;
-				createAllVSAllMenu(*window, gameDisplay, game.gameOptions.numPlayers);
+				createAllVSAllMenu(*window, gameDisplay, game.gameOptions.numPlayers + game.gameOptions.numIAPlayers);
+				break;
+
+			case PICK_MAP_TEAMS:
+				previousMenu = MenuState::TYPE_OF_GAME;
+				createTeamVSTeamMenu(*window, gameDisplay, game.gameOptions.numPlayers + game.gameOptions.numIAPlayers);
 				break;
 
 			default:
@@ -309,9 +306,13 @@ private:
 			}
 			break;
 
+
 		case ButtonActions::QUIT:
 			window->close();
 			break;
+		}
+		if (id != -1) {
+			GameSounds::buttonPress();
 		}
 	}
 
@@ -349,6 +350,7 @@ private:
 	void createAllVSAllMenu(sf::RenderWindow& window, GameDisplayController& gameDisplay, int numPlayers) {
 		menu = new GameGUI::Menu(window);
 		GameGUI::HorizontalBoxLayout* hboxQuit = menu->addHorizontalBoxLayout();
+		cout << "TODOS CONTRA TODOS. NUM PLAYERS: " << numPlayers << endl;
 		switch ((numPlayers)) {
 		case 2:
 			menu->addButton("                      Jugador vs IA                       ", ButtonActions::PLVSIA);
@@ -379,7 +381,7 @@ private:
 	void createTeamVSTeamMenu(sf::RenderWindow& window, GameDisplayController& gameDisplay, int numPlayers) {
 		menu = new GameGUI::Menu(window);
 		GameGUI::HorizontalBoxLayout* hboxQuit = menu->addHorizontalBoxLayout();
-
+		cout << "EQUIPOS. NUM PLAYERS: " << numPlayers << endl;
 		switch ((numPlayers)) {
 
 		case 3:
@@ -416,8 +418,9 @@ private:
 		createBackgroundMenu(window);
 	}
 
-	void draw(sf::RenderWindow& window) {
-		window.draw(background);
+	void draw(sf::RenderWindow& window, GameDisplayController& gameDisplay) {
+		window.draw(gameDisplay.backgroundBomberman);
+		window.draw(gameDisplay.getSquaresBackground());
 
 		window.draw(menuBackgroundShadow2);
 		window.draw(menuBackgroundShadow1);
@@ -433,7 +436,7 @@ public:
 			gameDisplay.multiplayerReprocessDisplay = false;
 			createBackgroundMenu(*gameDisplay.getWindow());
 		}
-		draw(*gameDisplay.getWindow());
+		draw(*gameDisplay.getWindow(), gameDisplay);
 
 		// Manage window events and pass a callback to manage this menu buttons
 		gameDisplay.manageGameInterface(gameDisplay, std::bind(&MultiplayerMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));

@@ -89,6 +89,7 @@ private:
 		int id = menu->onEvent(event);
 		switch (id) {
 		case ButtonActions::STORY_MODE:
+			gameDisplay.backgroundOpacity = 0;
 			game.samePlay = false;
 			game.gameOptions.numIAPlayers = 0;
 			game.gameOptions.historyMode = true;
@@ -99,6 +100,7 @@ private:
 			//game.startNewGame(*window);
 			break;
 		case ButtonActions::VERSUS_MODE:
+			gameDisplay.backgroundOpacity = 0;
 			//  game.gameOptions.numPlayers = 2;
 			game.samePlay = false;
 			game.gameOptions.numIAPlayers = 0;
@@ -110,7 +112,7 @@ private:
 			break;
 
 		case ButtonActions::DEBUG:
-			
+			gameDisplay.backgroundOpacity = 0;
 			game.gameOptions.numPlayers = 1;
 			game.gameOptions.numIAPlayers = 1;
 			game.gameOptions.difLevel = 1;
@@ -121,11 +123,13 @@ private:
 
 
 		case ButtonActions::OPCIONS:
+			gameDisplay.backgroundOpacity = 0;
 			OptionsMenu::lastGameStateOptionsMenu = GameDisplayController::GameState::MAIN_MENU;
 			gameDisplay.setGameState(GameDisplayController::GameState::OPTIONS_MENU);
 			break;
 
 		case ButtonActions::HISTORY_SCORE:
+			gameDisplay.backgroundOpacity = 0;
 			gameDisplay.setGameState(GameDisplayController::FINAL_SCORE);
 			gameDisplay.notifyChangeDisplay();
 			break;

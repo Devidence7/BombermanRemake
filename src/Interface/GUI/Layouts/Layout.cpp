@@ -4,7 +4,6 @@
 #include "VerticalBoxLayout.hpp"
 #include "../Button.hpp"
 #include "../Label.hpp"
-#include <iostream>
 
 namespace GameGUI {
 
@@ -207,16 +206,13 @@ namespace GameGUI {
 			auto finalWidget = m_focus->searchFinalFocussedWidget();
 			if (finalWidget != nullptr && !finalWidget->transformableOptions) {
 				if (key == Theme::nextWidgetKey || key == sf::Keyboard::Key::S || (key == sf::Keyboard::Key::Tab && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift))) {
-					std::cout << "DOWN: " << std::endl;
 					int moves = finalWidget->goDownDown;
-					std::cout << moves << std::endl;
 					for (int i = 0; i < moves; i++) {
 						if (!focusNextWidget())
 							focusNextWidget();
 					}
 				}
 				else if (key == sf::Keyboard::Key::Right || key == sf::Keyboard::Key::D) {
-					std::cout << "RIGHT: " << std::endl;
 					int moves = finalWidget->goDownRight;
 					for (int i = 0; i < moves; i++) {
 						if (!focusNextWidget())
@@ -225,7 +221,6 @@ namespace GameGUI {
 
 				}
 				else if (key == Theme::previousWidgetKey || key == sf::Keyboard::Key::W || key == sf::Keyboard::Key::Tab) {
-					std::cout << "UP: " << std::endl;
 					int moves = finalWidget->goUpUp;
 					for (int i = 0; i < moves; i++) {
 						if (!focusPreviousWidget())
@@ -233,7 +228,6 @@ namespace GameGUI {
 					}
 				}
 				else if (key == sf::Keyboard::Key::Left || key == sf::Keyboard::Key::A) {
-					std::cout << "LEFT: " << std::endl;
 					int moves = finalWidget->goUpLeft;
 					for (int i = 0; i < moves; i++) {
 						if (!focusPreviousWidget())
@@ -241,7 +235,6 @@ namespace GameGUI {
 					}
 				}
 				else {
-					std::cout << "NOTHING: " << std::endl;
 					m_focus->onKeyPressed(key);
 				}
 			}
@@ -259,83 +252,6 @@ namespace GameGUI {
 				}
 			}
 		}
-
-
-
-
-
-
-
-
-
-
-
-		//if (m_focus != NULL && !m_focus->editedWidget) {
-		//	m_focus->onKeyPressed(key);
-		//	return;
-		//}
-
-		//if (m_focus != NULL && !m_focus->transformableOptions) {
-		//	std::cout << "Transformable: " << m_focus->transformableOptions << std::endl;
-		//	if (key == Theme::nextWidgetKey || key == sf::Keyboard::Key::S || (key == sf::Keyboard::Key::Tab && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)))
-		//	{
-		//		std::cout << "DOWN: " << std::endl;
-		//		int moves = m_focus->goDownDown;
-		//		std::cout << moves << std::endl;
-		//		for (int i = 0; i < moves; i++) {
-		//			if (!focusNextWidget())
-		//				focusNextWidget();
-		//		}
-		//	}
-		//	else if (key == sf::Keyboard::Key::Right || key == sf::Keyboard::Key::D) {
-		//		std::cout << "RIGHT: " << std::endl;
-		//		int moves = m_focus->goDownRight;
-		//		for (int i = 0; i < moves; i++) {
-		//			if (!focusNextWidget())
-		//				focusNextWidget();
-		//		}
-
-		//	}
-		//	else if (key == Theme::previousWidgetKey || key == sf::Keyboard::Key::W || key == sf::Keyboard::Key::Tab)
-		//	{
-		//		std::cout << "UP: " << std::endl;
-		//		int moves = m_focus->goUpUp;
-		//		for (int i = 0; i < moves; i++) {
-		//			if (!focusPreviousWidget())
-		//				focusPreviousWidget();
-		//		}
-		//	}
-		//	else if (key == sf::Keyboard::Key::Left || key == sf::Keyboard::Key::A) {
-		//		std::cout << "LEFT: " << std::endl;
-		//		int moves = m_focus->goUpLeft;
-		//		for (int i = 0; i < moves; i++) {
-		//			if (!focusPreviousWidget())
-		//				focusPreviousWidget();
-		//		}
-		//	}
-		//	else if (m_focus != NULL)
-		//	{
-		//		std::cout << "NOTHING: " << std::endl;
-		//		m_focus->onKeyPressed(key);
-		//	}
-		//}
-		//else {
-		//	if (m_focus == NULL) {
-		//		if (key == sf::Keyboard::Key::Right || key == sf::Keyboard::Key::D) {
-		//			if (!focusNextWidget())
-		//				focusNextWidget();
-		//		}
-		//		else if (key == sf::Keyboard::Key::Left || key == sf::Keyboard::Key::A) {
-		//			if (!focusPreviousWidget())
-		//				focusPreviousWidget();
-		//		}
-		//	}
-		//	else {
-		//		std::cout << "Transformable: " << m_focus->transformableOptions << std::endl;
-		//	}
-
-		//	
-		//}
 	}
 
 	void Layout::onKeyReleased(sf::Keyboard::Key key) {

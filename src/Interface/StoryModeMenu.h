@@ -28,8 +28,6 @@ class StoryModeMenu {
 		NUMPLAYERS
 	};
 
-	sf::Texture texture;
-	sf::Sprite background;
 	sf::RectangleShape menuBackground;
 	sf::RectangleShape menuBackgroundShadow;
 	sf::RectangleShape menuBackgroundShadow1;
@@ -61,12 +59,6 @@ public:
 	StoryModeMenu(sf::RenderWindow& window) {
 		previousMenu=MenuState::MAIN;
 
-		texture.loadFromFile("../textures/interface/Background_orange_squares.png");
-		texture.setRepeated(true);
-		background.setColor(sf::Color(255, 255, 0, 5));
-		background.setTexture(texture);
-		background.setScale(sf::Vector2f(2, 2));
-		background.setTextureRect({ 0, 0, (int)window.getSize().x, (int)window.getSize().y });
 		createNumPlayersMenu(window);
 
 	}
@@ -141,6 +133,9 @@ private:
 			window->close();
 			break;
 		}
+		if (id != -1) {
+			GameSounds::buttonPress();
+		}
 	}
 
 	void createDifficultyMenu(sf::RenderWindow& window){
@@ -164,10 +159,10 @@ private:
 		createBackgroundMenu(window);
 	}
 
-	void draw(sf::RenderWindow& window) {
-		
+	void draw(sf::RenderWindow& window, GameDisplayController& gameDisplay) {
 
-		window.draw(background);
+		window.draw(gameDisplay.backgroundBomberman);
+		window.draw(gameDisplay.getSquaresBackground());
 
 		window.draw(menuBackgroundShadow2);
 		window.draw(menuBackgroundShadow1);
@@ -183,7 +178,7 @@ public:
 			gameDisplay.storyReprocessDisplay = false;
 			createBackgroundMenu(*gameDisplay.getWindow());
 		}
-		draw(*gameDisplay.getWindow());
+		draw(*gameDisplay.getWindow(), gameDisplay);
 
 		// Manage window events and pass a callback to manage this menu buttons
 		gameDisplay.manageGameInterface(gameDisplay, std::bind(&StoryModeMenu::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));

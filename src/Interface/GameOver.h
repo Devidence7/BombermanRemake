@@ -20,9 +20,7 @@ class GameOver {
 		QUIT
 	};
 
-	sf::Texture texture;
 	sf::Text game_over;
-	sf::Sprite background;
 	sf::RectangleShape menuBackground;
 	sf::RectangleShape menuBackgroundShadow;
 	sf::RectangleShape menuBackgroundShadow1;
@@ -59,15 +57,6 @@ public:
 		if (!font.loadFromFile("../textures/mainMenu/PixelEmulator.ttf")) {
 			//cosas
 		}
-
-		texture.loadFromFile("../textures/interface/Background_orange_squares.png");
-		texture.setRepeated(true);
-		
-		background.setTexture(texture);
-		background.setScale(sf::Vector2f(2, 2));
-		background.setTextureRect({ 0, 0, (int)window.getSize().x, (int)window.getSize().y });
-		background.setColor(sf::Color(10, 10, 10, 20));
-
 
 		menu->addButton("                Reintentar               ", ButtonActions::RETRY);
 		menu->addButton("        Ir al menu principal       ", ButtonActions::GO_MAIN_MENU);
@@ -115,8 +104,9 @@ private:
 		}
 	}
 
-	void draw(sf::RenderWindow& window) {
-		window.draw(background);
+	void draw(sf::RenderWindow& window, GameDisplayController& gameDisplay) {
+		window.draw(gameDisplay.backgroundBomberman);
+		window.draw(gameDisplay.getSquaresBackground());
 		window.draw(game_over);
 		window.draw(menuBackgroundShadow2);
 		window.draw(menuBackgroundShadow1);
@@ -132,7 +122,7 @@ public:
 			gameDisplay.gameOverReprocessDisplay = false;
 			createGameOverInterface(*gameDisplay.getWindow());
 		}
-		draw(*gameDisplay.getWindow());
+		draw(*gameDisplay.getWindow(), gameDisplay);
 
 		// Manage window events and pass a callback to manage this menu buttons
 		gameDisplay.manageGameInterface(gameDisplay, std::bind(&GameOver::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));
