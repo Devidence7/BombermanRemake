@@ -75,7 +75,7 @@ int main(int argc, char* argv[]) {
 			break;
 
 		case GameDisplayController::GameState::LOADING:
-			gameDisplayController.getWindow()->setView(gameDisplayController.menuView);
+			// gameDisplayController.getWindow()->setView(gameDisplayController.menuView);
 
 			game.startNewGame(*gameDisplayController.getWindow(), gameDisplayController);
 
