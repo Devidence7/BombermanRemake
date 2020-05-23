@@ -1201,3 +1201,84 @@ bool PanicMode(sf::Vector2i cPosition, ActionsAvalible aa, LookingAt &at){
     }
     return canUSe;
 }
+
+bool PanicMode(sf::Vector2i posPLayer, ActionsAvalible aa, LookingAt &at, std::list<ANode_Ptr> &movements){
+    sf::Vector2i sLevel = Level::sizeLevel();
+    bool bombX = false;
+    bool bombY = false;
+    int mostNearX = 0;
+    int mostNearY = 0;
+    for(int x = 1;  x < sLevel.x - 1; x++){
+        Bomb_ptr b = std::dynamic_pointer_cast<Bomb>(Level::getCellMiniMapObject(x, posPLayer.y));
+        sf::Vector2i posBom = sf::Vector2i(x, posPLayer.y);
+        if(x == posPLayer.x){
+            continue;
+        }
+        if(b != nullptr && checkIsDirectAccesible(posPLayer, sf::Vector2i(x, posPLayer.y)) && abs(x) < abs(mostNearX)){
+            sf::Vector2f dir = normalize(posBom  - posPLayer);
+            sf::Vector2i iDir(dir.x, dir.y);
+            if(canUseAbilityPM(posBom, aa, posBom + iDir)){
+            mostNearX = x;
+            bombX = true;
+            }
+        }
+        
+    }
+  
+    for(int y = 1;  y < sLevel.y - 1; y++){
+        if(y == posPLayer.y){
+            continue;
+        }
+        Bomb_ptr b = std::dynamic_pointer_cast<Bomb>(Level::getCellMiniMapObject(posPLayer.x, y));
+        sf::Vector2i posBom = sf::Vector2i(posPLayer.x, y);
+       if(b != nullptr && checkIsDirectAccesible(posPLayer, posBom) && abs(y) < abs(mostNearX)){
+            sf::Vector2f dir = normalize(posBom  - posPLayer);
+            sf::Vector2i iDir(dir.x, dir.y);
+            if(canUseAbilityPM(posBom, aa, posBom + iDir)){
+                mostNearY = y;
+                bombY = true;
+            }
+        }
+    }
+    sf::Vector2i bomP;
+    if(bombX && bombY){
+        if(abs(mostNearX) < abs( mostNearY)){
+            bomP = sf::Vector2i(mostNearX, posPLayer.y);
+        }else{
+            bomP = sf::Vector2i(posPLayer.x, mostNearY);
+        }
+    }else if(bombX)
+    {
+        bomP = sf::Vector2i(mostNearX, posPLayer.y);
+    }else if(bombY){
+        bomP = sf::Vector2i(posPLayer.x, mostNearY);
+    }else{
+        return false;
+    }
+    
+
+    sf::Vector2f nDir = normalize(bomP - posPLayer);
+    sf::Vector2i inDir(nDir.x, nDir.y);
+    for(sf::Vector2i ip = posPLayer + inDir; ip.x != bomP.x && ip.y != bomP.y; ip = ip + inDir){
+        movements.push_back(std::make_shared<ANode>(ANode(ip, 0,0)));
+    }
+    if(aa == ActionsAvalible::GRAB_BOMB){
+        //Lanzar bomba hacia atras
+        nDir = -nDir;
+    }
+
+    if(nDir.x > 0){
+        at = LookingAt::right;
+        return true;
+    }else if(nDir.x < 0 ){
+        at = LookingAt::left;
+        return true;
+    }else if(nDir.y > 0){
+        at = LookingAt::down;
+        return true;
+    }else if(nDir.y < 0){
+        at = LookingAt::up;
+        return true;
+    }
+    return false;
+}

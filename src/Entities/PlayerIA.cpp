@@ -325,9 +325,13 @@ void PlayerIAEntity::putABomb(){
 			if(movements.size() < 1){
 				//Bloqueado
 				LookingAt at;
-				if(PanicMode(getEntityMapCoordinates(), actionAvaible, at) ){
+				if(PanicMode(getEntityMapCoordinates(), actionAvaible, at, movements) ){
+					std::cout << "Pani mode\n";
+					currentMovement = nullptr;
 					objetiveTo = at;
 					currentState = StateIA::PANIC_MODE;
+				}else{
+					std::cout << "NO Panic mode\n";
 				}
 			}else{
 				currentState = StateIA::RUNAWAY;
@@ -419,9 +423,13 @@ void PlayerIAEntity::decildetState(){
 			if(movements.size() < 1){
 				//Bloqueado
 				LookingAt at;
-				if(PanicMode(getEntityMapCoordinates(), actionAvaible, at) ){
+				if(PanicMode(getEntityMapCoordinates(), actionAvaible, at, movements) ){
+					std::cout << "Pani mode\n";
+					currentMovement = nullptr;
 					objetiveTo = at;
 					currentState = StateIA::PANIC_MODE;
+				}else{
+					std::cout << "NO Panic mode\n";
 				}
 			}else{
 				this->currentState = StateIA::RUNAWAY;				
@@ -600,9 +608,13 @@ void PlayerIAEntity::updateState(){
 		if(pathFindingGoSafeArea(getEntityMapCoordinates(), movements, me, 0)){
 			if(movements.size() < 1){
 				LookingAt at;
-				if(PanicMode(getEntityMapCoordinates(), actionAvaible, at) ){
+				if(PanicMode(getEntityMapCoordinates(), actionAvaible, at, movements) ){
+					std::cout << "Pani mode\n";
+					currentMovement = nullptr;
 					objetiveTo = at;
 					currentState = StateIA::PANIC_MODE;
+				}else{
+					std::cout << "NO Panic mode\n";
 				}
 			}else{
 				currentState = StateIA::RUNAWAY;

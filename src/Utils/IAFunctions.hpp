@@ -111,6 +111,7 @@ bool pathFindingGoWithCare(const sf::Vector2i &positionEnemy, const std::vector<
 bool pathFindingGoSafeArea(const sf::Vector2i &positionEnemy, std::list<ANode_Ptr> &path, std::shared_ptr<Entity>  e, int costAddDestroy);
 bool checkIfWillDestroy(sf::Vector2i wallPos);
 bool PanicMode(sf::Vector2i cPosition, ActionsAvalible aa, LookingAt &at);
+bool PanicMode(sf::Vector2i posPLayer, ActionsAvalible aa, LookingAt &at, std::list<ANode_Ptr> &movements);
 #include "OmittedAreas.hpp"
 
 inline void addThisZone2OmittedArea(sf::Vector2i cPos, std::list<OmittedArea> & oaList, int powerOfBombs ){
