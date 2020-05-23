@@ -381,12 +381,7 @@ ANode::ANode(const sf::Vector2i cp, float fAcum, int _numOfWalss ,std::shared_pt
 
 ANode::ANode(const sf::Vector2i cp, float fAcum, int numOFBombsOrFires, bool bombOrNot,std::shared_ptr<ANode> p)
     : currentPostion(cp), f(fAcum), parent(p) {
-    if(bombOrNot){
-        h = numOFBombsOrFires;
-    }else{
-        h =  1 - numOFBombsOrFires/3;   
-        numOfWalls = numOFBombsOrFires;
-    }
+    h = numOFBombsOrFires;
 }
 
 ANode::ANode(const sf::Vector2i cp, sf::Vector2i dir, const sf::Vector2i objetive, float fAcum, std::shared_ptr<ANode> p)
