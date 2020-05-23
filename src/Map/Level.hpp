@@ -34,6 +34,8 @@ class Level
 //	static Entity_ptr tel;
 	
 	static int stage;
+	static int dimX; 
+	static int dimY;
 
 public:
 	static bool exitHasApeared;

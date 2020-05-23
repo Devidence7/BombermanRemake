@@ -26,6 +26,7 @@ Teleporter::Teleporter(sf::Vector2f pos) : Entity() {
 	isFireDestroyable = false;
 	fireCanGoThroght = false;
 	collisioner = false;
+	expiredEntity = false;
 
 	spriteCounter = GameTime::getTimeNow();
 

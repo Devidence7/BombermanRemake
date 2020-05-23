@@ -11,6 +11,8 @@ bool Level::canFinishLevel = false;
 bool Level::levelFinished = false;
 int Level::numWalls = 0;
 int Level::stage = 1;
+int Level::dimX = 1;
+int Level::dimY = 1;
 int Level::numEnemiesLeft = 0;
 double *gameTime;
 Teleporter_ptr Level::teleporter = nullptr;
@@ -26,6 +28,8 @@ Level::Level(int dimX, int dimY, bool debug, int stage,GameOptions* gameOptions)
 	Level::gameOptions = gameOptions;
 	
 	Level::stage = stage;
+	Level::dimX = dimX + 1;
+	Level::dimY = dimY + 1;
 	
 	this->onFlightBombs.clear();
 	this->entities.clear();
@@ -54,8 +58,6 @@ Level::Level(int dimX, int dimY, bool debug, int stage,GameOptions* gameOptions)
 		Level::stage = 3;
 		break;
 	}
-
-
 
 	// Create all pillars:
 	for (int x = 0; x < dimX + 2; x++) {
@@ -160,7 +162,6 @@ void Level::createTeleporter(Entity_ptr it) {
 	Level::exitHasApeared = true;
 	Teleporter_ptr newObject = std::make_shared<Teleporter>(Teleporter((it)->getPosition()));
 	addEntityToMiniMap(newObject, getMapCoordinates((it)->getPosition()));
-	addNewItem(newObject);
 	GameSounds::teleportAppear();
 
 	teleporter = newObject;
@@ -224,6 +225,7 @@ void Level::brickWallOutcomes(Entity_ptr it) {
 				tryTeleport = true;
 			}
 
+			cout << "Try teleporter  " << tryTeleport << endl;
 			if (newObject != nullptr) {
 				addEntityToMiniMap(newObject, getMapCoordinates((it)->getPosition()));
 				addNewItem(newObject);
@@ -246,6 +248,15 @@ void Level::brickWallOutcomes(Entity_ptr it) {
 void Level::update() {
 	auto it = entities.begin();
 	int counter = 0;
+	// Update teleporter if it is one:
+	if (teleporter != nullptr) {
+		teleporter->update();
+		if (getCellMiniMapObject(getMapCoordinates(teleporter->getPosition())) == nullptr || std::dynamic_pointer_cast<Teleporter>(getCellMiniMapObject(getMapCoordinates(teleporter->getPosition()))) == nullptr){
+			cout << "ALGUIEN ELIMINO EL TELEPORTER" << endl;
+			addEntityToMiniMap(teleporter, getMapCoordinates(teleporter->getPosition()));
+		}
+	}
+
 	// This is made this way because we need to erase element from a vector while we are iterating
 	//std::cout << "Entreando a update\n";
 	while (it != entities.end()) {
@@ -632,6 +643,12 @@ Entity_ptr& Level::getCellObject(int x, int y) {
 }
 
 Entity_ptr& Level::getCellMiniMapObject(int x, int y) {
+	
+	if (x < 0 || y < 0 || x > Level::dimX || y > Level::dimY) { 
+		cout << x << "  -- " << y << endl;
+		return miniMap[0][0];
+	}
+
 	if (miniMap[y][x].get() != nullptr && miniMap[y][x].get()->getExpiredEntity()) {
 		miniMap[y][x].reset();
 	}
