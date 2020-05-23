@@ -385,6 +385,7 @@ ANode::ANode(const sf::Vector2i cp, float fAcum, int numOFBombsOrFires, bool bom
         h = numOFBombsOrFires;
     }else{
         h =  1 - numOFBombsOrFires/3;   
+        numOfWalls = numOFBombsOrFires;
     }
 }
 
