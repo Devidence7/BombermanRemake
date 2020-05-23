@@ -105,4 +105,5 @@ public:
 	bool objetiveOnExactlyThrowBomb();
 	bool canArraiveBombKickinExactly();
 	void updatePanicMode();
+	bool canArraiveBombKickin();
 };

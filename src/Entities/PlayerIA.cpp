@@ -568,6 +568,10 @@ void PlayerIAEntity::updateState(){
 			currentState = StateIA::THROWING_BOMB;
 			objetiveTo = at;
 			//movements.clear();
+		}else if(actionAvaible == ActionsAvalible::KICK_BOM && canArraiveBombKickin()){
+			currentMovement = nullptr;
+			currentState = StateIA::KICKING_BOMB;
+			Level::addBomb(me);
 		}
 	case  StateIA::FARM:
 		updateFarm();
@@ -855,6 +859,47 @@ bool PlayerIAEntity::isObjetiveFarmOnRange(){
 			Level::addBomb(me);
 			return true;
 		}
+	}
+	return false;
+}
+
+bool PlayerIAEntity::canArraiveBombKickin(){
+	if(movements.size() < 2 || !haveBombs()  || actionAvaible != ActionsAvalible::KICK_BOM){
+		return false;
+	}
+
+	sf::Vector2i objPosition = movements.back()->getPosition();
+	sf::Vector2i cPosition = getEntityMapCoordinates();
+
+	if(objPosition.x != cPosition.x && objPosition.y != cPosition.y){
+		return false;
+	}
+	if(objPosition.x == cPosition.x && objPosition.y == cPosition.y){
+		return false;
+	}
+	if(checkIsDirectAccesible(cPosition, objPosition)){
+		sf::Vector2f Dir = normalize(objPosition - cPosition);
+		sf::Vector2i iDir(Dir.x, Dir.y);
+		
+		Entity_ptr e = Level::getCellMiniMapObject(cPosition - iDir);
+		bool space2kick = e == nullptr || std::dynamic_pointer_cast<PowerUp>(e) != nullptr;
+		if(space2kick){
+			if(Dir.x < 0){
+				objetiveTo = LookingAt::left;
+			}else if(Dir.x > 0){
+				objetiveTo = LookingAt::right;
+			}
+			else if(Dir.y > 0){
+				objetiveTo = LookingAt::down;
+			}
+			else if(Dir.y < 0){
+				objetiveTo = LookingAt::up;
+			}
+			movements.clear();
+			movements.push_back(std::make_shared<ANode>(ANode(sf::Vector2i(cPosition - iDir), 0,0)));
+			//movements.push_back(std::make_shared<ANode>(sf::Vector2i(cPosition)));
+		}
+		return space2kick;
 	}
 	return false;
 }
