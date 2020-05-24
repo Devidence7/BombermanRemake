@@ -13,6 +13,36 @@ class MultiplayerMenu {
 
 	bool EsqPressed = false;
 
+	GameGUI::Slider* mapSlider;
+	GameGUI::Label* mapText;
+	const int mapQuantum = 50;
+	int map = 1;
+
+	GameGUI::Slider* livesSlider;
+	GameGUI::Label* livesText;
+	const int livesQuantum = 11;
+	int lives = 3;
+
+	GameGUI::Slider* sizeMapSlider;
+	GameGUI::Label* sizeMapText;
+	const int sizeMapQuantum = 50;
+	int sizeMAp = 2;
+
+	GameGUI::Slider* percentageBrickWallsSlider;
+	GameGUI::Label* percentageBrickWallsText;
+	const int percentageBrickWallsQuantum = 1;
+	int percentageBrickWalls = 66;
+
+	GameGUI::Slider* startingAbilitySlider;
+	GameGUI::Label* startingAbilityText;
+	const int startingAbilityQuantum = 25;
+	ActionsAvalible startingAbility = NONE_ACTION;
+
+	GameGUI::Slider* difficultyIASlider;
+	GameGUI::Label* difficultyIAText;
+	const int difficultyIAQuantum = 50;
+	int difficultyLevel = 1;
+
 	enum ButtonActions {
 		//NUmJUGADORES
 		TWOPLAYERS,
@@ -47,10 +77,15 @@ class MultiplayerMenu {
 		PL2VS2IA,
 		PLIAVSPLIA,
 		//Maps
-		MAP_1,
-		MAP_2,
-		MAP_3,
+		
+		MAP,
+		MAPSIZE,
+		LIVES,
+		PERCENTAGE_BRICK_WALL,
+		ABILITY,
+		IA_DIFFICULTY,
 
+		CONTINUE,
 		BACK,
 		QUIT
 
@@ -248,16 +283,55 @@ private:
 			fillPlayersAndTeamsArray(game, 0, 1, 0, 1, 2);
 			break;
 
-		case ButtonActions::MAP_1:
+		case ButtonActions::CONTINUE:
 			previousMenu = MenuState::MAIN;
 			createNumPlaySelection(*window, gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::PICK_COLOR);
 			gameDisplay.notifyChangeDisplay();
-			game.gameOptions.selectedStage = 1;
+
+			// Pass the settings
+			game.gameOptions.selectedStage = map;
+			game.gameOptions.percentageOfWalls = percentageBrickWalls;
+			game.gameOptions.startingLives = lives;
+			game.gameOptions.selectedSizeStage = sizeMAp;
+			game.gameOptions.startingAbility = startingAbility;
+			game.gameOptions.IADifficulty = difficultyLevel;
+
+			break;
+
+		case ButtonActions::MAP:
+			map = mapSlider->getValue() / mapQuantum;
+			mapText->setText(mapToString(map), false);
+			break;
+
+		case ButtonActions::MAPSIZE:
+			sizeMAp = sizeMapSlider->getValue() / sizeMapQuantum;
+			sizeMapText->setText(mapSizeToString(sizeMAp), false);
+			break;
+
+		case ButtonActions::ABILITY:
+			startingAbility = abilityToAbility(startingAbilitySlider->getValue() / startingAbilityQuantum);
+			startingAbilityText->setText(abilityToString(startingAbilitySlider->getValue() / startingAbilityQuantum), false);
+			break;
+
+		case ButtonActions::LIVES:
+			lives = livesSlider->getValue() / livesQuantum + 1;
+			livesText->setText(to_string(lives), false);
+			break;
+
+		case ButtonActions::PERCENTAGE_BRICK_WALL:
+			percentageBrickWalls = percentageBrickWallsSlider->getValue() / percentageBrickWallsQuantum;
+			percentageBrickWallsText->setText(to_string(percentageBrickWalls), false);
+			break;
+
+		case ButtonActions::IA_DIFFICULTY:
+			difficultyLevel = difficultyIASlider->getValue() / difficultyIAQuantum;
+			difficultyIAText->setText(difficultyIAToString(difficultyLevel), false);
 			break;
 
 
-		case ButtonActions::MAP_2:
+
+		/*case ButtonActions::MAP_2:
 			previousMenu = MenuState::MAIN;
 			createNumPlaySelection(*window, gameDisplay);
 			gameDisplay.setGameState(GameDisplayController::GameState::PICK_COLOR);
@@ -272,7 +346,7 @@ private:
 			gameDisplay.setGameState(GameDisplayController::GameState::PICK_COLOR);
 			gameDisplay.notifyChangeDisplay();
 			game.gameOptions.selectedStage = 3;
-			break;
+			break;*/
 
 
 		case ButtonActions::BACK:
@@ -406,14 +480,183 @@ private:
 
 	}
 
+	string mapToString(int num) {
+		switch (num) {
+		case 0:
+			return "Prision  ";
+			break;
+		case 1:
+			return "Tesoreria";
+			break;
+		default:
+			return "Cristales";
+			break;
+		}
+	}
+
+	string mapSizeToString(int num) {
+		switch (num) {
+		case 0:
+			return "Diminuto";
+			break;
+		case 1:
+			return "Mediano";
+			break;
+		default:
+			return "Grande";
+			break;
+		}
+	}
+
+	string difficultyIAToString(int num) {
+		switch (num) {
+		case 0:
+			return "Facil";
+			break;
+		case 1:
+			return "Normal";
+			break;
+		default:
+			return "Dificil";
+			break;
+		}
+	}
+
+	string abilityToString(int num) {
+		switch (num) {
+		case 0:
+			return "Ninguna";
+			break;
+		case 1:
+			return "Guante";
+			break;
+		case 2:
+			return "B Remota";
+			break;
+		case 3:
+			return "Travesia";
+			break;
+		default:
+			return "Patear";
+			break;
+		}
+	}
+
+	ActionsAvalible abilityToAbility(int num) {
+		switch (num) {
+		case 0:
+			return ActionsAvalible::NONE_ACTION;
+			break;
+		case 1:
+			return ActionsAvalible::GRAB_BOMB;
+			break;
+		case 2:
+			return ActionsAvalible::REMOTE_BOMB;
+			break;
+		case 3:
+			return ActionsAvalible::THROUGH_BOMB;
+			break;
+		default:
+			return ActionsAvalible::KICK_BOM;
+			break;
+		}
+	}
+
+	void centerElement(GameGUI::Widget* e) {
+		sf::Vector2f eSize = e->getSize();
+		sf::Vector2f mSize = menu->getSize();
+		e->setPosition(e->getPosition() + sf::Vector2f(mSize.x / 2 - eSize.x / 2, 0));
+	}
+
 	void pickMap(sf::RenderWindow& window, GameDisplayController& gameDisplay) {
 		menu = new GameGUI::Menu(window);
-		GameGUI::HorizontalBoxLayout* hboxQuit = menu->addHorizontalBoxLayout();
+		auto title = menu->add(new GameGUI::Label("Opciones de la partida"));
+		GameGUI::FormLayout* f = menu->addFormLayout();
+		
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		mapSlider = new GameGUI::Slider();
+		mapSlider->setQuantum(mapQuantum);
+		mapSlider->setValue(map * mapQuantum);
 
-		menu->addButton("             STAGE 1             ", ButtonActions::MAP_1);
-		menu->addButton("             STAGE 2             ", ButtonActions::MAP_2);
-		menu->addButton("             STAGE 3             ", ButtonActions::MAP_3);
-		hboxQuit->addButton("Atras", ButtonActions::BACK);
+		
+		GameGUI::HorizontalBoxLayout* mapLine = new GameGUI::HorizontalBoxLayout();
+		mapLine->add(mapSlider, ButtonActions::MAP);
+		mapText = mapLine->addLabel(mapToString(mapSlider->getValue() / mapQuantum));
+
+		f->addRow("Mapa", mapLine);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		livesSlider = new GameGUI::Slider();
+		livesSlider->setQuantum(livesQuantum);
+		livesSlider->setValue(lives * livesQuantum);
+
+		
+		GameGUI::HorizontalBoxLayout* livesLine = new GameGUI::HorizontalBoxLayout();
+		livesLine->add(livesSlider, ButtonActions::LIVES);
+		livesText = livesLine->addLabel(to_string(livesSlider->getValue() / livesQuantum));
+
+		f->addRow("Vidas", livesLine);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+
+		sizeMapSlider = new GameGUI::Slider();
+		sizeMapSlider->setQuantum(sizeMapQuantum);
+		sizeMapSlider->setValue(sizeMAp * sizeMapQuantum);
+
+
+		GameGUI::HorizontalBoxLayout* sizeMapLine = new GameGUI::HorizontalBoxLayout();
+		sizeMapLine->add(sizeMapSlider, ButtonActions::MAPSIZE);
+		sizeMapText = sizeMapLine->addLabel(mapSizeToString(sizeMapSlider->getValue() / sizeMapQuantum));
+
+		f->addRow("Dimension del mapa", sizeMapLine);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+
+		percentageBrickWallsSlider = new GameGUI::Slider();
+		percentageBrickWallsSlider->setQuantum(percentageBrickWallsQuantum);
+		percentageBrickWallsSlider->setValue(percentageBrickWalls * percentageBrickWallsQuantum);
+
+
+		GameGUI::HorizontalBoxLayout* percentageBrickWallsLine = new GameGUI::HorizontalBoxLayout();
+		percentageBrickWallsLine->add(percentageBrickWallsSlider, ButtonActions::PERCENTAGE_BRICK_WALL);
+		percentageBrickWallsText = percentageBrickWallsLine->addLabel(to_string(percentageBrickWallsSlider->getValue() / percentageBrickWallsQuantum));
+
+		f->addRow("Porcentaje de muros", percentageBrickWallsLine);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+
+		startingAbilitySlider = new GameGUI::Slider();
+		startingAbilitySlider->setQuantum(startingAbilityQuantum);
+		startingAbilitySlider->setValue(startingAbility * startingAbilityQuantum);
+
+
+		GameGUI::HorizontalBoxLayout* startingAbilityLine = new GameGUI::HorizontalBoxLayout();
+		startingAbilityLine->add(startingAbilitySlider, ButtonActions::ABILITY);
+		startingAbilityText = startingAbilityLine->addLabel(abilityToString(startingAbilitySlider->getValue() / startingAbilityQuantum));
+
+		f->addRow("Habilidad inicial", startingAbilityLine);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+
+		difficultyIASlider = new GameGUI::Slider();
+		difficultyIASlider->setQuantum(difficultyIAQuantum);
+		difficultyIASlider->setValue(difficultyLevel * difficultyIAQuantum);
+
+
+		GameGUI::HorizontalBoxLayout* difficultyIALine = new GameGUI::HorizontalBoxLayout();
+		difficultyIALine->add(difficultyIASlider, ButtonActions::IA_DIFFICULTY);
+		difficultyIAText = difficultyIALine->addLabel(difficultyIAToString(difficultyIASlider->getValue() / difficultyIAQuantum));
+
+		f->addRow("Dificultad IA", difficultyIALine);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+
+		auto continueButton = menu->addButton("   Continuar   ", ButtonActions::CONTINUE);
+		auto back = menu->addButton("       Atras       ", ButtonActions::BACK);
+
+		centerElement(title);
+		centerElement(continueButton);
+		centerElement(back);
 
 		createBackgroundMenu(window);
 	}

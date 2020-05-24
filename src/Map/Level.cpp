@@ -71,11 +71,17 @@ Level::Level(int dimX, int dimY, bool debug, int stage,GameOptions* gameOptions)
 	}
 
 	//create Pillars
+	int createBrickWallThreshold = 33;
+	if (!gameOptions->historyMode) {
+		createBrickWallThreshold = gameOptions->percentageOfWalls;
+	}
+	
+
 	for (int x = 1; x < dimX + 1; x++) {
 		for (int y = 1; y < dimY + 1; y++) {
 			if (x % 2 == 1 || y % 2 == 1) {
 				// Create random Bricks:
-				if (!Random::getIntNumberBetween(0, 3)) {
+				if (Random::getIntNumberBetween(1, 100) <= createBrickWallThreshold) {
 					bool intersec = false;
 					for (Enemy_ptr e : Enemies::getVectorEnemies()) {
 						sf::Vector2i p = getMapCoordinates(e->getCenterPosition());

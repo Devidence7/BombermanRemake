@@ -151,14 +151,41 @@ public:
 			Enemies::insertarEnemigos(dimX, dimY, numEnemies, stage, gameOptions.difLevel);
 		}
 		else if (!gameOptions.historyMode) {
-			stage = gameOptions.selectedStage;
+			stage = gameOptions.selectedStage + 1;
 		}
 		//insertEnemies(7);
 		if (level != nullptr) {
 			delete(level);
 		}
 
-		level = new Level(dimX, dimY, debug, stage, &gameOptions);
+		if (gameOptions.historyMode) {
+			dimX = 25;
+			dimY = 15;
+			level = new Level(dimX, dimY, debug, stage, &gameOptions);
+		}
+		else {
+			// Small
+			if (gameOptions.selectedSizeStage == 0) {
+				dimX = 11;
+				dimY = 11;
+				level = new Level(dimX, dimY, debug, stage, &gameOptions);
+			}
+			// Medium
+			else if (gameOptions.selectedSizeStage == 1) {
+				dimX = 21;
+				dimY = 11;
+				level = new Level(dimX, dimY, debug, stage, &gameOptions);
+			}
+			// Big
+			else {
+				dimX = 25;
+				dimY = 15;
+				level = new Level(dimX, dimY, debug, stage, &gameOptions);
+			}
+		}
+		
+
+
 		PointsDestroyMap::resetMap();
 		//Enemies::insertarEnemigos(dimX, dimY);
 		if (debug) {
@@ -196,6 +223,12 @@ public:
 			PLayers::getVectorPlayer()[0]->score = scoreForTheMoment;
 			if (PLayers::getVectorPlayer().size() > 1) {
 				PLayers::getVectorPlayer()[1]->storyMode = true;
+			}
+		}
+		else {
+			for (auto player : PLayers::getVectorPlayer()) {
+				player->lives = gameOptions.startingLives;
+				player->setAction(gameOptions.startingAbility);
 			}
 		}
 		scoreForTheMoment = 0;
