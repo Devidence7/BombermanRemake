@@ -588,7 +588,7 @@ private:
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		livesSlider = new GameGUI::Slider();
 		livesSlider->setQuantum(livesQuantum);
-		livesSlider->setValue(lives * livesQuantum);
+		livesSlider->setValue(lives * livesQuantum - 1);
 
 		
 		GameGUI::HorizontalBoxLayout* livesLine = new GameGUI::HorizontalBoxLayout();
