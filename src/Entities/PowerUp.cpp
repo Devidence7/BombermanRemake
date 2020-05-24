@@ -157,7 +157,7 @@ MoreTimePowerUp::MoreTimePowerUp(sf::Vector2f pos) : BuffPoweUp() {
 
 void MoreTimePowerUp::setPlayerStatus(PlayerEntity& pe) {
 	cout<<"TIEMPO ANTES"<<GlobalTime::totalTime<<endl;
-	GlobalTime::totalTime=GlobalTime::totalTime+30;
+	GlobalTime::totalTime = GlobalTime::totalTime + 30;
 	cout<<"TIEMPO DESPUÉS"<<GlobalTime::totalTime<<endl;
 }
 

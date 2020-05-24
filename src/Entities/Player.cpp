@@ -59,6 +59,10 @@ void PlayerEntity::setExpiredEntity() {
 	}
 	//
 	if (!expiredEntity) {
+		if (storyMode) {
+			resetStats();
+		}
+
 		if(BombTaked != nullptr){
 			BombTaked->setExpiredEntity();
 		}
@@ -84,6 +88,22 @@ void PlayerEntity::changeColor(sf::Color newColor) {
 
 int PlayerEntity::getLives() {
 	return lives;
+}
+
+void PlayerEntity::resetStats() {
+	speedBoost = 1;
+	numOfBombs = 1;
+	powerOfBombs = 1;
+	actionAvaible = ActionsAvalible::NONE_ACTION;
+}
+
+void PlayerEntity::setStats(int speedBoost, int numOfBombs, int powerOfBombs, int lives, ActionsAvalible action) {
+	this->speedBoost = speedBoost;
+	this->numOfBombs = numOfBombs;
+	this->powerOfBombs = powerOfBombs;
+	this->lives = lives; 
+	this->actionAvaible = action;
+
 }
 
 /*

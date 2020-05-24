@@ -41,13 +41,28 @@ private:
 	//MainMenu mainMenu;
 
 public:
-
 	int stage;
 	GameOptions gameOptions;
 	bool debug = false;
 	bool timesUp = false;
+
+	// For story mode when pass to next level.
 	bool samePlay = false;
+
 	int scoreForTheMoment = 0;
+
+	int player1_speedBoost = 1;
+	int player1_numOfBombs = 1;
+	int player1_powerOfBombs = 1;
+	int player1_lives = 1;
+	ActionsAvalible player1_action = ActionsAvalible::NONE_ACTION;
+
+	int player2_speedBoost = 1;
+	int player2_numOfBombs = 1;
+	int player2_powerOfBombs = 1;
+	int player2_lives = 1;
+	ActionsAvalible player2_action = ActionsAvalible::NONE_ACTION;
+
 
 	Game() {
 		stage = 1;
@@ -170,9 +185,19 @@ public:
 					}
 				}
 			}
-		}
+			else {
+				PLayers::getVectorPlayer()[0]->setStats(player1_speedBoost, player1_numOfBombs, player1_powerOfBombs, player1_lives, player1_action);
+				if (PLayers::getVectorPlayer().size() > 1) {
+					PLayers::getVectorPlayer()[1]->setStats(player2_speedBoost, player2_numOfBombs, player2_powerOfBombs, player2_lives, player2_action);
+				}
+			}
 
-		PLayers::getVectorPlayer()[0]->score = scoreForTheMoment;
+			PLayers::getVectorPlayer()[0]->storyMode = true;
+			PLayers::getVectorPlayer()[0]->score = scoreForTheMoment;
+			if (PLayers::getVectorPlayer().size() > 1) {
+				PLayers::getVectorPlayer()[1]->storyMode = true;
+			}
+		}
 		scoreForTheMoment = 0;
 	}
 
@@ -440,8 +465,24 @@ public:
 					gameDisplay.setGameState(GameDisplayController::VICTORY);
 					gameDisplay.backgroundOpacity = 0;
 					gameDisplay.notifyChangeDisplay();
+					int i = 0;
 					for (auto player : PLayers::getVectorPlayer()) {
 						scoreForTheMoment += player->score;
+						if (i == 0) {
+							player1_lives = player->lives;
+							player1_numOfBombs = player->numOfBombs;
+							player1_powerOfBombs = player->powerOfBombs;
+							player1_speedBoost = player->speedBoost;
+							player1_action = player->getActionsAvaliable();
+						}
+						else {
+							player2_lives = player->lives;
+							player2_numOfBombs = player->numOfBombs;
+							player2_powerOfBombs = player->powerOfBombs;
+							player2_speedBoost = player->speedBoost;
+							player2_action = player->getActionsAvaliable();
+						}
+						i++;
 					}
 				}
 				else {
