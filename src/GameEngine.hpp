@@ -489,6 +489,25 @@ public:
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+		if (gameOptions.historyMode) {
+			if (gameDisplay.tutorialIntro) {
+				gameDisplay.tutorialType = 1;
+				gameDisplay.setGameState(GameDisplayController::TUTORIAL);
+				GameTime::stopGameTime();
+				gameDisplay.tutorialIntro = false;
+				gameDisplay.notifyChangeDisplay();
+			}
+			else if (gameDisplay.tutorialAbility) {
+				if (PLayers::getVectorPlayer()[0]->getActionsAvaliable() != NONE_ACTION) {
+					gameDisplay.tutorialType = 2;
+					gameDisplay.setGameState(GameDisplayController::TUTORIAL);
+					GameTime::stopGameTime();
+					gameDisplay.tutorialAbility = false;
+					gameDisplay.notifyChangeDisplay();
+				}
+			}
+		}
+
 		level->update();
 		PointsDestroyMap::updateMap();
 

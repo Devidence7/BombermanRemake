@@ -272,8 +272,12 @@ private:
 		menu = new GameGUI::Menu(window);
 
 		GameGUI::HorizontalBoxLayout* hbox = menu->addHorizontalBoxLayout();
+		menu->add(new GameGUI::Label(" "));
+		menu->add(new GameGUI::Label("Para cambiar la resolucion"));
+		menu->add(new GameGUI::Label("simplemente reescala la ventana"));
+		menu->add(new GameGUI::Label(" "));
 		GameGUI::FormLayout* f = menu->addFormLayout();
-		f->add(new GameGUI::Label(" "));
+		
 
 		auto* b1 = hbox->addButton("Audio", ButtonActions::AUDIO);
 		b1->goDownDown = 2;

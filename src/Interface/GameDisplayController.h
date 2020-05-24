@@ -27,6 +27,9 @@ public:
 	bool fullScreen;
     const string PROPERTIES_FILENAME = "properties.txt";
 
+	bool tutorialIntro = false;
+	bool tutorialAbility = false;
+
     enum GameState {
         MAIN_MENU,
         PLAYING,
@@ -41,7 +44,8 @@ public:
 		FINAL_SCORE,
 		END_BATTLE,
 		PICK_COLOR,
-		PICK_MAP
+		PICK_MAP,
+		TUTORIAL
 		//RESTART
     };
 
@@ -73,6 +77,9 @@ public:
 	bool endBattleReprocessDisplay = false;
 	bool gameInterfaceReprocessDisplay = false;
 	bool colorPickerReprocessDisplay = false;
+	bool tutorialReprocessDisplay = false;
+
+	int tutorialType = 1;
 
 	bool newScore = false;
 	
@@ -203,6 +210,7 @@ public:
 		endBattleReprocessDisplay = true;
 		gameInterfaceReprocessDisplay = true;
 		colorPickerReprocessDisplay = true;
+		tutorialReprocessDisplay = true;
 	}
 
 	void updateCamera() {
@@ -311,6 +319,9 @@ public:
 		propertiesFile << "player2.bomb = " + to_string((int)sf::Keyboard::RControl) << endl;
 		propertiesFile << "player2.action = " + to_string((int)sf::Keyboard::RShift) << endl;
 
+		propertiesFile << "tutorial.intro = 1"<< endl;
+		propertiesFile << "tutorial.ability = 1 " << endl;
+
 		propertiesFile.close();
 	}
 
@@ -367,6 +378,9 @@ public:
 		player2.UseBomb = (sf::Keyboard::Key)getIntProperty("player2.bomb");
 		player2.MakeAction = (sf::Keyboard::Key)getIntProperty("player2.action");
 
+		tutorialAbility = (bool)getIntProperty("tutorial.ability");
+		tutorialIntro = (bool)getIntProperty("tutorial.intro");
+
 		UserKeyPress * userKeyPressManager = new UserKeyPress(player1, player2);
 
 		propertiesFile.close();
@@ -401,6 +415,8 @@ public:
 		gameProperties.at("player2.bomb") = to_string(userKeyPress->player2.UseBomb);
 		gameProperties.at("player2.action") = to_string(userKeyPress->player2.MakeAction);
 
+		gameProperties.at("tutorial.ability") = to_string((int)tutorialAbility);
+		gameProperties.at("tutorial.intro") = to_string((int)tutorialIntro);
 
 		fstream file;
 		file.open(PROPERTIES_FILENAME, std::fstream::in | std::fstream::out | fstream::trunc);
