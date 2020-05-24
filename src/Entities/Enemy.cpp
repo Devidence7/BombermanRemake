@@ -223,7 +223,7 @@ Ice::Ice(float difficultyLevel) : EnemyEntity(difficultyLevel)
 {
 	enemyType = ice;
 	scoreValue=150;
-	baseSpeed = 1.4 + (difficultyLevel/10);
+	baseSpeed = 1.5 + (difficultyLevel/10);
 	this->rangoVision = 5 + (difficultyLevel*1.5);
 	this->numConsecutiveMovements = 7;
 	//this->typeSeek = TypeSeekIA::SECOND_BEST_PATH;
@@ -239,7 +239,7 @@ Barrel::Barrel(float difficultyLevel) : EnemyEntity(difficultyLevel)
 {
 	enemyType = barrel;
 	scoreValue=200;
-	baseSpeed = 1.4 + (difficultyLevel/10);
+	baseSpeed = 1.9 + (difficultyLevel/10);
 	this->rangoVision = 7 + (difficultyLevel*1.5);
 	this->numConsecutiveMovements = 5;
 	this->typeSeek = TypeSeekIA::LONG_PATH;
@@ -264,7 +264,7 @@ Blob::Blob(float difficultyLevel) : EnemyEntity(difficultyLevel)
 {
 	scoreValue=250;
 	enemyType = blob;
-	baseSpeed = 1 + (difficultyLevel/10);
+	baseSpeed = 1.4 + (difficultyLevel/10);
 	this->rangoVision = 6 + (difficultyLevel*1.7);
 	this->numConsecutiveMovements = 4;
 	this->typeSeek = TypeSeekIA::LONG_PATH;
@@ -277,7 +277,7 @@ Ghost::Ghost(float difficultyLevel) : EnemyEntity(difficultyLevel)
 {
 	scoreValue=300;
 	enemyType = ghost;
-	baseSpeed = 1 + (difficultyLevel/10)*1.2;
+	baseSpeed = 1.6 + (difficultyLevel/10)*1.2;
 	this->rangoVision = 4 + (difficultyLevel*1.9);
 	this->numConsecutiveMovements = 7;
 	this->typeSeek = TypeSeekIA::LONG_PATH;
@@ -290,7 +290,7 @@ Hypo::Hypo(float difficultyLevel) : EnemyEntity(difficultyLevel)
 {
 	scoreValue=350;
 	enemyType = hypo;
-	baseSpeed = 1.3 + (difficultyLevel/10)*1.2;
+	baseSpeed = 2.3 + (difficultyLevel/10)*1.2;
 	this->rangoVision = 13 + (difficultyLevel*2);
 	this->numConsecutiveMovements = 5;
 	this->typeSeek = TypeSeekIA::BEST_PATH;

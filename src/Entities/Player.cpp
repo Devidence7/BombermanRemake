@@ -198,7 +198,12 @@ void PlayerEntity::animate(sf::Vector2f velocity) {
 			respawning = false;
 			lastInvencibleTime = GameTime::getTimeNow();
 			isInvicible = true;
-			std::cout << "Respouning\n";
+			if (storyMode) {
+				resetStats();
+				while (BombsAsociated.size() > 0) {
+					BombsAsociated.front()->setExpiredEntity();
+				}	
+			}
 			setPosition(initialPos);
 			//cout<<"INITIAL POS X "<<initialPos.x<<" INITIAL POS Y "<<initialPos.y<<endl;
 		}
@@ -300,6 +305,7 @@ void PlayerEntity::realizeActions()
 		case ActionsAvalible::REMOTE_BOMB:
 			if(BombsAsociated.size() > 0)
 				BombsAsociated.front()->setExpiredEntity();
+			break;
 		default:
 			break;
 		}
@@ -422,9 +428,9 @@ bool PlayerEntity::updatePlayer() {
 	if (!expiredEntity) {
 		Interst_ptr i = PointsDestroyMap::getIntersetZone(getEntityMapCoordinates());
 		if(i != nullptr){
-			std::cout<< "interes " <<  i->intersest() << "\n";
+			//std::cout<< "interes " <<  i->intersest() << "\n";
 		}else{
-			std::cout<< "interes 0\n";
+			//std::cout<< "interes 0\n";
 		}
 		move(velocity.x, velocity.y);
 		if (BombTaked != nullptr) {//Si tiene bomba, actualizar a la posicion del jugador (centrado segun cuadricula)

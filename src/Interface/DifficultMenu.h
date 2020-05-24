@@ -66,18 +66,18 @@ private:
 		switch (id) {
 		case ButtonActions::EASYLEVEL:
 
-           // game.gameOptions.difLevel=1;
+            game.gameOptions.difLevel=1;
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			break;
 
 		case ButtonActions::NORMALLEVEL:
-           // game.gameOptions.difLevel=1.5;
+            game.gameOptions.difLevel=1.5;
         	gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 					
 			break;
 				
 		case ButtonActions::HARDLEVEL:
-           // game.gameOptions.difLevel=1.75;
+            game.gameOptions.difLevel=2;
 			//OptionsMenu::lastGameStateOptionsMenu = GameDisplayController::GameState::MULTIPLAYER_MENU;
 			gameDisplay.setGameState(GameDisplayController::GameState::LOADING);
 			break;

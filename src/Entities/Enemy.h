@@ -25,7 +25,7 @@ private:
 	double expiredTime = 1;				// Time for delete entity
 	int deadSpriteFrames = 5;
 
-	bool dyingEntity = false;			// Starts entity dying animation
+
 
 	double lastMovementTime = 0;
 
@@ -46,6 +46,7 @@ protected:
 	EnemyType enemyType;
 	
 public:
+	bool dyingEntity = false;			// Starts entity dying animation
 	std::shared_ptr<EnemyEntity> me;
 	EnemyEntity(float difficultyLevel);
 

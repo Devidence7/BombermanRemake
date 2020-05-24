@@ -43,6 +43,34 @@ class MultiplayerMenu {
 	const int difficultyIAQuantum = 50;
 	int difficultyLevel = 1;
 
+	// Bombas
+	GameGUI::Slider* numStartingBombsSlider;
+	GameGUI::Label* numStartingBombsText;
+	const int numStartingBombsQuantum = 50;
+	int numStartingBombs = 1;
+
+	
+	/*GameGUI::Slider* difficultyIASlider;
+	GameGUI::Label* difficultyIAText;
+	const int difficultyIAQuantum = 50;
+	int difficultyLevel = 1;
+
+	GameGUI::Slider* difficultyIASlider;
+	GameGUI::Label* difficultyIAText;
+	const int difficultyIAQuantum = 50;
+	int difficultyLevel = 1;
+
+
+	GameGUI::Slider* difficultyIASlider;
+	GameGUI::Label* difficultyIAText;
+	const int difficultyIAQuantum = 50;
+	int difficultyLevel = 1;
+
+	GameGUI::Slider* difficultyIASlider;
+	GameGUI::Label* difficultyIAText;
+	const int difficultyIAQuantum = 50;
+	int difficultyLevel = 1;*/
+
 	enum ButtonActions {
 		//NUmJUGADORES
 		TWOPLAYERS,

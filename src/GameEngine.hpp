@@ -11,7 +11,7 @@
 ///#include "Interface/GameDisplayController.h"
 
 #define MAX_NUMBER_OF_STAGES 3
-#define DEFAULT_NUM_OF_ENEMIES 10
+#define DEFAULT_NUM_OF_ENEMIES 7
 
 Level* level;
 
@@ -143,17 +143,28 @@ public:
 		GameTime::startGameTime();
 
 		//	cout<<gameOptions.numPlayers<<endl;
-		int numEnemies = DEFAULT_NUM_OF_ENEMIES * gameOptions.difLevel + (stage / 0.5);
+		int numEnemies = DEFAULT_NUM_OF_ENEMIES * gameOptions.difLevel * ((float)stage * 0.2 + 1);
+		GlobalTime::totalTime = 299;
 		if (!debug && gameOptions.historyMode) {
 			if (!samePlay) {
 				stage = 1;
 			}
 			Enemies::insertarEnemigos(dimX, dimY, numEnemies, stage, gameOptions.difLevel);
+			if (gameOptions.difLevel <= 1.250) {
+				GlobalTime::totalTime = 299;
+			}
+			else if (gameOptions.difLevel <= 1.500) {
+				GlobalTime::totalTime = 239;
+			}
+			else {
+				GlobalTime::totalTime = 179;
+			}
+
 		}
 		else if (!gameOptions.historyMode) {
 			stage = gameOptions.selectedStage + 1;
 		}
-		//insertEnemies(7);
+		
 		if (level != nullptr) {
 			delete(level);
 		}
@@ -496,14 +507,17 @@ public:
 				GameTime::stopGameTime();
 				gameDisplay.tutorialIntro = false;
 				gameDisplay.notifyChangeDisplay();
+				gameDisplay.saveProperties();
 			}
 			else if (gameDisplay.tutorialAbility) {
 				if (PLayers::getVectorPlayer()[0]->getActionsAvaliable() != NONE_ACTION) {
+					gameDisplay.backgroundOpacity = 0;
 					gameDisplay.tutorialType = 2;
 					gameDisplay.setGameState(GameDisplayController::TUTORIAL);
 					GameTime::stopGameTime();
 					gameDisplay.tutorialAbility = false;
 					gameDisplay.notifyChangeDisplay();
+					gameDisplay.saveProperties();
 				}
 			}
 		}

@@ -77,6 +77,12 @@ class FinalScoreInterface {
 		}
 	}
 
+	void centerElement(GameGUI::Widget* e) {
+		sf::Vector2f eSize = e->getSize();
+		sf::Vector2f mSize = menu->getSize();
+		e->setPosition(e->getPosition() + sf::Vector2f(mSize.x / 2 - eSize.x / 2, 0));
+	}
+
 	void ReadPuntuation() {
 		fstream propertiesFile;
 
@@ -159,16 +165,22 @@ public:
 		}
 
 		if (gameDisplay.newScore) {
-			menu->addButton("       Ir al menu principal       ", ButtonActions::GO_MAIN_MENU);
-			menu->addButton("                   Salir                    ", ButtonActions::QUIT);
+			auto a1 = menu->addButton("       Ir al menu principal       ", ButtonActions::GO_MAIN_MENU);
+			auto a2 = menu->addButton("                   Salir                    ", ButtonActions::QUIT);
+			createBackgroundMenu(window);
+
+			centerElement(a1);
+			centerElement(a2);
 		}
 		else {
-			menu->addButton("                   Volver                    ", ButtonActions::GO_MAIN_MENU_FROM_MENU);
+			auto a1 = menu->addButton("                   Volver                    ", ButtonActions::GO_MAIN_MENU_FROM_MENU);
+			createBackgroundMenu(window);
+
+			centerElement(a1);
 		}
 
-		gameDisplay.newScore = false;
-
-		createBackgroundMenu(window);
+		
+		
 	}
 
 private:
@@ -180,15 +192,18 @@ private:
 			game.deleteMap();
 			gameDisplay.setGameState(GameDisplayController::GameState::MAIN_MENU);
 			GameMusic::playTitleMusic();
+			gameDisplay.newScore = false;
 			break;
 
 		case ButtonActions::GO_MAIN_MENU_FROM_MENU:
 			gameDisplay.setGameState(GameDisplayController::GameState::MAIN_MENU);
+			gameDisplay.newScore = false;
 			break;
 
 		case ButtonActions::QUIT:
 			savePuntuation();
 			window->close();
+			gameDisplay.newScore = false;
 			break;
 		}
 		if (id != -1) {

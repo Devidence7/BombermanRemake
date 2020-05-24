@@ -120,7 +120,7 @@ public:
 		menu = new GameGUI::Menu(window);
 
 		auto a1 = (menu->add(new Label("Encuentra el portal para")));
-		auto a2 = (menu->add(new Label("el siguiente nivel y derrota a ")));
+		auto a2 = (menu->add(new Label("el siguiente nivel y derrota a")));
 		auto a3 = (menu->add(new Label("todos los enemigos para abrirlo.")));
 		menu->add(new Label(" "));
 		auto a5 = (menu->addButton("                  Bien...                  ", ButtonActions::CONTINUE));
@@ -158,10 +158,11 @@ public:
 		auto title = menu->add(new Label("Has conseguido una habilidad!"));
 		menu->add(new Label(" "));
 		auto a1 = menu->add(new Label("Las habilidades se muestran al lado de"));
-		auto a2 = menu->add(new Label("tu personaje en la parte de arriba de la"));
-		auto a3 = menu->add(new Label("pantalla."));
+		auto a2 = menu->add(new Label("las vidas de tu personaje, en la parte"));
+		auto a3 = menu->add(new Label("superior de la pantalla."));
+		menu->add(new Label(" "));
 		auto a4 = menu->add(new Label("Existen habilidades activas y pasivas."));
-		auto a5 = menu->add(new Label("Si es activa utiliza el boton accion " + gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.MakeAction)));
+		auto a5 = menu->add(new Label("Si es activa, utiliza el boton accion " + gameDisplay.userKeyPress->getKeyName(gameDisplay.userKeyPress->player1.MakeAction)));
 		auto a6 = menu->add(new Label("cerca de una bomba a ver que pasa..."));
 		menu->add(new Label(" "));
 		auto continueButton = menu->addButton("                    Entendido!                    ", ButtonActions::QUIT);

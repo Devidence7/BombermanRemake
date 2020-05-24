@@ -56,7 +56,7 @@ public:
 	std::list<OmittedArea> OmittedAreas;
 	std::list<sf::Vector2i> dangerZoner;
 	int team = 0;
-	int scoreValue=0;
+	int scoreValue = 0;
 
 	ActionsAvalible getActionsAvaliable();
 
