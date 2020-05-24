@@ -149,29 +149,6 @@ int main(int argc, char* argv[]) {
 			pauseMenu.checkUserPauseActions(gameDisplayController);
 		}
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num9)) {
-
-			gameDisplayController.gameState = GameDisplayController::GameState::GAME_OVER;
-		}
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
-			PLayers::getVectorPlayer()[0]->setExpiredEntity();
-			PLayers::getVectorPlayer()[0]->lives = 0;
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
-			PLayers::getVectorPlayer()[1]->setExpiredEntity();
-			PLayers::getVectorPlayer()[1]->lives = 0;
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) {
-			PLayers::getVectorPlayer()[2]->setExpiredEntity();
-			PLayers::getVectorPlayer()[2]->lives = 0;
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4)) {
-			PLayers::getVectorPlayer()[3]->setExpiredEntity();
-			PLayers::getVectorPlayer()[3]->lives = 0;
-		}
-
-
 		// Update display window window
 		gameDisplayController.getWindow()->display();
 	}

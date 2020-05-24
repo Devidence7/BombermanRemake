@@ -199,11 +199,6 @@ void EnemyEntity::update()
 			setTextureRect(enemyTexture->getDeathSprite(currentFrame, enemyType));
 		}
 	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num6)) {
-		setExpiredEntity();
-	}
-
 }
 
 sf::FloatRect EnemyEntity::getGlobalBounds() const

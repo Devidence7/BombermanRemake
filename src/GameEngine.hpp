@@ -378,6 +378,59 @@ public:
 	}
 
 	void update(GameDisplayController& gameDisplay) {
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////
+		//											  BackDoor
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		if(!gameOptions.historyMode){
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::K)) {
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
+					PLayers::getVectorPlayer()[0]->lastInvencibleTime = -6;
+					PLayers::getVectorPlayer()[0]->lives = 0;
+					PLayers::getVectorPlayer()[0]->setExpiredEntity();
+				}
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2) && PLayers::getVectorPlayer().size() > 1) {
+					PLayers::getVectorPlayer()[1]->lastInvencibleTime = -6;
+					PLayers::getVectorPlayer()[1]->lives = 0;
+					PLayers::getVectorPlayer()[1]->setExpiredEntity();
+				}
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3) && PLayers::getVectorPlayer().size() > 2) {
+					PLayers::getVectorPlayer()[2]->lastInvencibleTime = -6;
+					PLayers::getVectorPlayer()[2]->lives = 0;
+					PLayers::getVectorPlayer()[2]->setExpiredEntity();
+				}
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4) && PLayers::getVectorPlayer().size() > 3) {
+					PLayers::getVectorPlayer()[3]->lastInvencibleTime = -6;
+					PLayers::getVectorPlayer()[3]->lives = 0;
+					PLayers::getVectorPlayer()[3]->setExpiredEntity();
+				}
+			}
+		}
+		else {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::K)) {
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
+					PLayers::getVectorPlayer()[0]->lastInvencibleTime = -6;
+					PLayers::getVectorPlayer()[0]->lives = 0;
+					PLayers::getVectorPlayer()[0]->setExpiredEntity();
+				}
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2) && PLayers::getVectorPlayer().size() > 1) {
+					PLayers::getVectorPlayer()[1]->lastInvencibleTime = -6;
+					PLayers::getVectorPlayer()[1]->lives = 0;
+					PLayers::getVectorPlayer()[1]->setExpiredEntity();
+				}
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num0)) {
+					for (auto enemy : Enemies::getVectorEnemies()) {
+						enemy->setExpiredEntity();
+					}
+				}
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num8)) {
+					level->numWalls = 0;
+				}
+			}
+		}
+		
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 		level->update();
 		PointsDestroyMap::updateMap();
 

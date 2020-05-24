@@ -27,7 +27,7 @@ class Level
 	static std::vector<std::vector<Entity_ptr>> miniMap;
 	static sf::RectangleShape flooro;
 
-	static int numWalls;
+	
 	static int numEnemiesLeft;
 	static Teleporter_ptr teleporter;
 	static GameOptions* gameOptions;
@@ -38,6 +38,7 @@ class Level
 	static int dimY;
 
 public:
+	static int numWalls;
 	static bool exitHasApeared;
 	static bool canFinishLevel;
 	static bool levelFinished;
