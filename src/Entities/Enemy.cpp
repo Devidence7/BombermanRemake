@@ -264,7 +264,7 @@ Blob::Blob(float difficultyLevel) : EnemyEntity(difficultyLevel)
 {
 	scoreValue=250;
 	enemyType = blob;
-	baseSpeed = 1.4 + (difficultyLevel/10);
+	baseSpeed = 1.2 + (difficultyLevel/10);
 	this->rangoVision = 6 + (difficultyLevel*1.7);
 	this->numConsecutiveMovements = 4;
 	this->typeSeek = TypeSeekIA::LONG_PATH;
@@ -277,7 +277,7 @@ Ghost::Ghost(float difficultyLevel) : EnemyEntity(difficultyLevel)
 {
 	scoreValue=300;
 	enemyType = ghost;
-	baseSpeed = 1.6 + (difficultyLevel/10)*1.2;
+	baseSpeed = 1.8 + (difficultyLevel/10)*1.2;
 	this->rangoVision = 4 + (difficultyLevel*1.9);
 	this->numConsecutiveMovements = 7;
 	this->typeSeek = TypeSeekIA::LONG_PATH;
