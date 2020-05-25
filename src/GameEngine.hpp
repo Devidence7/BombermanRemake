@@ -601,6 +601,11 @@ public:
 				}
 			}
 
+			if (timesUp) {
+				gameDisplay.setGameState(GameDisplayController::END_BATTLE);
+				gameDisplay.notifyChangeDisplay();
+			}
+
 		}
 
 
