@@ -366,7 +366,8 @@ public:
 			int numPlayersCenter = 0;
 			int numPlayersTotal = PLayers::getVectorPlayer().size();
 
-			Vector2i camCenter = gameDisplay.getWindow()->mapCoordsToPixel(gameDisplay.camera.getCenter());
+			sf::Vector2f cameraRealCenter = (gameDisplay.camera.getCenter() + sf::Vector2f(0, gameDisplay.camera.getSize().y / 10.0));
+			Vector2i camCenter = gameDisplay.getWindow()->mapCoordsToPixel(cameraRealCenter);
 			float dimXCam = gameDisplay.camera.getSize().x / 2;
 			float dimYCam = gameDisplay.camera.getSize().y / 2;
 
@@ -375,7 +376,7 @@ public:
 				camCenter.x + dimXCam > (level->sizeLevel().x) * SIZE_PILLAR &&
 				camCenter.y - dimYCam < 0 &&
 				camCenter.y + dimYCam > (level->sizeLevel().y) * SIZE_PILLAR) {
-				gameDisplay.camera.move(((level->sizeLevel().x) * SIZE_PILLAR / 2 - gameDisplay.camera.getCenter().x) / 20 * moveTime, ((level->sizeLevel().y + 2) * SIZE_PILLAR / 2 - gameDisplay.camera.getCenter().y) / 20 * moveTime);
+				gameDisplay.camera.move(((level->sizeLevel().x) * SIZE_PILLAR / 2 - cameraRealCenter.x) / 20 * moveTime, ((level->sizeLevel().y + 2) * SIZE_PILLAR / 2 - cameraRealCenter.y) / 20 * moveTime);
 				//gameDisplay.camera.setCenter((level->sizeLevel().x) * SIZE_PILLAR / 2 , (level->sizeLevel().y + 2) * SIZE_PILLAR / 2);
 
 				if (camCenter.x - dimXCam < -48 &&
