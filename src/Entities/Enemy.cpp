@@ -214,8 +214,8 @@ void EnemyEntity::setInvencible1sec() {
 Balloon::Balloon(float difficultyLevel) : EnemyEntity(difficultyLevel)
 {
 	enemyType = balloon;
-	scoreValue=100;
-	baseSpeed = 1.3 + (difficultyLevel/10);
+	scoreValue= 50 ;
+	baseSpeed = 1.1 + difficultyLevel * 0.2;
 	//move(500, 100);
 }
 
@@ -223,7 +223,7 @@ Ice::Ice(float difficultyLevel) : EnemyEntity(difficultyLevel)
 {
 	enemyType = ice;
 	scoreValue=150;
-	baseSpeed = 1.5 + (difficultyLevel/10);
+	baseSpeed = 1.5 + difficultyLevel * 0.2;
 	this->rangoVision = 5 + (difficultyLevel*1.5);
 	this->numConsecutiveMovements = 7;
 	//this->typeSeek = TypeSeekIA::SECOND_BEST_PATH;
@@ -239,7 +239,7 @@ Barrel::Barrel(float difficultyLevel) : EnemyEntity(difficultyLevel)
 {
 	enemyType = barrel;
 	scoreValue=250;
-	baseSpeed = 1.9 + (difficultyLevel/10);
+	baseSpeed = 1.9 + difficultyLevel * 0.3;
 	this->rangoVision = 7 + (difficultyLevel*1.5);
 	this->numConsecutiveMovements = 5;
 	this->typeSeek = TypeSeekIA::LONG_PATH;
@@ -251,7 +251,7 @@ Coin::Coin(float difficultyLevel) : EnemyEntity(difficultyLevel)
 {
 	enemyType = coin;
 	scoreValue= 0;
-	baseSpeed = 3 + (difficultyLevel/10) * 1.2;
+	baseSpeed = 3 + difficultyLevel * 0.5;
 	this->rangoVision = 13 + (difficultyLevel*1.8);
 	this->numConsecutiveMovements = 2;
 	this->typeSeek = TypeSeekIA::BEST_PATH;
@@ -264,7 +264,7 @@ Blob::Blob(float difficultyLevel) : EnemyEntity(difficultyLevel)
 {
 	scoreValue=350;
 	enemyType = blob;
-	baseSpeed = 1.2 + (difficultyLevel/10);
+	baseSpeed = 1.2 + difficultyLevel * 0.2;
 	this->rangoVision = 6 + (difficultyLevel*1.7);
 	this->numConsecutiveMovements = 4;
 	this->typeSeek = TypeSeekIA::LONG_PATH;
@@ -277,7 +277,7 @@ Ghost::Ghost(float difficultyLevel) : EnemyEntity(difficultyLevel)
 {
 	scoreValue=400;
 	enemyType = ghost;
-	baseSpeed = 1.8 + (difficultyLevel/10)*1.2;
+	baseSpeed = 1.8 + difficultyLevel * 0.3;
 	this->rangoVision = 4 + (difficultyLevel*1.9);
 	this->numConsecutiveMovements = 7;
 	this->typeSeek = TypeSeekIA::LONG_PATH;
@@ -290,7 +290,7 @@ Hypo::Hypo(float difficultyLevel) : EnemyEntity(difficultyLevel)
 {
 	scoreValue=500;
 	enemyType = hypo;
-	baseSpeed = 2.3 + (difficultyLevel/10)*1.2;
+	baseSpeed = 2.3 + difficultyLevel * 0.4;
 	this->rangoVision = 13 + (difficultyLevel*2);
 	this->numConsecutiveMovements = 5;
 	this->typeSeek = TypeSeekIA::BEST_PATH;

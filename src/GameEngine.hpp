@@ -157,7 +157,7 @@ public:
 				GlobalTime::totalTime = 239;
 			}
 			else {
-				GlobalTime::totalTime = 179;
+				GlobalTime::totalTime = 209;
 			}
 
 		}
@@ -238,9 +238,10 @@ public:
 		}
 		else {
 			for (auto player : PLayers::getVectorPlayer()) {
-				player->lives = gameOptions.startingLives;
-				player->setAction(gameOptions.startingAbility);
+				player->setStats(1 + gameOptions.startingSpeed * 0.2, gameOptions.startingBombs, gameOptions.startingFire, gameOptions.startingLives, gameOptions.startingAbility);
 			}
+
+			GlobalTime::totalTime = gameOptions.totalTime - 1;
 		}
 		scoreForTheMoment = 0;
 	}

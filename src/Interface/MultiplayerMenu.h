@@ -43,33 +43,35 @@ class MultiplayerMenu {
 	const int difficultyIAQuantum = 50;
 	int difficultyLevel = 1;
 
-	// Bombas
+	// Bombs
 	GameGUI::Slider* numStartingBombsSlider;
 	GameGUI::Label* numStartingBombsText;
-	const int numStartingBombsQuantum = 50;
+	const int numStartingBombsQuantum = 11;
 	int numStartingBombs = 1;
 
-	
-	/*GameGUI::Slider* difficultyIASlider;
-	GameGUI::Label* difficultyIAText;
-	const int difficultyIAQuantum = 50;
-	int difficultyLevel = 1;
+	// Fire
+	GameGUI::Slider* numStartingFireSlider;
+	GameGUI::Label* numStartingFireText;
+	const int numStartingFireQuantum = 11;
+	int numStartingFire = 1;
 
-	GameGUI::Slider* difficultyIASlider;
-	GameGUI::Label* difficultyIAText;
-	const int difficultyIAQuantum = 50;
-	int difficultyLevel = 1;
+	// Speed
+	GameGUI::Slider* numStartingSpeedSlider;
+	GameGUI::Label* numStartingSpeedText;
+	const int numStartingSpeedQuantum = 11;
+	int numStartingSpeed = 1;
 
+	// Objects per box
+	GameGUI::Slider* percentageObjectsPerBrickWallSlider;
+	GameGUI::Label* percentageObjectsPerBrickWallText;
+	const int percentageObjectsPerBrickWallQuantum = 1;
+	int percentageObjectsPerBrickWall = 60;
 
-	GameGUI::Slider* difficultyIASlider;
-	GameGUI::Label* difficultyIAText;
-	const int difficultyIAQuantum = 50;
-	int difficultyLevel = 1;
-
-	GameGUI::Slider* difficultyIASlider;
-	GameGUI::Label* difficultyIAText;
-	const int difficultyIAQuantum = 50;
-	int difficultyLevel = 1;*/
+	// Time
+	GameGUI::Slider* totalTimeSlider;
+	GameGUI::Label* totalTimeText;
+	const int totalTimeQuantum = 11;
+	int totalTime = 300;
 
 	enum ButtonActions {
 		//NUmJUGADORES
@@ -109,14 +111,22 @@ class MultiplayerMenu {
 		MAP,
 		MAPSIZE,
 		LIVES,
-		PERCENTAGE_BRICK_WALL,
-		ABILITY,
+		TIME,
 		IA_DIFFICULTY,
+
+		BOMBS,
+		SPEED,
+		FIRE,
+		ABILITY,
+		PERCENTAGE_BRICK_WALL,
+		PERCENTAGE_OBJECTS_IN_BRICK_WALL,
+
+		ADVANCED_OPTIONS,
+		BACK_FROM_ADVANCED_OPTIONS,
 
 		CONTINUE,
 		BACK,
 		QUIT
-
 	};
 
 	enum MenuState {
@@ -325,6 +335,12 @@ private:
 			game.gameOptions.startingAbility = startingAbility;
 			game.gameOptions.IADifficulty = difficultyLevel;
 
+			game.gameOptions.startingBombs = numStartingBombs;
+			game.gameOptions.startingFire = numStartingFire;
+			game.gameOptions.startingSpeed = numStartingSpeed;
+			game.gameOptions.totalTime = totalTime;
+			game.gameOptions.percentageObjectsFromWalls = percentageObjectsPerBrickWall;
+
 			break;
 
 		case ButtonActions::MAP:
@@ -346,10 +362,35 @@ private:
 			lives = livesSlider->getValue() / livesQuantum + 1;
 			livesText->setText(to_string(lives), false);
 			break;
+		
+		case ButtonActions::TIME:
+			totalTime = totalTimeSlider->getValue() / totalTimeQuantum * 30 + 30;
+			totalTimeText->setText(getTimeString(totalTime), false);
+			break;
+
+		case ButtonActions::BOMBS:
+			numStartingBombs = numStartingBombsSlider->getValue() / numStartingBombsQuantum + 1;
+			numStartingBombsText->setText(to_string(numStartingBombs), false);
+			break;
+
+		case ButtonActions::SPEED:
+			numStartingSpeed = numStartingSpeedSlider->getValue() / numStartingSpeedQuantum + 1;
+			numStartingSpeedText->setText(to_string(numStartingSpeed), false);
+			break;
+
+		case ButtonActions::FIRE:
+			numStartingFire = numStartingFireSlider->getValue() / numStartingFireQuantum + 1;
+			numStartingFireText->setText(to_string(numStartingFire), false);
+			break;
 
 		case ButtonActions::PERCENTAGE_BRICK_WALL:
 			percentageBrickWalls = percentageBrickWallsSlider->getValue() / percentageBrickWallsQuantum;
 			percentageBrickWallsText->setText(to_string(percentageBrickWalls), false);
+			break;
+
+		case ButtonActions::PERCENTAGE_OBJECTS_IN_BRICK_WALL:
+			percentageObjectsPerBrickWall = percentageObjectsPerBrickWallSlider->getValue() / percentageObjectsPerBrickWallQuantum;
+			percentageObjectsPerBrickWallText->setText(to_string(percentageObjectsPerBrickWall), false);
 			break;
 
 		case ButtonActions::IA_DIFFICULTY:
@@ -377,6 +418,12 @@ private:
 			break;*/
 
 
+		case ButtonActions::ADVANCED_OPTIONS:
+			advancedOptions(*window, gameDisplay);
+			break;
+		case ButtonActions::BACK_FROM_ADVANCED_OPTIONS:
+			pickMap(*window, gameDisplay);
+			break;
 		case ButtonActions::BACK:
 			switch (previousMenu) {
 			case MAIN:
@@ -596,6 +643,11 @@ private:
 		e->setPosition(e->getPosition() + sf::Vector2f(mSize.x / 2 - eSize.x / 2, 0));
 	}
 
+	string getTimeString(int num) {
+		string seconds = num % 60 > 9 ? to_string(num % 60) : "0" + to_string(num % 60);
+		return to_string(num / 60) + ":" + seconds;
+	}
+
 	void pickMap(sf::RenderWindow& window, GameDisplayController& gameDisplay) {
 		menu = new GameGUI::Menu(window);
 		auto title = menu->add(new GameGUI::Label("Opciones de la partida"));
@@ -616,12 +668,12 @@ private:
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		livesSlider = new GameGUI::Slider();
 		livesSlider->setQuantum(livesQuantum);
-		livesSlider->setValue(lives * livesQuantum - 1);
+		livesSlider->setValue((lives - 1)* livesQuantum);
 
 		
 		GameGUI::HorizontalBoxLayout* livesLine = new GameGUI::HorizontalBoxLayout();
 		livesLine->add(livesSlider, ButtonActions::LIVES);
-		livesText = livesLine->addLabel(to_string(livesSlider->getValue() / livesQuantum));
+		livesText = livesLine->addLabel(to_string(livesSlider->getValue() / livesQuantum + 1));
 
 		f->addRow("Vidas", livesLine);
 
@@ -640,16 +692,91 @@ private:
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 
-		percentageBrickWallsSlider = new GameGUI::Slider();
-		percentageBrickWallsSlider->setQuantum(percentageBrickWallsQuantum);
-		percentageBrickWallsSlider->setValue(percentageBrickWalls * percentageBrickWallsQuantum);
+		totalTimeSlider = new GameGUI::Slider();
+		totalTimeSlider->setQuantum(totalTimeQuantum);
+		totalTimeSlider->setValue(((totalTime - 30) / 30) * totalTimeQuantum);
 
 
-		GameGUI::HorizontalBoxLayout* percentageBrickWallsLine = new GameGUI::HorizontalBoxLayout();
-		percentageBrickWallsLine->add(percentageBrickWallsSlider, ButtonActions::PERCENTAGE_BRICK_WALL);
-		percentageBrickWallsText = percentageBrickWallsLine->addLabel(to_string(percentageBrickWallsSlider->getValue() / percentageBrickWallsQuantum));
+		GameGUI::HorizontalBoxLayout* totalTimeLine = new GameGUI::HorizontalBoxLayout();
+		totalTimeLine->add(totalTimeSlider, ButtonActions::TIME);
+		totalTimeText = totalTimeLine->addLabel(getTimeString(totalTimeSlider->getValue() / totalTimeQuantum * 30 + 30));
 
-		f->addRow("Porcentaje de muros", percentageBrickWallsLine);
+		f->addRow("Tiempo Limite", totalTimeLine);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+
+		difficultyIASlider = new GameGUI::Slider();
+		difficultyIASlider->setQuantum(difficultyIAQuantum);
+		difficultyIASlider->setValue(difficultyLevel * difficultyIAQuantum);
+
+
+		GameGUI::HorizontalBoxLayout* difficultyIALine = new GameGUI::HorizontalBoxLayout();
+		difficultyIALine->add(difficultyIASlider, ButtonActions::IA_DIFFICULTY);
+		difficultyIAText = difficultyIALine->addLabel(difficultyIAToString(difficultyIASlider->getValue() / difficultyIAQuantum));
+
+		f->addRow("Dificultad IA", difficultyIALine);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		auto advanceButton = menu->addButton("   Opciones Avanzadas   ", ButtonActions::ADVANCED_OPTIONS);
+		auto continueButton = menu->addHorizontalBoxLayout();
+		auto a1 = continueButton->addButton("          Atras          ", ButtonActions::BACK);
+		a1->transformableOptions = false;
+		a1->goDownDown = 2;
+		auto a2 = continueButton->addButton("      Continuar      ", ButtonActions::CONTINUE);
+		a2->transformableOptions = false;
+		a2->goUpUp = 2;
+
+		
+
+		createBackgroundMenu(window);
+		centerElement(title);
+		centerElement(advanceButton);
+		centerElement(continueButton);
+		//centerElement(back);
+	}
+
+
+	void advancedOptions(sf::RenderWindow& window, GameDisplayController& gameDisplay) {
+		menu = new GameGUI::Menu(window);
+		auto title = menu->add(new GameGUI::Label("Opciones avanzadas de la partida"));
+		GameGUI::FormLayout* f = menu->addFormLayout();
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		numStartingBombsSlider = new GameGUI::Slider();
+		numStartingBombsSlider->setQuantum(numStartingBombsQuantum);
+		numStartingBombsSlider->setValue((numStartingBombs - 1) * numStartingBombsQuantum);
+
+
+		GameGUI::HorizontalBoxLayout* numStartingBombsLine = new GameGUI::HorizontalBoxLayout();
+		numStartingBombsLine->add(numStartingBombsSlider, ButtonActions::BOMBS);
+		numStartingBombsText = numStartingBombsLine->addLabel(to_string(numStartingBombsSlider->getValue() / numStartingBombsQuantum + 1));
+
+		f->addRow("Bombas iniciales", numStartingBombsLine);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		numStartingFireSlider = new GameGUI::Slider();
+		numStartingFireSlider->setQuantum(numStartingFireQuantum);
+		numStartingFireSlider->setValue((numStartingFire - 1) * numStartingFireQuantum );
+
+
+		GameGUI::HorizontalBoxLayout* numStartingFireLine = new GameGUI::HorizontalBoxLayout();
+		numStartingFireLine->add(numStartingFireSlider, ButtonActions::FIRE);
+		numStartingFireText = numStartingFireLine->addLabel(to_string(numStartingFireSlider->getValue() / numStartingFireQuantum + 1));
+
+		f->addRow("fuegos iniciales", numStartingFireLine);
+
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		numStartingSpeedSlider = new GameGUI::Slider();
+		numStartingSpeedSlider->setQuantum(numStartingSpeedQuantum);
+		numStartingSpeedSlider->setValue((numStartingSpeed - 1)* numStartingSpeedQuantum);
+
+
+		GameGUI::HorizontalBoxLayout* numStartingSpeedLine = new GameGUI::HorizontalBoxLayout();
+		numStartingSpeedLine->add(numStartingSpeedSlider, ButtonActions::SPEED);
+		numStartingSpeedText = numStartingSpeedLine->addLabel(to_string(numStartingSpeedSlider->getValue() / numStartingSpeedQuantum + 1));
+
+		f->addRow("Patines iniciales", numStartingSpeedLine);
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -666,27 +793,39 @@ private:
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 
-		difficultyIASlider = new GameGUI::Slider();
-		difficultyIASlider->setQuantum(difficultyIAQuantum);
-		difficultyIASlider->setValue(difficultyLevel * difficultyIAQuantum);
+		percentageBrickWallsSlider = new GameGUI::Slider();
+		percentageBrickWallsSlider->setQuantum(percentageBrickWallsQuantum);
+		percentageBrickWallsSlider->setValue(percentageBrickWalls * percentageBrickWallsQuantum);
 
 
-		GameGUI::HorizontalBoxLayout* difficultyIALine = new GameGUI::HorizontalBoxLayout();
-		difficultyIALine->add(difficultyIASlider, ButtonActions::IA_DIFFICULTY);
-		difficultyIAText = difficultyIALine->addLabel(difficultyIAToString(difficultyIASlider->getValue() / difficultyIAQuantum));
+		GameGUI::HorizontalBoxLayout* percentageBrickWallsLine = new GameGUI::HorizontalBoxLayout();
+		percentageBrickWallsLine->add(percentageBrickWallsSlider, ButtonActions::PERCENTAGE_BRICK_WALL);
+		percentageBrickWallsText = percentageBrickWallsLine->addLabel(to_string(percentageBrickWallsSlider->getValue() / percentageBrickWallsQuantum));
 
-		f->addRow("Dificultad IA", difficultyIALine);
+		f->addRow("Porcentaje de muros", percentageBrickWallsLine);
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 
-		auto continueButton = menu->addButton("   Continuar   ", ButtonActions::CONTINUE);
-		auto back = menu->addButton("       Atras       ", ButtonActions::BACK);
+		percentageObjectsPerBrickWallSlider = new GameGUI::Slider();
+		percentageObjectsPerBrickWallSlider->setQuantum(percentageObjectsPerBrickWallQuantum);
+		percentageObjectsPerBrickWallSlider->setValue(percentageObjectsPerBrickWall * percentageObjectsPerBrickWallQuantum);
 
-		centerElement(title);
-		centerElement(continueButton);
-		centerElement(back);
+
+		GameGUI::HorizontalBoxLayout* percentageObjectsPerBrickWallLine = new GameGUI::HorizontalBoxLayout();
+		percentageObjectsPerBrickWallLine->add(percentageObjectsPerBrickWallSlider, ButtonActions::PERCENTAGE_OBJECTS_IN_BRICK_WALL);
+		percentageObjectsPerBrickWallText = percentageObjectsPerBrickWallLine->addLabel(to_string(percentageObjectsPerBrickWallSlider->getValue() / percentageObjectsPerBrickWallQuantum));
+
+		f->addRow("Prob objeto por muro", percentageObjectsPerBrickWallLine);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+
+		
+
+		auto back = menu->addButton("       Volver       ", ButtonActions::BACK_FROM_ADVANCED_OPTIONS);
 
 		createBackgroundMenu(window);
+		centerElement(title);
+		centerElement(back);
 	}
 
 	void draw(sf::RenderWindow& window, GameDisplayController& gameDisplay) {

@@ -34,7 +34,12 @@ struct GameOptions {
 	int IADifficulty = 1;
 	ActionsAvalible startingAbility = ActionsAvalible::NONE_ACTION;
 	int percentageOfWalls = 66;
+	int percentageObjectsFromWalls = 60;
 	int startingLives = 3;
+	int startingBombs = 1;
+	int startingSpeed = 1;
+	int startingFire = 1;
+	int totalTime = 300;
 };
 
 class GlobalTime{

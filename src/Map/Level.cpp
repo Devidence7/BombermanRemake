@@ -182,11 +182,20 @@ void Level::brickWallOutcomes(Entity_ptr it) {
 	// Russian Roullete
 	else {
 		float probability = Random::getFloatNumberBetween(0, 1);
-		//cout << probability << endl;
-		if (!gameOptions->historyMode) probability /= 2;
+		
+		double propThreshold = 0.40;
+		if (!gameOptions->historyMode) {
+			propThreshold = (float)gameOptions->percentageObjectsFromWalls / 100.0;
+		}
 
-		if (probability < 0.40) {
-			probability = Random::getFloatNumberBetween(0, 125);
+		if (probability < propThreshold) {
+			if (gameOptions->historyMode) {
+				probability = Random::getFloatNumberBetween(0, 125);
+			}
+			else {
+				probability = Random::getFloatNumberBetween(0, 105);
+			}
+			
 			Entity_ptr newObject = nullptr;
 			bool tryTeleport = false;
 
@@ -205,23 +214,23 @@ void Level::brickWallOutcomes(Entity_ptr it) {
 			else if (probability < 75) {
 				newObject = std::make_shared<LessSpeedPowerUp>(LessSpeedPowerUp((it)->getPosition()));
 			}
-			else if (gameOptions->historyMode && probability < 85) {
-				newObject = std::make_shared<MoreTimePowerUp>(MoreTimePowerUp((it)->getPosition()));
-			}
-			else if (probability < 90) {
+			else if (probability < 80) {
 				newObject = std::make_shared<GrabBombsPowerUp>(GrabBombsPowerUp((it)->getPosition()));
 			}
-			else if (probability < 95) {
+			else if (probability < 85) {
 				newObject = std::make_shared<KickBombsPowerUp>(KickBombsPowerUp((it)->getPosition()));
 			}
-			else if (probability < 105) {
+			else if (probability < 95) {
 				newObject = std::make_shared<DisseasePowerUp>(DisseasePowerUp((it)->getPosition()));
 			}
-			else if (probability < 110) {
+			else if (probability < 100) {
 				newObject = std::make_shared<PassBombsPowerUp>(PassBombsPowerUp((it)->getPosition()));
 			}
-			else if (probability < 115) {
+			else if (probability < 105) {
 				newObject = std::make_shared<RemoteBombPowerUp>(RemoteBombPowerUp((it)->getPosition()));
+			}
+			else if (gameOptions->historyMode && probability < 115) {
+				newObject = std::make_shared<MoreTimePowerUp>(MoreTimePowerUp((it)->getPosition()));
 			}
 			else if (gameOptions->historyMode && probability < 120) {
 				newObject = std::make_shared<ExtraLifePowerUp>(ExtraLifePowerUp((it)->getPosition()));
