@@ -1,0 +1,18 @@
+(Estado Patrullar 
+    -1 0 3 0
+)
+(Estado perseguir
+    RangoVision 5
+    costDestroyWall 8
+)
+(Estado matar 
+    imprudencia 5
+    costDestroyWall 8
+    agresivity 9
+)
+
+(Estado buscarpu
+    interGen 15
+    RangoVision 8
+        -1 2 -8
+)
