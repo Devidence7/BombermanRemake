@@ -238,7 +238,7 @@ Ice::Ice(float difficultyLevel) : EnemyEntity(difficultyLevel)
 Barrel::Barrel(float difficultyLevel) : EnemyEntity(difficultyLevel)
 {
 	enemyType = barrel;
-	scoreValue=200;
+	scoreValue=250;
 	baseSpeed = 1.9 + (difficultyLevel/10);
 	this->rangoVision = 7 + (difficultyLevel*1.5);
 	this->numConsecutiveMovements = 5;
@@ -250,7 +250,7 @@ Barrel::Barrel(float difficultyLevel) : EnemyEntity(difficultyLevel)
 Coin::Coin(float difficultyLevel) : EnemyEntity(difficultyLevel)
 {
 	enemyType = coin;
-	scoreValue= 400;
+	scoreValue= 0;
 	baseSpeed = 3 + (difficultyLevel/10) * 1.2;
 	this->rangoVision = 13 + (difficultyLevel*1.8);
 	this->numConsecutiveMovements = 2;
@@ -262,7 +262,7 @@ Coin::Coin(float difficultyLevel) : EnemyEntity(difficultyLevel)
 
 Blob::Blob(float difficultyLevel) : EnemyEntity(difficultyLevel)
 {
-	scoreValue=250;
+	scoreValue=350;
 	enemyType = blob;
 	baseSpeed = 1.2 + (difficultyLevel/10);
 	this->rangoVision = 6 + (difficultyLevel*1.7);
@@ -275,7 +275,7 @@ Blob::Blob(float difficultyLevel) : EnemyEntity(difficultyLevel)
 
 Ghost::Ghost(float difficultyLevel) : EnemyEntity(difficultyLevel)
 {
-	scoreValue=300;
+	scoreValue=400;
 	enemyType = ghost;
 	baseSpeed = 1.8 + (difficultyLevel/10)*1.2;
 	this->rangoVision = 4 + (difficultyLevel*1.9);
@@ -288,7 +288,7 @@ Ghost::Ghost(float difficultyLevel) : EnemyEntity(difficultyLevel)
 
 Hypo::Hypo(float difficultyLevel) : EnemyEntity(difficultyLevel)
 {
-	scoreValue=350;
+	scoreValue=500;
 	enemyType = hypo;
 	baseSpeed = 2.3 + (difficultyLevel/10)*1.2;
 	this->rangoVision = 13 + (difficultyLevel*2);

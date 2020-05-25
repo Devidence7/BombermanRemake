@@ -174,7 +174,7 @@ void Enemies::insertarEnemigos(int dimX, int dimY, int numEnemies, int stage, fl
 		do {
 			x = Random::getIntNumberBetween(0, dimX / 2);
 
-		} while (x < 2);
+		} while (x < 3);
 
 		y = Random::getIntNumberBetween(0, dimY / 2);
 		//e->setPosition(sf::Vector2f((x * 2 + 1) * SIZE_PILLAR - 3, (y * 2 + 1) * SIZE_PILLAR - 3));
