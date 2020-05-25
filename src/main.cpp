@@ -155,10 +155,6 @@ int main(int argc, char* argv[]) {
 			pauseMenu.checkUserPauseActions(gameDisplayController);
 		}
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num5)) {
-			gameDisplayController.setGameState(GameDisplayController::GameState::TUTORIAL);
-		}
-
 		// Update display window window
 		gameDisplayController.getWindow()->display();
 	}
