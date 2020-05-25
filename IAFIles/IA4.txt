@@ -2,7 +2,7 @@
     -1 0 3 0
 )
 (Estado perseguir
-    RangoVision 5
+    RangoVision -1
     costDestroyWall 8
 )
 (Estado matar 
