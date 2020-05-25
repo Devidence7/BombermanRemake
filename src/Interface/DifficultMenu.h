@@ -55,7 +55,7 @@ public:
 		menu->addButton("                Normal                 ", ButtonActions::NORMALLEVEL);
 		menu->addButton("                Dificil                ", ButtonActions::HARDLEVEL);
 		menu->addButton("            Atras       ", ButtonActions::BACK);
-		menu->addButton("                    Salir                    ", ButtonActions::QUIT);
+		// menu->addButton("                    Salir                    ", ButtonActions::QUIT);
 
 		createBackgroundMenu(window);
 	}

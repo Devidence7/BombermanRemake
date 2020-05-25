@@ -474,7 +474,7 @@ private:
 		menu->addButton("                3 jugadores                 ", ButtonActions::THREEPLAYERS);
 		menu->addButton("                4 jugadores                 ", ButtonActions::FOURPLAYERS);
 		//	menu->addButton("                   Atras       ", ButtonActions::BACK);
-		hboxQuit->addButton("Atras", ButtonActions::BACK);
+		menu->addButton("    Atras    ", ButtonActions::BACK);
 
 
 		createBackgroundMenu(window);
@@ -489,7 +489,7 @@ private:
 		menu->addButton("                Batalla por equipos                 ", ButtonActions::TEAM);
 		//menu->addButton("            		    Atras      ", ButtonActions::BACK);
 
-		hboxQuit->addButton("Atras", ButtonActions::BACK);
+		menu->addButton("    Atras    ", ButtonActions::BACK);
 
 		createBackgroundMenu(window);
 
@@ -504,19 +504,19 @@ private:
 		case 2:
 			menu->addButton("                      Jugador vs IA                       ", ButtonActions::PLVSIA);
 			menu->addButton("                  Jugador vs Jugador                ", ButtonActions::PLVSPL);
-			hboxQuit->addButton("Atras", ButtonActions::BACK);
+			menu->addButton("    Atras    ", ButtonActions::BACK);
 			break;
 
 		case 3:
 			menu->addButton("                1  Jugador , 2 IA                   ", ButtonActions::PL12IA);
 			menu->addButton("               2  Jugadores , 1 IA                 ", ButtonActions::PL21IA);
-			hboxQuit->addButton("Atras", ButtonActions::BACK);
+			menu->addButton("    Atras    ", ButtonActions::BACK);
 			break;
 
 		case 4:
 			menu->addButton("                 1 Jugador , 3 IA                   ", ButtonActions::PL13IA);
 			menu->addButton("                2 Jugadores , 2 IA                 ", ButtonActions::PL22IA);
-			hboxQuit->addButton("Atras", ButtonActions::BACK);
+			menu->addButton("    Atras    ", ButtonActions::BACK);
 			break;
 
 		default:
@@ -537,7 +537,7 @@ private:
 			menu->addButton("                     1 Jugador Vs 2 IA                      ", ButtonActions::PL1VS2IA);
 			menu->addButton("                    2 Jugadores Vs 1 IA                    ", ButtonActions::PL2VS1IA);
 			menu->addButton("                1 Jugador vs Jugador IA                ", ButtonActions::PLVSPLIA);
-			hboxQuit->addButton("Atras", ButtonActions::BACK);
+			menu->addButton("    Atras    ", ButtonActions::BACK);
 
 			break;
 
@@ -545,7 +545,7 @@ private:
 			menu->addButton("                    1 Jugador Vs  3 IA                      ", ButtonActions::PL1VS3IA);
 			menu->addButton("          	     2 Jugadores Vs 2 IA                     ", ButtonActions::PL2VS2IA);
 			menu->addButton("             Jugador IA  Vs Jugador IA                 ", ButtonActions::PLIAVSPLIA);
-			hboxQuit->addButton("Atras", ButtonActions::BACK);
+			menu->addButton("    Atras    ", ButtonActions::BACK);
 			break;
 
 		default:

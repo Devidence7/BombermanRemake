@@ -85,7 +85,7 @@ private:
 
 		case ButtonActions::EASYLEVEL:
 
-            game.gameOptions.difLevel=1.25;
+            game.gameOptions.difLevel=1.1;
 			previousMenu=MenuState::MAIN;
 				createNumPlayersMenu(*window);
 			gameDisplay.setGameState(GameDisplayController::GameState::PICK_COLOR);
@@ -104,7 +104,7 @@ private:
 			break;
 				
 		case ButtonActions::HARDLEVEL:
-            game.gameOptions.difLevel=1.75;
+            game.gameOptions.difLevel=1.90;
 			previousMenu=MenuState::MAIN;
 				createNumPlayersMenu(*window);
 			//OptionsMenu::lastGameStateOptionsMenu = GameDisplayController::GameState::MULTIPLAYER_MENU;
@@ -144,7 +144,7 @@ private:
 		menu->addButton("                  Facil                   ", ButtonActions::EASYLEVEL);
 		menu->addButton("                Normal                 ", ButtonActions::NORMALLEVEL);
 		menu->addButton("                 Dificil                   ", ButtonActions::HARDLEVEL);
-		hboxQuit->addButton("Atras", ButtonActions::BACK);
+		menu->addButton("    Atras    ", ButtonActions::BACK);
 
 		createBackgroundMenu(window);
 	}
@@ -155,7 +155,7 @@ private:
 		GameGUI::HorizontalBoxLayout* hboxQuit = menu->addHorizontalBoxLayout();
 		menu->addButton("                  1 jugador                   ", ButtonActions::SINGLEPLAYER);
 		menu->addButton("                2 jugadores                 ", ButtonActions::COOP);
-		hboxQuit->addButton("Atras", ButtonActions::BACK);
+		menu->addButton("    Atras    ", ButtonActions::BACK);
 		createBackgroundMenu(window);
 	}
 
