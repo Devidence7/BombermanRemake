@@ -239,8 +239,8 @@ public:
 			case sf::Event::LostFocus:
 				// Pause
 				if (gameState == GameDisplayController::GameState::PLAYING) {
-					//GameTime::stopGameTime();
-					//gameDisplay.setGameState(GameDisplayController::GameState::PAUSE_MENU);
+					GameTime::stopGameTime();
+					gameDisplay.setGameState(GameDisplayController::GameState::PAUSE_MENU);
 				}
 				break;
 			case sf::Event::GainedFocus:
