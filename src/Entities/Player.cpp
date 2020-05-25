@@ -1,5 +1,6 @@
 #include "../Map/Level.hpp"
 #include "../Utils/IAFunctions.hpp"
+#include "../Music/GameSounds.h"
 PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team, float posX,float posY) : Entity(), playerControls(pControls) {
 
 	team = _team;
@@ -71,6 +72,8 @@ void PlayerEntity::setExpiredEntity() {
 		if (storyMode) {
 			resetStats();
 		}
+
+		GameSounds::playerDead();
 
 		if(BombTaked != nullptr){
 			BombTaked->setExpiredEntity();
