@@ -337,7 +337,8 @@ public:
 		moveTime *= 60;
 
 		if (PLayers::getVectorPlayer().size() == 1) {
-			sf::Vector2f distCenter2Player = PLayers::getVectorPlayer()[0]->getCenterPosition() - gameDisplay.camera.getCenter();
+			sf::Vector2f cameraRealCenter = (gameDisplay.camera.getCenter() + sf::Vector2f(0, gameDisplay.camera.getSize().y / 30.0));
+			sf::Vector2f distCenter2Player = PLayers::getVectorPlayer()[0]->getCenterPosition() - cameraRealCenter;
 
 			sf::Vector2f squareRadius = sf::Vector2f(gameDisplay.getWindow()->getSize().x / 6, gameDisplay.getWindow()->getSize().y / 6);
 			if (distCenter2Player.x > squareRadius.x && gameDisplay.camera.getCenter().x + gameDisplay.camera.getSize().x / 2 < (level->sizeLevel().x + 2) * SIZE_PILLAR + SIZE_PILLAR * 2) {
@@ -347,10 +348,10 @@ public:
 				gameDisplay.camera.setCenter(sf::Vector2f(gameDisplay.camera.getCenter().x + ((distCenter2Player.x + squareRadius.x) / 20) * moveTime, gameDisplay.camera.getCenter().y));
 			}
 
-			if (distCenter2Player.y > squareRadius.y && gameDisplay.camera.getCenter().y + gameDisplay.camera.getSize().y / 2 < (level->sizeLevel().y + 2) * SIZE_PILLAR + SIZE_PILLAR * 2) {
+			if (distCenter2Player.y > squareRadius.y && cameraRealCenter.y + gameDisplay.camera.getSize().y / 2 < (level->sizeLevel().y + 2) * SIZE_PILLAR + SIZE_PILLAR * 2) {
 				gameDisplay.camera.setCenter(sf::Vector2f(gameDisplay.camera.getCenter().x, gameDisplay.camera.getCenter().y + ((distCenter2Player.y - squareRadius.y) / 20) * moveTime));
 			}
-			else if (distCenter2Player.y < -squareRadius.y && gameDisplay.camera.getCenter().y - gameDisplay.camera.getSize().y / 2 > -SIZE_PILLAR * 2) {
+			else if (distCenter2Player.y < -squareRadius.y && cameraRealCenter.y - gameDisplay.camera.getSize().y / 2 > -SIZE_PILLAR * 2) {
 				gameDisplay.camera.setCenter(sf::Vector2f(gameDisplay.camera.getCenter().x, gameDisplay.camera.getCenter().y + ((distCenter2Player.y + squareRadius.y) / 20) * moveTime));
 			}
 		}
