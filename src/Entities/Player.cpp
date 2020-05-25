@@ -1,5 +1,6 @@
 #include "../Map/Level.hpp"
 #include "../Utils/IAFunctions.hpp"
+#include "../Music/GameSounds.h"
 PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team, float posX,float posY) : Entity(), playerControls(pControls) {
 
 	team = _team;
@@ -43,6 +44,8 @@ PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team, float posX,floa
 	initialPos = sf::Vector2f(posX, posY);
 	cout<<"INITIAL POS X "<<posX<<" INITIAL POS Y "<<posY<<endl;
 
+	shadow.setTexture(TextureStorage::getEntityShadowTexture().getTexture());
+	shadow.setColor(sf::Color(255, 255, 255, 200));
 
 	//actionAvaible = ActionsAvalible::KICK_BOM;
 	//numOfBombs = 3;
@@ -53,12 +56,25 @@ int PlayerEntity::getPowerOfBombs() {
 	return powerOfBombs;
 }
 
+void PlayerEntity::drawShadow(sf::RenderWindow& window) {
+	if (!expiredEntity) {
+		shadow.setPosition(this->getPosition().x + 6, this->getPosition().y + 53);
+		window.draw(shadow);
+	}
+}
+
 void PlayerEntity::setExpiredEntity() {
 	if (GameTime::getTimeNow() - lastInvencibleTime < invencibleTime) {
 		return;
 	}
 	//
 	if (!expiredEntity) {
+		if (storyMode) {
+			resetStats();
+		}
+
+		GameSounds::playerDead();
+
 		if(BombTaked != nullptr){
 			BombTaked->setExpiredEntity();
 		}
@@ -84,6 +100,22 @@ void PlayerEntity::changeColor(sf::Color newColor) {
 
 int PlayerEntity::getLives() {
 	return lives;
+}
+
+void PlayerEntity::resetStats() {
+	speedBoost = 1;
+	numOfBombs = 1;
+	powerOfBombs = 1;
+	actionAvaible = ActionsAvalible::NONE_ACTION;
+}
+
+void PlayerEntity::setStats(int speedBoost, int numOfBombs, int powerOfBombs, int lives, ActionsAvalible action) {
+	this->speedBoost = speedBoost;
+	this->numOfBombs = numOfBombs;
+	this->powerOfBombs = powerOfBombs;
+	this->lives = lives; 
+	this->actionAvaible = action;
+
 }
 
 /*
@@ -178,7 +210,12 @@ void PlayerEntity::animate(sf::Vector2f velocity) {
 			respawning = false;
 			lastInvencibleTime = GameTime::getTimeNow();
 			isInvicible = true;
-			std::cout << "Respouning\n";
+			if (storyMode) {
+				resetStats();
+				while (BombsAsociated.size() > 0) {
+					BombsAsociated.front()->setExpiredEntity();
+				}	
+			}
 			setPosition(initialPos);
 			//cout<<"INITIAL POS X "<<initialPos.x<<" INITIAL POS Y "<<initialPos.y<<endl;
 		}
@@ -280,6 +317,7 @@ void PlayerEntity::realizeActions()
 		case ActionsAvalible::REMOTE_BOMB:
 			if(BombsAsociated.size() > 0)
 				BombsAsociated.front()->setExpiredEntity();
+			break;
 		default:
 			break;
 		}
@@ -402,9 +440,9 @@ bool PlayerEntity::updatePlayer() {
 	if (!expiredEntity) {
 		Interst_ptr i = PointsDestroyMap::getIntersetZone(getEntityMapCoordinates());
 		if(i != nullptr){
-			std::cout<< "interes " <<  i->intersest() << "\n";
+			//std::cout<< "interes " <<  i->intersest() << "\n";
 		}else{
-			std::cout<< "interes 0\n";
+			//std::cout<< "interes 0\n";
 		}
 		move(velocity.x, velocity.y);
 		if (BombTaked != nullptr) {//Si tiene bomba, actualizar a la posicion del jugador (centrado segun cuadricula)

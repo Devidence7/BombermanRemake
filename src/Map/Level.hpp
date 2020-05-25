@@ -27,7 +27,7 @@ class Level
 	static std::vector<std::vector<Entity_ptr>> miniMap;
 	static sf::RectangleShape flooro;
 
-	static int numWalls;
+	
 	static int numEnemiesLeft;
 	static Teleporter_ptr teleporter;
 	static GameOptions* gameOptions;
@@ -38,6 +38,7 @@ class Level
 	static int dimY;
 
 public:
+	static int numWalls;
 	static bool exitHasApeared;
 	static bool canFinishLevel;
 	static bool levelFinished;
@@ -50,6 +51,8 @@ public:
 	//Level(int dimX, int dimY,bool debug,int stage);
 	
 	static void update();
+
+	void drawShadows(sf::RenderWindow& w);
 
 	/*
 	 * This is a DEBUG method, draws in the RenderWindow the hitbox of the Entity

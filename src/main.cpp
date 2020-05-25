@@ -23,6 +23,7 @@
 #include "Interface/FinalScoreInterface.h"
 #include "Interface/BattleVictoryMenu.h"
 #include "Interface/PickColor.h"
+#include "Interface/TutorialInterface.h"
 
 
 int main(int argc, char* argv[]) {
@@ -34,7 +35,6 @@ int main(int argc, char* argv[]) {
 
 	// Create new game
 	Game game = Game();
-
 
 	// Create a Multiple interface controller
 	auto gameDisplayController = GameDisplayController();
@@ -56,6 +56,7 @@ int main(int argc, char* argv[]) {
 	FinalScoreInterface finalScore(*gameDisplayController.getWindow(), game, gameDisplayController);
 	BattleVictoryMenu battleVictory(*gameDisplayController.getWindow(), game, gameDisplayController);
 	PickColorMenu pickColorMenu(*gameDisplayController.getWindow(), gameDisplayController, game);
+	TutorialInterface tutorialInterface(*gameDisplayController.getWindow(), gameDisplayController);
 
 
 	// Start game loop
@@ -127,6 +128,11 @@ int main(int argc, char* argv[]) {
 			pickColorMenu.menuActions(gameDisplayController, game);
 			break;
 
+		case GameDisplayController::GameState::TUTORIAL:
+			gameDisplayController.getWindow()->setView(gameDisplayController.menuView);
+			tutorialInterface.menuActions(gameDisplayController, game);
+			break;
+
 
 		case GameDisplayController::GameState::PLAYING:
 
@@ -148,29 +154,6 @@ int main(int argc, char* argv[]) {
 			// Manage pause menu when playing
 			pauseMenu.checkUserPauseActions(gameDisplayController);
 		}
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num9)) {
-
-			gameDisplayController.gameState = GameDisplayController::GameState::GAME_OVER;
-		}
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
-			PLayers::getVectorPlayer()[0]->setExpiredEntity();
-			PLayers::getVectorPlayer()[0]->lives = 0;
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
-			PLayers::getVectorPlayer()[1]->setExpiredEntity();
-			PLayers::getVectorPlayer()[1]->lives = 0;
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) {
-			PLayers::getVectorPlayer()[2]->setExpiredEntity();
-			PLayers::getVectorPlayer()[2]->lives = 0;
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4)) {
-			PLayers::getVectorPlayer()[3]->setExpiredEntity();
-			PLayers::getVectorPlayer()[3]->lives = 0;
-		}
-
 
 		// Update display window window
 		gameDisplayController.getWindow()->display();

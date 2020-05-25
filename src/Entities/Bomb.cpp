@@ -213,10 +213,29 @@ Fire::Fire(Player_ptr p, int type ) : Entity()
 
 void Fire::onCollission(std::shared_ptr<Entity> eCollisioning, std::shared_ptr<Entity> eCollisioner, CollisionType colT)
 {
-	eCollisioning->setExpiredEntity();
-
-	//TODO: Check if have increment score
-	player2Score->incrementScore(0);
+	if (!eCollisioning->getExpiredEntity()) {
+		Enemy_ptr e;
+		Player_ptr p;
+		if ((e = std::dynamic_pointer_cast<EnemyEntity>(eCollisioning)) != nullptr) {
+			if (!e->dyingEntity) {
+				eCollisioning->setExpiredEntity();
+				player2Score->incrementScore(eCollisioning->scoreValue);
+			}
+			
+		}
+		else if (std::dynamic_pointer_cast<Player_ptr>(eCollisioning) != nullptr) {
+			if (!p->getExpiredEntity() && !p->dead && !p->respawning) {
+				eCollisioning->setExpiredEntity();
+				player2Score->incrementScore(eCollisioning->scoreValue);
+			}
+		}
+		else {
+			eCollisioning->setExpiredEntity();
+			//player2Score->incrementScore(0);
+		}
+		
+	}
+	
 }
 
 void Fire::update()

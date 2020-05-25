@@ -107,6 +107,8 @@ private:
 			game.gameOptions.historyMode = false;
 			game.debug = false;
 			game.scoreForTheMoment = 0;
+			gameDisplay.camera = sf::View(sf::FloatRect(0.f, 0.f, window->getSize().x, window->getSize().y));
+			gameDisplay.camera.zoom(2);
 			gameDisplay.setGameState(GameDisplayController::GameState::VS_NUMPLAYERS_MENU);
 
 			break;

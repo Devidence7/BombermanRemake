@@ -20,10 +20,8 @@ class VictoryScreen {
 		QUIT
 	};
 
-	sf::Texture texture;
     sf::Text level;
-   sf::Text victory;
-	sf::Sprite background;
+    sf::Text victory;
 	sf::RectangleShape menuBackground;
 	sf::RectangleShape menuBackgroundShadow;
 	sf::RectangleShape menuBackgroundShadow1;
@@ -88,14 +86,6 @@ public:
 		level.setPosition(sf::Vector2f(window.getSize().x / 2.0f, window.getSize().y / 4.0f * 3));
 
 
-		texture.loadFromFile("../textures/interface/Background_orange_squares.png");
-		texture.setRepeated(true);
-		background.setColor(sf::Color(0, 255, 153, 5));
-		background.setTexture(texture);
-		background.setScale(sf::Vector2f(2, 2));
-		background.setTextureRect({ 0, 0, (int)window.getSize().x, (int)window.getSize().y });
-
-
 		menu->addButton("                Continuar               ", ButtonActions::CONTINUE);
 		menu->addButton("       Ir al menu principal       ", ButtonActions::GO_MAIN_MENU);
 		menu->addButton("                   Salir                    ", ButtonActions::QUIT);
@@ -132,8 +122,9 @@ private:
 		}
 	}
 
-	void draw(sf::RenderWindow& window) {
-		window.draw(background);
+	void draw(sf::RenderWindow& window, GameDisplayController& gameDisplay) {
+		window.draw(gameDisplay.backgroundBomberman);
+		window.draw(gameDisplay.getSquaresBackground());
         window.draw(victory);
         window.draw(level);
 		window.draw(menuBackgroundShadow2);
@@ -150,7 +141,7 @@ public:
 			gameDisplay.victoryReprocessDisplay = false;
 			createVictoryScreen(*gameDisplay.getWindow(), game);
 		}
-		draw(*gameDisplay.getWindow());
+		draw(*gameDisplay.getWindow(), gameDisplay);
 
 		// Manage window events and pass a callback to manage this menu buttons
 		gameDisplay.manageGameInterface(gameDisplay, std::bind(&VictoryScreen::userActions, this, std::placeholders::_1, std::ref(gameDisplay.getWindow()), std::ref(gameDisplay), std::ref(game)));

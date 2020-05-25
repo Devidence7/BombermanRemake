@@ -27,6 +27,9 @@ public:
 	bool fullScreen;
     const string PROPERTIES_FILENAME = "properties.txt";
 
+	bool tutorialIntro = false;
+	bool tutorialAbility = false;
+
     enum GameState {
         MAIN_MENU,
         PLAYING,
@@ -41,7 +44,8 @@ public:
 		FINAL_SCORE,
 		END_BATTLE,
 		PICK_COLOR,
-		PICK_MAP
+		PICK_MAP,
+		TUTORIAL
 		//RESTART
     };
 
@@ -73,6 +77,9 @@ public:
 	bool endBattleReprocessDisplay = false;
 	bool gameInterfaceReprocessDisplay = false;
 	bool colorPickerReprocessDisplay = false;
+	bool tutorialReprocessDisplay = false;
+
+	int tutorialType = 1;
 
 	bool newScore = false;
 	
@@ -100,11 +107,14 @@ public:
 		
 
 		// CAMERA
+		
+		
 		menuView = sf::View(sf::FloatRect(0.f, 0.f, window->getSize().x, window->getSize().y));
-		camera = sf::View (sf::FloatRect(0.f, 0.f, window->getSize().x, window->getSize().y));
+		camera = sf::View(sf::FloatRect(0.f, 0.f, window->getSize().x, window->getSize().y));
 		camera.setViewport(sf::FloatRect(0.f, 0.1f, 1.f, 1.f));
 		playingGuiView = sf::View(sf::FloatRect(0.f, 0.f, window->getSize().x, window->getSize().y / 5));
 		playingGuiView.setViewport(sf::FloatRect(0.f, 0.f, 1.f, 0.2f));
+
 
 		// Background Bomberman:
 		textureBomberman.loadFromFile(MAIN_MENU_BACKGROUND_PATH);
@@ -203,6 +213,7 @@ public:
 		endBattleReprocessDisplay = true;
 		gameInterfaceReprocessDisplay = true;
 		colorPickerReprocessDisplay = true;
+		tutorialReprocessDisplay = true;
 	}
 
 	void updateCamera() {
@@ -228,8 +239,8 @@ public:
 			case sf::Event::LostFocus:
 				// Pause
 				if (gameState == GameDisplayController::GameState::PLAYING) {
-					GameTime::stopGameTime();
-					gameDisplay.setGameState(GameDisplayController::GameState::PAUSE_MENU);
+					//GameTime::stopGameTime();
+					//gameDisplay.setGameState(GameDisplayController::GameState::PAUSE_MENU);
 				}
 				break;
 			case sf::Event::GainedFocus:
@@ -248,7 +259,7 @@ public:
 				gameDisplay.saveProperties();
 				notifyChangeDisplay();
 				
-				camera.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
+				camera = sf::View(sf::FloatRect(0.f, 0.f, window->getSize().x, window->getSize().y));
 				camera.setViewport(sf::FloatRect(0.f, 0.1f, 1.f, 1.f));
 				playingGuiView = sf::View(sf::FloatRect(0.f, 0.f, window->getSize().x, window->getSize().y / 5));
 				playingGuiView.setViewport(sf::FloatRect(0.f, 0.f, 1.f, 0.2f));
@@ -311,6 +322,9 @@ public:
 		propertiesFile << "player2.bomb = " + to_string((int)sf::Keyboard::RControl) << endl;
 		propertiesFile << "player2.action = " + to_string((int)sf::Keyboard::RShift) << endl;
 
+		propertiesFile << "tutorial.intro = 1"<< endl;
+		propertiesFile << "tutorial.ability = 1 " << endl;
+
 		propertiesFile.close();
 	}
 
@@ -367,6 +381,9 @@ public:
 		player2.UseBomb = (sf::Keyboard::Key)getIntProperty("player2.bomb");
 		player2.MakeAction = (sf::Keyboard::Key)getIntProperty("player2.action");
 
+		tutorialAbility = (bool)getIntProperty("tutorial.ability");
+		tutorialIntro = (bool)getIntProperty("tutorial.intro");
+
 		UserKeyPress * userKeyPressManager = new UserKeyPress(player1, player2);
 
 		propertiesFile.close();
@@ -401,6 +418,8 @@ public:
 		gameProperties.at("player2.bomb") = to_string(userKeyPress->player2.UseBomb);
 		gameProperties.at("player2.action") = to_string(userKeyPress->player2.MakeAction);
 
+		gameProperties.at("tutorial.ability") = to_string((int)tutorialAbility);
+		gameProperties.at("tutorial.intro") = to_string((int)tutorialIntro);
 
 		fstream file;
 		file.open(PROPERTIES_FILENAME, std::fstream::in | std::fstream::out | fstream::trunc);

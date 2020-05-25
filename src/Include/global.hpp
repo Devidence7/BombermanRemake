@@ -9,6 +9,14 @@
 
 #define SHOOTING_DISTANCE 5
 
+enum ActionsAvalible {
+	NONE_ACTION = 0,
+	GRAB_BOMB = 7,
+	THROUGH_BOMB = 12,
+	REMOTE_BOMB = 5,
+	KICK_BOM = 6
+};
+
 struct GameOptions {
 	int numPlayers = 0;
 	double difLevel = 1;
@@ -19,7 +27,19 @@ struct GameOptions {
 	sf::Color* colorList;
 	int player1ColorPick = 0;
 	int player2ColorPick = 1;
+
+	// Multi options
 	int selectedStage = 1;
+	int selectedSizeStage = 1;
+	int IADifficulty = 1;
+	ActionsAvalible startingAbility = ActionsAvalible::NONE_ACTION;
+	int percentageOfWalls = 66;
+	int percentageObjectsFromWalls = 60;
+	int startingLives = 3;
+	int startingBombs = 1;
+	int startingSpeed = 1;
+	int startingFire = 1;
+	int totalTime = 300;
 };
 
 class GlobalTime{
@@ -49,14 +69,7 @@ enum PlayerEvent
 	STOPED
 };
 
-enum ActionsAvalible
-{
-	NONE_ACTION = 0,
-	GRAB_BOMB = 7,
-	THROUGH_BOMB = 12,
-	REMOTE_BOMB = 5,
-	KICK_BOM = 6
-};
+
 
 enum EnemyType
 {
@@ -110,7 +123,7 @@ enum TypeSeekIA
 const int TOTAL_ENEMY_FRAMES = 13;
 const int THRESHOLD_CENTER_CELL = 5;
 // Debug features:
-#define HITBOX_DEBUG_MODE true;
+// #define HITBOX_DEBUG_MODE true;
 
 ////////////////////////////////////////////
 ///////// MAP COORDENATE OPERATOR /////////

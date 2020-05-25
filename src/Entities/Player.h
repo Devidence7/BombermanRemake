@@ -18,6 +18,8 @@ public:
 	int numOfBombs = 1;
 	int powerOfBombs = 1;
 	bool dead=false;
+	bool storyMode = false;
+
 	sf::Vector2f respownPosition;
 	// Sprites for GUI
 	sf::Sprite playerHead;
@@ -80,6 +82,8 @@ public:
 	*/
 	PlayerEntity(PlayerControls& playerControls, int _team,float posX,float posY);
 
+	void drawShadow(sf::RenderWindow& window) override;
+
 	int getPowerOfBombs();
 
 	void setExpiredEntity() override;
@@ -89,6 +93,9 @@ public:
 	void changeColor(sf::Color newColor);
 
 	int getLives();
+
+	void resetStats();
+	void setStats(int speedBoost, int numOfBombs, int powerOfBombs,	int lives, ActionsAvalible action);
 
 	inline void addLife(int numLives){
 		this->lives += numLives;

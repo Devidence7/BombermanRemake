@@ -114,7 +114,7 @@ public:
 
 
 
-		menu->addButton("             Continuar            ", ButtonActions::CONTINUE);
+		menu->addButton("        Empezar Partida        ", ButtonActions::CONTINUE);
 		menu->addButton("                Atras                ", ButtonActions::GO_MAIN_MENU);
 
 		createBackgroundMenu(window, game);

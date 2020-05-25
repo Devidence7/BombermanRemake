@@ -60,7 +60,7 @@ public:
 		insertSoundTrack("../music/Sounds/Menu/Sound Change.wav", 11);
 		insertSoundTrack("../music/Sounds/Menu/The_Game_Over.wav", 12);
 
-		insertSoundTrack("../music/Sounds/Menu/Player Dead.wav", 13);
+		insertSoundTrack("../music/Sounds/Player/Player Dead.wav", 13);
 	}
 
 	static void Update(void) {

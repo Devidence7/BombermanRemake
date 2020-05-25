@@ -71,11 +71,17 @@ Level::Level(int dimX, int dimY, bool debug, int stage,GameOptions* gameOptions)
 	}
 
 	//create Pillars
+	int createBrickWallThreshold = 33;
+	if (!gameOptions->historyMode) {
+		createBrickWallThreshold = gameOptions->percentageOfWalls;
+	}
+	
+
 	for (int x = 1; x < dimX + 1; x++) {
 		for (int y = 1; y < dimY + 1; y++) {
 			if (x % 2 == 1 || y % 2 == 1) {
 				// Create random Bricks:
-				if (!Random::getIntNumberBetween(0, 3)) {
+				if (Random::getIntNumberBetween(1, 100) <= createBrickWallThreshold) {
 					bool intersec = false;
 					for (Enemy_ptr e : Enemies::getVectorEnemies()) {
 						sf::Vector2i p = getMapCoordinates(e->getCenterPosition());
@@ -176,11 +182,20 @@ void Level::brickWallOutcomes(Entity_ptr it) {
 	// Russian Roullete
 	else {
 		float probability = Random::getFloatNumberBetween(0, 1);
-		//cout << probability << endl;
-		if (!gameOptions->historyMode) probability /= 2;
+		
+		double propThreshold = 0.40;
+		if (!gameOptions->historyMode) {
+			propThreshold = (float)gameOptions->percentageObjectsFromWalls / 100.0;
+		}
 
-		if (probability < 0.40) {
-			probability = Random::getFloatNumberBetween(0, 125);
+		if (probability < propThreshold) {
+			if (gameOptions->historyMode) {
+				probability = Random::getFloatNumberBetween(0, 125);
+			}
+			else {
+				probability = Random::getFloatNumberBetween(0, 105);
+			}
+			
 			Entity_ptr newObject = nullptr;
 			bool tryTeleport = false;
 
@@ -199,23 +214,23 @@ void Level::brickWallOutcomes(Entity_ptr it) {
 			else if (probability < 75) {
 				newObject = std::make_shared<LessSpeedPowerUp>(LessSpeedPowerUp((it)->getPosition()));
 			}
-			else if (gameOptions->historyMode && probability < 85) {
-				newObject = std::make_shared<MoreTimePowerUp>(MoreTimePowerUp((it)->getPosition()));
-			}
-			else if (probability < 90) {
+			else if (probability < 80) {
 				newObject = std::make_shared<GrabBombsPowerUp>(GrabBombsPowerUp((it)->getPosition()));
 			}
-			else if (probability < 95) {
+			else if (probability < 85) {
 				newObject = std::make_shared<KickBombsPowerUp>(KickBombsPowerUp((it)->getPosition()));
 			}
-			else if (probability < 105) {
+			else if (probability < 95) {
 				newObject = std::make_shared<DisseasePowerUp>(DisseasePowerUp((it)->getPosition()));
 			}
-			else if (probability < 110) {
+			else if (probability < 100) {
 				newObject = std::make_shared<PassBombsPowerUp>(PassBombsPowerUp((it)->getPosition()));
 			}
-			else if (probability < 115) {
+			else if (probability < 105) {
 				newObject = std::make_shared<RemoteBombPowerUp>(RemoteBombPowerUp((it)->getPosition()));
+			}
+			else if (gameOptions->historyMode && probability < 115) {
+				newObject = std::make_shared<MoreTimePowerUp>(MoreTimePowerUp((it)->getPosition()));
 			}
 			else if (gameOptions->historyMode && probability < 120) {
 				newObject = std::make_shared<ExtraLifePowerUp>(ExtraLifePowerUp((it)->getPosition()));
@@ -353,13 +368,12 @@ void Level::update() {
 
 }
 
-/*
-	 * This is a DEBUG method, draws in the RenderWindow the hitbox of the Entity
-	*/
-
-void Level::draw(sf::RenderWindow& w) {
+void Level::drawShadows(sf::RenderWindow& w) {
 	// Draw the flooro:
 	w.draw(flooro);
+
+	// Shadows
+
 
 	for (std::vector<Entity_ptr>& v : miniMap) {
 		for (Entity_ptr e : v) {
@@ -368,7 +382,13 @@ void Level::draw(sf::RenderWindow& w) {
 			}
 		}
 	}
+}
 
+/*
+	 * This is a DEBUG method, draws in the RenderWindow the hitbox of the Entity
+	*/
+
+void Level::draw(sf::RenderWindow& w) {
 	// Draw the entities
 	for (std::vector<Entity_ptr>& v : miniMap) {
 		for (Entity_ptr e : v) {

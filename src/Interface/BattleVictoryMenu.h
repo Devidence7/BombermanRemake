@@ -32,6 +32,12 @@ class BattleVictoryMenu {
 	GameGUI::Slider* musicSlider;
 	GameGUI::InputBox* textbox;
 
+	void centerElement(GameGUI::Widget* e) {
+		sf::Vector2f eSize = e->getSize();
+		sf::Vector2f mSize = menu->getSize();
+		e->setPosition(e->getPosition() + sf::Vector2f(mSize.x / 2 - eSize.x / 2, 0));
+	}
+
 	void createBackgroundMenu(sf::RenderWindow& window) {
 		menu->setPosition(sf::Vector2f((int)window.getSize().x / 2 - (int)menu->getSize().x / 2, (int)window.getSize().y / 2 - (int)menu->getSize().y / 2));
 
@@ -165,10 +171,13 @@ public:
 			}
 		}
 
-		menu->addButton("       Ir al menu principal       ", ButtonActions::GO_MAIN_MENU);
-		menu->addButton("                   Salir                    ", ButtonActions::QUIT);
+		auto a1 = menu->addButton("       Ir al menu principal       ", ButtonActions::GO_MAIN_MENU);
+		auto a2 = menu->addButton("                   Salir                    ", ButtonActions::QUIT);
 
 		createBackgroundMenu(window);
+
+		centerElement(a1);
+		centerElement(a2);
 	}
 
 private:
