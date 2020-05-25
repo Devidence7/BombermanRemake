@@ -52,6 +52,8 @@ public:
 	
 	static void update();
 
+	void drawShadows(sf::RenderWindow& w);
+
 	/*
 	 * This is a DEBUG method, draws in the RenderWindow the hitbox of the Entity
 	*/

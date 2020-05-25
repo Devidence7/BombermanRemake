@@ -43,6 +43,8 @@ PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team, float posX,floa
 	initialPos = sf::Vector2f(posX, posY);
 	cout<<"INITIAL POS X "<<posX<<" INITIAL POS Y "<<posY<<endl;
 
+	shadow.setTexture(TextureStorage::getEntityShadowTexture().getTexture());
+	shadow.setColor(sf::Color(255, 255, 255, 200));
 
 	//actionAvaible = ActionsAvalible::KICK_BOM;
 	//numOfBombs = 3;
@@ -51,6 +53,11 @@ PlayerEntity::PlayerEntity(PlayerControls& pControls, int _team, float posX,floa
 
 int PlayerEntity::getPowerOfBombs() {
 	return powerOfBombs;
+}
+
+void PlayerEntity::drawShadow(sf::RenderWindow& window) {
+	shadow.setPosition(this->getPosition().x + 6, this->getPosition().y + 53);
+	window.draw(shadow);
 }
 
 void PlayerEntity::setExpiredEntity() {

@@ -639,7 +639,6 @@ public:
 
 	void drawEnemies(sf::RenderWindow& w) {
 		for (Enemy_ptr e : Enemies::getVectorEnemies()) {
-			e->drawShadow(w);
 			e->drawEntity(w);
 			
 #ifdef HITBOX_DEBUG_MODE
@@ -649,14 +648,14 @@ public:
 #endif
 		}
 
-		for (Enemy_ptr e2 : Enemies::getVectorEnemiesExtra()) {
-			w.draw(*e2);
-#ifdef HITBOX_DEBUG_MODE
-			e2->drawEntityHitbox(w);
-			//		e->generateMovements();
-			e2->drawMovements(w);
-#endif
-		}
+//		for (Enemy_ptr e2 : Enemies::getVectorEnemiesExtra()) {
+//			w.draw(*e2);
+//#ifdef HITBOX_DEBUG_MODE
+//			e2->drawEntityHitbox(w);
+//			//		e->generateMovements();
+//			e2->drawMovements(w);
+//#endif
+//		}
 
 	}
 
@@ -718,6 +717,16 @@ public:
 	}
 
 	void draw(RenderWindow& w) {
+		level->drawShadows(w);
+
+		for (Enemy_ptr e : Enemies::getVectorEnemies()) {
+			e->drawShadow(w);
+		}
+
+		for (Player_ptr player : PLayers::getVectorPlayer()) {
+			player->drawShadow(w);
+		}
+
 		level->draw(w);
 		drawEnemies(w);
 		drawPlayers(w);

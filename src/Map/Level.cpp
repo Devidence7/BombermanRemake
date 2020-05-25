@@ -368,13 +368,12 @@ void Level::update() {
 
 }
 
-/*
-	 * This is a DEBUG method, draws in the RenderWindow the hitbox of the Entity
-	*/
-
-void Level::draw(sf::RenderWindow& w) {
+void Level::drawShadows(sf::RenderWindow& w) {
 	// Draw the flooro:
 	w.draw(flooro);
+
+	// Shadows
+
 
 	for (std::vector<Entity_ptr>& v : miniMap) {
 		for (Entity_ptr e : v) {
@@ -383,7 +382,13 @@ void Level::draw(sf::RenderWindow& w) {
 			}
 		}
 	}
+}
 
+/*
+	 * This is a DEBUG method, draws in the RenderWindow the hitbox of the Entity
+	*/
+
+void Level::draw(sf::RenderWindow& w) {
 	// Draw the entities
 	for (std::vector<Entity_ptr>& v : miniMap) {
 		for (Entity_ptr e : v) {

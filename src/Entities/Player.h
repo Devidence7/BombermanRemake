@@ -82,6 +82,8 @@ public:
 	*/
 	PlayerEntity(PlayerControls& playerControls, int _team,float posX,float posY);
 
+	void drawShadow(sf::RenderWindow& window) override;
+
 	int getPowerOfBombs();
 
 	void setExpiredEntity() override;
