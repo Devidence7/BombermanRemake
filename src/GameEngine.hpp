@@ -51,13 +51,13 @@ public:
 
 	int scoreForTheMoment = 0;
 
-	int player1_speedBoost = 1;
+	double player1_speedBoost = 1;
 	int player1_numOfBombs = 1;
 	int player1_powerOfBombs = 1;
 	int player1_lives = 1;
 	ActionsAvalible player1_action = ActionsAvalible::NONE_ACTION;
 
-	int player2_speedBoost = 1;
+	double player2_speedBoost = 1;
 	int player2_numOfBombs = 1;
 	int player2_powerOfBombs = 1;
 	int player2_lives = 1;

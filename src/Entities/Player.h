@@ -95,7 +95,7 @@ public:
 	int getLives();
 
 	void resetStats();
-	void setStats(int speedBoost, int numOfBombs, int powerOfBombs,	int lives, ActionsAvalible action);
+	void setStats(double speedBoost, int numOfBombs, int powerOfBombs,	int lives, ActionsAvalible action);
 
 	inline void addLife(int numLives){
 		this->lives += numLives;

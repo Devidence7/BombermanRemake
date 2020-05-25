@@ -109,7 +109,7 @@ void PlayerEntity::resetStats() {
 	actionAvaible = ActionsAvalible::NONE_ACTION;
 }
 
-void PlayerEntity::setStats(int speedBoost, int numOfBombs, int powerOfBombs, int lives, ActionsAvalible action) {
+void PlayerEntity::setStats(double speedBoost, int numOfBombs, int powerOfBombs, int lives, ActionsAvalible action) {
 	this->speedBoost = speedBoost;
 	this->numOfBombs = numOfBombs;
 	this->powerOfBombs = powerOfBombs;
