@@ -8,7 +8,7 @@
 (Estado matar 
     imprudencia 5
     costDestroyWall 8
-    agresivity 9
+    agresivity 5
 )
 
 (Estado buscarpu

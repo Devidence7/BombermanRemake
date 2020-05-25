@@ -2,17 +2,17 @@
     -1 0 3 0
 )
 (Estado perseguir
-    RangoVision 8
+    RangoVision 6
     costDestroyWall 8
 )
 (Estado matar 
-    imprudencia 5
+    imprudencia 14
     costDestroyWall 8
-    agresivity 4
+    agresivity 13
 )
 
 (Estado buscarpu
     interGen 4
     RangoVision 8
-        -1 2 -2
+        -1 0 -1
 )
