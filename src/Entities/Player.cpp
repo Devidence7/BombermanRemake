@@ -56,8 +56,10 @@ int PlayerEntity::getPowerOfBombs() {
 }
 
 void PlayerEntity::drawShadow(sf::RenderWindow& window) {
-	shadow.setPosition(this->getPosition().x + 6, this->getPosition().y + 53);
-	window.draw(shadow);
+	if (!expiredEntity) {
+		shadow.setPosition(this->getPosition().x + 6, this->getPosition().y + 53);
+		window.draw(shadow);
+	}
 }
 
 void PlayerEntity::setExpiredEntity() {
