@@ -734,6 +734,7 @@ public:
 		level->draw(w);
 		drawEnemies(w);
 		drawPlayers(w);
+		level->drawBombs(w);
 	}
 
 

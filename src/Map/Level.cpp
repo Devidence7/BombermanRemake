@@ -410,8 +410,23 @@ void Level::draw(sf::RenderWindow& w) {
 			it = onFlightBombs.erase(it);
 		}
 		else {
-			(*it)->drawEntity(w);
 			(*it)->drawShadow(w);
+			++it;
+		}
+	}
+}
+
+
+void Level::drawBombs(sf::RenderWindow& w) {
+	auto it = onFlightBombs.begin();
+	while (it != onFlightBombs.end()) {
+		if (!(*it)->onFlight || (*it)->getExpiredEntity()) {
+			// Remove the bomb from the list onFlightBombs if it at floor.
+			it->reset();
+			it = onFlightBombs.erase(it);
+		}
+		else {
+			(*it)->drawEntity(w);
 			++it;
 		}
 	}
