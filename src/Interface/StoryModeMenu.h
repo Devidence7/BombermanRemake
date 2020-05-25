@@ -85,7 +85,7 @@ private:
 
 		case ButtonActions::EASYLEVEL:
 
-            game.gameOptions.difLevel=1.1;
+            game.gameOptions.difLevel=1.0;
 			previousMenu=MenuState::MAIN;
 				createNumPlayersMenu(*window);
 			gameDisplay.setGameState(GameDisplayController::GameState::PICK_COLOR);
