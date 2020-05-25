@@ -31,7 +31,7 @@ class PLayers
 
 public:
     static void addPlayer(PlayerEntity::PlayerControls &playerControls, int posX,int posY,int team);
-    static void addIAPlayer(PlayerEntity::PlayerControls &playerControls,int posX,int posY,bool debug,int team, int IA=0);
+    static void addIAPlayer(PlayerEntity::PlayerControls &playerControls,int posX,int posY,bool debug,int team, int IAFile, int IA=0);
     static std::vector<Player_ptr> &getVectorPlayer();
     static bool cehckSomeCollision(Entity_ptr e);
 };
