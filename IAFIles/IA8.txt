@@ -6,7 +6,7 @@
     costDestroyWall 8
 )
 (Estado matar 
-    imprudencia 5
+    imprudencia 10
     costDestroyWall 8
     agresivity 13
 )
