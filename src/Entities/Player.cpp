@@ -70,6 +70,9 @@ void PlayerEntity::setExpiredEntity() {
 	//
 	if (!expiredEntity) {
 		if (storyMode) {
+			while (BombsAsociated.size() > 0) {
+				BombsAsociated.front()->setExpiredEntity();
+			}
 			resetStats();
 		}
 
@@ -212,9 +215,6 @@ void PlayerEntity::animate(sf::Vector2f velocity) {
 			isInvicible = true;
 			if (storyMode) {
 				resetStats();
-				while (BombsAsociated.size() > 0) {
-					BombsAsociated.front()->setExpiredEntity();
-				}	
 			}
 			setPosition(initialPos);
 			//cout<<"INITIAL POS X "<<initialPos.x<<" INITIAL POS Y "<<initialPos.y<<endl;

@@ -146,6 +146,8 @@ public:
 		// Restart time parameters
 		GameTime::startGameTime();
 
+		timesUp = false;
+
 		//	cout<<gameOptions.numPlayers<<endl;
 		int numEnemies = DEFAULT_NUM_OF_ENEMIES * gameOptions.difLevel * ((float)stage * 0.2 + 1);
 		GlobalTime::totalTime = 299;
@@ -597,6 +599,11 @@ public:
 					gameDisplay.setGameState(GameDisplayController::END_BATTLE);
 					gameDisplay.notifyChangeDisplay();
 				}
+			}
+
+			if (timesUp) {
+				gameDisplay.setGameState(GameDisplayController::END_BATTLE);
+				gameDisplay.notifyChangeDisplay();
 			}
 
 		}
