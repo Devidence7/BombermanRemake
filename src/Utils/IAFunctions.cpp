@@ -153,13 +153,13 @@ bool checkValidPositionWithImprudence(const sf::Vector2i &v, std::shared_ptr<Ent
         if(e->OmittedAreas.size() > 0){
             for(OmittedArea oa : e->OmittedAreas){
                 if(oa == v){
-                    if(abs(CostPath - oa.TimeAp()) == 0 /* || p->avanzaAtravesDelFuego(abs(CostPath - oa.TimeAp())) */){
+                    if(abs((CostPath * SIZE_PILLAR/ (p->baseSpeed * p->speedBoost) ) - oa.TimeAp()) < 3 /* || p->avanzaAtravesDelFuego(abs(CostPath - oa.TimeAp())) */){
                         valid = false;
                         break;
                     }else{
                         incrementCost = std::dynamic_pointer_cast<PlayerIAEntity>(e)->sg._KillStruct.imprudencia;
                     }
-                }
+                }//cost* sizePilar/ baseSpeed * speedBoost * 
             }
         }
     }
@@ -982,6 +982,7 @@ bool pathFindingGoWithCare(const sf::Vector2i &positionEnemy, const std::vector<
                     int incrementCost = 0;
                     if (checkValidPositionWithImprudence(nodePosition, e, newNode->costNode(), incrementCost) && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(newNode))
                     { //Si es una posicion valida y no se ha expandido
+                        newNode->incrementCost(incrementCost);
                         levelInterset = generateIntersetPowerUps(Level::getCellMiniMapObject(nodePosition), IA);
                         if(levelInterset != nullptr){
                             newNode->incrementCost(levelInterset->intersest()); // TODO: variable segun IA
@@ -1080,7 +1081,7 @@ bool pathFindingGoSafeArea(const sf::Vector2i &positionEnemy, std::list<ANode_Pt
                     int incrementCost = 0;
                     if (checkValidPositionWithImprudence(nodePosition, e, newNode->costNode(), incrementCost) && expanded.count(vec2i(nodePosition)) == 0 && !frontera.containsNode(newNode))
                     { //Si es una posicion valida y no se ha expandido
-                        newNode->incrementCost(levelInterset->intersest()); // TODO: variable segun IA
+                        newNode->incrementCost(incrementCost); // TODO: variable segun IA
                         frontera.add(newNode);
                     }
                     else
